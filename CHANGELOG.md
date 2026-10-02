@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.0-rc.8
+
+- Message deletion `@ux-timeline-017`, `020`, `021`, `022` verified against Piclaw 3.2.5 (`suite/specs/message-deletion.spec.ts`).
+  3.2.5 removes posts immediately (no transitional removing state); the cascade prompt reads
+  "Delete this message and its N replies?" for N visible replies. `018`/`019` remain to reconcile.
+- `Runtime.newSession()` retries HTTP 429 (Retry-After or exponential backoff); Piclaw rate-limits session creation.
+- Feature descriptions no longer reference runtime repository paths; a catalogue test enforces this.
+
 ## v0.1.0-rc.7
 
 - `@ux-shared-028` (SVG safety) no longer requires `@cap-svg-render`; it applies to every runtime.

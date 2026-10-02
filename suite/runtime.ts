@@ -85,11 +85,18 @@ export class Runtime {
     let id = 'default';
     const c = this.profile.session.create;
     if (c) {
-      const res = await fetch(this.baseUrl + fill(c.path, vars), {
-        method: c.method,
-        headers: { 'content-type': 'application/json', ...(this.profile.auth?.headers ?? {}), ...(c.headers ?? {}) },
-        body: c.body === undefined ? undefined : JSON.stringify(fill(c.body, vars)),
-      });
+      // Runtimes may rate-limit session creation; honour Retry-After, otherwise back off exponentially (~60s total).
+      let res: Response;
+      for (let attempt = 0; ; attempt++) {
+        res = await fetch(this.baseUrl + fill(c.path, vars), {
+          method: c.method,
+          headers: { 'content-type': 'application/json', ...(this.profile.auth?.headers ?? {}), ...(c.headers ?? {}) },
+          body: c.body === undefined ? undefined : JSON.stringify(fill(c.body, vars)),
+        });
+        if (res.status !== 429 || attempt >= 6) break;
+        const wait = Number(res.headers.get('retry-after')) * 1000 || 1000 * 2 ** attempt;
+        await new Promise(r => setTimeout(r, Math.min(wait, 30_000)));
+      }
       if (!res.ok) throw new Error(`session create failed: ${res.status}`);
       id = String(pick(await res.json(), c.idField ?? 'id'));
     }

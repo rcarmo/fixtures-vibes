@@ -1,20 +1,18 @@
 @classic @piclaw-3.2.4 @source-reviewed
 Feature: Message deletion from timeline
-  Installed Piclaw 3.2.4 counts replies in the loaded view before prompting.
-  Direct deletion does not guard against replies outside that view. The
-  historical 70d33bc clauses are in features/ux/upstream/classic-snapshot/.
+  The installed Piclaw reference counts replies in the loaded view before prompting.
+  Direct deletion does not guard against replies outside that view.
 
   Background:
     Given I am authenticated and on the main chat
     And the timeline contains messages
 
   Rule: Direct deletion follows the loaded timeline view
-    @ux-timeline-017 @cap-message-delete @reconcile-3.2.5
+    @ux-timeline-017 @cap-message-delete
     Scenario: Delete a single message without visible replies
       Given a message with no visible thread replies exists
       When I click the delete button on that message
-      Then the message should enter the removing state
-      And the message should be removed from the DOM after the removal delay
+      Then the message is removed from the timeline without a confirmation prompt
       And refreshing the page should not show the deleted message
 
     @ux-timeline-018 @oracle-mismatch @cap-message-delete @reconcile-3.2.5
@@ -40,22 +38,21 @@ Feature: Message deletion from timeline
       # This tests a conditional UI branch, not a normal backend journey.
 
   Rule: Visible thread replies require explicit cascade confirmation
-    @ux-timeline-020 @cap-message-delete @reconcile-3.2.5
-    Scenario: Deleting a message with 3 visible replies asks for cascade confirmation
-      Given a message that has 3 visible thread replies exists
+    @ux-timeline-020 @cap-message-delete
+    Scenario: Deleting a message with visible replies asks for cascade confirmation
+      Given a message that has N visible thread replies exists
       When I click the delete button on the parent message
-      Then a confirmation prompt should ask "Delete this message and its 3 replies?"
+      Then a confirmation prompt should ask "Delete this message and its N replies?"
 
-    @ux-timeline-021 @cap-message-delete @reconcile-3.2.5
+    @ux-timeline-021 @cap-message-delete
     Scenario: Confirming cascade deletes the parent and visible replies together
       Given a message that has visible thread replies exists
       When I click the delete button on the parent message
       And I confirm the cascade prompt
-      Then the parent message should enter the removing state
-      And its visible thread replies should enter the removing state
-      And the parent and replies should be removed together
+      Then the parent and its visible replies are removed together
+      And refreshing the page shows neither of them
 
-    @ux-timeline-022 @cap-message-delete @reconcile-3.2.5
+    @ux-timeline-022 @cap-message-delete
     Scenario: Cancelling cascade preserves the parent and visible replies
       Given a message that has visible thread replies exists
       When I click the delete button on the parent message

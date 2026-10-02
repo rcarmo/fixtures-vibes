@@ -1,10 +1,7 @@
 @canonical @piclaw-3.2.4 @classic @source-reviewed
 Feature: Classic Piclaw interaction model
-  Installed Piclaw 3.2.4 is the reference; the historical 70d33bc clauses are
-  preserved under features/ux/upstream/classic-snapshot/.
+  The installed Piclaw reference release is the oracle.
   Visual differences and optional add-on behavior are not implied to be identical.
-  Source-review evidence and validation gaps are indexed in
-  docs/internal/ux-reaudit-2026-09-26/gherkin-alignment.md.
 
   Background:
     Given Piclaw is in single-user mode in an isolated workspace

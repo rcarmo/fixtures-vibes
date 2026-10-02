@@ -48,10 +48,10 @@ test('capability tags are declared in capabilities.json', () => {
   expect(unknown).toEqual([]);
 });
 
-test('features name no runtime', () => {
+test('features name no runtime and no runtime repository path', () => {
   const hits: string[] = [];
   for (const path of files(join(root, 'features'))) {
-    readFileSync(path, 'utf8').split('\n').forEach((l, i) => { if (/\b(Gi|Vibes|Tau|tau-prime)\b/.test(l)) hits.push(`${relative(root, path)}:${i + 1}`); });
+    readFileSync(path, 'utf8').split('\n').forEach((l, i) => { if (/\b(Gi|Vibes|Tau|tau-prime)\b|(features|tests)\/ux\/|docs\/(internal|reviews|design)\//.test(l)) hits.push(`${relative(root, path)}:${i + 1}`); });
   }
   expect(hits).toEqual([]);
 });
