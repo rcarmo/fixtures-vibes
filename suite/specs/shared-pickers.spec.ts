@@ -71,8 +71,14 @@ test('@ux-shared-021 Find and activate picker entries without changing unsupport
   await expect(opener).toContainText(/fixture-1|fixture model$/i);
   const list = page.getByRole('listbox', { name: /models/i });
   // aria-selected marks the current model; the keyboard highlight is the combobox's active descendant.
+  // The search combobox that controls the model list (a <select>, e.g. Thinking level, is also a combobox).
+  const modelSearch = async () => {
+    const listId = await list.getAttribute('id');
+    const owner = listId ? page.locator(`[role=combobox][aria-controls="${listId}"]`) : page.getByRole('combobox');
+    return (await owner.count()) ? owner.first() : page.getByRole('combobox').first();
+  };
   const activeName = async () => {
-    const id = await page.getByRole('combobox').first().getAttribute('aria-activedescendant');
+    const id = await (await modelSearch()).getAttribute('aria-activedescendant');
     return id ? (await list.locator(`[id="${id}"]`).getAttribute('aria-label')) ?? '' : '';
   };
   const fixtureOnly = async () => {
@@ -83,6 +89,8 @@ test('@ux-shared-021 Find and activate picker entries without changing unsupport
 
   // Search by display name: only the fixture models remain.
   await opener.click();
+  await expect(list).toBeVisible();
+  await expect(await modelSearch()).toBeFocused();
   await page.keyboard.type('fixture');
   await expect(list.getByRole('option')).toHaveCount(2);
   await fixtureOnly();
@@ -104,6 +112,8 @@ test('@ux-shared-021 Find and activate picker entries without changing unsupport
 
   // Enter activates the highlighted fixture entry exactly once.
   await opener.click();
+  await expect(list).toBeVisible();
+  await expect(await modelSearch()).toBeFocused();
   await page.keyboard.type('fixture-2');
   await expect(list.getByRole('option')).toHaveCount(1);
   await fixtureOnly();

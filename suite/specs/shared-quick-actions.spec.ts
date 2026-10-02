@@ -1,18 +1,11 @@
 /** Shared Quick actions contract (features/canonical/shared-ux.feature @ux-shared-003, 006). */
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
+import { quietTimelinePoint } from '../points';
 
 /** Click a timeline point that is not a control, so focus is on noninteractive content. */
 async function focusTimeline(page: Page, sel: (k: string) => string) {
-  const box = (await page.locator(sel('timeline')).boundingBox())!;
-  const point = await page.evaluate(b => {
-    for (let fy = 0.5; fy <= 0.9; fy += 0.1) for (let fx = 0.1; fx <= 0.9; fx += 0.2) {
-      const [x, y] = [b.x + b.width * fx, b.y + b.height * fy];
-      const el = document.elementFromPoint(x, y);
-      if (el && !el.closest('button, a, input, textarea, select, label, [role=button], [contenteditable=true], [tabindex]')) return [x, y];
-    }
-    return null;
-  }, box);
+  const point = await quietTimelinePoint(page, sel('timeline'));
   expect(point, 'a non-interactive timeline point').not.toBeNull();
   await page.mouse.click(point![0], point![1]);
 }

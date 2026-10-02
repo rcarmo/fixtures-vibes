@@ -108,7 +108,8 @@ test('@ux-shared-015 Expose only supported session mutations', async ({ page, ru
   expect((await runtime.gates())[gate]?.waiting).toBe(1);
   await page.keyboard.press('Escape');
   await page.goto(current.url);
-  await expect(page.getByText(`busy-${n}`, { exact: true })).toBeVisible();
+  // After a reload the running turn shows as busy; 3.2.5 may not repaint its Draft until new output arrives.
+  await expect(page.getByRole('button', { name: /^stop/i })).toBeVisible();
   await runtime.openGate(gate);
   await expect(page.locator(sel('agentPost')).filter({ hasText: `busy-${n}` })).toHaveCount(1);
   await page.getByRole('button', { name: /manage sessions/i }).first().click();

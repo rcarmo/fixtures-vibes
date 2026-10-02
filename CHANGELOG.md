@@ -62,6 +62,18 @@
   tool's start and advances. The status clears when the turn ends. This is Piclaw 3.2.5's only tool-execution surface.
 - `@ux-shared-027` now also requires a new `@cap-tool-pane`. 3.2.5 has no disclosable tool pane, so the scenario stays
   without a spec.
+- New helper `suite/points.ts` (`quietTimelinePoint()`), now used by the Quick actions and workspace-menu dismissal specs:
+  - It accepts a point only inside the timeline, with no control between the hit target and the timeline.
+  - The timeline itself may be focusable; Gi's `tabindex=0` conversation region previously left no usable point on
+    empty phone/tablet timelines (reported by @gi).
+  - It waits for the timeline to render.
+- Stabilised after the first full rc.15 run:
+  - The model picker spec waits for its search combobox, which it finds by `aria-controls`; the Thinking `<select>` is
+    also a combobox.
+  - `@ux-shared-015` checks Stop rather than the Draft after reloading a page with a running turn. 3.2.5 does not
+    repaint a held Draft until new output arrives.
+- `@ux-shared-023` is listed as a known 3.2.5 defect (rcarmo/piclaw#1519). It fails intermittently: after a reconnect
+  and Stop with a queued follow-up, the next turn can run with no Stop, Draft or status.
 - `runtime.newSession(name?)` accepts a unique session name.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.

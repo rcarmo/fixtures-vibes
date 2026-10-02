@@ -2,6 +2,7 @@
  * Shared shell and session-picker contract (features/canonical/shared-ux.feature @ux-shared-001, 002, 013).
  */
 import { test, expect } from '../fixtures';
+import { quietTimelinePoint } from '../points';
 import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 
@@ -31,15 +32,7 @@ for (const [input, dismissal] of [['pointer', 'outside pointer'], ['keyboard', '
     if (dismissal === 'Escape') await page.keyboard.press('Escape');
     else {
       // Dismiss on a timeline point that is neither a control nor part of the open menu, so nothing underneath activates.
-      const box = (await page.locator(sel('timeline')).boundingBox())!;
-      const point = await page.evaluate(b => {
-        for (let fy = 0.9; fy >= 0.1; fy -= 0.1) for (let fx = 0.1; fx <= 0.9; fx += 0.2) {
-          const [x, y] = [b.x + b.width * fx, b.y + b.height * fy];
-          const el = document.elementFromPoint(x, y);
-          if (el && !el.closest('button, a, input, textarea, select, label, [role=button], [role=menu], [role=menuitem], [contenteditable=true], [tabindex]')) return [x, y];
-        }
-        return null;
-      }, box);
+      const point = await quietTimelinePoint(page, sel('timeline'), 'bottom-up');
       expect(point, 'a non-interactive timeline point').not.toBeNull();
       const [x, y] = point!;
       await page.mouse.click(x, y);
