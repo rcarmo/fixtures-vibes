@@ -352,6 +352,18 @@ Feature: Piclaw-compatible interaction model
       | cancelling            |
       | steering              |
 
+  @timeline @copy @fidelity @ux-shared-033
+  Scenario Outline: Text shown and copied matches what was written
+    Given a <author> post contains Markdown and a fenced code block with angle brackets such as "a < b && c > d"
+    Then the code block shows that text exactly
+    And Copy code puts exactly that text on the clipboard
+    And Copy message puts the Markdown as written on the clipboard, with no HTML entities
+
+    Examples:
+      | author    |
+      | user      |
+      | assistant |
+
   @timeline @svg @accessibility @ux-shared-031 @cap-svg-render
   Scenario: Render safe model-generated SVG as an isolated image
     Given an assistant message contains a fenced "svg" block with safe vector geometry and a title

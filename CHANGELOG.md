@@ -17,6 +17,17 @@
   The untested grouping clause and the "close control" example were dropped.
 - New canonical selector `quickActionHighlight` (`[role="option"][aria-selected="true"]`). Piclaw 3.2.5 exposes the
   highlight only as a CSS class, so its profile overrides it (rcarmo/piclaw#1510).
+- Shared copy, delete and read-aloud specs (`suite/specs/shared-copy.spec.ts`):
+  - `@ux-shared-024`: Copy message / Delete message / Copy code actions; copy gives the authored Markdown and shows
+    "Copied" before returning to idle; a rejected delete keeps the message; an accepted one removes only it.
+  - `@ux-shared-029`: Copy code is exact. Read aloud appears only on assistant posts and only with browser speech
+    support. Starting another post takes over, and the old post's late end callback does nothing. Speech uses an
+    in-page stub engine.
+  Clipboard contents are recorded from the page's `copy` event and `navigator.clipboard.writeText`.
+- New shared `@ux-shared-033`: displayed and copied text matches what was written, for code with angle brackets and
+  for Copy message on assistant posts. Piclaw 3.2.5 fails both (rcarmo/piclaw#1511: `< b && c >` in a fence becomes a
+  `<b>` tag; #1505: assistant Copy message copies `&lt;`). Listed.
+- New canonical selector `userPost` (`.timeline .post:not(.agent-post)`).
 
 ## v0.1.0-rc.13
 

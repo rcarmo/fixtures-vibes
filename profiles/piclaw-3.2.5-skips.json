@@ -34,6 +34,12 @@
       "reason": "known-defect",
       "detail": "Escape from a focused menu item closes the workspace menu but leaves focus on document.body (all six projects); pointer dismissal passes.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1509"
+    },
+    {
+      "id": "@ux-shared-033",
+      "reason": "known-defect",
+      "detail": "Fenced code 'a < b && c > d' renders and copies as 'a <b> d' in user and agent posts (restoreAllowedHtmlTags turns it into a <b> tag; piclaw#1511). Copy message on agent posts copies HTML-escaped stored text ('a &lt; b'; piclaw#1505).",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1511"
     }
   ]
 }
