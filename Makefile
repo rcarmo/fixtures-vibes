@@ -7,7 +7,7 @@ PROFILE ?=
 PROJECT ?=
 PLAYWRIGHT = $(NODE) node_modules/@playwright/test/cli.js
 
-.PHONY: deps test compliance suite report manifest
+.PHONY: deps test compliance suite report manifest oracle
 
 deps:
 	$(BUN) install --frozen-lockfile
@@ -30,3 +30,8 @@ compliance: suite report
 
 manifest:
 	$(BUN) tools/manifest.ts
+
+# Record the last reference run (gate must be OK) as immutable dated evidence under oracle/.
+oracle:
+	@test -n "$(PROFILE)" || { echo "PROFILE=/absolute/path/to/profile.json is required"; exit 2; }
+	FIXTURES_PROFILE="$(PROFILE)" FIXTURES_VIBES_REF="$$(git describe --tags --always 2>/dev/null || echo local)" $(BUN) tools/record-oracle.ts

@@ -12,7 +12,7 @@
     "shared": "Vibes Python tests/parity/features/canonical-ux.feature at 9a34046 (IDs minted @ux-shared-NNN)"
   },
   "files": {
-    "Makefile": "8c29f0c65aeee42544dd68061ab9bc15d7dbeccf6c8e880c7f91a561131669e5",
+    "Makefile": "af1ce265fc9707178f1562cac41eba5c9fb2f3253006751b832d948e41d0962d",
     "bun.lock": "4ccd41dec45019c0aeae33122abe8a7e56b58d6d0c857ea9dc5b143617416341",
     "capabilities.json": "dd1da575b3fbb3b2470be0db34a8b8f248e493e9923d16e733d3ac2ecd950b32",
     "control/fixture-model-server.ts": "3bef53ca1a35040af427c721498975897b4c137a3baf6f16386ae1e579354073",

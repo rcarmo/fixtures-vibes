@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Oracle evidence: `oracle/piclaw/3.2.5/` (instance identity and hashes) and the first immutable record,
+  `2026-10-02-v0.1.0-rc.12`. 276 tests: 265 passed, 11 failures, all in the three listed defects. Scenarios: 40 passed,
+  3 listed failing, 256 with no suite test yet. Gate OK.
+- `make oracle PROFILE=…` (`tools/record-oracle.ts`) records the last run when its gate is OK and refuses to overwrite.
+
 ## v0.1.0-rc.12
 
 - PWA avatar scenarios reconciled against Piclaw 3.2.5 with specs: `@ux-pwa-002` (avatar icons replace the defaults and
