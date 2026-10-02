@@ -64,6 +64,6 @@ test('shared ID map covers every Gi positional ID once', () => {
 });
 
 test('catalogue counts are stable', () => {
-  expect(scenarios.filter(s => s.id!.startsWith('@ux-shared-')).length).toBe(29);
+  expect(scenarios.filter(s => s.id!.startsWith('@ux-shared-')).length).toBe(31);
   expect(scenarios.filter(s => !s.id!.startsWith('@ux-shared-')).length).toBe(267);
 });

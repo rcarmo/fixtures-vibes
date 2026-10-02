@@ -17,7 +17,7 @@
     "capabilities.json": "d9aeaaf8264c05dd6b1d67318ac56a17e0398e33b9d8e8cc8a40bb830ce8746d",
     "control/fixture-model-server.ts": "a4ddaf6d3d8f588f8ea7940f387c1d5b7f1f90d7bd412be4bb4c3f4637c522b3",
     "features/canonical/shared-id-map.json": "b3d2969f72d9682127da2c7d366a632be66b723efb1162408b0fdde3a7ef02e2",
-    "features/canonical/shared-ux.feature": "1058e29ae5716b83199a5ec545d6ba4dccb11d398bb6f163f0288a034eca0272",
+    "features/canonical/shared-ux.feature": "2a571569869aee45e01c712a2f462b5b2c2bb68970c612ed74170c009e16ab61",
     "features/classic/canonical/canonical-ux.feature": "ee9f40d7852ec7e55dfa8060b669fece867c8e5280c01ea170a27964db4b1d3f",
     "features/classic/canonical/core-auth.feature": "1adfbe9c8b1261fa20bae8496ea4273cb4929258ed59c631b419ac5cd28e572c",
     "features/classic/canonical/core-interactions.feature": "884b9ea518a1a4b1a42d187889c26edc5ee8f06ae359519ccfff9bbb0f67317d",
@@ -45,7 +45,8 @@
     "features/classic/timeline/message-deletion.feature": "52084420616d3514b1fbe66a3ba94aba613c7e951d4821b0c79d9dd1e7803239",
     "features/classic/timeline/rendering.feature": "a91d0745ee4eefcb32a84dd9d01d3c5967c515ea7c636b2624e587f0b98f0d86",
     "package.json": "a4341c62bee004156513d62a47e1709dd3d9628b013b29ced08c5b564581a978",
-    "profiles/piclaw-3.2.5-reference.json": "e508f0fdfe9ccd7f0736b610fb80dbdb4ccf11340f87ae709372f7a72822332b",
+    "profiles/piclaw-3.2.5-reference.json": "b30451c3d0808e0a25e0a09f1e29fa6ca54ec0d443b59ba59b264863ddbc9f83",
+    "profiles/piclaw-3.2.5-skips.json": "33501b48f92fb533e1e724da6a63d7e253e28838eae9bea86526cefce86ce2fc",
     "schemas/evidence-manifest.schema.json": "28ecb5661e5611571301f900419676e5ca9623f130276715372db5215971800d",
     "schemas/runtime-profile.schema.json": "10f33dd4e8ae1e83ca481a486766e15cfcdbfa62c0a1dc072d9770d14a84155d",
     "schemas/skips.schema.json": "e88be55ca9ec39a9ccd30b55bd534dc5ea54dc11f8dc9aac175df5f2552d871e",
@@ -55,6 +56,7 @@
     "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",
     "suite/report.ts": "862e2ed8749dd83af124c4e9b5dd4cc83dcf07abd32b9a8d3f61692de67ab2a9",
     "suite/runtime.ts": "1dae70f8efb5d42655cd81972209182429c55d1a0042c6c7ea03203104ce50d9",
-    "suite/specs/classic-core.spec.ts": "c0152b657b16bf7b1cae54b1807a750c1af7e8bee8fabb3b30502011d8fe05bb"
+    "suite/specs/classic-core.spec.ts": "c0152b657b16bf7b1cae54b1807a750c1af7e8bee8fabb3b30502011d8fe05bb",
+    "suite/specs/shared-svg.spec.ts": "afc2d8c46c09d612cf88f4d8557278bc659dcb985890fd4a0610a52fb12040b3"
   }
 }

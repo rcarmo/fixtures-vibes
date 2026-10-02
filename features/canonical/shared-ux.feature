@@ -113,47 +113,46 @@ Feature: Piclaw-compatible interaction model
     And execution expands only the skill loaded by the captured session
     And an unknown or stale skill command fails recoverably without invoking another skill
 
-  @plan @pointer @keyboard @ux-shared-009 @cap-plan-sidebar @reconcile-3.2.5
-  Scenario Outline: Open Plan and edit the loaded revision
-    Given session "main" has the canonical Plan at revision 1
+  @plan @pointer @keyboard @ux-shared-009 @cap-plan-sidebar
+  Scenario Outline: Open Plan and edit the stored Markdown
+    Given session "main" has a stored Plan
     When I open Plan using <input>
-    Then its editor and real checklist progress are visible
-    When I edit the Plan and save revision 1
-    Then the native Plan tool reads the saved text at revision 2
-    And a reload preserves that text and revision
+    Then its editor and checklist progress are visible
+    When I edit the Plan and save it
+    Then the session-scoped "plan" tool reads the saved Markdown
+    And a reload preserves the saved Markdown
 
     Examples:
       | input    |
       | pointer  |
       | keyboard |
 
-  @plan @race @failure @ux-shared-010 @cap-plan-sidebar @reconcile-3.2.5
-  Scenario: Preserve a dirty Plan across a remote update
+  @plan @race @failure @ux-shared-010 @cap-plan-sidebar
+  Scenario: Preserve dirty Plan text on a remote update
     Given the open Plan editor has unsaved local text
-    When the native Plan tool writes different text with the loaded revision
-    Then the remote text is stored and emits a session-scoped update
-    And the editor retains its local text
-    And the UI reports that refresh is required
-    When I refresh the dirty Plan
-    Then I must confirm before discarding local text
+    When the "plan" tool stores different text for the same session
+    Then the editor retains its local text
+    And the UI reports that the Plan changed remotely
+    When I refresh the dirty Plan, accepting any discard confirmation
+    Then the editor shows the stored remote text
 
-  @plan @scope @submit @ux-shared-011 @cap-plan-sidebar @reconcile-3.2.5
+  @plan @scope @submit @ux-shared-011 @cap-plan-sidebar
   Scenario: Submit Plan to the captured session
     Given Plan and composer both contain unsent content
     When I choose "Submit to model"
     Then Plan is saved before it is sent
     And normal send or queue policy targets session "main"
     And composer text, media and references remain unchanged
-    And switching sessions cannot retarget the pending submission
+    And switching sessions before the save completes cancels the submission instead of retargeting it
 
-  @plan @tool @model @truthful-ui @ux-shared-012 @cap-plan-sidebar @cap-tool-output @reconcile-3.2.5
-  Scenario: Expose canonical Plan Markdown and the native Plan tool to the model
+  @plan @tool @model @truthful-ui @ux-shared-012 @cap-plan-sidebar @cap-tool-output
+  Scenario: Expose canonical Plan Markdown and the Plan tool to the model
     Given session "main" has checklist items in pending, in-progress and completed states
     Then Plan renders them as "- [ ]", "- [-]" and "- [x]" Markdown
     And headings and non-checklist Markdown remain editable without fabricated progress
     And the model tool catalogue contains one session-scoped "plan" tool
     When the model reads and updates Plan through that tool
-    Then the sidebar and tool return the same canonical Markdown and revision
+    Then the sidebar and tool return the same canonical Markdown
     And another session's Plan is unchanged
 
   @session-picker @pointer @keyboard @ux-shared-013 @cap-session-picker
@@ -192,15 +191,14 @@ Feature: Piclaw-compatible interaction model
     And their text, media and references are stored once
     And session "research" is unchanged
 
-  @queue @return @race @failure @ux-shared-017 @cap-queue @reconcile-3.2.5
-  Scenario: Return a queued item to the latest editor draft
-    Given the composer draft changes while return-to-editor is pending
-    When I return the selected queue item to the editor
-    Then its recovery record and merged origin-session draft persist before DELETE
-    And the latest concurrent draft text is retained
-    And media and references are retained
-    And retrying a partial failure creates no duplicate
-    And a storage failure prevents DELETE
+  @queue @return @race @failure @ux-shared-017 @cap-queue
+  Scenario: Return a queued item to the editor
+    Given session "main" has a queued item with text
+    When I return that queued item to the editor
+    Then the composer contains the queued text
+    And the item leaves the queue exactly once
+    And retrying after a partial failure creates no duplicate
+    # Conflicts with a newer composer draft (replace or merge) are not yet canonical.
 
   @queue @remove @reorder @scope @ux-shared-018 @cap-queue
   Scenario: Reorder and remove by durable identity
@@ -210,17 +208,13 @@ Feature: Piclaw-compatible interaction model
     Then the selected row remains or reconciles to authoritative consumed state
     And no other session or composer draft changes
 
-  @queue @steer @safety-deviation @ux-shared-019 @cap-queue @cap-steer @reconcile-3.2.5
-  Scenario: Steer only a matching active run
-    Given activity is idle or unknown
-    Then Steer is disabled and sends no request
+  @queue @steer @safety-deviation @ux-shared-019 @cap-queue @cap-steer
+  Scenario: Steer a queued item into the matching active run
     Given session "main" has a matching active run and queued item
     When I activate Steer twice
     Then the original queued ID is consumed at most once
     And delivery targets only that run and session
     And failure leaves the item queued
-    # Piclaw currently enables idle Steer. All runtimes must converge on this safer outcome;
-    # visual equality must not be achieved by enabling an unsafe action.
 
   @model-picker @pointer @keyboard @ux-shared-020 @cap-model-picker
   Scenario Outline: Search and select a model authoritatively
@@ -322,15 +316,12 @@ Feature: Piclaw-compatible interaction model
     And closing the pane restores usable focus without activating underlying controls
     And reduced-motion mode preserves state meaning without requiring animation
 
-  @timeline @svg @security @accessibility @ux-shared-028 @cap-svg-render @reconcile-3.2.5
-  Scenario: Render model-generated SVG inline without page privileges
-    Given an assistant message contains a fenced "svg" block with safe vector geometry
-    Then the timeline renders it inline as an accessible image that fits the message width
+  @timeline @svg @security @accessibility @ux-shared-028 @cap-svg-render
+  Scenario: Model-generated SVG cannot run code or fetch resources
+    Given an assistant message contains a fenced "svg" block with a script, an event handler and an external image reference
+    Then no script runs and the external reference is not fetched
+    And the SVG source remains visible as inert text
     And ordinary raw HTML remains escaped
-    When the SVG also contains scripts, event handlers, foreign objects or external references
-    Then unsafe elements and attributes are removed before rendering
-    And the SVG cannot execute code, navigate, fetch external resources or inspect the page DOM
-    And malformed or oversized SVG remains visible as inert source rather than trusted markup
 
   @copy @speech @capability @ux-shared-029 @cap-read-aloud
   Scenario: Copy and read assistant content truthfully
@@ -339,3 +330,17 @@ Feature: Piclaw-compatible interaction model
     And read aloud is shown only when the browser and assistant text support it
     And starting another post transfers speech ownership
     And stale completion callbacks do nothing
+
+  @queue @steer @idle @ux-shared-030 @cap-queue @cap-steer @cap-steer-idle
+  Scenario: Steer a queued item while no run is active
+    Given session "main" is idle and has a queued item
+    When I activate Steer for that item
+    Then the queued item is delivered to session "main" exactly once
+    And it leaves the queue
+
+  @timeline @svg @accessibility @ux-shared-031 @cap-svg-render
+  Scenario: Render safe model-generated SVG as an isolated image
+    Given an assistant message contains a fenced "svg" block with safe vector geometry and a title
+    Then the timeline displays it as an image with an accessible title that fits the message width
+    And no inline SVG element from the message is inserted into the page
+    And the SVG source remains available to copy

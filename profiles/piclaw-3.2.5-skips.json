@@ -1,0 +1,12 @@
+{
+  "runtime": "piclaw",
+  "fixturesVibes": "v0.1.0-rc.5",
+  "skips": [
+    {
+      "id": "@ux-shared-031",
+      "reason": "known-defect",
+      "detail": "3.2.5 stores assistant text HTML-escaped; the SVG fence handler parses the escaped body, fails, and shows double-escaped source instead of an image. Ordinary code fences are unaffected.",
+      "issue": "pending: Piclaw issue to be filed (evidence in fixtures-vibes CHANGELOG v0.1.0-rc.5)"
+    }
+  ]
+}

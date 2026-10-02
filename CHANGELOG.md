@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.0-rc.5
+
+- Shared scenarios reconciled against installed Piclaw 3.2.5 (no `@reconcile-3.2.5` left in `shared-ux.feature`):
+  - Plan (`009`–`012`): stored Markdown and a session-scoped `plan` tool; no server revision numbers. A dirty editor keeps
+    local text on a remote update; Refresh replaces it, accepting any discard confirmation. Submit saves first and cancels
+    rather than retargets if the session changes.
+  - `017` Return to editor: only the shared core (queued text returns once, no duplicates). Replace-vs-merge with a newer
+    draft is not canonical yet (Piclaw replaces; Vibes/Tau merge).
+  - `019` Steer into the matching active run; new `@ux-shared-030` idle Steer behind `@cap-steer-idle` (Piclaw enables it).
+  - `028` SVG safety for every runtime (no script, no fetch, source visible, raw HTML escaped); new `@ux-shared-031`
+    image preview behind `@cap-svg-render`.
+- New spec `suite/specs/shared-svg.spec.ts` (`028`, `031`).
+- Piclaw 3.2.5 defect: assistant text is stored HTML-escaped, so the SVG fence handler parses `&lt;svg…`, fails and shows
+  double-escaped source. Ordinary code fences are unaffected. The reference profile lists `@ux-shared-031` as `known-defect`
+  in `profiles/piclaw-3.2.5-skips.json`.
+
 ## v0.1.0-rc.4
 
 - README: a capability claim means the user-visible surface exists; failing tagged scenarios need per-ID skips
