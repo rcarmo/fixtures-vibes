@@ -146,7 +146,8 @@ Bun.serve({
       return json({ ok: true });
     }
     if (url.pathname === "/control/log") return json(log);
-    if (url.pathname === "/v1/models") return json({ object: "list", data: [{ id: "fixture-1", object: "model" }] });
+    // Two interchangeable models, so model selection can be tested without any real provider.
+    if (url.pathname === "/v1/models") return json({ object: "list", data: ["fixture-1", "fixture-2"].map((id) => ({ id, object: "model" })) });
     if (url.pathname !== "/v1/chat/completions" || req.method !== "POST") return json({ error: "not found" }, 404);
     inflight++;
     let res: Response;

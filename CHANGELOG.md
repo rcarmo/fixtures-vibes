@@ -27,6 +27,18 @@
 - New shared `@ux-shared-033`: displayed and copied text matches what was written, for code with angle brackets and
   for Copy message on assistant posts. Piclaw 3.2.5 fails both (rcarmo/piclaw#1511: `< b && c >` in a fence becomes a
   `<b>` tag; #1505: assistant Copy message copies `&lt;`). Listed.
+- `@ux-shared-004`: typing inside the composer, a search input, a button, the workspace sidebar or the session picker
+  does not open Quick actions and reaches that surface. The contenteditable and modal-dialog example rows were removed;
+  a fresh 3.2.5 session has neither surface.
+- `@ux-shared-005`: whitespace, Ctrl/Meta/Alt, composing, repeated and already-prevented keys do not open Quick
+  actions. Repeat and composition are dispatched events; a plain dispatched key is checked to open the palette, so the
+  check is meaningful. Piclaw 3.2.5 opens on prevented and repeated keys (rcarmo/piclaw#1513; listed).
+- `@ux-shared-020` (`suite/specs/shared-model-picker.spec.ts`): pointer and keyboard model selection. The fixture
+  server records which model each turn used, so the spec checks the next turn really uses the chosen model in that
+  session only. Only fixture models are selected; a reference instance may also list real, billable providers. The
+  untested context-window and references clauses were dropped.
+- The fixture server advertises `fixture-1` and `fixture-2` (it already answered any model ID). Profiles that claim
+  `@cap-model-picker` must register both. The Piclaw reference registers `fixture-2` ("Fixture Model Two").
 - New canonical selector `userPost` (`.timeline .post:not(.agent-post)`).
 
 ## v0.1.0-rc.13

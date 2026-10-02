@@ -64,9 +64,7 @@ Feature: Piclaw-compatible interaction model
       | composer textarea        |
       | input or select          |
       | button or link           |
-      | contenteditable editor   |
       | workspace sidebar        |
-      | open modal dialog        |
       | session or model picker  |
 
   @quick-actions @typeahead @ime @ux-shared-005 @cap-quick-actions @cap-slash-commands
@@ -218,12 +216,13 @@ Feature: Piclaw-compatible interaction model
 
   @model-picker @pointer @keyboard @ux-shared-020 @cap-model-picker
   Scenario Outline: Search and select a model authoritatively
-    Given two real registry models with explicit capabilities
-    And the composer has unsent text and references
+    Given two models are available
+    And the composer has unsent text
     When I open the model picker using <input>
     And I search for and select the second model
-    Then the accepted native mutation updates the session model and context window
-    And reload preserves the selected model only for session "main"
+    Then the picker closes and session "main" shows the second model
+    And the next turn in "main" uses the second model, also after a reload
+    And session "research" still uses the default model
     And composer content is unchanged
 
     Examples:

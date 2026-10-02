@@ -13,7 +13,7 @@ Each dated directory is one compliance run of the shared suite against the refer
 | Classic `app.bundle.css` | `24b81c0f900f87b0ed439aa67da3baa5b844e7e97e1e25520196e998af876722` |
 | Profile | `profiles/piclaw-3.2.5-reference.json` (external instance) |
 | Skips | `profiles/piclaw-3.2.5-skips.json` |
-| Model | `control/fixture-model-server.ts` as provider `fixture`, model `fixture-1` |
+| Models | `control/fixture-model-server.ts` as provider `fixture`, models `fixture-1` (default) and `fixture-2` |
 
 The instance runs with its own workspace, store and data directories, separate from any other Piclaw. It reaches the fixture model through a hostname: Piclaw reduces its tool set for model
 URLs on loopback or private addresses, so an IP-address URL would test a degraded Piclaw.

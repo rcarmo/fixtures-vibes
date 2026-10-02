@@ -40,6 +40,12 @@
       "reason": "known-defect",
       "detail": "Fenced code 'a < b && c > d' renders and copies as 'a <b> d' in user and agent posts (restoreAllowedHtmlTags turns it into a <b> tag; piclaw#1511). Copy message on agent posts copies HTML-escaped stored text ('a &lt; b'; piclaw#1505).",
       "issue": "https://github.com/rcarmo/piclaw/issues/1511"
+    },
+    {
+      "id": "@ux-shared-005",
+      "reason": "known-defect",
+      "detail": "Already-prevented and repeated keydowns on timeline content open Quick actions (no defaultPrevented/repeat check); whitespace, composing and modified keys are ignored correctly. All six projects.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1513"
     }
   ]
 }

@@ -72,3 +72,89 @@ for (const dismissal of ['Escape', 'outside pointer'] as const) {
     await expect(page.getByRole('complementary').filter({ hasText: /workspace/i }).first()).toBeHidden();
   });
 }
+
+/** The surfaces a runtime offers on a fresh session, each focused and ready to receive a typed character. */
+const surfaces: Record<string, (page: Page, sel: (k: string) => string) => Promise<() => Promise<void>>> = {
+  'composer textarea': async (page, sel) => {
+    const input = page.locator(sel('composeInput'));
+    await input.focus();
+    return async () => expect(input).toHaveValue('k');
+  },
+  'input or select': async page => {
+    await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
+    const search = page.getByRole('searchbox', { name: /search sessions/i });
+    await search.focus();
+    return async () => expect(search).toHaveValue('k');
+  },
+  'button or link': async page => {
+    const button = page.getByRole('button', { name: /^menu$|workspace menu/i }).first();
+    await button.focus();
+    return async () => expect(button).toBeFocused();
+  },
+  'workspace sidebar': async page => {
+    await page.getByRole('button', { name: /^menu$|workspace menu/i }).first().click();
+    await page.getByRole('menuitem', { name: /show workspace/i }).click();
+    const sidebar = page.getByRole('complementary').filter({ hasText: /workspace/i }).first();
+    const control = sidebar.locator('button:visible, [tabindex="0"]:visible, input:visible').first();
+    await control.focus();
+    return async () => expect(sidebar).toBeVisible();
+  },
+  'session or model picker': async page => {
+    await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
+    const option = page.getByRole('option').or(page.getByRole('menuitem')).first();
+    await option.focus();
+    return async () => expect(page.getByRole('option').or(page.getByRole('menuitem')).first()).toBeVisible();
+  },
+};
+
+for (const [surface, prepare] of Object.entries(surfaces)) {
+  test(`@ux-shared-004 Do not steal typing from an interactive surface: ${surface}`, async ({ page, runtime, sel }) => {
+    await page.goto((await runtime.newSession()).url);
+    await expect(page.locator(sel('composeInput'))).toBeVisible();
+    const received = await prepare(page, sel);
+    await page.keyboard.type('k');
+    await page.waitForTimeout(300);
+    await expect(searchBox(page)).toHaveCount(0);
+    await received();
+  });
+}
+
+/** Keys that must not open Quick actions from noninteractive timeline content. */
+const ignoredKeys: Record<string, (page: Page) => Promise<void>> = {
+  whitespace: page => page.keyboard.press('Space'),
+  'Control-modified': page => page.keyboard.press('Control+k'),
+  'Meta-modified': page => page.keyboard.press('Meta+k'),
+  'Alt-modified': page => page.keyboard.press('Alt+k'),
+  // Repeat and IME composition flags cannot be produced by the Playwright keyboard; these are dispatched events, and a
+  // plain dispatched key is checked below to open Quick actions, so the handler does accept dispatched events.
+  repeated: page => page.evaluate(() => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', repeat: true, bubbles: true, cancelable: true }))),
+  composing: page => page.evaluate(() => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', isComposing: true, keyCode: 229, bubbles: true, cancelable: true }))),
+  'already prevented': async page => {
+    await page.evaluate(() => (window as any).__preventNext = true);
+    await page.keyboard.press('k');
+  },
+};
+
+test('@ux-shared-005 Ignore consumed, modified and composing keys', async ({ page, runtime, sel }) => {
+  // Installed before the app so it runs first and consumes the key, as another component would.
+  await page.addInitScript(() => window.addEventListener('keydown', e => {
+    if ((window as any).__preventNext) { (window as any).__preventNext = false; e.preventDefault(); }
+  }, { capture: true }));
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  await input.fill('existing draft');
+  const failures: string[] = [];
+  for (const [kind, press] of Object.entries(ignoredKeys)) {
+    await focusTimeline(page, sel);
+    await press(page);
+    await page.waitForTimeout(300);
+    if (await searchBox(page).count()) { failures.push(kind); await page.keyboard.press('Escape'); }
+  }
+  // Control: a plain dispatched printable key does open Quick actions.
+  await focusTimeline(page, sel);
+  await page.evaluate(() => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', bubbles: true, cancelable: true })));
+  await expect(searchBox(page)).toHaveCount(1);
+  await page.keyboard.press('Escape');
+  await expect(input).toHaveValue('existing draft');
+  expect(failures, 'keys that opened Quick actions').toEqual([]);
+});
