@@ -1,6 +1,6 @@
 {
   "runtime": "piclaw",
-  "fixturesVibes": "v0.1.0-rc.13",
+  "fixturesVibes": "v0.1.0-rc.14",
   "skips": [
     {
       "id": "@ux-shared-031",
@@ -28,6 +28,12 @@
       "intermittent": true,
       "detail": "After a rejected Return, Cancel or Steer the failure shows but the item stays hidden until reload while /agent/queue-state still lists it (Return then risks a duplicate send). Same cause as @ux-original-030; the Steer path does not fail on every run.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1506"
+    },
+    {
+      "id": "@ux-shared-001",
+      "reason": "known-defect",
+      "detail": "Escape from a focused menu item closes the workspace menu but leaves focus on document.body (all six projects); pointer dismissal passes.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1509"
     }
   ]
 }

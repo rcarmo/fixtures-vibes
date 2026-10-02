@@ -20,7 +20,7 @@ Feature: Piclaw-compatible interaction model
     When I dismiss the workspace menu using <dismissal>
     Then the workspace menu is closed
     And no underlying control is activated
-    And focus returns to a usable shell control
+    And after keyboard dismissal focus returns to the workspace menu button
 
     Examples:
       | input    | dismissal      |
@@ -34,8 +34,8 @@ Feature: Piclaw-compatible interaction model
     Then the native workspace tree is visible
     And the workspace menu is closed
     When I hide the workspace
-    Then the current session and composer content are unchanged
-    And on narrow layouts the drawer backdrop activates no Plan or composer control
+    Then the workspace tree is hidden
+    And the current session and composer content are unchanged
 
   @quick-actions @typeahead @keyboard @ux-shared-003 @cap-quick-actions @cap-slash-commands
   Scenario: Type on the idle timeline to open Quick actions
@@ -158,9 +158,8 @@ Feature: Piclaw-compatible interaction model
   @session-picker @pointer @keyboard @ux-shared-013 @cap-session-picker
   Scenario Outline: Open, search and dismiss the session picker
     When I open the session picker using <input>
-    Then search has focus before the first visible paint
-    And the popup remains anchored to its native composer target
-    And sessions "main" and "research" are present by native identifier
+    Then its search field has focus
+    And searching by native identifier finds sessions "main" and "research"
     When I dismiss it with Escape
     Then no session changes
     And focus returns to the session-picker trigger

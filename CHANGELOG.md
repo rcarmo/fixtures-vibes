@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Shared shell specs (`suite/specs/shared-shell.spec.ts`), reconciled against Piclaw 3.2.5:
+  - `@ux-shared-001`: workspace menu open/dismiss by pointer and keyboard. Focus must return to the menu button only
+    after keyboard dismissal; a pointer dismissal keeps browser default focus. Piclaw 3.2.5 drops focus to `body` on
+    Escape (rcarmo/piclaw#1509, listed).
+  - `@ux-shared-002`: show and hide the workspace; "hidden" includes collapsed to zero size. The untested
+    narrow-layout backdrop clause was dropped.
+  - `@ux-shared-013`: session picker search focus, find by identifier, Escape restores focus. The untested
+    paint-timing and anchoring clauses were dropped.
+
 ## v0.1.0-rc.13
 
 - Shared queue specs, reconciled against Piclaw 3.2.5: `@ux-shared-016` (FIFO, delivered once each), `017` (Return to

@@ -17,7 +17,7 @@
     "capabilities.json": "dd1da575b3fbb3b2470be0db34a8b8f248e493e9923d16e733d3ac2ecd950b32",
     "control/fixture-model-server.ts": "3bef53ca1a35040af427c721498975897b4c137a3baf6f16386ae1e579354073",
     "features/canonical/shared-id-map.json": "b3d2969f72d9682127da2c7d366a632be66b723efb1162408b0fdde3a7ef02e2",
-    "features/canonical/shared-ux.feature": "b4e68422669f2a1185a9c67196dd9492d78602dd51d438ad8688677e57709d4a",
+    "features/canonical/shared-ux.feature": "ace14b2aedd784e46b291cd1bc49ba968984c8ad02f3e0753187642a24eef7eb",
     "features/classic/canonical/canonical-ux.feature": "d1f097d62731234a008ba0c9c8d0e6fef67767edfbf65da8051fbac604492870",
     "features/classic/canonical/core-auth.feature": "1adfbe9c8b1261fa20bae8496ea4273cb4929258ed59c631b419ac5cd28e572c",
     "features/classic/canonical/core-interactions.feature": "884b9ea518a1a4b1a42d187889c26edc5ee8f06ae359519ccfff9bbb0f67317d",
@@ -46,7 +46,7 @@
     "features/classic/timeline/rendering.feature": "a91d0745ee4eefcb32a84dd9d01d3c5967c515ea7c636b2624e587f0b98f0d86",
     "package.json": "a4341c62bee004156513d62a47e1709dd3d9628b013b29ced08c5b564581a978",
     "profiles/piclaw-3.2.5-reference.json": "3f3cad5b5a6719a98f4d9913eab8f869237cb21623387c3e1d1db590766e7c4c",
-    "profiles/piclaw-3.2.5-skips.json": "bd42bc1581907e2d432195878d1d55dba6002b2d34558a31f75e1b7df7adebd9",
+    "profiles/piclaw-3.2.5-skips.json": "d0ca9c4fc9ed9e30bce0fdcb0a564e1e0cb3820c94d1a56d08ef7d1fef3d4865",
     "schemas/evidence-manifest.schema.json": "28ecb5661e5611571301f900419676e5ca9623f130276715372db5215971800d",
     "schemas/runtime-profile.schema.json": "1309fb219d22ab059dc0a6f9e8264a3ed11fbc9be564990fc466cb1c987fceab",
     "schemas/skips.schema.json": "2d659d0963074b8b84a28443d5e7d95f53efa1b9b414e61ad31ff5760a1d1500",
@@ -67,6 +67,7 @@
     "suite/specs/queue-steer.spec.ts": "521dd506d85f2d73adcf0e55e607957bc340a613ce5a868ce22215a721672fcf",
     "suite/specs/quick-actions.spec.ts": "c848b213d036c7d6b88591f2f80ac1a3bcdd3214c6300f277b90b80ebea080ba",
     "suite/specs/shared-queue.spec.ts": "27b70104105a6020564e83c6ee0735c61d5cd20049d4945f2e49a8e44b39ba93",
+    "suite/specs/shared-shell.spec.ts": "25b715986ed7f2336e437d1bce5587304a46bddbfffdf3ebf014b2ce8f3bdada",
     "suite/specs/shared-svg.spec.ts": "c6daeebed2ea47d24162e4827d9d021f7b91b8524f999cb4dd193e48744f5934",
     "suite/specs/thoughts-panel.spec.ts": "d5f38cf3bb02a04fef01f7bdf9aa2ea41b2b14ec1dc219b716d6ea86ed4c66b3"
   }
