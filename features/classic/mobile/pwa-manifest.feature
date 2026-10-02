@@ -11,12 +11,14 @@ Feature: PWA manifest and home screen icon responses
     And the declared sizes include 192x192 and 512x512
     And every declared icon source is served as an image
 
-  @ux-pwa-002 @cap-pwa @reconcile-3.2.5
+  @ux-pwa-002 @cap-pwa @cap-agent-avatar
   Scenario: Use configured agent-avatar URLs for manifest icons
-    Given an agent avatar is configured for manifest use
-    When the manifest is built
-    Then avatar icon URLs request PNG format at the declared sizes
-    And those URLs include an avatar version value
+    Given the agent avatar is set to a PNG image
+    When the manifest is fetched
+    Then its icons are no longer the default icons
+    And each icon URL serves a PNG at its declared size, including 192x192 and 512x512
+    When the avatar is cleared
+    Then the manifest lists the default icons again
 
   @ux-pwa-003 @cap-pwa
   Scenario: Fall back to static icons without an avatar
@@ -44,8 +46,9 @@ Feature: PWA manifest and home screen icon responses
     Then the response is an image
     And it is a PNG agent avatar when one is configured, otherwise the static favicon
 
-  @ux-pwa-006 @cap-pwa @reconcile-3.2.5
+  @ux-pwa-006 @cap-pwa @cap-agent-avatar
   Scenario: Vary avatar icon cache URLs with the avatar version
-    Given the configured avatar version changes
-    When the manifest is rebuilt
-    Then its avatar icon URLs include the changed version value
+    Given the agent avatar is set to one PNG image
+    When it is changed to a different PNG image
+    Then every manifest icon URL changes
+    And the icons served at the new URLs differ from the previous ones

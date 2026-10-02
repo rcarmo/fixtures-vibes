@@ -109,12 +109,13 @@ test('@ux-compose-005 Keep upload progress separate from sending state', async (
   const uploadStatus = page.getByRole('status').filter({ hasText: `att-${n}.txt` });
   await expect(uploadStatus).toBeVisible();
   await expect(uploadStatus.getByRole('progressbar')).toBeVisible();
-  await expect(page.getByRole('button', { name: /upload/i })).toBeDisabled();
+  // The submit button's own state label; other upload controls (e.g. Cancel uploads) may stay enabled.
+  await expect(page.getByRole('button', { name: /^uploading/i })).toBeDisabled();
 
   upload.release();
   await expect.poll(() => message.count).toBe(1);
   await expect(uploadStatus).toHaveCount(0);
-  await expect(page.getByRole('button', { name: /sending/i })).toBeDisabled();
+  await expect(page.getByRole('button', { name: /^sending/i })).toBeDisabled();
   message.release();
   await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
 });
@@ -131,12 +132,13 @@ test('@ux-compose-006 Submit captures the destination chat', async ({ page, runt
   await input.press('Enter');
   await expect.poll(() => upload.count).toBe(1);
 
-  // Switch sessions through the in-app picker while the upload is held.
-  const otherName = other.id.replace(/^web:/, '');
+  // Switch sessions through the in-app picker while the upload is held. Pickers may expose entries as options or
+  // menu items; match the entry by the session identifier. If the switch did not happen, the delivery check below fails.
+  const otherKey = other.id.replace(/^[a-z]+:/, '');
+  const entryName = new RegExp(otherKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
-  await page.getByRole('searchbox', { name: /search sessions/i }).fill(otherName);
-  await page.getByRole('option', { name: new RegExp(`@${otherName}\\b`) }).click();
-  await expect(page.getByRole('button', { name: new RegExp(`@${otherName}\\b`) }).first()).toBeVisible();
+  await page.getByRole('searchbox', { name: /search sessions/i }).fill(otherKey);
+  await page.getByRole('option', { name: entryName }).or(page.getByRole('menuitem', { name: entryName })).first().click();
 
   upload.release();
   // The logged prompt is only its last line (attachments follow the text), so match the directive.

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.1.0-rc.12
+
+- PWA avatar scenarios reconciled against Piclaw 3.2.5 with specs: `@ux-pwa-002` (avatar icons replace the defaults and
+  serve PNGs at their declared sizes; clearing restores the defaults) and `@ux-pwa-006` (changing the avatar changes every
+  icon URL; the icon centre colour follows the avatar, checked within a tolerance). The specs always clear the avatar.
+- New capability `@cap-agent-avatar` and profile `commands.setAgentAvatar` / `commands.clearAgentAvatar` (composer text;
+  `{source}` is a PNG data URL). Piclaw: `/agent-avatar {source}` and `/agent-avatar clear`.
+- Avatar commands survive Piclaw's agent-message rate limit (30/min, no `Retry-After`): on HTTP 429 the spec waits out
+  the window once and resends.
+- Portability (reported by @gi): `@ux-compose-006` picks the session entry as `option` or `menuitem` by session
+  identifier and no longer checks a Piclaw-style `@name` button; `@ux-compose-005` checks the submit button's own
+  `Uploading…`/`Sending…` label, so other upload controls such as an enabled "Cancel uploads" do not match.
+- Only the 26 passkey `@proposal` scenarios remain tagged `@reconcile-3.2.5`.
+
 ## v0.1.0-rc.11
 
 - Reconciled against Piclaw 3.2.5 with specs, all six projects:

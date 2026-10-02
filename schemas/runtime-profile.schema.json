@@ -208,6 +208,23 @@
         }
       },
       "description": "Opt-in for runtimes whose tool calls always wait for user approval and cannot be pre-approved by configuration. The suite clicks the matching control whenever it appears."
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "setAgentAvatar": {
+          "type": "string",
+          "pattern": "\\{source\\}",
+          "description": "Composer text that sets the agent avatar; {source} is replaced by a data:image/png;base64 URL."
+        },
+        "clearAgentAvatar": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Composer text that restores the default agent avatar."
+        }
+      },
+      "description": "Composer commands the suite types to seed runtime settings that have no shared API. Required for the capabilities that use them (@cap-agent-avatar)."
     }
   },
   "oneOf": [

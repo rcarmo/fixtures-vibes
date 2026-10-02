@@ -186,6 +186,10 @@
     "@cap-text-highlights": {
       "area": "timeline",
       "description": "Persistent text highlights and annotations on timeline messages."
+    },
+    "@cap-agent-avatar": {
+      "area": "mobile",
+      "description": "A configurable agent avatar used for the PWA manifest icons; the profile supplies commands.setAgentAvatar/clearAgentAvatar."
     }
   }
 }

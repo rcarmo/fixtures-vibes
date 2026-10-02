@@ -23,6 +23,7 @@ export type Profile = {
   routes?: Record<string, string>;
   tools?: { shell?: string; activate?: string };
   approval?: { button: string };
+  commands?: { setAgentAvatar?: string; clearAgentAvatar?: string };
 };
 
 export function profilePath(): string {

@@ -27,6 +27,7 @@
   "capabilities": [
     "@cap-adaptive-cards",
     "@cap-addons",
+    "@cap-agent-avatar",
     "@cap-attachments",
     "@cap-auth-login",
     "@cap-auth-passkey",
@@ -74,5 +75,9 @@
   "skips": "piclaw-3.2.5-skips.json",
   "tools": {
     "activate": "activate_tools"
+  },
+  "commands": {
+    "setAgentAvatar": "/agent-avatar {source}",
+    "clearAgentAvatar": "/agent-avatar clear"
   }
 }
