@@ -89,20 +89,8 @@ async function avatarControl(page: Page, runtime: Runtime, sel: (k: string) => s
     (await page.locator('link[rel="manifest"]').first().getAttribute('href'))!, page.url()).toString())).json()).icons as any[];
   const run = async (text: string, before: string) => {
     const input = page.locator(sel('composeInput'));
-    // Runtimes may rate-limit agent messages (Piclaw: 30/min, no Retry-After). On HTTP 429, wait out the window once.
-    let limited = false;
-    const on429 = (r: import('@playwright/test').Response) => { if (r.status() === 429 && r.request().method() !== 'GET') limited = true; };
-    page.on('response', on429);
     await input.fill(text);
     await input.press('Enter');
-    await page.waitForTimeout(1000);
-    if (limited) {
-      test.info().setTimeout(test.info().timeout + 75_000);
-      await page.waitForTimeout(61_000);
-      await input.fill(text);
-      await input.press('Enter');
-    }
-    page.off('response', on429);
     await expect.poll(async () => JSON.stringify((await icons()).map(i => i.src)), { timeout: 15_000 }).not.toBe(before);
   };
   return {

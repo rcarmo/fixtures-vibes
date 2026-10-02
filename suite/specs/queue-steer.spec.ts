@@ -41,6 +41,5 @@ test('@ux-original-030 A failed Steer warns and keeps the item queued', async ({
   await expect.poll(() => fault.failed).not.toBeNull();
   await expect(page.getByText(/could not be sent as steering/i)).toBeVisible();
   await expect(item).toHaveCount(1, { timeout: 5000 });
-  await page.unrouteAll({ behavior: 'wait' });
   await runtime.openGate(gate);
 });

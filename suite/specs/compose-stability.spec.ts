@@ -54,7 +54,6 @@ test('@ux-compose-002 Restore a failed submission alongside newer text', async (
     send.release();
     await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
     await expect(input).toHaveValue(newer === `first-${n}` ? `first-${n}` : `first-${n}\n\n${newer}`);
-    await page.unrouteAll({ behavior: 'wait' });
   }
   await page.waitForTimeout(500);
   await expect(page.locator(sel('timelinePost')).filter({ hasText: `first-${n}` })).toHaveCount(0);
@@ -81,7 +80,6 @@ test('@ux-compose-004 Return a queued message replaces the current editor draft'
   await expect.poll(() => send.count).toBe(1);
   send.release();
   await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
-  await page.unrouteAll({ behavior: 'wait' });
   await attach(page, n);
   await expect(page.getByText(`att-${n}.txt`)).toBeVisible();
   await input.fill(`newer draft ${n}`);

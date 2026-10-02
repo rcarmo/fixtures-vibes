@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## v0.1.0-rc.13
+
+- Shared queue specs, reconciled against Piclaw 3.2.5: `@ux-shared-016` (FIFO, delivered once each), `017` (Return to
+  editor; the agent receives the text only when sent), `018` (move up persists; removal drops exactly that item) and
+  `019` (double Steer delivers once, in that session only). Their failure clauses now live in a new shared
+  `@ux-shared-032`: a rejected Return, Cancel or Steer must show a failure, bring the item back without a reload and
+  deliver it at most once. Piclaw 3.2.5 fails all three actions (rcarmo/piclaw#1506, intermittent).
+- `@ux-shared-030` (idle Steer) still has no spec. In 3.2.5, Stop discards the queue and queued items dispatch as soon
+  as a run ends, so an idle session with a queued item cannot be built black-box.
+- The `page` fixture retries writes answered with HTTP 429 (2/4/8/8/8 s, or `Retry-After`). Piclaw allows 30 agent
+  messages per sliding minute. Specs no longer call `page.unrouteAll`. The fixture unroutes with `ignoreErrors` when a
+  test ends.
+- `@ux-chat-lifecycle-002` (rcarmo/piclaw#1507) is now listed for all projects. It is timing-dependent and was also
+  seen on Chromium tablet.
+- Reference run: 318 tests; scenarios 44 passed, 4 listed failing, 252 with no suite test yet; gate OK.
+
+## Unreleased (rc.12 follow-up)
 
 - Oracle evidence: `oracle/piclaw/3.2.5/` (instance identity and hashes) and the first immutable record,
   `2026-10-02-v0.1.0-rc.12`. 276 tests: 265 passed, 11 failures, all in the three listed defects. Scenarios: 40 passed,

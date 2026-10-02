@@ -1,6 +1,6 @@
 {
   "runtime": "piclaw",
-  "fixturesVibes": "v0.1.0-rc.11",
+  "fixturesVibes": "v0.1.0-rc.13",
   "skips": [
     {
       "id": "@ux-shared-031",
@@ -18,12 +18,16 @@
     {
       "id": "@ux-chat-lifecycle-002",
       "reason": "known-defect",
-      "projects": [
-        "webkit-desktop"
-      ],
       "intermittent": true,
-      "detail": "WebKit desktop only: the drafting agent_status ('Writing response...') arrives over SSE but is not rendered; Draft/Thoughts panes are, and a reload shows the status. 3/6 runs normally, 5/6 with a 3 s delay; Chromium 0/6.",
+      "detail": "The drafting agent_status ('Writing response...') arrives over SSE but is sometimes not rendered; Draft/Thoughts panes are, and a reload shows the status. Timing-dependent: WebKit desktop 3/6 to 5/6 runs; also seen once on Chromium tablet with four suites loading the host.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+    },
+    {
+      "id": "@ux-shared-032",
+      "reason": "known-defect",
+      "intermittent": true,
+      "detail": "After a rejected Return, Cancel or Steer the failure shows but the item stays hidden until reload while /agent/queue-state still lists it (Return then risks a duplicate send). Same cause as @ux-original-030; the Steer path does not fail on every run.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1506"
     }
   ]
 }

@@ -186,35 +186,39 @@ Feature: Piclaw-compatible interaction model
   @queue @fifo @ux-shared-016 @cap-queue
   Scenario: Queue two follow-ups exactly once
     Given session "main" has an active turn
-    When I send two canonical follow-ups
-    Then both native queue IDs are visible in FIFO order
-    And their text, media and references are stored once
+    When I send two follow-ups
+    Then both are shown in the follow-up stack in the order sent, also after a reload
+    And when the turn ends each is delivered to the agent exactly once, in that order
     And session "research" is unchanged
 
-  @queue @return @race @failure @ux-shared-017 @cap-queue
+  @queue @return @ux-shared-017 @cap-queue
   Scenario: Return a queued item to the editor
     Given session "main" has a queued item with text
     When I return that queued item to the editor
     Then the composer contains the queued text
-    And the item leaves the queue exactly once
-    And retrying after a partial failure creates no duplicate
+    And the item leaves the queue
+    And the agent receives that text only when I send it, exactly once
     # Conflicts with a newer composer draft (replace or merge) are not yet canonical.
+    # A rejected removal is @ux-shared-032.
 
   @queue @remove @reorder @scope @ux-shared-018 @cap-queue
   Scenario: Reorder and remove by durable identity
-    When I move one queued item by one adjacent position
-    Then only that target group's persisted FIFO order changes
-    When native removal rejects the selected queue ID
-    Then the selected row remains or reconciles to authoritative consumed state
+    Given session "main" has three queued items and an unsent composer draft
+    When I move one queued item up by one position
+    Then only that item's position changes, also after a reload
+    When I remove one queued item
+    Then only that item leaves the queue and it is never delivered
+    And the remaining items are delivered in their queued order
     And no other session or composer draft changes
+    # A rejected removal is @ux-shared-032.
 
   @queue @steer @safety-deviation @ux-shared-019 @cap-queue @cap-steer
   Scenario: Steer a queued item into the matching active run
     Given session "main" has a matching active run and queued item
     When I activate Steer twice
-    Then the original queued ID is consumed at most once
-    And delivery targets only that run and session
-    And failure leaves the item queued
+    Then the item leaves the queue
+    And the agent receives it exactly once, in session "main" only
+    # A rejected Steer is @ux-shared-032.
 
   @model-picker @pointer @keyboard @ux-shared-020 @cap-model-picker
   Scenario Outline: Search and select a model authoritatively
@@ -337,6 +341,20 @@ Feature: Piclaw-compatible interaction model
     When I activate Steer for that item
     Then the queued item is delivered to session "main" exactly once
     And it leaves the queue
+
+  @queue @failure @ux-shared-032 @cap-queue
+  Scenario Outline: A rejected queue action keeps the item recoverable
+    Given session "main" has a running turn and a queued item
+    When the runtime rejects <action> for that item
+    Then a failure is shown
+    And the item is back in the follow-up stack without a reload
+    And the agent receives the item at most once
+
+    Examples:
+      | action                |
+      | returning to editor   |
+      | cancelling            |
+      | steering              |
 
   @timeline @svg @accessibility @ux-shared-031 @cap-svg-render
   Scenario: Render safe model-generated SVG as an isolated image
