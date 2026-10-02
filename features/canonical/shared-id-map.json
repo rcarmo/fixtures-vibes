@@ -1,0 +1,173 @@
+{
+  "note": "Gi positional @shared-N (pickle order) to minted @ux-shared-NNN",
+  "map": [
+    {
+      "giPositional": "@shared-1",
+      "id": "@ux-shared-001"
+    },
+    {
+      "giPositional": "@shared-2",
+      "id": "@ux-shared-001"
+    },
+    {
+      "giPositional": "@shared-3",
+      "id": "@ux-shared-002"
+    },
+    {
+      "giPositional": "@shared-4",
+      "id": "@ux-shared-003"
+    },
+    {
+      "giPositional": "@shared-5",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-6",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-7",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-8",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-9",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-10",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-11",
+      "id": "@ux-shared-004"
+    },
+    {
+      "giPositional": "@shared-12",
+      "id": "@ux-shared-005"
+    },
+    {
+      "giPositional": "@shared-13",
+      "id": "@ux-shared-006"
+    },
+    {
+      "giPositional": "@shared-14",
+      "id": "@ux-shared-006"
+    },
+    {
+      "giPositional": "@shared-15",
+      "id": "@ux-shared-006"
+    },
+    {
+      "giPositional": "@shared-16",
+      "id": "@ux-shared-007"
+    },
+    {
+      "giPositional": "@shared-17",
+      "id": "@ux-shared-008"
+    },
+    {
+      "giPositional": "@shared-18",
+      "id": "@ux-shared-009"
+    },
+    {
+      "giPositional": "@shared-19",
+      "id": "@ux-shared-009"
+    },
+    {
+      "giPositional": "@shared-20",
+      "id": "@ux-shared-010"
+    },
+    {
+      "giPositional": "@shared-21",
+      "id": "@ux-shared-011"
+    },
+    {
+      "giPositional": "@shared-22",
+      "id": "@ux-shared-012"
+    },
+    {
+      "giPositional": "@shared-23",
+      "id": "@ux-shared-013"
+    },
+    {
+      "giPositional": "@shared-24",
+      "id": "@ux-shared-013"
+    },
+    {
+      "giPositional": "@shared-25",
+      "id": "@ux-shared-014"
+    },
+    {
+      "giPositional": "@shared-26",
+      "id": "@ux-shared-015"
+    },
+    {
+      "giPositional": "@shared-27",
+      "id": "@ux-shared-016"
+    },
+    {
+      "giPositional": "@shared-28",
+      "id": "@ux-shared-017"
+    },
+    {
+      "giPositional": "@shared-29",
+      "id": "@ux-shared-018"
+    },
+    {
+      "giPositional": "@shared-30",
+      "id": "@ux-shared-019"
+    },
+    {
+      "giPositional": "@shared-31",
+      "id": "@ux-shared-020"
+    },
+    {
+      "giPositional": "@shared-32",
+      "id": "@ux-shared-020"
+    },
+    {
+      "giPositional": "@shared-33",
+      "id": "@ux-shared-021"
+    },
+    {
+      "giPositional": "@shared-34",
+      "id": "@ux-shared-021"
+    },
+    {
+      "giPositional": "@shared-35",
+      "id": "@ux-shared-022"
+    },
+    {
+      "giPositional": "@shared-36",
+      "id": "@ux-shared-023"
+    },
+    {
+      "giPositional": "@shared-37",
+      "id": "@ux-shared-024"
+    },
+    {
+      "giPositional": "@shared-38",
+      "id": "@ux-shared-025"
+    },
+    {
+      "giPositional": "@shared-39",
+      "id": "@ux-shared-026"
+    },
+    {
+      "giPositional": "@shared-40",
+      "id": "@ux-shared-027"
+    },
+    {
+      "giPositional": "@shared-41",
+      "id": "@ux-shared-028"
+    },
+    {
+      "giPositional": "@shared-42",
+      "id": "@ux-shared-029"
+    }
+  ]
+}

@@ -60,8 +60,10 @@ export class Runtime {
   constructor(readonly profile: Profile, readonly baseUrl: string, readonly modelUrl: string) {}
 
   static fromProfile(profile: Profile) {
-    if (!profile.external) throw new Error('Lifecycle-managed profiles are started by the suite global setup (FIXTURES_BASE_URL).');
-    return new Runtime(profile, profile.external.baseUrl.replace(/\/$/, ''), profile.external.modelControlUrl.replace(/\/$/, ''));
+    const base = profile.external?.baseUrl ?? process.env.FIXTURES_BASE_URL;
+    const model = profile.external?.modelControlUrl ?? process.env.FIXTURES_MODEL_URL;
+    if (!base || !model) throw new Error('Lifecycle profile not started: run through the suite config (global setup sets FIXTURES_BASE_URL).');
+    return new Runtime(profile, base.replace(/\/$/, ''), model.replace(/\/$/, ''));
   }
 
   has(cap: string) { return this.profile.capabilities.includes(cap); }

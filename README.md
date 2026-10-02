@@ -29,6 +29,67 @@ git -C references/fixtures-vibes checkout v0.1.0
 Then provide a runtime profile (`schemas/runtime-profile.schema.json`) and a skips file (`schemas/skips.schema.json`) in your
 repository, and run the suite against it. Do not edit submodule files; change this repository first and bump the pin.
 
+```sh
+make -C references/fixtures-vibes deps          # Bun deps + Chromium/WebKit (needs bun and node)
+make -C references/fixtures-vibes compliance PROFILE=$PWD/tests/fixtures-vibes/profile.json
+```
+
+`compliance` runs the Playwright suite (Chromium and WebKit × phone, tablet, desktop; zero retries), then the report gate.
+Outputs go to `references/fixtures-vibes/test-results/` (git-ignored, so the submodule stays clean):
+
+- `compliance-report-<runtime>.{md,json}`: status per scenario ID,
+- `evidence-<runtime>.json`: ID → passing test titles, per project.
+
+The gate fails when a covered scenario fails, when a test is skipped for a capability the skips file does not list, when a
+skip is stale (the scenario passes), names an unknown ID or is duplicated, when a `capability-absent` skip names a claimed
+capability, and when the profile or skips file does not match its schema. Scenarios without a shared test yet are reported
+as `no-suite-test` and do not fail the gate.
+
+### Runtime profile
+
+Use `lifecycle` when the suite should start the runtime, or `external` for an instance you manage yourself.
+Lifecycle commands run under `/bin/sh` with `FIXTURES_ROOT` (fresh temp dir), `FIXTURES_PORT`, `FIXTURE_MODEL_URL`
+(OpenAI-compatible base URL ending in `/v1`) and `FIXTURE_MODEL_ID` (`fixture-1`). `start` must stay in the foreground.
+
+```json
+{
+  "runtime": "vibes-python",
+  "version": "9a34046",
+  "lifecycle": {
+    "prepare": "mkdir -p \"$FIXTURES_ROOT/pi\" && printf '{\"providers\":{\"fixture\":{\"baseUrl\":\"%s\",\"api\":\"openai-completions\",\"apiKey\":\"fixture-local-only\",\"models\":[{\"id\":\"fixture-1\"}]}}}' \"$FIXTURE_MODEL_URL\" > \"$FIXTURES_ROOT/pi/models.json\"",
+    "start": "PI_CODING_AGENT_DIR=\"$FIXTURES_ROOT/pi\" VIBES_PORT=$FIXTURES_PORT VIBES_PI_MODEL=fixture/fixture-1 exec ./serve"
+  },
+  "readiness": { "path": "/health", "status": 200 },
+  "session": { "open": "/" },
+  "capabilities": ["@cap-queue", "@cap-stop"],
+  "skips": "skips.json"
+}
+```
+
+`session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
+Claim a capability only when every scenario tagged with it passes. Specs never list capabilities themselves: a test is
+skipped automatically when the profile lacks a `@cap-*` tag of its scenario.
+
+### Skips file
+
+```json
+{
+  "runtime": "vibes-python",
+  "fixturesVibes": "v0.1.0-rc.1",
+  "skips": [
+    { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
+  ]
+}
+```
+
+Reasons: `capability-absent` (needs `capability`), `intentional-divergence` (needs `approvedBy`), `not-implemented` and
+`known-defect` (need `issue`), `environment-limit`.
+
+## Status
+
+Scenarios tagged `@reconcile-3.2.5` are still being checked against the installed Piclaw 3.2.5 and may change wording.
+Shared IDs were minted per scenario; `features/canonical/shared-id-map.json` maps the old positional IDs.
+
 ## Test lifecycle
 
 For each isolation group the suite:

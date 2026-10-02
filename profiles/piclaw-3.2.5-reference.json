@@ -5,19 +5,69 @@
     "baseUrl": "http://192.168.1.236:8090",
     "modelControlUrl": "http://192.168.1.236:9920"
   },
-  "readiness": { "path": "/agent/status", "status": 200, "timeoutMs": 30000 },
+  "readiness": {
+    "path": "/agent/status",
+    "status": 200,
+    "timeoutMs": 30000
+  },
   "session": {
-    "create": { "method": "POST", "path": "/agent/root-session", "body": { "agent_name": "{name}" }, "idField": "branch.chat_jid" },
+    "create": {
+      "method": "POST",
+      "path": "/agent/root-session",
+      "body": {
+        "agent_name": "{name}"
+      },
+      "idField": "branch.chat_jid"
+    },
     "open": "/?chat_jid={id}"
   },
-  "auth": { "mode": "none" },
+  "auth": {
+    "mode": "none"
+  },
   "capabilities": [
-    "@cap-queue", "@cap-steer", "@cap-steer-idle", "@cap-stop", "@cap-attachments", "@cap-model-picker", "@cap-thinking-levels",
-    "@cap-quick-actions", "@cap-slash-commands", "@cap-compaction", "@cap-context-meter", "@cap-thoughts", "@cap-tool-output",
-    "@cap-message-delete", "@cap-read-aloud", "@cap-svg-render", "@cap-adaptive-cards", "@cap-widgets", "@cap-reconnect",
-    "@cap-session-picker", "@cap-session-manage", "@cap-plan-sidebar", "@cap-workspace", "@cap-workspace-write", "@cap-editor",
-    "@cap-terminal", "@cap-vnc", "@cap-system-meters", "@cap-settings-dialog", "@cap-auth-login", "@cap-auth-totp",
-    "@cap-auth-passkey", "@cap-multi-user", "@cap-addons", "@cap-skills", "@cap-scheduled-tasks", "@cap-recordings",
-    "@cap-search", "@cap-pwa", "@cap-push-notifications", "@cap-touch"
+    "@cap-queue",
+    "@cap-steer",
+    "@cap-steer-idle",
+    "@cap-stop",
+    "@cap-attachments",
+    "@cap-model-picker",
+    "@cap-thinking-levels",
+    "@cap-quick-actions",
+    "@cap-slash-commands",
+    "@cap-compaction",
+    "@cap-context-meter",
+    "@cap-thoughts",
+    "@cap-tool-output",
+    "@cap-message-delete",
+    "@cap-read-aloud",
+    "@cap-svg-render",
+    "@cap-adaptive-cards",
+    "@cap-widgets",
+    "@cap-reconnect",
+    "@cap-session-picker",
+    "@cap-session-manage",
+    "@cap-plan-sidebar",
+    "@cap-workspace",
+    "@cap-workspace-write",
+    "@cap-editor",
+    "@cap-terminal",
+    "@cap-vnc",
+    "@cap-system-meters",
+    "@cap-settings-dialog",
+    "@cap-auth-login",
+    "@cap-auth-totp",
+    "@cap-auth-passkey",
+    "@cap-multi-user",
+    "@cap-addons",
+    "@cap-skills",
+    "@cap-scheduled-tasks",
+    "@cap-recordings",
+    "@cap-search",
+    "@cap-pwa",
+    "@cap-push-notifications",
+    "@cap-touch",
+    "@cap-theme-tint",
+    "@cap-annotation",
+    "@cap-message-range"
   ]
 }

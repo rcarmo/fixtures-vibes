@@ -1,0 +1,60 @@
+{
+  "oracle": {
+    "runtime": "piclaw",
+    "version": "3.2.5",
+    "interface": "classic",
+    "assets": {
+      "/static/classic/dist/app.bundle.js": "65205f9b4339289f896120f3a7510a75baf14e7e085f39ed47e593ec9eb052d5"
+    }
+  },
+  "sources": {
+    "classic": "rcarmo Gi features/ux/classic + additions/piclaw-2026-09-24 at af48800 (IDs preserved)",
+    "shared": "Vibes Python tests/parity/features/canonical-ux.feature at 9a34046 (IDs minted @ux-shared-NNN)"
+  },
+  "files": {
+    "Makefile": "c959f268483c0708fbd07af771e93546c0185c3dacd268b008dad5b01ab60c67",
+    "bun.lock": "30a36403f2c85c54f1bbfc97b09da2465fbd7517efbea5d4fc3c19f721b97f41",
+    "capabilities.json": "551e06ef08b8bd5194c5eef25889d85ea9105eace38cf74d7b50984aeb846b1c",
+    "control/fixture-model-server.ts": "a4ddaf6d3d8f588f8ea7940f387c1d5b7f1f90d7bd412be4bb4c3f4637c522b3",
+    "features/canonical/shared-id-map.json": "b3d2969f72d9682127da2c7d366a632be66b723efb1162408b0fdde3a7ef02e2",
+    "features/canonical/shared-ux.feature": "2f64be49a457bf9fa8f75024072a20971c1dee9d0ddbc8cd934351be40c97042",
+    "features/classic/canonical/canonical-ux.feature": "b7ded86cb3e0e0ce70cbb2d135afded75009c25898201aac7b126936b094e93c",
+    "features/classic/canonical/core-auth.feature": "acd175b3e49bf15c15f0d5b37e650d888b7749abee492a7ef238f1b287602fb8",
+    "features/classic/canonical/core-interactions.feature": "884b9ea518a1a4b1a42d187889c26edc5ee8f06ae359519ccfff9bbb0f67317d",
+    "features/classic/canonical/core-settings.feature": "422f236b1d40442852e69b34ae6d81d28e1ffc3e04b583d938d37026184a91ab",
+    "features/classic/canonical/workspace-flows.feature": "b2d9d3258d2fba227348daa1ced2e463756d27ae43a151762ecab5471b30a12c",
+    "features/classic/compose/chat-lifecycle.feature": "04e0dfc20656163a91d424960a40d8b1ceb8bea5fd298f81e13ffc9f24b980ad",
+    "features/classic/compose/compaction-model-switch.feature": "5336eb117cbea25acdc61b2adc494f10f8cb08c60d374f6c1a0ffeb4f1cf9a60",
+    "features/classic/compose/compose-stability.feature": "488d335722ed9f92eba3b72b4238293451e9a07766c6505c6d0475b478f9b57b",
+    "features/classic/compose/context-meter-tooltip.feature": "86d539125b6b688d6326fdd4399b67875e0f12f49e68124614b1c5d1cd241fec",
+    "features/classic/compose/hamburger-layout-scale.feature": "db58777dc746e8101fbed70648bb0c8ca42ae57b74ab3aafb114b845fd79e996",
+    "features/classic/compose/instant-visibility.feature": "5f4b1f0b39819cd1d84977e6a0e6cfffa62a9cb69c9653710305b2cfdbea0b26",
+    "features/classic/compose/sse-reconnection.feature": "3234e7b62ea8b51cade1998a520b44bba8a9e7fd7999cbd12610bdfade213b54",
+    "features/classic/compose/theme-tint.feature": "ba6adca66b331d8d6b64cc885de17103fc423a47781ec057a5308d7d3c0edfd6",
+    "features/classic/compose/thoughts-panel.feature": "4eac88c8a2e676342000ea4a6805d839e31abf4ab008db6866a4ad1aed0f8b07",
+    "features/classic/editor/editor-stability.feature": "6fa130e9dcc8143ee26fbb149f5c0611eb878ebd1f0d28552c318869e5c27385",
+    "features/classic/mobile/pwa-manifest.feature": "e37975005dead60789732087b15c8408911cdd0694c6585755ad68ebd4e670d2",
+    "features/classic/mobile/swipe-independence.feature": "8cb4ca35726981cfce81fe63aa23ff4392856287706234c06a650e295c5550e8",
+    "features/classic/panes/terminal.feature": "2af1ca09ebdedc32e38b5098658bdcc84fa2fd08cde4c0fa7c3b68d26f247efe",
+    "features/classic/sessions/session-switching.feature": "6ab52a1822161221d4aef1cefd1c9b782e8b25810ccc0c30d6658343db556db9",
+    "features/classic/settings/settings-dialog.feature": "22677ddffb7a2e4f27b73a76b8a46f0ebbbae315895ddf2f7da7a5bdc79ea84f",
+    "features/classic/settings/settings-layering.feature": "d014a78c5a73089ac612f0a4c98149b1181baefb090b5d6a90a80229ccdce5f5",
+    "features/classic/settings/single-user-passkey-settings.feature": "f7476a04a7efeb8ff112c625b2d506fe38f1424eccb0cb4c91bec0d21abbaa33",
+    "features/classic/timeline/annotation-highlights.feature": "7c6c8e2570ee05713afdcd41f0b2c5994517bf156b1d8183f5bf48f5c8c23f51",
+    "features/classic/timeline/lightbox-dismissal.feature": "c580d6be93eabee89f83e1d334323bed6b3ca990114936717b7f206689c26b7f",
+    "features/classic/timeline/message-deletion.feature": "52084420616d3514b1fbe66a3ba94aba613c7e951d4821b0c79d9dd1e7803239",
+    "features/classic/timeline/rendering.feature": "c7f442de6d831deec0fc073c1b7825b395e2ca18bb59331dea79947e02d32591",
+    "package.json": "a4341c62bee004156513d62a47e1709dd3d9628b013b29ced08c5b564581a978",
+    "profiles/piclaw-3.2.5-reference.json": "de1289ac1edf4357b25e688c82b02d29fa20bcf94d017307d5c6d1759b794c9f",
+    "schemas/evidence-manifest.schema.json": "28ecb5661e5611571301f900419676e5ca9623f130276715372db5215971800d",
+    "schemas/runtime-profile.schema.json": "10f33dd4e8ae1e83ca481a486766e15cfcdbfa62c0a1dc072d9770d14a84155d",
+    "schemas/skips.schema.json": "e88be55ca9ec39a9ccd30b55bd534dc5ea54dc11f8dc9aac175df5f2552d871e",
+    "suite/catalogue.ts": "1804f112a6bebed3efc9c626a720f1c0593a979c094777c19efa7ed09d9361e4",
+    "suite/fixtures.ts": "fceeb81a66c84c7e636ea45573865928b50e1dd682295ec8fa2b2c1799088324",
+    "suite/global-setup.ts": "956d448634d1f33f602fe39cbd063b44d6ec1c3e0463e27ba3e0a2853035dc8b",
+    "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",
+    "suite/report.ts": "d52c1dffe7fa12891196966f1ed556843ca1b3bb43dd5826e24a61c06d2d592e",
+    "suite/runtime.ts": "1dae70f8efb5d42655cd81972209182429c55d1a0042c6c7ea03203104ce50d9",
+    "suite/specs/classic-core.spec.ts": "c0152b657b16bf7b1cae54b1807a750c1af7e8bee8fabb3b30502011d8fe05bb"
+  }
+}

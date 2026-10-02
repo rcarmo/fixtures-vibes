@@ -9,6 +9,7 @@ const viewports = {
 
 export default defineConfig({
   testDir: './specs',
+  globalSetup: './global-setup.ts',
   timeout: 45_000,
   expect: { timeout: 10_000 },
   retries: 0,

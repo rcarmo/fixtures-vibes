@@ -2,47 +2,186 @@
   "$comment": "Capability vocabulary for fixtures-vibes Classic scenarios. A scenario tagged @cap-X requires capability X. Runtime profiles claim capabilities; unclaimed ones must be skipped with reason capability-absent. The Piclaw 3.2.5 reference claims all capabilities except those marked reference:false.",
   "version": 1,
   "capabilities": {
-    "@cap-queue": { "area": "compose", "description": "Follow-up messages queue while a run is active and are delivered FIFO." },
-    "@cap-steer": { "area": "compose", "description": "Steering an active run (queue-steer / Enter during run)." },
-    "@cap-steer-idle": { "area": "compose", "description": "Steer action offered while idle. Vibes and tau-prime intentionally disable this." },
-    "@cap-stop": { "area": "compose", "description": "Stop/abort the active run from the UI." },
-    "@cap-attachments": { "area": "compose", "description": "Attach files/media to a message." },
-    "@cap-model-picker": { "area": "compose", "description": "Model selection popup with search." },
-    "@cap-thinking-levels": { "area": "compose", "description": "Per-session thinking level control." },
-    "@cap-quick-actions": { "area": "compose", "description": "Quick actions dialog with search and prefill." },
-    "@cap-slash-commands": { "area": "compose", "description": "Slash command typeahead and execution." },
-    "@cap-compaction": { "area": "compose", "description": "Manual/automatic context compaction surfaced in the UI." },
-    "@cap-context-meter": { "area": "compose", "description": "Authoritative context usage display." },
-    "@cap-thoughts": { "area": "timeline", "description": "Streaming reasoning/thought disclosure in the timeline." },
-    "@cap-tool-output": { "area": "timeline", "description": "Tool calls and results rendered in the timeline." },
-    "@cap-message-delete": { "area": "timeline", "description": "Delete a timeline message." },
-    "@cap-read-aloud": { "area": "timeline", "description": "Read aloud / speech controls on messages." },
-    "@cap-svg-render": { "area": "timeline", "description": "Sanitised fenced SVG rendering." },
-    "@cap-adaptive-cards": { "area": "timeline", "description": "Adaptive Card content blocks." },
-    "@cap-widgets": { "area": "timeline", "description": "Dashboard widgets in panes/timeline." },
-    "@cap-reconnect": { "area": "timeline", "description": "SSE/stream reconnection with recovery UI." },
-    "@cap-session-picker": { "area": "sessions", "description": "Session switcher popup with search." },
-    "@cap-session-manage": { "area": "sessions", "description": "Create, rename, fork, archive sessions from the UI." },
-    "@cap-plan-sidebar": { "area": "panes", "description": "Session plan sidebar with checklist editor." },
-    "@cap-workspace": { "area": "panes", "description": "Workspace file tree (read)." },
-    "@cap-workspace-write": { "area": "panes", "description": "Workspace create/rename/move/upload/delete." },
-    "@cap-editor": { "area": "editor", "description": "In-browser file editor." },
-    "@cap-terminal": { "area": "panes", "description": "Web terminal pane with a real PTY." },
-    "@cap-vnc": { "area": "panes", "description": "VNC viewer pane." },
-    "@cap-system-meters": { "area": "shell", "description": "System meters (CPU/memory) in the shell." },
-    "@cap-settings-dialog": { "area": "settings", "description": "Monolithic Settings dialog (Classic)." },
-    "@cap-auth-login": { "area": "settings", "description": "Web login/logout flow." },
-    "@cap-auth-totp": { "area": "settings", "description": "TOTP enrolment and login." },
-    "@cap-auth-passkey": { "area": "settings", "description": "Passkey enrolment and login." },
-    "@cap-multi-user": { "area": "settings", "description": "Family/multi-user invitations and roles." },
-    "@cap-addons": { "area": "settings", "description": "Add-on install/config surfaces." },
-    "@cap-skills": { "area": "compose", "description": "Skills listing/invocation in the UI." },
-    "@cap-scheduled-tasks": { "area": "settings", "description": "Scheduled task management UI." },
-    "@cap-recordings": { "area": "panes", "description": "Session recordings viewer." },
-    "@cap-search": { "area": "timeline", "description": "Timeline/message search." },
-    "@cap-pwa": { "area": "mobile", "description": "PWA manifest, install and standalone behaviour." },
-    "@cap-push-notifications": { "area": "mobile", "description": "Web push subscription and notifications." },
-    "@cap-touch": { "area": "mobile", "description": "Touch gestures (swipe, long-press) on phone/tablet projects." },
-    "@cap-physical-device": { "area": "mobile", "description": "Requires a real device (biometric, hardware keys). Never runnable in CI.", "reference": false }
+    "@cap-queue": {
+      "area": "compose",
+      "description": "Follow-up messages queue while a run is active and are delivered FIFO."
+    },
+    "@cap-steer": {
+      "area": "compose",
+      "description": "Steering an active run (queue-steer / Enter during run)."
+    },
+    "@cap-steer-idle": {
+      "area": "compose",
+      "description": "Steer action offered while idle. Vibes and tau-prime intentionally disable this."
+    },
+    "@cap-stop": {
+      "area": "compose",
+      "description": "Stop/abort the active run from the UI."
+    },
+    "@cap-attachments": {
+      "area": "compose",
+      "description": "Attach files/media to a message."
+    },
+    "@cap-model-picker": {
+      "area": "compose",
+      "description": "Model selection popup with search."
+    },
+    "@cap-thinking-levels": {
+      "area": "compose",
+      "description": "Per-session thinking level control."
+    },
+    "@cap-quick-actions": {
+      "area": "compose",
+      "description": "Quick actions dialog with search and prefill."
+    },
+    "@cap-slash-commands": {
+      "area": "compose",
+      "description": "Slash command typeahead and execution."
+    },
+    "@cap-compaction": {
+      "area": "compose",
+      "description": "Manual/automatic context compaction surfaced in the UI."
+    },
+    "@cap-context-meter": {
+      "area": "compose",
+      "description": "Authoritative context usage display."
+    },
+    "@cap-thoughts": {
+      "area": "timeline",
+      "description": "Streaming reasoning/thought disclosure in the timeline."
+    },
+    "@cap-tool-output": {
+      "area": "timeline",
+      "description": "Tool calls and results rendered in the timeline."
+    },
+    "@cap-message-delete": {
+      "area": "timeline",
+      "description": "Delete a timeline message."
+    },
+    "@cap-read-aloud": {
+      "area": "timeline",
+      "description": "Read aloud / speech controls on messages."
+    },
+    "@cap-svg-render": {
+      "area": "timeline",
+      "description": "Sanitised fenced SVG rendering."
+    },
+    "@cap-adaptive-cards": {
+      "area": "timeline",
+      "description": "Adaptive Card content blocks."
+    },
+    "@cap-widgets": {
+      "area": "timeline",
+      "description": "Dashboard widgets in panes/timeline."
+    },
+    "@cap-reconnect": {
+      "area": "timeline",
+      "description": "SSE/stream reconnection with recovery UI."
+    },
+    "@cap-session-picker": {
+      "area": "sessions",
+      "description": "Session switcher popup with search."
+    },
+    "@cap-session-manage": {
+      "area": "sessions",
+      "description": "Create, rename, fork, archive sessions from the UI."
+    },
+    "@cap-plan-sidebar": {
+      "area": "panes",
+      "description": "Session plan sidebar with checklist editor."
+    },
+    "@cap-workspace": {
+      "area": "panes",
+      "description": "Workspace file tree (read)."
+    },
+    "@cap-workspace-write": {
+      "area": "panes",
+      "description": "Workspace create/rename/move/upload/delete."
+    },
+    "@cap-editor": {
+      "area": "editor",
+      "description": "In-browser file editor."
+    },
+    "@cap-terminal": {
+      "area": "panes",
+      "description": "Web terminal pane with a real PTY."
+    },
+    "@cap-vnc": {
+      "area": "panes",
+      "description": "VNC viewer pane."
+    },
+    "@cap-system-meters": {
+      "area": "shell",
+      "description": "System meters (CPU/memory) in the shell."
+    },
+    "@cap-settings-dialog": {
+      "area": "settings",
+      "description": "Monolithic Settings dialog (Classic)."
+    },
+    "@cap-auth-login": {
+      "area": "settings",
+      "description": "Web login/logout flow."
+    },
+    "@cap-auth-totp": {
+      "area": "settings",
+      "description": "TOTP enrolment and login."
+    },
+    "@cap-auth-passkey": {
+      "area": "settings",
+      "description": "Passkey enrolment and login."
+    },
+    "@cap-multi-user": {
+      "area": "settings",
+      "description": "Family/multi-user invitations and roles."
+    },
+    "@cap-addons": {
+      "area": "settings",
+      "description": "Add-on install/config surfaces."
+    },
+    "@cap-skills": {
+      "area": "compose",
+      "description": "Skills listing/invocation in the UI."
+    },
+    "@cap-scheduled-tasks": {
+      "area": "settings",
+      "description": "Scheduled task management UI."
+    },
+    "@cap-recordings": {
+      "area": "panes",
+      "description": "Session recordings viewer."
+    },
+    "@cap-search": {
+      "area": "timeline",
+      "description": "Timeline/message search."
+    },
+    "@cap-pwa": {
+      "area": "mobile",
+      "description": "PWA manifest, install and standalone behaviour."
+    },
+    "@cap-push-notifications": {
+      "area": "mobile",
+      "description": "Web push subscription and notifications."
+    },
+    "@cap-touch": {
+      "area": "mobile",
+      "description": "Touch gestures (swipe, long-press) on phone/tablet projects."
+    },
+    "@cap-physical-device": {
+      "area": "mobile",
+      "description": "Requires a real device (biometric, hardware keys). Never runnable in CI.",
+      "reference": false
+    },
+    "@cap-theme-tint": {
+      "area": "compose",
+      "description": "Theme and tint switching (/theme, appearance settings)."
+    },
+    "@cap-annotation": {
+      "area": "timeline",
+      "description": "Inline image annotation and persistent text highlights (image markup limited to iPad-class devices)."
+    },
+    "@cap-message-range": {
+      "area": "timeline",
+      "description": "Model-facing lookup of bounded, session-scoped ranges of persisted messages."
+    }
   }
 }
