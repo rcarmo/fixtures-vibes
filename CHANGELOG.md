@@ -19,6 +19,12 @@
     - Session-scoped composer attachments (#22): in 3.2.5 an attachment stays in the composer across a session switch;
       submit-time destination capture is `@ux-compose-006`.
     Each needs a decision before it becomes contract.
+- `@ux-shared-008` has a spec. Each skill appears once in Slash commands and is searchable by description. Activating it
+  inserts the command. Sending it expands only that skill. An unknown skill reports an error without a model turn.
+- `@ux-shared-007` and `@ux-shared-008` corrected to the oracle: inserting a command replaces the composer text with
+  exactly the command (`@ux-original-007`). The previous wording, which kept the existing draft and added a trailing
+  space, contradicted Piclaw 3.2.5.
+- The fixture model log records `skills`: the names of expanded `<skill name="…">` blocks in the turn's prompt.
 - `holdWrites()` returns `disarm()`, so later matching writes pass through.
 
 ## v0.1.0-rc.14

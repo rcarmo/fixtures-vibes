@@ -94,7 +94,7 @@ Feature: Piclaw-compatible interaction model
     Then the older result cannot replace or activate an action in "research"
     And failed activation keeps Quick actions open with recoverable input and an error
     And unsupported commands and workspace actions are absent rather than simulated
-    And command insertion preserves the existing composer draft and does not submit it
+    And command insertion replaces the composer text with exactly the command and does not submit it (as @ux-original-007)
 
   @quick-actions @skills @commands @scope @ux-shared-008 @cap-quick-actions @cap-skills @cap-slash-commands
   Scenario: Discover loaded skills through canonical slash commands
@@ -104,7 +104,7 @@ Feature: Piclaw-compatible interaction model
     And skill commands are searchable by name and description in the Slash commands group
     And no separate Skills group or synthetic skill action is added
     When I activate one skill command
-    Then "/skill:<name> " is inserted without submitting or erasing the existing composer draft
+    Then the composer text is replaced with exactly "/skill:<name>" and nothing is submitted (as @ux-original-007)
     And execution expands only the skill loaded by the captured session
     And an unknown or stale skill command fails recoverably without invoking another skill
 

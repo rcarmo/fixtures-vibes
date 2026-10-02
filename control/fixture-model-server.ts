@@ -184,6 +184,8 @@ async function completion(req: Request): Promise<Response> {
     const entry: Record<string, unknown> = {
       at: new Date().toISOString(), model: body.model, roles: messages.map((m) => m.role),
       prompt: prompt.split(/\r?\n/).filter(Boolean).pop() || "", directives: p.directives,
+      // Expanded skills in the turn's prompt (pi `/skill:<name>` → `<skill name="…" …>` block).
+      skills: [...prompt.matchAll(/<skill name="([^"]+)"/g)].map((m) => m[1]),
       toolFollowUp, stream: !!body.stream, aborted: false,
       tools: (body.tools || []).map((t: any) => t?.function?.name).filter(Boolean),
       ...(toolFollowUp ? { toolResult: textOf(last.content).slice(0, 2000) } : {}),
