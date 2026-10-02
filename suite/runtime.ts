@@ -46,6 +46,8 @@ export const canonicalSelectors: Record<string, string> = {
   timeline: '.timeline',
   timelinePost: '.timeline .post',
   agentPost: '.timeline .post.agent-post',
+  /** The keyboard-highlighted Quick actions result. */
+  quickActionHighlight: '[role="option"][aria-selected="true"]',
 };
 
 export function selector(profile: Profile, key: string): string {

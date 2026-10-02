@@ -79,5 +79,8 @@
   "commands": {
     "setAgentAvatar": "/agent-avatar {source}",
     "clearAgentAvatar": "/agent-avatar clear"
+  },
+  "selectors": {
+    "quickActionHighlight": ".timeline-quick-actions-item.active"
   }
 }

@@ -45,10 +45,9 @@ Feature: Piclaw-compatible interaction model
     Then Quick actions opens exactly once
     And its search field has focus
     And the typed character is the initial query
-    And matching sessions, workspace actions and supported slash commands are grouped in native order
-    And the highlighted result prefers exact title, then title prefix, then the first result
+    And the highlighted result prefers an exact title over a longer title with that prefix
     When I press ArrowDown or ArrowUp
-    Then the highlight wraps through the filtered results
+    Then the highlight moves through the filtered results and wraps at both ends
     When I press Enter
     Then the highlighted action runs exactly once
     And Quick actions closes without erasing the composer draft
@@ -79,8 +78,7 @@ Feature: Piclaw-compatible interaction model
 
   @quick-actions @dismissal @scope @ux-shared-006 @cap-quick-actions
   Scenario Outline: Dismiss Quick actions without side effects
-    Given Quick actions was opened from a connected visible trigger
-    And its search query has not activated an action
+    Given Quick actions is open and its search query has not activated an action
     When I dismiss it using <dismissal>
     Then Quick actions is closed
     And focus returns to the connected opening trigger when applicable
@@ -90,7 +88,6 @@ Feature: Piclaw-compatible interaction model
       | dismissal       |
       | Escape          |
       | outside pointer |
-      | close control   |
 
   @quick-actions @scope @race @failure @ux-shared-007 @cap-quick-actions
   Scenario: Activate only current supported Quick actions

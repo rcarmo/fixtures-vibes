@@ -10,6 +10,13 @@
     narrow-layout backdrop clause was dropped.
   - `@ux-shared-013`: session picker search focus, find by identifier, Escape restores focus. The untested
     paint-timing and anchoring clauses were dropped.
+- Shared Quick actions specs (`suite/specs/shared-quick-actions.spec.ts`):
+  - `@ux-shared-003`: typing on the timeline opens with the typed query; exact title is preferred over a prefix match;
+    the arrow keys wrap; Enter runs the highlighted action and keeps the draft.
+  - `@ux-shared-006`: Escape or an outside click closes with no side effects.
+  The untested grouping clause and the "close control" example were dropped.
+- New canonical selector `quickActionHighlight` (`[role="option"][aria-selected="true"]`). Piclaw 3.2.5 exposes the
+  highlight only as a CSS class, so its profile overrides it (rcarmo/piclaw#1510).
 
 ## v0.1.0-rc.13
 
