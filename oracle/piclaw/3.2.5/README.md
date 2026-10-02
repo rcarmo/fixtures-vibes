@@ -31,7 +31,17 @@ Listed in the skips file and filed upstream:
 - rcarmo/piclaw#1505: agent-authored `svg` fences show escaped source instead of the sanitised image (`@ux-shared-031`).
 - rcarmo/piclaw#1506: a failed Steer leaves the queued item hidden until reload (`@ux-original-030`).
 - rcarmo/piclaw#1507: on WebKit at desktop size the "Writing response..." status is received but often not rendered
-  (`@ux-chat-lifecycle-002`, intermittent).
+  (`@ux-chat-lifecycle-002`, intermittent). Since rc.15, transient Draft, running-tool status, Output pane and post-reload
+  Stop renders are also listed for WebKit (`@ux-chat-lifecycle-003`, `-007`, `-008`, `@ux-shared-015`).
+- rcarmo/piclaw#1509: the workspace menu loses keyboard focus on Escape (`@ux-shared-001`).
+- rcarmo/piclaw#1511: code with angle brackets is rendered and copied incorrectly (`@ux-shared-033`).
+- rcarmo/piclaw#1513: consumed and repeated keydowns open Quick actions (`@ux-shared-005`).
+- rcarmo/piclaw#1515: the session picker stays empty until the current session's first timeline page loads. It is not
+  listed, because the `@ux-shared-014` spec avoids that delay.
+- rcarmo/piclaw#1518: on phone widths a disabled Thinking level select covers the session button. It is not listed,
+  because the `@ux-shared-022` spec opens the picker by keyboard.
+- rcarmo/piclaw#1519: after an SSE reconnect and Stop, a newer turn can run with no Stop, Draft or status
+  (`@ux-shared-023`, intermittent).
 
 `@ux-timeline-018` documents a further 3.2.5 behaviour (a non-cascade delete orphans stored replies). It is not a
 compliance requirement and has no spec.

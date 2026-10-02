@@ -1,0 +1,3706 @@
+{
+  "runtime": "piclaw",
+  "version": "3.2.5",
+  "fixturesVibes": "v0.1.0-rc.15",
+  "startedAt": "2026-10-02T22:46:08.659Z",
+  "durationMs": 2631175.137,
+  "playwright": "1.63.0",
+  "tests": [
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1857
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1818
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 5593
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 21636
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1914
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 4220
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 7617
+    },
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3145
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 12439
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 5978
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 22151
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1904
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 4988
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 7937
+    },
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2258
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 8846
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 5643
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 22004
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1858
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 4172
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 7593
+    },
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2433
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 9143
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6115
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 22006
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2222
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 4937
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 11023
+    },
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2713
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 11313
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 15725
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 22681
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2474
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 13784
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 8708
+    },
+    {
+      "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3000
+    },
+    {
+      "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2884
+    },
+    {
+      "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6274
+    },
+    {
+      "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 22707
+    },
+    {
+      "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2654
+    },
+    {
+      "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6022
+    },
+    {
+      "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+      "file": "chat-lifecycle.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 11501
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2311
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2433
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2246
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3037
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2315
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2650
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2543
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2693
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2910
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3001
+    },
+    {
+      "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3201
+    },
+    {
+      "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+      "file": "classic-core.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3360
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1808
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 3192
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1430
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1011
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1847
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 5148
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2081
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2069
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3353
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1094
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1044
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1934
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 4963
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1860
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2097
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3126
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1343
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1055
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1932
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 5135
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1818
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2083
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 4056
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1711
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1524
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2427
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5729
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2178
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2359
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3798
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1842
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1710
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2398
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 6551
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2520
+    },
+    {
+      "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2502
+    },
+    {
+      "title": "@ux-compose-003 Reject an entirely empty submission",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3782
+    },
+    {
+      "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2283
+    },
+    {
+      "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2608
+    },
+    {
+      "title": "@ux-compose-005 Keep upload progress separate from sending state",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2911
+    },
+    {
+      "title": "@ux-compose-006 Submit captures the destination chat",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6532
+    },
+    {
+      "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+      "file": "compose-stability.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2773
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2200
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1679
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1993
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2999
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 3802
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2196
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1577
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1848
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2890
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3761
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2297
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1816
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1798
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3295
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3993
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2584
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1883
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2241
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3400
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 4132
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2969
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2370
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2783
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3809
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 4786
+    },
+    {
+      "title": "@ux-timeline-017 Delete a single message without visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3046
+    },
+    {
+      "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2606
+    },
+    {
+      "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2782
+    },
+    {
+      "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3791
+    },
+    {
+      "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "file": "message-deletion.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 5186
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 4763
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 19994
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 5904
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6143
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2848
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 3069
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6998
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 7118
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 4880
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 11926
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 6004
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 5979
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2964
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2960
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 7002
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 6862
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 5272
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 12694
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6397
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6501
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2786
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3222
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 7449
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 7535
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5376
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5250
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6471
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6426
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3370
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3238
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 8111
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 7617
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5633
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5545
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 6615
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 6769
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3488
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3522
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 7815
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 7617
+    },
+    {
+      "title": "@ux-shared-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6060
+    },
+    {
+      "title": "@ux-original-009 Edit and save Plan Markdown",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 5834
+    },
+    {
+      "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6853
+    },
+    {
+      "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6832
+    },
+    {
+      "title": "@ux-shared-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 4086
+    },
+    {
+      "title": "@ux-original-011 Submit Plan to the captured session",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3676
+    },
+    {
+      "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 8078
+    },
+    {
+      "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+      "file": "plan.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 8373
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 409
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 291
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 22
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 18
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 19
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 17
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 17
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1335
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1158
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 359
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 301
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 17
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 16
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 13
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 13
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 15
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1022
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1066
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 339
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 446
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 41
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 17
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 22
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 16
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 16
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1751
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1664
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 579
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 537
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 25
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 19
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 20
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 17
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 19
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1795
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2005
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 644
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 593
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 21
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 13
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 15
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 14
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 14
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1832
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2430
+    },
+    {
+      "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 685
+    },
+    {
+      "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 646
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 18
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 15
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 15
+    },
+    {
+      "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 14
+    },
+    {
+      "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 16
+    },
+    {
+      "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2020
+    },
+    {
+      "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+      "file": "pwa-manifest.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2771
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2514
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2745
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1992
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 6094
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2158
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 6571
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2622
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 6765
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2801
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 6623
+    },
+    {
+      "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3118
+    },
+    {
+      "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+      "file": "queue-steer.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2051
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 7659
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 7607
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 17341
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 7341
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 8141
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 17103
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 7625
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 9808
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 20455
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 12823
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3836
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 8544
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 12347
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3661
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 8627
+    },
+    {
+      "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 12569
+    },
+    {
+      "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3726
+    },
+    {
+      "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+      "file": "quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 8344
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 5796
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2997
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1508
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 1663
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 10093
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 11411
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 5196
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3073
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1640
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 2275
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 10047
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 12402
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6139
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3169
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1531
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 1874
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 10224
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 12430
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6794
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3857
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2104
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 2321
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 10494
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 11334
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 6836
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 4147
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2379
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 2608
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 10430
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 12458
+    },
+    {
+      "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 7113
+    },
+    {
+      "title": "@ux-shared-029 Copy and read assistant content truthfully",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 4679
+    },
+    {
+      "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2533
+    },
+    {
+      "title": "@ux-shared-033 Copy message on an assistant post gives the Markdown as written",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 2562
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: user post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 10677
+    },
+    {
+      "title": "@ux-shared-033 Code with angle brackets is shown and copied exactly: assistant post",
+      "file": "shared-copy.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 12509
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 9901
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 8973
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 10285
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 9825
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 10867
+    },
+    {
+      "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+      "file": "shared-messages-tool.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 10522
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6886
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6765
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 15869
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 6400
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 5594
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 9798
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6570
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6157
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 10161
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 7535
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6625
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 11354
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 7205
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 6562
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 11752
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 7445
+    },
+    {
+      "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6748
+    },
+    {
+      "title": "@ux-shared-022 Reject stale or unsupported model state",
+      "file": "shared-model-picker.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 11340
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 12365
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 5044
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 6438
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 4235
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6361
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 4738
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 10803
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5677
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 10886
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5083
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 9427
+    },
+    {
+      "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+      "file": "shared-pickers.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 5330
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 4693
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6266
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 6712
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 3858
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 6395
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 6328
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 6387
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 4240
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 6145
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 14651
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3728
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 6145
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 6255
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 6233
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 4647
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 6545
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 11889
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 4933
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 6574
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 6255
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 6468
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 4977
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 6945
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 7625
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 4315
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 6840
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5903
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 6846
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5093
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 7134
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 8137
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 4652
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 6758
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 6875
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5935
+    },
+    {
+      "title": "@ux-shared-016 Queue two follow-ups exactly once",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 5580
+    },
+    {
+      "title": "@ux-shared-017 Return a queued item to the editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 7595
+    },
+    {
+      "title": "@ux-shared-018 Reorder and remove by durable identity",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 8736
+    },
+    {
+      "title": "@ux-shared-019 Steer a queued item into the matching active run",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 4624
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6166
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6136
+    },
+    {
+      "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+      "file": "shared-queue.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 6159
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2118
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 810
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 760
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 782
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 850
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 757
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1121
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 3955
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 3106
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2329
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 876
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 789
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1026
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 835
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 776
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 846
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3602
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 2926
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2254
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 805
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 777
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 792
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 878
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 762
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 826
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3437
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 2973
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2736
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3089
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2767
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1117
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3679
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1017
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1453
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 5150
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 13270
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2523
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2791
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2889
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1450
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3762
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1427
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1591
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 5111
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 13751
+    },
+    {
+      "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2659
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2824
+    },
+    {
+      "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2923
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1517
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3348
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1484
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1714
+    },
+    {
+      "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 4656
+    },
+    {
+      "title": "@ux-shared-005 Ignore consumed, modified and composing keys",
+      "file": "shared-quick-actions.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 3860
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 12428
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 9230
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 8989
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 14469
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 19827
+    },
+    {
+      "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+      "file": "shared-reconnect.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 20693
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 12718
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 13263
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 9479
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 12687
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 11948
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 10107
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 13146
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 20668
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 14272
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 15892
+    },
+    {
+      "title": "@ux-shared-014 Select one coherent session view",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 14091
+    },
+    {
+      "title": "@ux-shared-015 Expose only supported session mutations",
+      "file": "shared-session-picker.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 14892
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1150
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 11044
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1100
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 905
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 963
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 817
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 10613
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 965
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1794
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 3788
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 890
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 11074
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1224
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1878
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 3827
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1284
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 11265
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1381
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 3565
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1146
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1418
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 11467
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1614
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3558
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3846
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1420
+    },
+    {
+      "title": "@ux-shared-001 Open and dismiss the workspace menu: keyboard / Escape",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 11545
+    },
+    {
+      "title": "@ux-shared-002 Show and hide the native workspace",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2023
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3260
+    },
+    {
+      "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+      "file": "shared-shell.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3337
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2818
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-phone",
+      "status": "failed",
+      "durationMs": 12245
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 2773
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2435
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-tablet",
+      "status": "failed",
+      "durationMs": 11588
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 2167
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2532
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-desktop",
+      "status": "failed",
+      "durationMs": 11562
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 2237
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2901
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-phone",
+      "status": "failed",
+      "durationMs": 12070
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2429
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 3608
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-tablet",
+      "status": "failed",
+      "durationMs": 12242
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2843
+    },
+    {
+      "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3331
+    },
+    {
+      "title": "@ux-shared-031 Render safe model-generated SVG as an isolated image",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-desktop",
+      "status": "failed",
+      "durationMs": 12436
+    },
+    {
+      "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+      "file": "shared-svg.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 3083
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1007
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1095
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1182
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1125
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1171
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 800
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 911
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 933
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 893
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 873
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 849
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1042
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1028
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 898
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 937
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1308
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1915
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1392
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1509
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 1509
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1653
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1695
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2179
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2069
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 1900
+    },
+    {
+      "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1839
+    },
+    {
+      "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 1906
+    },
+    {
+      "title": "@ux-thoughts-003 Toggle thought panel expansion",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2063
+    },
+    {
+      "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2040
+    },
+    {
+      "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+      "file": "thoughts-panel.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2175
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "chromium-phone",
+      "status": "passed",
+      "durationMs": 1711
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "chromium-tablet",
+      "status": "passed",
+      "durationMs": 1508
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "chromium-desktop",
+      "status": "passed",
+      "durationMs": 1505
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "webkit-phone",
+      "status": "passed",
+      "durationMs": 2100
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "webkit-tablet",
+      "status": "passed",
+      "durationMs": 2275
+    },
+    {
+      "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+      "file": "timeline-time.spec.ts",
+      "project": "webkit-desktop",
+      "status": "passed",
+      "durationMs": 2376
+    }
+  ]
+}

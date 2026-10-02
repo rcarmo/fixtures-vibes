@@ -1,0 +1,2671 @@
+{
+  "runtime": "piclaw",
+  "fixturesVibes": "v0.1.0-rc.14-11-g387422e-dirty",
+  "entries": [
+    {
+      "id": "@ux-chat-lifecycle-001",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-001 An idle chat does not manufacture an activity pane",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-002",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-003",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-005",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-005 A terminal provider error is not a user input or a tool success",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-006",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-007",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-008",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "webkit-tablet"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-004",
+      "tests": [
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-chat-lifecycle-004 A persisted assistant reply retains its identity and Markdown",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-016",
+      "tests": [
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "classic-core.spec.ts",
+          "title": "@ux-original-016 Display queued follow-ups during a busy turn",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-001",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-001 Clear captured content while allowing a new draft",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-003",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-003 Reject an entirely empty submission",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-002",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-002 Restore a failed submission alongside newer text",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-004",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-004 Return a queued message replaces the current editor draft",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-005",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-005 Keep upload progress separate from sending state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-006",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-006 Submit captures the destination chat",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compose-012",
+      "tests": [
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compose-stability.spec.ts",
+          "title": "@ux-compose-012 A failed send keeps its uploaded attachment for the retry",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-017",
+      "tests": [
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-017 Delete a single message without visible replies",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-020",
+      "tests": [
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-020 Deleting a message with visible replies asks for cascade confirmation",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-021",
+      "tests": [
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-021 Confirming cascade deletes the parent and visible replies together",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-022",
+      "tests": [
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-022 Cancelling cascade preserves the parent and visible replies",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-019",
+      "tests": [
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "message-deletion.spec.ts",
+          "title": "@ux-timeline-019 A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-009",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-009 Edit and save Plan Markdown",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-009",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-009 Edit and save Plan Markdown",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-010",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-010",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-010 Preserve dirty Plan text on a remote update",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-011",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-011 Submit Plan to the captured session",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-011",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-011 Submit Plan to the captured session",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-012",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-shared-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-012",
+      "tests": [
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "plan.spec.ts",
+          "title": "@ux-original-012 Plan Markdown, progress and the session-scoped plan tool",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-001",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-001 Serve a manifest with declared application icons",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-003",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-003 Fall back to static icons without an avatar",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-004",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-180x180.png",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-167x167.png",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon-152x152.png",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-004 Request sized Apple touch icons: /apple-touch-icon.png",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-005",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-005 Prefer PNG avatars for favicon compatibility",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-002",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-002 Use configured agent-avatar URLs for manifest icons",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-pwa-006",
+      "tests": [
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "pwa-manifest.spec.ts",
+          "title": "@ux-pwa-006 Vary avatar icon cache URLs with the avatar version",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-019",
+      "tests": [
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-019 Steer a queued item using the backend-authoritative action",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-030",
+      "tests": [
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "queue-steer.spec.ts",
+          "title": "@ux-original-030 A failed Steer warns and keeps the item queued",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-007",
+      "tests": [
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-007 Insert a Quick Actions command into the composer",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-008",
+      "tests": [
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-original-008 Discover loaded skills in the command catalogue",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-008",
+      "tests": [
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "quick-actions.spec.ts",
+          "title": "@ux-shared-008 Discover loaded skills through canonical slash commands",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-024",
+      "tests": [
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-024 Copy and delete timeline messages through native actions",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-029",
+      "tests": [
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Copy and read assistant content truthfully",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-copy.spec.ts",
+          "title": "@ux-shared-029 Read aloud is absent without browser speech support",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-025",
+      "tests": [
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-messages-tool.spec.ts",
+          "title": "@ux-shared-025 Let the model identify bounded ranges of persisted messages",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-020",
+      "tests": [
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: pointer",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-020 Search and select a model authoritatively: keyboard",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-022",
+      "tests": [
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-model-picker.spec.ts",
+          "title": "@ux-shared-022 Reject stale or unsupported model state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-021",
+      "tests": [
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-pickers.spec.ts",
+          "title": "@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-016",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-016 Queue two follow-ups exactly once",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-017",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-017 Return a queued item to the editor",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-018",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-018 Reorder and remove by durable identity",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-019",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-019 Steer a queued item into the matching active run",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-032",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-003",
+      "tests": [
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-003 Type on the idle timeline to open Quick actions",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-006",
+      "tests": [
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: Escape",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-006 Dismiss Quick actions without side effects: outside pointer",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-004",
+      "tests": [
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: composer textarea",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: input or select",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: button or link",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: workspace sidebar",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-quick-actions.spec.ts",
+          "title": "@ux-shared-004 Do not steal typing from an interactive surface: session or model picker",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-023",
+      "tests": [
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-014",
+      "tests": [
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-014 Select one coherent session view",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-015",
+      "tests": [
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-001",
+      "tests": [
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-002",
+      "tests": [
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-002 Show and hide the native workspace",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-013",
+      "tests": [
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: pointer",
+          "project": "webkit-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-013 Open, search and dismiss the session picker: keyboard",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-028",
+      "tests": [
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-shared-028 Model-generated SVG cannot run code or fetch resources",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-029",
+      "tests": [
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-svg.spec.ts",
+          "title": "@ux-original-029 Render a safe fenced SVG as an isolated image and retain source",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-001",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-001 Render collapsed thought content with disclosure state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-002",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-002 Continue updating content independently of disclosure",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-003",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-003 Toggle thought panel expansion",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-004",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-004 Collapse an expanded status panel with Escape",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-005",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-timeline-029",
+      "tests": [
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "timeline-time.spec.ts",
+          "title": "@ux-timeline-029 Post times are shown in the viewer's time zone",
+          "project": "webkit-desktop"
+        }
+      ]
+    }
+  ]
+}
