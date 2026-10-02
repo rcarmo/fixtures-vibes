@@ -28,7 +28,10 @@ async function statusLines(page: Page, postSel: string): Promise<Set<string>> {
   return new Set(text.split(/\n/).map(l => l.trim()));
 }
 const shown = (page: Page, postSel: string, line: string) => expect.poll(async () => (await statusLines(page, postSel)).has(line));
-const moreControl = (page: Page) => page.getByRole('button', { name: /more|expand|less|collapse/i }).first();
+/** The Thoughts disclosure control: its title or accessible name mentions Thoughts (other panels have their own toggles). */
+const moreControl = (page: Page) => page.getByTitle(/\bthoughts\b/i)
+  .or(page.getByRole('button', { name: /\b(more|less|expand|collapse)\b.*\bthoughts\b|\bthoughts\b.*\b(more|less|expand|collapse)\b/i }))
+  .first();
 
 test('@ux-thoughts-001 Render collapsed thought content with disclosure state', async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 6);
@@ -38,8 +41,10 @@ test('@ux-thoughts-001 Render collapsed thought content with disclosure state', 
   await holdThinking(page, runtime, sel, all, gate);
   try {
     // Collapsed: the newest nine lines are shown, earlier ones are not.
-    for (const l of all.slice(-9)) await shown(page, sel('timelinePost'), l).toBe(true);
-    for (const l of all.slice(0, 6)) await shown(page, sel('timelinePost'), l).toBe(false);
+    await expect.poll(async () => {
+      const seen = await statusLines(page, sel('timelinePost'));
+      return all.slice(-9).every(l => seen.has(l)) && all.slice(0, 6).every(l => !seen.has(l));
+    }).toBe(true);
     await expect(moreControl(page)).toBeVisible();
   } finally { await runtime.openGate(gate); }
 });
@@ -99,6 +104,6 @@ test('@ux-thoughts-005 Preserve text when changing disclosure state', async ({ p
     await moreControl(page).click();
     await moreControl(page).click();
     await moreControl(page).click();
-    for (const l of all) await shown(page, sel('timelinePost'), l).toBe(true);
+    await expect.poll(async () => { const seen = await statusLines(page, sel('timelinePost')); return all.every(l => seen.has(l)); }).toBe(true);
   } finally { await runtime.openGate(gate); }
 });

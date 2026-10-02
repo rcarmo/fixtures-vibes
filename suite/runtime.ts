@@ -21,7 +21,8 @@ export type Profile = {
   skips?: string;
   selectors?: Record<string, string>;
   routes?: Record<string, string>;
-  tools?: { shell?: string };
+  tools?: { shell?: string; activate?: string };
+  approval?: { button: string };
 };
 
 export function profilePath(): string {
@@ -61,8 +62,8 @@ const pick = (obj: any, path: string) => path.split('.').reduce((o, k) => (o == 
 export class Runtime {
   constructor(readonly profile: Profile, readonly baseUrl: string, readonly modelUrl: string) {}
 
-  static fromProfile(profile: Profile) {
-    const base = profile.external?.baseUrl ?? process.env.FIXTURES_BASE_URL;
+  static fromProfile(profile: Profile, baseUrl?: string) {
+    const base = baseUrl ?? profile.external?.baseUrl ?? process.env.FIXTURES_BASE_URL;
     const model = profile.external?.modelControlUrl ?? process.env.FIXTURES_MODEL_URL;
     if (!base || !model) throw new Error('Lifecycle profile not started: run through the suite config (global setup sets FIXTURES_BASE_URL).');
     return new Runtime(profile, base.replace(/\/$/, ''), model.replace(/\/$/, ''));
@@ -72,6 +73,12 @@ export class Runtime {
 
   /** Runtime name of a canonical tool; 'shell' takes {"command": string}. */
   toolName(canonical: 'shell') { return this.profile.tools?.[canonical] ?? 'bash'; }
+
+  /** Directive prefix turn that activates `names` when the runtime gates tools behind an activation tool. */
+  activationTurn(names: string[]): string | null {
+    const tool = this.profile.tools?.activate;
+    return tool ? `[tool:${tool} ${JSON.stringify({ names }).replace(/[[\]]/g, m => '\\' + m)}][after-tool:activated]` : null;
+  }
 
   async ready() {
     const { path, status = 200, timeoutMs = 30000 } = this.profile.readiness;
@@ -121,6 +128,18 @@ export class Runtime {
   async outage(status: number, count: number) {
     const r = await fetch(`${this.modelUrl}/control/fail?status=${status}&count=${count}`, { method: 'POST' });
     if (!r.ok) throw new Error(`outage: ${r.status}`);
+  }
+
+  /** Test cleanup: release held turns, end any outage, and wait until the runtime stops talking to the model. */
+  async releaseAll(timeoutMs = 30_000) {
+    await fetch(`${this.modelUrl}/control/gates/open-all`, { method: 'POST' });
+    await this.outage(500, 0);
+    const end = Date.now() + timeoutMs;
+    while (Date.now() < end) {
+      const h = await (await fetch(`${this.modelUrl}/control/health`)).json();
+      if (!h.inflight) return;
+      await new Promise(r => setTimeout(r, 200));
+    }
   }
 
   async modelLog(): Promise<any[]> { return (await fetch(`${this.modelUrl}/control/log`)).json(); }

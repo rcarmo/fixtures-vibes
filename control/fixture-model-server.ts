@@ -25,6 +25,8 @@
  *   POST /control/fail?status=S&count=N  fail the next N completion requests with HTTP S (count=0 clears)
  *   GET  /control/gates            { name: { open, waiting } }
  *   POST /control/gates/NAME/open
+ *   POST /control/gates/open-all   release every held request (cleanup between tests)
+ *   GET  /control/health           { ok, inflight } — completion requests not yet finished
  *   GET  /control/log              received requests (model, roles, last text, directives, offered tools, tool result, aborted)
  */
 
@@ -36,6 +38,7 @@ type Step =
 
 const gates = new Map<string, Gate>();
 let outage: { status: number; remaining: number } | null = null;
+let inflight = 0;
 const log: Array<Record<string, unknown>> = [];
 
 const gate = (name: string): Gate => {
@@ -63,11 +66,14 @@ const textOf = (content: unknown): string =>
       ? content.map((p: any) => (typeof p?.text === "string" ? p.text : "")).join("")
       : "";
 
-const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool-fail|after-tool|fail):([^\]]*)\]/g;
+// Values may contain escaped brackets (\[ and \]) so tool arguments can carry Markdown checklists.
+const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool-fail|after-tool|fail):((?:\\[\[\]]|[^\]])*)\]/g;
+const HAS_DIRECTIVE = new RegExp(DIRECTIVE.source);
+const unbracket = (v: string) => v.replace(/\\([\[\]])/g, "$1");
 
 function plan(text: string) {
   // A literal backslash-n inside a directive value becomes a newline, so single-line prompts can script Markdown.
-  const all = [...text.matchAll(DIRECTIVE)].map((m) => ({ k: m[1], v: m[1] === "tool" ? m[2] : m[2].replace(/\\n/g, "\n") }));
+  const all = [...text.matchAll(DIRECTIVE)].map((m) => ({ k: m[1], v: unbracket(m[1] === "tool" ? m[2] : m[2].replace(/\\n/g, "\n")) }));
   const first = (k: string) => all.find((d) => d.k === k)?.v;
   const lastLine = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).pop() || "";
   const visible = lastLine.replace(DIRECTIVE, "").trim();
@@ -108,7 +114,7 @@ Bun.serve({
   idleTimeout: 0,
   async fetch(req) {
     const url = new URL(req.url);
-    if (url.pathname === "/control/health") return json({ ok: true });
+    if (url.pathname === "/control/health") return json({ ok: true, inflight });
     if (url.pathname === "/control/reset" && req.method === "POST") {
       // Fail held requests so no stray reply lands after the scenario that owned them.
       for (const g of gates.values()) g.waiters.splice(0).forEach((w) => w.reject(new Error("reset")));
@@ -127,6 +133,11 @@ Bun.serve({
     if (url.pathname === "/control/gates") {
       return json(Object.fromEntries([...gates].map(([k, g]) => [k, { open: g.open, waiting: g.waiters.length }])));
     }
+    if (url.pathname === "/control/gates/open-all" && req.method === "POST") {
+      // Release every held request (test cleanup); unlike reset, held turns complete normally.
+      for (const g of gates.values()) { g.open = true; g.waiters.splice(0).forEach((w) => w.resolve()); }
+      return json({ ok: true });
+    }
     const open = url.pathname.match(/^\/control\/gates\/([^/]+)\/open$/);
     if (open && req.method === "POST") {
       const g = gate(decodeURIComponent(open[1]));
@@ -137,11 +148,35 @@ Bun.serve({
     if (url.pathname === "/control/log") return json(log);
     if (url.pathname === "/v1/models") return json({ object: "list", data: [{ id: "fixture-1", object: "model" }] });
     if (url.pathname !== "/v1/chat/completions" || req.method !== "POST") return json({ error: "not found" }, 404);
+    inflight++;
+    let res: Response;
+    try { res = await completion(req); } catch (e) { inflight--; throw e; }
+    if (!res.body || !(res.headers.get("content-type") || "").includes("event-stream")) { inflight--; return res; }
+    let settled = false;
+    const settle = () => { if (!settled) { settled = true; inflight--; } };
+    const counted = res.body.pipeThrough(new TransformStream({ flush: settle }));
+    req.signal.addEventListener("abort", settle);
+    return new Response(counted, { status: res.status, headers: res.headers });
+  },
+});
+
+async function completion(req: Request): Promise<Response> {
+  {
 
     const body: any = await req.json();
     const messages: any[] = body.messages || [];
     const last = messages[messages.length - 1];
-    const lastUser = [...messages].reverse().find((m) => m.role === "user");
+    // The current turn's user messages: runtimes may append context (e.g. a Plan) as extra user messages after the
+    // prompt, and tool follow-ups add assistant tool_calls + tool results. Prefer the one that carries directives.
+    const turnUsers: any[] = [];
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const m = messages[i];
+      if (m.role === "tool" || (m.role === "assistant" && m.tool_calls?.length)) continue;
+      if (m.role !== "user") break;
+      turnUsers.unshift(m);
+    }
+    const lastUser = turnUsers.find((m) => HAS_DIRECTIVE.test(textOf(m.content)))
+      ?? [...messages].reverse().find((m) => m.role === "user");
     const prompt = textOf(lastUser?.content);
     const p = plan(prompt);
     const toolFollowUp = last?.role === "tool";
@@ -229,6 +264,6 @@ Bun.serve({
       cancel() { entry.aborted = true; },
     });
     return new Response(stream, { headers: { "content-type": "text/event-stream", "cache-control": "no-cache" } });
-  },
-});
+  }
+}
 console.log(`fixture-model-server listening on ${port}`);

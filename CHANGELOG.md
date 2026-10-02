@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.0-rc.10
+
+- Isolation: lifecycle runtimes now start per Playwright worker. A failed test replaces the worker, so the next test gets a
+  fresh runtime and store; held turns and outages cannot poison later scenarios. After every test the suite also releases
+  all gates, clears any outage and waits until no model request is in flight.
+- Fixture model: `POST /control/gates/open-all`, `inflight` in `/control/health`, `\[`/`\]` escapes in directive values,
+  and directives are read from the current turn's user messages (runtimes may append context such as a Plan after the prompt).
+- Profile `approval: {"button": "<regex>"}` (opt-in) for runtimes that always require tool approval; `tools.activate` for
+  runtimes that gate tools behind an activation tool.
+- Thought panel specs scope the disclosure control to Thoughts (other panels have their own toggles).
+- Newly verified against Piclaw 3.2.5 with specs: Plan `@ux-shared-009..012` and `@ux-original-009..012` (no `@cap-addons`;
+  live remote-change warning is not required), PWA `@ux-pwa-001/003/004/005`, composer `@ux-compose-001/003`,
+  Quick Actions `@ux-original-007/008`, SVG `@ux-original-029` (user-authored post).
+- Reference run: 33 scenario IDs pass in all six projects; `@ux-shared-031` remains the listed 3.2.5 known defect.
+
 ## v0.1.0-rc.9
 
 - Profile `tools` map: canonical `shell` → runtime tool name (default `bash`). Specs ask for `runtime.toolName('shell')`.

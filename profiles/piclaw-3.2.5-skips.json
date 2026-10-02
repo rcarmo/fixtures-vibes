@@ -1,6 +1,6 @@
 {
   "runtime": "piclaw",
-  "fixturesVibes": "v0.1.0-rc.9",
+  "fixturesVibes": "v0.1.0-rc.10",
   "skips": [
     {
       "id": "@ux-shared-031",

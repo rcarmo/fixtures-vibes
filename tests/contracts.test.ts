@@ -134,3 +134,38 @@ test('control outage fails the next N requests, then clears', async () => {
   expect((await chat('[reply:A] x')).status).toBe(400);
   expect((await chat('[reply:A] x')).status).toBe(200);
 });
+
+test('escaped brackets inside directive values', async () => {
+  const r = await (await chat('[reply:- \\[ \\] todo\\n- \\[x\\] done] x')).json();
+  expect(r.choices[0].message.content).toBe('- [ ] todo\n- [x] done');
+  const t = await (await chat('[tool:plan {"markdown":"- \\[-\\] step"}] y')).json();
+  expect(t.choices[0].message.tool_calls[0].function.arguments).toBe('{"markdown":"- [-] step"}');
+});
+
+test('directives are read from the current turn even when context follows the prompt', async () => {
+  const r = await (await fetch(`${base}/v1/chat/completions`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ model: 'fixture-1', messages: [
+      { role: 'user', content: '[reply:OLD] earlier' }, { role: 'assistant', content: 'OLD' },
+      { role: 'user', content: '[reply:NEW] now' }, { role: 'user', content: 'Plan context\n- [x] done' },
+    ] }),
+  })).json();
+  expect(r.choices[0].message.content).toBe('NEW');
+  const plain = await (await fetch(`${base}/v1/chat/completions`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ model: 'fixture-1', messages: [
+      { role: 'user', content: '[reply:OLD] earlier' }, { role: 'assistant', content: 'OLD' }, { role: 'user', content: 'plain' },
+    ] }),
+  })).json();
+  expect(plain.choices[0].message.content).toBe('Fixture reply: plain');
+});
+
+test('open-all releases held requests and health reports in-flight count', async () => {
+  const held = chat('[gate:cleanup-a][reply:A] x', { stream: true }).then(r => r.text());
+  await new Promise(r => setTimeout(r, 200));
+  expect((await (await fetch(`${base}/control/health`)).json()).inflight).toBe(1);
+  await fetch(`${base}/control/gates/open-all`, { method: 'POST' });
+  expect(await held).toContain('"content":"A"');
+  await new Promise(r => setTimeout(r, 50));
+  expect((await (await fetch(`${base}/control/health`)).json()).inflight).toBe(0);
+});

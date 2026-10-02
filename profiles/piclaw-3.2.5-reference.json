@@ -71,5 +71,8 @@
     "@cap-workspace",
     "@cap-workspace-write"
   ],
-  "skips": "piclaw-3.2.5-skips.json"
+  "skips": "piclaw-3.2.5-skips.json",
+  "tools": {
+    "activate": "activate_tools"
+  }
 }

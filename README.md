@@ -73,6 +73,10 @@ the full tool set (`*.localhost` must resolve to loopback; add a hosts entry whe
 `tools` maps canonical tool names used by specs to the runtime's names. Today only `shell` exists: it must run a POSIX
 shell command given `{"command": "..."}` (default `bash`). Mapping a name adapts naming only; the tool must still run.
 
+`approval` is opt-in for runtimes that always ask before running a tool and cannot be pre-approved by configuration:
+`"approval": {"button": "^Allow "}` makes the suite click the matching control whenever it appears. Prefer configuring
+approval in `prepare` when the runtime allows it.
+
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
 Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such
 scenario then needs its own skips entry (`not-implemented`, `known-defect` or `intentional-divergence`); do not drop a claim
@@ -84,7 +88,7 @@ automatically when the profile lacks a `@cap-*` tag of its scenario.
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.9",
+  "fixturesVibes": "v0.1.0-rc.10",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]
@@ -129,5 +133,8 @@ Directives in the latest user message are executed in order:
 Control API: `GET /control/health`, `GET /control/gates`, `POST /control/gates/NAME/open`, `GET /control/log`
 (requests, offered tools, tool results), `POST /control/fail?status=S&count=N` (simulated provider outage for the next N
 requests) and `POST /control/reset`.
+
+Inside directive values, `\n` is a newline (except in `tool`) and `\[` / `\]` are literal brackets, so tool arguments can
+carry Markdown checklists such as `- \[ \] item`.
 
 Without directives the reply is `Fixture reply: <last line of the prompt>`.

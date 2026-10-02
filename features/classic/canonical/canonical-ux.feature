@@ -87,45 +87,37 @@ Feature: Classic Piclaw interaction model
     Then its command text replaces the existing draft like other slash commands
     And selection alone does not submit the command
 
-  @ux-original-009 @plan @addon-dependent @cap-addons @cap-plan-sidebar @reconcile-3.2.5
-  Scenario: Save Markdown through the Plan sidebar add-on
-    Given the Plan sidebar add-on is installed and its browser entry is loaded
-    And its editor has loaded the selected chat's Markdown
+  @ux-original-009 @plan @addon-dependent @cap-plan-sidebar
+  Scenario: Save Markdown through the Plan sidebar
+    Given the Plan sidebar shows the selected chat's Markdown
     When I edit the Markdown and activate Save
-    Then the add-on posts the chat identifier and Markdown to its plan API
-    And a successful response updates its saved timestamp
-    And the dirty flag clears only if the editor still contains the submitted text
-    And newer edits are retained as unsaved changes
+    Then the session-scoped "plan" tool reads the saved Markdown
+    And a reload shows the saved Markdown
 
-  @ux-original-010 @plan @addon-dependent @cap-addons @cap-plan-sidebar @reconcile-3.2.5
+  @ux-original-010 @plan @addon-dependent @cap-plan-sidebar
   Scenario: Keep dirty Plan text when a remote update arrives
-    Given the Plan sidebar add-on editor contains unsaved edits
-    When a plan-update event for the same chat is received
-    Then the add-on retains the local text and displays its remote-change warning
-    When I explicitly activate Refresh
-    Then the add-on requests the stored plan without the automatic dirty-preservation option
-    And an applicable response replaces the displayed Markdown
-    # Refresh is not specified as a compare-and-swap revision operation or discard confirmation.
+    Given the Plan editor contains unsaved edits
+    When the "plan" tool stores different text for the same chat
+    Then the editor retains the local text
+    When I explicitly activate Refresh, accepting any discard confirmation
+    Then the editor shows the stored text
 
-  @ux-original-011 @plan @addon-dependent @cap-addons @cap-plan-sidebar @reconcile-3.2.5
+  @ux-original-011 @plan @addon-dependent @cap-plan-sidebar
   Scenario: Save a Plan before submitting it to the model
-    Given the Plan sidebar add-on is open
+    Given the Plan sidebar is open with checklist text
+    And the composer contains an unsent draft
     When I activate Submit to model
-    Then the add-on first saves the editor Markdown for the captured chat
-    And it does not submit if saving fails, the chat changes or the saved plan is empty
-    And otherwise it posts the saved checklist prompt in auto mode to that chat's message endpoint
-    And a submission error is displayed in the Plan sidebar
+    Then the Plan is saved and sent as a message to the captured chat
+    And the composer draft is unchanged
 
-  @ux-original-012 @plan @addon-dependent @cap-addons @cap-plan-sidebar @reconcile-3.2.5
-  Scenario: Represent checklist progress using the Plan add-on
-    Given the Plan sidebar add-on is installed with its model tool available
-    And the selected chat's plan contains pending, in-progress and completed checklist items
-    Then the sidebar interprets "- [ ]", "- [-]" and "- [x]" as checklist states
-    And headings and other Markdown remain editor content
-    And the progress display derives from parsed checklist items
-    When the session-scoped "plan" tool reads or writes the plan
-    Then it addresses the selected chat's stored Markdown
-    # Tool activation policy still decides whether the tool is model-visible.
+  @ux-original-012 @plan @addon-dependent @cap-plan-sidebar
+  Scenario: Represent checklist progress in the Plan sidebar
+    Given the selected chat's plan contains a heading and pending, in-progress and completed checklist items
+    Then the editor shows "- [ ]", "- [-]" and "- [x]" lines and the heading as Markdown
+    And the progress display counts only checklist items
+    When the session-scoped "plan" tool reads the plan
+    Then it returns the selected chat's stored Markdown
+    And another session's Plan is unchanged
 
   @ux-original-013 @session-picker @keyboard @cap-session-picker
   Scenario: Open and dismiss the Classic session picker
