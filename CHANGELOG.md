@@ -10,6 +10,15 @@
     re-uploads on retry; the contract covers only the delivered result.
   - `@ux-shared-026` now also requires a new `@cap-upload-cancel`. 3.2.5 has no upload cancel control, so the scenario
     stays without a spec.
+  - `@ux-chat-lifecycle-007`: a running turn in one session does not leak its draft, status, Stop control or reply into
+    another session's tab, and vice versa.
+  - Not added:
+    - Permission-request review (#20): 3.2.5 raises agent requests only from extension UI calls, so a stock reference
+      instance has none to observe.
+    - Resource meters (#21): not shown by default in 3.2.5.
+    - Session-scoped composer attachments (#22): in 3.2.5 an attachment stays in the composer across a session switch;
+      submit-time destination capture is `@ux-compose-006`.
+    Each needs a decision before it becomes contract.
 - `holdWrites()` returns `disarm()`, so later matching writes pass through.
 
 ## v0.1.0-rc.14

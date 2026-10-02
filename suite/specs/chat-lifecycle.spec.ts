@@ -130,3 +130,34 @@ test('@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order', asyn
   await expect(reply).toHaveCount(1);
   expect((await reply.innerText()).replace(/\s+/g, ' ')).toMatch(inOrder);
 });
+
+test('@ux-chat-lifecycle-007 A running turn in one session does not leak into another', async ({ page, context, runtime, sel }) => {
+  const n = nonce();
+  const gate = gateName('scope');
+  const main = await runtime.newSession();
+  const research = await runtime.newSession();
+  await page.goto(main.url);
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[say:draft-main-${n}][gate:${gate}] ask main ${n}`);
+  await input.press('Enter');
+  await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0).toBe(1);
+  await expect(page.getByText(`draft-main-${n}`, { exact: true })).toBeVisible();
+
+  const other = await context.newPage();
+  await other.goto(research.url);
+  await other.locator(sel('composeInput')).fill(`[reply:done-research-${n}] ask research ${n}`);
+  await other.locator(sel('composeInput')).press('Enter');
+  await expect(other.locator(sel('agentPost')).filter({ hasText: `done-research-${n}` })).toHaveCount(1);
+  await expect(other.getByText(`draft-main-${n}`, { exact: true })).toHaveCount(0);
+  await expect(other.getByRole('button', { name: /^stop/i })).toHaveCount(0);
+
+  await expect(page.getByText(`draft-main-${n}`, { exact: true })).toBeVisible();
+  await expect(page.getByText(`done-research-${n}`)).toHaveCount(0);
+
+  await runtime.openGate(gate);
+  // With streamed chunks the final reply is those chunks.
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `draft-main-${n}` })).toHaveCount(1);
+  await other.waitForTimeout(1000);
+  await expect(other.getByText(`draft-main-${n}`)).toHaveCount(0);
+  await other.close();
+});

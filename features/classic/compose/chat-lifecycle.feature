@@ -62,3 +62,11 @@ Feature: Separate the conversation from transient agent activity
     Given the agent streams its response in several chunks and then pauses
     Then the Draft pane shows every chunk received so far, in order, not only the latest
     And the final reply contains all chunks in the same order
+
+  @ux-chat-lifecycle-007 @scope @concurrency
+  Scenario: A running turn in one session does not leak into another
+    Given session "main" has a turn that is streaming a draft and then pauses
+    When session "research" is open in another tab and completes a turn
+    Then the "research" tab shows its own reply and no draft, status or Stop control from "main"
+    And the "main" tab still shows its own draft and not the "research" reply
+    And when the "main" turn finishes, its reply appears only in "main"
