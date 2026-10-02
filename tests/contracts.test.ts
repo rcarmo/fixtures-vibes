@@ -16,9 +16,14 @@ test('every schema compiles', () => {
   for (const f of readdirSync(join(root, 'schemas'))) expect(() => compile(`schemas/${f}`)).not.toThrow();
 });
 
-test('reference profiles are valid and only claim known capabilities', () => {
+test('reference profiles and skips files are valid and only claim known capabilities', () => {
   const validate = compile('schemas/runtime-profile.schema.json');
+  const validateSkips = compile('schemas/skips.schema.json');
   for (const f of readdirSync(join(root, 'profiles'))) {
+    if (f.endsWith('-skips.json')) {
+      expect(validateSkips(read(`profiles/${f}`)), `${f}: ${ajv.errorsText(validateSkips.errors)}`).toBe(true);
+      continue;
+    }
     const profile = read(`profiles/${f}`);
     expect(validate(profile), `${f}: ${ajv.errorsText(validate.errors)}`).toBe(true);
     for (const cap of profile.capabilities) expect(capabilities[cap], `${f} claims unknown ${cap}`).toBeDefined();

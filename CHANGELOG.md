@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.0-rc.6
+
+- Fix the contract test so `profiles/*-skips.json` is validated against the skips schema (rc.5 shipped with that test failing).
+
 ## v0.1.0-rc.5
 
 - Shared scenarios reconciled against installed Piclaw 3.2.5 (no `@reconcile-3.2.5` left in `shared-ux.feature`):
