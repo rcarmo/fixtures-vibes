@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## v0.1.0-rc.14
+
+- Reference run (recorded in `oracle/piclaw/3.2.5/2026-10-02-v0.1.0-rc.14`): scenarios 52 passed, 7 listed Piclaw 3.2.5
+  defects (#1505, #1506, #1507, #1509, #1511, #1513), 242 with no suite test yet; gate OK.
 
 - Shared shell specs (`suite/specs/shared-shell.spec.ts`), reconciled against Piclaw 3.2.5:
   - `@ux-shared-001`: workspace menu open/dismiss by pointer and keyboard. Focus must return to the menu button only
@@ -65,7 +68,7 @@
   seen on Chromium tablet.
 - Reference run: 318 tests; scenarios 44 passed, 4 listed failing, 252 with no suite test yet; gate OK.
 
-## Unreleased (rc.12 follow-up)
+## rc.12 follow-up
 
 - Oracle evidence: `oracle/piclaw/3.2.5/` (instance identity and hashes) and the first immutable record,
   `2026-10-02-v0.1.0-rc.12`. 276 tests: 265 passed, 11 failures, all in the three listed defects. Scenarios: 40 passed,
