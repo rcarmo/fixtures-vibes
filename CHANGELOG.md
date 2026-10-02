@@ -58,6 +58,10 @@
   - Model picker: 3.2.5 keeps focus in its search combobox, so the spec covers search, Arrow/Page keys, Escape, and
     Enter activating a fixture model once. The keyboard highlight is the combobox's active descendant, not
     `aria-selected`. The open per-picker split question is noted in the feature.
+- `@ux-chat-lifecycle-008` (new): a running tool shows its name, arguments and an elapsed time that counts from the
+  tool's start and advances. The status clears when the turn ends. This is Piclaw 3.2.5's only tool-execution surface.
+- `@ux-shared-027` now also requires a new `@cap-tool-pane`. 3.2.5 has no disclosable tool pane, so the scenario stays
+  without a spec.
 - `runtime.newSession(name?)` accepts a unique session name.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.

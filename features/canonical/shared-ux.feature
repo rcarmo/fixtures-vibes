@@ -307,7 +307,7 @@ Feature: Piclaw-compatible interaction model
     And retry delivers one durable media item to the active destination
     And it survives reload and source removal
 
-  @tools @pane @glyph @timer @reconnect @accessibility @ux-shared-027 @cap-reconnect @cap-tool-output
+  @tools @pane @glyph @timer @reconnect @accessibility @ux-shared-027 @cap-reconnect @cap-tool-output @cap-tool-pane
   Scenario: Present tool execution lifecycle in the native tool pane
     Given the captured turn emits a tool call with a durable tool-call ID and start time
     When I open its tool pane using pointer or keyboard

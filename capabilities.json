@@ -194,6 +194,10 @@
     "@cap-upload-cancel": {
       "area": "compose",
       "description": "An in-progress attachment upload can be cancelled from the composer (Piclaw 3.2.5 has no such control)."
+    },
+    "@cap-tool-pane": {
+      "area": "compose",
+      "description": "A disclosable per-call tool pane with running/terminal glyphs, timer and persisted lifecycle (Piclaw 3.2.5 shows only a running-tool status line)."
     }
   }
 }

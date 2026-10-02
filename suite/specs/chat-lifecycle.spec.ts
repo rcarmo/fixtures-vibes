@@ -161,3 +161,32 @@ test('@ux-chat-lifecycle-007 A running turn in one session does not leak into an
   await expect(other.getByText(`draft-main-${n}`)).toHaveCount(0);
   await other.close();
 });
+
+test('@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long', async ({ page, runtime, sel }) => {
+  const n = nonce();
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  const command = `sleep 6; echo tool-${n}`;
+  await input.fill(`[tool:${runtime.toolName('shell')} ${JSON.stringify({ command })}][after-tool:done-${n}] run ${n}`);
+  const sent = Date.now();
+  await input.press('Enter');
+  // The status line names the tool and its arguments; the timer is m:ss (or Ns) since the tool started.
+  const tool = runtime.toolName('shell');
+  const status = page.getByText(new RegExp(`${tool}\\b.*sleep 6; echo tool-${n}`)).filter({ hasNotText: `run ${n}` }).last();
+  await expect(status).toBeVisible();
+  // The timer may sit beside the tool text; read the nearest enclosing status that shows one.
+  const elapsed = () => status.evaluate(el => {
+    for (let node: HTMLElement | null = el as HTMLElement, i = 0; node && i < 4; node = node.parentElement, i++) {
+      const m = node.innerText.match(/\b(\d+):(\d{2})\b|\b(\d+)s\b/);
+      if (m) return m[3] !== undefined ? Number(m[3]) : Number(m[1]) * 60 + Number(m[2]);
+    }
+    return NaN;
+  }).catch(() => NaN);
+  await expect.poll(elapsed, { message: 'elapsed time is shown' }).not.toBeNaN();
+  const first = await elapsed();
+  const wall = (Date.now() - sent) / 1000;
+  expect(first, 'elapsed counts from the tool start, not an earlier or skewed clock').toBeLessThanOrEqual(Math.ceil(wall) + 1);
+  await expect.poll(elapsed, { timeout: 5_000 }).toBeGreaterThan(first);
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `done-${n}` })).toHaveCount(1, { timeout: 20_000 });
+  await expect(page.getByText(new RegExp(`${tool}\\b.*sleep 6; echo tool-${n}`)).filter({ hasNotText: `run ${n}` })).toHaveCount(0);
+});

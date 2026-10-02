@@ -70,3 +70,11 @@ Feature: Separate the conversation from transient agent activity
     Then the "research" tab shows its own reply and no draft, status or Stop control from "main"
     And the "main" tab still shows its own draft and not the "research" reply
     And when the "main" turn finishes, its reply appears only in "main"
+
+  @ux-chat-lifecycle-008 @tools @timer @cap-tool-output
+  Scenario: A running tool shows what it is doing and for how long
+    Given the agent calls a shell tool that takes several seconds
+    Then the agent status shows the tool name and its arguments while it runs
+    And an elapsed time counted from when the tool started, which advances
+    When the tool finishes and the agent replies
+    Then the running-tool status is gone
