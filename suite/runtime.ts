@@ -41,6 +41,7 @@ export const canonicalSelectors: Record<string, string> = {
   sendButton: '[data-testid="send-button"]',
   stopButton: '[data-testid="stop-button"]',
   queueItem: '[data-testid="queue-item"]',
+  timeline: '.timeline',
   timelinePost: '.timeline .post',
   agentPost: '.timeline .post.agent-post',
 };

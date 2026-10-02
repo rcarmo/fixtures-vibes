@@ -67,26 +67,24 @@ Feature: Classic Piclaw interaction model
     Then Quick Actions closes and clears its query
     And no result action is executed
 
-  @ux-original-007 @quick-actions @commands @cap-quick-actions @cap-slash-commands @reconcile-3.2.5
+  @ux-original-007 @quick-actions @commands @cap-quick-actions @cap-slash-commands
   Scenario: Insert a Quick Actions command into the composer
-    Given a supported slash command is present in Quick Actions
-    And the composer already contains text
+    Given the composer already contains text
+    And Quick Actions lists a slash command
     When I select that slash command
-    Then the client requests compose prefill with exactly the selected command text
-    And the composer replaces its existing text with that prefill
-    And the text area is focused with its cursor at the end
-    And prefill does not submit the command
-    And the palette closes
+    Then the composer text is replaced with exactly the selected command
+    And the composer is focused with its cursor at the end
+    And selection does not submit the command
+    And Quick Actions closes
 
-  @ux-original-008 @quick-actions @skills @cap-quick-actions @cap-skills @reconcile-3.2.5
+  @ux-original-008 @quick-actions @skills @cap-quick-actions @cap-skills
   Scenario: Discover loaded skills in the command catalogue
-    Given the selected session resource loader exposes named skills
-    When the server builds the session command catalogue
-    Then loaded skills are exposed with the "/skill:<name>" command namespace and descriptions
-    And Quick Actions presents those commands in the Slash commands group
-    And no separate Skills group is created by Quick Actions
+    Given the selected session has loaded skills
+    When I open Quick Actions with a slash query
+    Then loaded skills are listed as "/skill:<name>" commands with descriptions in the Slash commands group
+    And no separate Skills group is shown
     When I select a skill command
-    Then its command text replaces the existing draft through the same compose-prefill path as other slash commands
+    Then its command text replaces the existing draft like other slash commands
     And selection alone does not submit the command
 
   @ux-original-009 @plan @addon-dependent @cap-addons @cap-plan-sidebar @reconcile-3.2.5
