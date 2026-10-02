@@ -70,6 +70,9 @@ the full tool set (`*.localhost` must resolve to loopback; add a hosts entry whe
 }
 ```
 
+`tools` maps canonical tool names used by specs to the runtime's names. Today only `shell` exists: it must run a POSIX
+shell command given `{"command": "..."}` (default `bash`). Mapping a name adapts naming only; the tool must still run.
+
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
 Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such
 scenario then needs its own skips entry (`not-implemented`, `known-defect` or `intentional-divergence`); do not drop a claim
@@ -81,7 +84,7 @@ automatically when the profile lacks a `@cap-*` tag of its scenario.
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.8",
+  "fixturesVibes": "v0.1.0-rc.9",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]

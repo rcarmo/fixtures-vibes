@@ -1,43 +1,39 @@
 @classic @source-reviewed
 Feature: Classic thought and draft panel disclosure
-  Source: installed Piclaw 3.2.4 status source-map content and Classic agent-status CSS.
+  Observed on the installed Piclaw reference release.
   # Reconciled 2026-09-28: generic more…/less controls, nine-line tail windows,
   # and independently scrollable bodies replace the older line-count renderer.
 
-  @ux-thoughts-001 @cap-thoughts @reconcile-3.2.5
+  @ux-thoughts-001 @cap-thoughts
   Scenario: Render collapsed thought content with disclosure state
-    Given thought content is available and its panel is collapsed
+    Given thought content longer than nine lines is streaming and its panel is collapsed
     When the status panel renders
-    Then it exposes the collapsed data-expanded state
-    And the collapsed height and overflow follow the panel's CSS
-    And the collapsed preview shows the newest nine source lines
-    And earlier retained text is disclosed through a more control
+    Then the collapsed preview shows the newest nine lines
+    And earlier lines are hidden behind a visible "more" disclosure control
 
-  @ux-thoughts-002 @cap-thoughts @reconcile-3.2.5
+  @ux-thoughts-002 @cap-thoughts
   Scenario: Continue updating content independently of disclosure
     Given a thought panel is collapsed
-    When accepted thought updates change its content
+    When further thought text streams
     Then the rendered thought content updates without requiring the panel to be expanded
 
-  @ux-thoughts-003 @cap-thoughts @reconcile-3.2.5
+  @ux-thoughts-003 @cap-thoughts
   Scenario: Toggle thought panel expansion
     Given thought content has a disclosure control
     When I activate that control
-    Then the panel's expansion state toggles
-    And expanded content remains available in a scrollable body
-    And the supplied panel-toggle callback is used when provided
-    And otherwise the component manages its own expansion set
+    Then the panel expands and shows all retained thought lines
+    When I activate the control again
+    Then the panel collapses to the newest lines
 
-  @ux-thoughts-004 @cap-thoughts @reconcile-3.2.5
+  @ux-thoughts-004 @cap-thoughts
   Scenario: Collapse an expanded status panel with Escape
-    Given an expanded status panel can be resolved
-    And the Escape event is unmodified and does not target an editable field
+    Given an expanded status panel
+    And focus is not in an editable field
     When I press Escape
-    Then that panel is collapsed through the panel-toggle path
+    Then that panel collapses to the newest lines
 
-  @ux-thoughts-005 @cap-thoughts @reconcile-3.2.5
+  @ux-thoughts-005 @cap-thoughts
   Scenario: Preserve text when changing disclosure state
     Given a status panel contains streamed text
-    When I expand and collapse the panel
-    Then changing disclosure does not itself replace the stored thought or draft text
-    And scroll behavior follows the component's content and expansion effects
+    When I expand and collapse the panel repeatedly
+    Then no retained thought text is lost

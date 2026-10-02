@@ -60,14 +60,18 @@ test('@ux-chat-lifecycle-003 Tool output belongs to the Output status pane', asy
   await page.goto(session.url);
   const input = page.locator(sel('composeInput'));
   const cmd = JSON.stringify({ command: `echo out-start-${n}; sleep 4; echo out-end-${n}` });
-  await input.fill(`[tool:bash ${cmd}][after-tool:Tool finished ${n}] run tool ${n}`);
+  await input.fill(`[tool:${runtime.toolName('shell')} ${cmd}][after-tool:Tool finished ${n}] run tool ${n}`);
   await input.press('Enter');
 
   // While the tool runs, its streamed output is shown in the Output pane and the status names the tool.
   // The pane label may be generated content, so read the accessibility tree rather than DOM text.
   await expect.poll(async () => {
     const tree = await page.locator('body').ariaSnapshot();
-    return /^\s*- text: Output\s*$/im.test(tree) && tree.includes(`out-start-${n}`) && /bash/i.test(tree);
+    // Ignore the prompt bubble, which contains the directive text itself.
+    const own = tree.split('\n').filter(l => !l.includes('[tool:'));
+    return own.some(l => /^\s*- text: Output\s*$/i.test(l))
+      && own.some(l => new RegExp(`^\\s*- (paragraph|text|code): "?out-start-${n}"?\\s*$`).test(l))
+      && own.some(l => l.includes(runtime.toolName('shell')));
   }, { timeout: 15_000 }).toBe(true);
 
   const reply = page.locator(sel('agentPost')).filter({ hasText: `Tool finished ${n}` });
@@ -84,10 +88,11 @@ test('@ux-chat-lifecycle-005 A terminal provider error is not a user input or a 
   await page.goto(session.url);
   const input = page.locator(sel('composeInput'));
   const cmd = JSON.stringify({ command: `echo tool-${n}; sleep 3` });
-  await input.fill(`[think:thinking-${n}][say:preview-${n}][tool:bash ${cmd}] failing turn ${n}`);
+  await input.fill(`[think:thinking-${n}][say:preview-${n}][tool:${runtime.toolName('shell')} ${cmd}] failing turn ${n}`);
   await input.press('Enter');
   // Previews stream and the tool starts; then the provider goes down for every follow-up and recovery attempt.
-  await expect.poll(async () => (await page.locator('body').ariaSnapshot()).includes(`tool-${n}`), { timeout: 15_000 }).toBe(true);
+  // The tool call has been issued once the model has seen this prompt; the shell tool then runs for ~3s.
+  await expect.poll(async () => (await runtime.modelLog()).some(e => !e.toolFollowUp && String(e.prompt).includes(`failing turn ${n}`)), { timeout: 15_000 }).toBe(true);
   try {
     await runtime.outage(400, 50);
     const error = page.locator(sel('agentPost')).filter({ hasText: /error|fail|exhausted/i });
@@ -95,6 +100,8 @@ test('@ux-chat-lifecycle-005 A terminal provider error is not a user input or a 
   } finally {
     await runtime.outage(400, 0);
   }
+  // The tool really ran: its output reached the model in the (failed) follow-up request.
+  expect((await runtime.modelLog()).some(e => e.toolFollowUp && String(e.toolResult ?? '').includes(`tool-${n}`))).toBe(true);
   // The error is an agent presentation, never a user post; previews are cleared; no Completed footer stands in.
   await expect(page.locator(`${sel('timelinePost')}:not(.agent-post)`).filter({ hasText: /error|fail|exhausted/i }).filter({ hasNotText: `failing turn ${n}` })).toHaveCount(0);
   await expect(page.getByText(`preview-${n}`, { exact: true })).toHaveCount(0);

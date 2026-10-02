@@ -21,6 +21,7 @@ export type Profile = {
   skips?: string;
   selectors?: Record<string, string>;
   routes?: Record<string, string>;
+  tools?: { shell?: string };
 };
 
 export function profilePath(): string {
@@ -67,6 +68,9 @@ export class Runtime {
   }
 
   has(cap: string) { return this.profile.capabilities.includes(cap); }
+
+  /** Runtime name of a canonical tool; 'shell' takes {"command": string}. */
+  toolName(canonical: 'shell') { return this.profile.tools?.[canonical] ?? 'bash'; }
 
   async ready() {
     const { path, status = 200, timeoutMs = 30000 } = this.profile.readiness;

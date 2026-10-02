@@ -179,6 +179,19 @@
           "format": "uri"
         }
       }
+    },
+    "tools": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      },
+      "propertyNames": {
+        "enum": [
+          "shell"
+        ]
+      },
+      "description": "Optional map from canonical tool names used by specs to the runtime's tool names. 'shell' runs a POSIX shell command with a 'command' string argument (default 'bash')."
     }
   },
   "oneOf": [
