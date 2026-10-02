@@ -84,6 +84,7 @@ const count = (p: (s: string) => boolean) => rows.filter(r => p(r.status)).lengt
 const summary = {
   runtime: profile.runtime, version: profile.version, scenarios: rows.length,
   passed: count(s => s === 'passed'), failed: count(s => s === 'failed'), skipped: count(s => s.startsWith('skipped')),
+  listedFailing: count(s => s.startsWith('failing-but-skipped')),
   noSuiteTest: count(s => s === 'no-suite-test'), problems,
 };
 writeFileSync(join(outDir, `compliance-report-${profile.runtime}.json`), JSON.stringify({ summary, rows }, null, 2));
@@ -93,8 +94,8 @@ writeFileSync(join(outDir, `evidence-${profile.runtime}.json`), JSON.stringify({
     id, tests: o.filter(x => x.status === 'passed').map(x => ({ file: x.file, title: x.title, project: x.project })) })),
 }, null, 2));
 const md = [`# Compliance: ${profile.runtime} ${profile.version}`, '',
-  `| Scenarios | Passed | Failed | Skipped | No suite test yet |`, '|---:|---:|---:|---:|---:|',
-  `| ${summary.scenarios} | ${summary.passed} | ${summary.failed} | ${summary.skipped} | ${summary.noSuiteTest} |`, '',
+  `| Scenarios | Passed | Failed | Skipped | Listed failing | No suite test yet |`, '|---:|---:|---:|---:|---:|---:|',
+  `| ${summary.scenarios} | ${summary.passed} | ${summary.failed} | ${summary.skipped} | ${summary.listedFailing} | ${summary.noSuiteTest} |`, '',
   ...(problems.length ? ['## Gate problems', '', ...problems.map(p => `- ${p}`)] : ['Gate: OK']),
   '', '## Covered scenarios', '', ...rows.filter(r => r.status !== 'no-suite-test').map(r => `- \`${r.id}\` ${r.status} — ${r.name}`)];
 writeFileSync(join(outDir, `compliance-report-${profile.runtime}.md`), md.join('\n') + '\n');

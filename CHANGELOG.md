@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.0-rc.4
+
+- README: a capability claim means the user-visible surface exists; failing tagged scenarios need per-ID skips
+  (`not-implemented`, `known-defect`, `intentional-divergence`) rather than a dropped claim. Listed skips still run.
+
 ## v0.1.0-rc.3
 
 - Owner review (@tau, @gi): `@cap-stop` moved from `@ux-auth-012` (leaving an invitation) to `@ux-original-023`, `@ux-shared-023`

@@ -53,7 +53,7 @@
     "suite/fixtures.ts": "fceeb81a66c84c7e636ea45573865928b50e1dd682295ec8fa2b2c1799088324",
     "suite/global-setup.ts": "956d448634d1f33f602fe39cbd063b44d6ec1c3e0463e27ba3e0a2853035dc8b",
     "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",
-    "suite/report.ts": "d52c1dffe7fa12891196966f1ed556843ca1b3bb43dd5826e24a61c06d2d592e",
+    "suite/report.ts": "862e2ed8749dd83af124c4e9b5dd4cc83dcf07abd32b9a8d3f61692de67ab2a9",
     "suite/runtime.ts": "1dae70f8efb5d42655cd81972209182429c55d1a0042c6c7ea03203104ce50d9",
     "suite/specs/classic-core.spec.ts": "c0152b657b16bf7b1cae54b1807a750c1af7e8bee8fabb3b30502011d8fe05bb"
   }

@@ -43,7 +43,8 @@ Outputs go to `references/fixtures-vibes/test-results/` (git-ignored, so the sub
 The gate fails when a covered scenario fails, when a test is skipped for a capability the skips file does not list, when a
 skip is stale (the scenario passes), names an unknown ID or is duplicated, when a `capability-absent` skip names a claimed
 capability, and when the profile or skips file does not match its schema. Scenarios without a shared test yet are reported
-as `no-suite-test` and do not fail the gate.
+as `no-suite-test` and do not fail the gate. A listed skip does not stop the test from running: a listed scenario that fails
+is reported as `failing-but-skipped`, and one that passes makes the skip stale.
 
 ### Runtime profile
 
@@ -67,15 +68,17 @@ Lifecycle commands run under `/bin/sh` with `FIXTURES_ROOT` (fresh temp dir), `F
 ```
 
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
-Claim a capability only when every scenario tagged with it passes. Specs never list capabilities themselves: a test is
-skipped automatically when the profile lacks a `@cap-*` tag of its scenario.
+Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such
+scenario then needs its own skips entry (`not-implemented`, `known-defect` or `intentional-divergence`); do not drop a claim
+to hide failures. Skips stay authoritative per scenario ID. Specs never list capabilities themselves: a test is skipped
+automatically when the profile lacks a `@cap-*` tag of its scenario.
 
 ### Skips file
 
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.3",
+  "fixturesVibes": "v0.1.0-rc.4",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]
