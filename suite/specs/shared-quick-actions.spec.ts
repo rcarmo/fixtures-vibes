@@ -35,20 +35,32 @@ test('@ux-shared-003 Type on the idle timeline to open Quick actions', async ({ 
   await expect(highlight).toHaveCount(1);
   await expect(highlight).toContainText(/\/abort(?!-)/);
   const text = async () => ((await highlight.textContent()) ?? '').replace(/\s+/g, ' ').trim();
-  const first = await text();
+  // The palette re-renders after a query change or key press; read the highlight once it is stable.
+  const settled = async () => {
+    let value = '';
+    await expect.poll(async () => {
+      const first = await text();
+      await page.waitForTimeout(150);
+      value = await text();
+      return first === value && value !== '';
+    }).toBe(true);
+    return value;
+  };
+  const first = await settled();
   await page.keyboard.press('ArrowDown');
-  const second = await text();
+  const second = await settled();
   expect(second, 'the "/abort" query matches at least two results').not.toBe(first);
   await page.keyboard.press('ArrowUp');
-  expect(await text()).toBe(first);
+  expect(await settled()).toBe(first);
   await page.keyboard.press('ArrowUp');
-  expect(await text(), 'ArrowUp from the first result wraps to the last').not.toBe(first);
+  expect(await settled(), 'ArrowUp from the first result wraps to the last').not.toBe(first);
   await page.keyboard.press('ArrowDown');
-  expect(await text(), 'ArrowDown from the last result wraps to the first').toBe(first);
+  expect(await settled(), 'ArrowDown from the last result wraps to the first').toBe(first);
 
   // Enter runs the highlighted action once and keeps the composer draft.
   await searchBox(page).fill('Show workspace');
-  await expect(highlight).toContainText('Show workspace');
+  // Wait until the highlight has settled on the action (the filtered list may re-render after the query changes).
+  await expect.poll(async () => (await settled()).includes('Show workspace')).toBe(true);
   await page.keyboard.press('Enter');
   await expect(searchBox(page)).toHaveCount(0);
   await expect(page.getByRole('complementary').filter({ hasText: /workspace/i }).first()).toBeVisible();

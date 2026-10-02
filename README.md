@@ -131,7 +131,9 @@ For lifecycle profiles, `make compliance PROFILE=…`:
 
 Never reset the fixture model under a live runtime: held requests fail and runtimes may retry them.
 
-Writes answered with HTTP 429 are retried with backoff (2/4/8/8/8 s, or `Retry-After`); rate limits are not under test.
+Rate limits are not under test. A profile may declare `"rateLimit": {"path": "<regex>", "perMinute": N}` to pace
+matching browser writes over a sliding minute. Writes answered with HTTP 429 are still retried with backoff
+(2/4/8/8/8 s, or `Retry-After`).
 Specs that need slow or failing requests use `suite/net.ts`, which matches requests by what the page sends, never by
 runtime route names.
 

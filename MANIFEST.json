@@ -69,7 +69,7 @@
     "suite/specs/shared-copy.spec.ts": "a14813fe86f2f0dfc99b23b21bd6c2e663d833822ed22ec6bfdb702ef43ed6ec",
     "suite/specs/shared-model-picker.spec.ts": "47a399789273407378c197472ba735bb095e0f598c803a852fd693d5968c2ade",
     "suite/specs/shared-queue.spec.ts": "d5d786899a3a563dff73c09098b70570e78512fe89f255100394475ae96ed6ac",
-    "suite/specs/shared-quick-actions.spec.ts": "6065648037c5fd0097459d1f6b3b18891f198c8dc93bf9ab0b41e550c88bcd2f",
+    "suite/specs/shared-quick-actions.spec.ts": "151f259100e5fee9d0a37cd0ec819ff422edbf6d1a06d55e1b8924e5ed5e3ab7",
     "suite/specs/shared-shell.spec.ts": "25b715986ed7f2336e437d1bce5587304a46bddbfffdf3ebf014b2ce8f3bdada",
     "suite/specs/shared-svg.spec.ts": "c6daeebed2ea47d24162e4827d9d021f7b91b8524f999cb4dd193e48744f5934",
     "suite/specs/thoughts-panel.spec.ts": "d5f38cf3bb02a04fef01f7bdf9aa2ea41b2b14ec1dc219b716d6ea86ed4c66b3"
