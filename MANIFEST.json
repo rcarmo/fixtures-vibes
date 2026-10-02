@@ -33,7 +33,7 @@
     "features/classic/compose/theme-tint.feature": "ba6adca66b331d8d6b64cc885de17103fc423a47781ec057a5308d7d3c0edfd6",
     "features/classic/compose/thoughts-panel.feature": "ca0a346323ea651fbd4c51a8e16985944ecf6faafbe9cec1a44b7ba9013236a4",
     "features/classic/editor/editor-stability.feature": "6fa130e9dcc8143ee26fbb149f5c0611eb878ebd1f0d28552c318869e5c27385",
-    "features/classic/mobile/pwa-manifest.feature": "e37975005dead60789732087b15c8408911cdd0694c6585755ad68ebd4e670d2",
+    "features/classic/mobile/pwa-manifest.feature": "22d8dc5a27756663d4a15a2faea30edb450b981c1723858c04a0f7a3209eb4c1",
     "features/classic/mobile/swipe-independence.feature": "8cb4ca35726981cfce81fe63aa23ff4392856287706234c06a650e295c5550e8",
     "features/classic/panes/terminal.feature": "2af1ca09ebdedc32e38b5098658bdcc84fa2fd08cde4c0fa7c3b68d26f247efe",
     "features/classic/sessions/session-switching.feature": "6ab52a1822161221d4aef1cefd1c9b782e8b25810ccc0c30d6658343db556db9",
@@ -59,6 +59,7 @@
     "suite/specs/chat-lifecycle.spec.ts": "ae4d8e9200f2b91fe78d2339ffefdf099c17613303a7c2a66df04dc79f141ff4",
     "suite/specs/classic-core.spec.ts": "c0152b657b16bf7b1cae54b1807a750c1af7e8bee8fabb3b30502011d8fe05bb",
     "suite/specs/message-deletion.spec.ts": "ed4e1b7947c8a9572fb292aa5f4313691a1b8b61a5951fe7f0188018dd75154f",
+    "suite/specs/pwa-manifest.spec.ts": "f0e5489e42999e6da634a1f3ca75dfde119a0afce4d27136b4f7619eb6f523f5",
     "suite/specs/shared-svg.spec.ts": "afc2d8c46c09d612cf88f4d8557278bc659dcb985890fd4a0610a52fb12040b3",
     "suite/specs/thoughts-panel.spec.ts": "e0776843c25c25a7eb84c90b63788ca16a28124330ed1c8ab184ce17e4f5853f"
   }
