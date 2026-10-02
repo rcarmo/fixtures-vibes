@@ -244,6 +244,10 @@ Feature: Piclaw-compatible interaction model
     And Escape closes the picker and restores focus without changing selection
     And unavailable mutations or models remain absent or disabled rather than simulated
 
+    # Piclaw 3.2.5: only the session picker has typeahead outside its search field. The model picker keeps focus in its
+    # search combobox, where typing filters and Home/End move the caret; its spec checks search, Arrow/Page keys, Enter
+    # and Escape. Whether to split this outline per picker is open.
+
     Examples:
       | picker         |
       | session picker |

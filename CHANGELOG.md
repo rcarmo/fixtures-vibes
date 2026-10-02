@@ -51,6 +51,14 @@
   - A rejected pin leaves the picker open, with the search, entry and selection usable.
   - Pinning round-trips and survives a reload.
   - A running session cannot be removed: 3.2.5 refuses the archive, and the turn continues.
+- `@ux-shared-021` has specs for both examples:
+  - Session picker: search by identifier; typeahead outside the search field prefers the prefix match; Arrow, Home,
+    End, PageUp and PageDown move within the results; Escape restores focus and keeps the session; Enter switches
+    exactly once.
+  - Model picker: 3.2.5 keeps focus in its search combobox, so the spec covers search, Arrow/Page keys, Escape, and
+    Enter activating a fixture model once. The keyboard highlight is the combobox's active descendant, not
+    `aria-selected`. The open per-picker split question is noted in the feature.
+- `runtime.newSession(name?)` accepts a unique session name.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.
 - The fixture model now prefers the *latest* user message that carries directives. An aborted turn leaves no

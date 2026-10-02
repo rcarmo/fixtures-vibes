@@ -96,8 +96,8 @@ export class Runtime {
   }
 
   /** Create a fresh session through the runtime's public API and return its URL. */
-  async newSession(): Promise<{ id: string; url: string }> {
-    const name = `fx${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+  /** `name`, when given, must be unique and handle-safe (lowercase letters, digits, hyphens). */
+  async newSession(name = `fx${randomUUID().replace(/-/g, '').slice(0, 12)}`): Promise<{ id: string; url: string }> {
     const vars = { name };
     let id = 'default';
     const c = this.profile.session.create;
