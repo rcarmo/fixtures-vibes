@@ -51,6 +51,9 @@ is reported as `failing-but-skipped`, and one that passes makes the skip stale.
 Use `lifecycle` when the suite should start the runtime, or `external` for an instance you manage yourself.
 Lifecycle commands run under `/bin/sh` with `FIXTURES_ROOT` (fresh temp dir), `FIXTURES_PORT`, `FIXTURE_MODEL_URL`
 (OpenAI-compatible base URL ending in `/v1`) and `FIXTURE_MODEL_ID` (`fixture-1`). `start` must stay in the foreground.
+`FIXTURE_MODEL_NAMED_URL` is the same server as `http://fixture-model.localhost:PORT/v1`: Piclaw-family runtimes switch to a
+reduced "local-lite" prompt and tool set for loopback/private model URLs, so use the named URL when tool scenarios must see
+the full tool set (`*.localhost` must resolve to loopback; add a hosts entry where it does not).
 
 ```json
 {
@@ -78,7 +81,7 @@ automatically when the profile lacks a `@cap-*` tag of its scenario.
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.6",
+  "fixturesVibes": "v0.1.0-rc.7",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]
@@ -118,5 +121,10 @@ Directives in the latest user message are executed in order:
 | `[usage:P]` | Report `prompt_tokens = P`. |
 | `[tool:NAME JSON]` / `[after-tool:TEXT]` | Emit one tool call, then reply to the tool result. |
 | `[fail:STATUS]` | Fail the request with HTTP STATUS. |
+| `[after-tool-fail:STATUS]` | Fail only the follow-up request that carries the tool result. |
+
+Control API: `GET /control/health`, `GET /control/gates`, `POST /control/gates/NAME/open`, `GET /control/log`
+(requests, offered tools, tool results), `POST /control/fail?status=S&count=N` (simulated provider outage for the next N
+requests) and `POST /control/reset`.
 
 Without directives the reply is `Fixture reply: <last line of the prompt>`.

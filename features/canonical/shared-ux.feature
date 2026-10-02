@@ -316,7 +316,7 @@ Feature: Piclaw-compatible interaction model
     And closing the pane restores usable focus without activating underlying controls
     And reduced-motion mode preserves state meaning without requiring animation
 
-  @timeline @svg @security @accessibility @ux-shared-028 @cap-svg-render
+  @timeline @svg @security @accessibility @ux-shared-028
   Scenario: Model-generated SVG cannot run code or fetch resources
     Given an assistant message contains a fenced "svg" block with a script, an event handler and an external image reference
     Then no script runs and the external reference is not fetched

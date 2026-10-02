@@ -6,7 +6,7 @@ Feature: Separate the conversation from transient agent activity
   # Error persistence, provider recovery and physical-device acceptance need
   # backend and device evidence beyond this bounded rendering probe.
 
-  @ux-chat-lifecycle-001 @idle @reconcile-3.2.5
+  @ux-chat-lifecycle-001 @idle
   Scenario: An idle chat does not manufacture an activity pane
     Given the selected chat has an authoritative idle snapshot with no active status data
     And there are no transient previews, requests or extension panels
@@ -15,7 +15,7 @@ Feature: Separate the conversation from transient agent activity
     And there is no agent activity pane saying Idle or Working
     And a previous tool completion does not become a persistent Completed footer
 
-  @ux-chat-lifecycle-002 @streaming @thoughts @draft @cap-thoughts @reconcile-3.2.5
+  @ux-chat-lifecycle-002 @streaming @thoughts @draft @cap-thoughts
   Scenario: Streaming thoughts and response drafts have separate panes
     Given a selected chat contains the user's submitted prompt
     When its current turn streams thinking text and assistant response text
@@ -25,7 +25,7 @@ Feature: Separate the conversation from transient agent activity
     And these previews do not become extra user messages in the timeline
     And internal tool-call markers are not inserted into the response text
 
-  @ux-chat-lifecycle-003 @tools @output @cap-tool-output @reconcile-3.2.5
+  @ux-chat-lifecycle-003 @tools @output @cap-tool-output
   Scenario: Tool output belongs to the Output status pane
     Given a tool starts with a call identity and arguments in the selected turn
     When a tool execution update supplies text output
@@ -36,7 +36,7 @@ Feature: Separate the conversation from transient agent activity
     # Preserve Classic's renderer, including its output trimming and Markdown
     # rules; this does not require plain preformatted text or identical bytes.
 
-  @ux-chat-lifecycle-004 @author @markdown @reconcile-3.2.5
+  @ux-chat-lifecycle-004 @author @markdown
   Scenario: A persisted assistant reply retains its identity and Markdown
     Given the conversation contains a user prompt and a persisted assistant response
     When the timeline renders the messages
@@ -46,7 +46,7 @@ Feature: Separate the conversation from transient agent activity
     And Markdown emphasis and list items render as emphasis and list items
     And the persisted assistant response is not attributed to the user
 
-  @ux-chat-lifecycle-005 @error @reconcile-3.2.5
+  @ux-chat-lifecycle-005 @error @cap-tool-output
   Scenario: A terminal provider error is not a user input or a tool success
     Given the current turn has streamed previews and completed a tool
     When the provider fails and the agent emits a terminal error status

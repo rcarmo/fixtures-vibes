@@ -15,15 +15,17 @@
  *   [tool:NAME JSON]   respond with one tool call NAME(JSON) instead of content
  *   [after-tool:TEXT]  reply used for the follow-up request that carries the tool result
  *   [fail:STATUS]      respond with HTTP STATUS before streaming
+ *   [after-tool-fail:STATUS]  respond with HTTP STATUS to the request that carries the tool result
  * A literal backslash-n (\n) inside a directive value becomes a newline.
  * Without directives the reply is `Fixture reply: <last line of the prompt>` (runtimes wrap prompts differently).
  *
  * Control API:
  *   GET  /control/health
- *   POST /control/reset            fail held requests, forget all gates, clear the log
+ *   POST /control/reset            fail held requests, forget all gates, clear the log and any outage
+ *   POST /control/fail?status=S&count=N  fail the next N completion requests with HTTP S (count=0 clears)
  *   GET  /control/gates            { name: { open, waiting } }
  *   POST /control/gates/NAME/open
- *   GET  /control/log              received requests (model, roles, last text, directives, aborted)
+ *   GET  /control/log              received requests (model, roles, last text, directives, offered tools, tool result, aborted)
  */
 
 type Waiter = { resolve: () => void; reject: (e: Error) => void };
@@ -33,6 +35,7 @@ type Step =
   | { kind: "gate"; name: string };
 
 const gates = new Map<string, Gate>();
+let outage: { status: number; remaining: number } | null = null;
 const log: Array<Record<string, unknown>> = [];
 
 const gate = (name: string): Gate => {
@@ -60,7 +63,7 @@ const textOf = (content: unknown): string =>
       ? content.map((p: any) => (typeof p?.text === "string" ? p.text : "")).join("")
       : "";
 
-const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool|fail):([^\]]*)\]/g;
+const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool-fail|after-tool|fail):([^\]]*)\]/g;
 
 function plan(text: string) {
   // A literal backslash-n inside a directive value becomes a newline, so single-line prompts can script Markdown.
@@ -88,7 +91,7 @@ function plan(text: string) {
     toolCall = { name: sp < 0 ? tool : tool.slice(0, sp), args: sp < 0 ? "{}" : tool.slice(sp + 1) };
   }
   return {
-    steps, toolCall, afterTool: first("after-tool"), fail: first("fail"),
+    steps, toolCall, afterTool: first("after-tool"), afterToolFail: first("after-tool-fail"), fail: first("fail"),
     usage: first("usage") ? Number(first("usage")) : undefined, directives: all,
   };
 }
@@ -111,7 +114,15 @@ Bun.serve({
       for (const g of gates.values()) g.waiters.splice(0).forEach((w) => w.reject(new Error("reset")));
       gates.clear();
       log.length = 0;
+      outage = null;
       return json({ ok: true });
+    }
+    if (url.pathname === "/control/fail" && req.method === "POST") {
+      // Simulated provider outage: the next `count` completion requests fail with `status` (count=0 clears).
+      const status = Number(url.searchParams.get("status") || 500);
+      const count = Number(url.searchParams.get("count") || 1);
+      outage = count > 0 ? { status, remaining: count } : null;
+      return json({ ok: true, outage });
     }
     if (url.pathname === "/control/gates") {
       return json(Object.fromEntries([...gates].map(([k, g]) => [k, { open: g.open, waiting: g.waiters.length }])));
@@ -138,14 +149,26 @@ Bun.serve({
       at: new Date().toISOString(), model: body.model, roles: messages.map((m) => m.role),
       prompt: prompt.split(/\r?\n/).filter(Boolean).pop() || "", directives: p.directives,
       toolFollowUp, stream: !!body.stream, aborted: false,
+      tools: (body.tools || []).map((t: any) => t?.function?.name).filter(Boolean),
+      ...(toolFollowUp ? { toolResult: textOf(last.content).slice(0, 2000) } : {}),
     };
     log.push(entry);
 
+    if (outage && outage.remaining > 0) {
+      outage.remaining -= 1;
+      const status = outage.status;
+      if (outage.remaining === 0) outage = null;
+      entry.outage = status;
+      return json({ error: { message: `fixture outage ${status}` } }, status);
+    }
     if (p.fail) return json({ error: { message: `fixture failure ${p.fail}` } }, Number(p.fail) || 500);
 
     // A tool result arrived: answer with [after-tool:] or echo the tool output.
     let steps = p.steps;
     let toolCall = p.toolCall;
+    if (toolFollowUp && p.afterToolFail) {
+      return json({ error: { message: `fixture failure ${p.afterToolFail} after tool` } }, Number(p.afterToolFail) || 500);
+    }
     if (toolFollowUp) {
       toolCall = null;
       const reply = p.afterTool ?? `Fixture tool result: ${textOf(last.content).slice(0, 200)}`;

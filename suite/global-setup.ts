@@ -37,11 +37,13 @@ export default async function globalSetup() {
     ...process.env, ...(profile.lifecycle.env ?? {}),
     FIXTURES_ROOT: root, FIXTURES_PORT: String(port),
     FIXTURE_MODEL_URL: `${modelUrl}/v1`, FIXTURE_MODEL_ID: 'fixture-1',
+    // Same server under a non-loopback-looking name, for runtimes that shrink tools/prompts for local model URLs.
+    FIXTURE_MODEL_NAMED_URL: `http://fixture-model.localhost:${modelPort}/v1`,
   };
   const log = (name: string) => openSync(join(root, `${name}.log`), 'a');
   const procs: ChildProcess[] = [];
   const model = spawn('bun', [resolve(here, '../control/fixture-model-server.ts')], {
-    env: { ...env, FIXTURE_MODEL_PORT: String(modelPort), FIXTURE_MODEL_HOST: '127.0.0.1' }, stdio: ['ignore', log('model'), log('model')], detached: true,
+    env: { ...env, FIXTURE_MODEL_PORT: String(modelPort), FIXTURE_MODEL_HOST: '::' }, stdio: ['ignore', log('model'), log('model')], detached: true,
   });
   procs.push(model);
   await waitFor(`${modelUrl}/control/health`, 200, 10_000, 'fixture model');

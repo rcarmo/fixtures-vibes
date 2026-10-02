@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.0-rc.7
+
+- `@ux-shared-028` (SVG safety) no longer requires `@cap-svg-render`; it applies to every runtime.
+- Chat lifecycle `@ux-chat-lifecycle-001..005` verified against Piclaw 3.2.5 with new specs (`suite/specs/chat-lifecycle.spec.ts`);
+  `005` now requires `@cap-tool-output` because its setup completes a tool.
+- Fixture model: `[after-tool-fail:STATUS]`, `POST /control/fail?status=S&count=N` (simulated outage), offered tools and tool
+  results in `/control/log`; `Runtime.outage()` helper.
+- Lifecycle runs export `FIXTURE_MODEL_NAMED_URL` (`http://fixture-model.localhost:PORT/v1`) and serve the model dual-stack.
+  Piclaw-family runtimes switch to a reduced local-lite prompt and tool set for loopback/private model URLs.
+- Reference instance now points Piclaw at `fixture-model.localhost` (hosts entry on the VM), so it runs the full tool set.
+  Earlier reference runs used the local-lite profile.
+
 ## v0.1.0-rc.6
 
 - Fix the contract test so `profiles/*-skips.json` is validated against the skips schema (rc.5 shipped with that test failing).

@@ -105,6 +105,12 @@ export class Runtime {
     return (await fetch(`${this.modelUrl}/control/gates`)).json();
   }
 
+  /** Simulated provider outage: the next `count` model requests fail with `status` (count 0 clears). */
+  async outage(status: number, count: number) {
+    const r = await fetch(`${this.modelUrl}/control/fail?status=${status}&count=${count}`, { method: 'POST' });
+    if (!r.ok) throw new Error(`outage: ${r.status}`);
+  }
+
   async modelLog(): Promise<any[]> { return (await fetch(`${this.modelUrl}/control/log`)).json(); }
 }
 

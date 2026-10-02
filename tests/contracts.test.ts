@@ -111,3 +111,26 @@ test('fail directive and reset failing held requests', async () => {
   expect(await (await fetch(`${base}/control/log`)).json()).toEqual([]);
   expect(await (await fetch(`${base}/control/gates`)).json()).toEqual({});
 });
+
+test('after-tool-fail fails only the tool follow-up', async () => {
+  const prompt = '[tool:bash {"command":"true"}][after-tool-fail:400] go';
+  const first = await chat(prompt);
+  expect(first.status).toBe(200);
+  const call = (await first.json()).choices[0].message.tool_calls[0];
+  const follow = await fetch(`${base}/v1/chat/completions`, {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ model: 'fixture-1', messages: [
+      { role: 'user', content: prompt },
+      { role: 'assistant', content: null, tool_calls: [call] },
+      { role: 'tool', tool_call_id: call.id, content: 'ok' },
+    ] }),
+  });
+  expect(follow.status).toBe(400);
+});
+
+test('control outage fails the next N requests, then clears', async () => {
+  await fetch(`${base}/control/fail?status=400&count=2`, { method: 'POST' });
+  expect((await chat('[reply:A] x')).status).toBe(400);
+  expect((await chat('[reply:A] x')).status).toBe(400);
+  expect((await chat('[reply:A] x')).status).toBe(200);
+});
