@@ -98,6 +98,10 @@ automatically when the profile lacks a `@cap-*` tag of its scenario.
 Reasons: `capability-absent` (needs `capability`), `intentional-divergence` (needs `approvedBy`), `not-implemented` and
 `known-defect` (need `issue`), `environment-limit`.
 
+Optional `projects` limits a skip to some Playwright projects (for example `["webkit-desktop"]`); failures in other
+projects still fail the gate. `intermittent: true` (known defects only) stops a run in which the scenario happens to
+pass from being reported as a stale skip; give the observed failure rate in `detail`.
+
 ## Status
 
 Scenarios tagged `@reconcile-3.2.5` are still being checked against the installed Piclaw 3.2.5 and may change wording.

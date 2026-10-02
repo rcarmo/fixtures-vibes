@@ -18,6 +18,7 @@ test:
 
 suite:
 	@test -n "$(PROFILE)" || { echo "PROFILE=/absolute/path/to/profile.json is required"; exit 2; }
+	rm -f test-results/compliance.json test-results/compliance-report-*.json test-results/compliance-report-*.md test-results/evidence-*.json
 	FIXTURES_PROFILE="$(PROFILE)" $(PLAYWRIGHT) test -c suite/playwright.config.ts $(if $(PROJECT),--project $(PROJECT),) || true
 
 report:

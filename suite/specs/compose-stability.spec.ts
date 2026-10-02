@@ -2,6 +2,8 @@
 import { test, expect } from '../fixtures';
 import { gateName } from '../runtime';
 import { randomUUID } from 'node:crypto';
+import type { Page } from '@playwright/test';
+import { holdWrites, bodyHas, uploadOf } from '../net';
 
 test('@ux-compose-001 Clear captured content while allowing a new draft', async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
@@ -34,4 +36,116 @@ test('@ux-compose-003 Reject an entirely empty submission', async ({ page, runti
   await page.waitForTimeout(1500);
   expect(await page.locator(sel('timelinePost')).count()).toBe(posts);
   expect((await runtime.modelLog()).length).toBe(before);
+});
+
+const attach = (page: Page, n: string) => page.locator('.compose-box input[type=file]')
+  .setInputFiles({ name: `att-${n}.txt`, mimeType: 'text/plain', buffer: Buffer.from(`filebody-${n}\n`) });
+
+test('@ux-compose-002 Restore a failed submission alongside newer text', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  for (const newer of [`newer-${n}`, `first-${n}`]) {
+    const send = await holdWrites(page, bodyHas(`first-${n}`), { status: 500, error: `boom-${n}` });
+    await input.fill(`first-${n}`);
+    await input.press('Enter');
+    await expect.poll(() => send.count).toBe(1);
+    await input.fill(newer);
+    send.release();
+    await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
+    await expect(input).toHaveValue(newer === `first-${n}` ? `first-${n}` : `first-${n}\n\n${newer}`);
+    await page.unrouteAll({ behavior: 'wait' });
+  }
+  await page.waitForTimeout(500);
+  await expect(page.locator(sel('timelinePost')).filter({ hasText: `first-${n}` })).toHaveCount(0);
+  expect((await runtime.modelLog()).some(e => String(e.prompt).includes(`first-${n}`))).toBe(false);
+});
+
+test('@ux-compose-004 Return a queued message replaces the current editor draft', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  const gate = gateName('return');
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[gate:${gate}][reply:first-${n}] one ${n}`);
+  await input.press('Enter');
+  await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0).toBe(1);
+  const queued = `[reply:second-${n}] two ${n}`;
+  await input.fill(queued);
+  await input.press('Enter');
+  await expect(page.locator(sel('queueItem'))).toHaveCount(1);
+
+  // A failed send leaves an alert; then a newer draft with an attachment.
+  const send = await holdWrites(page, bodyHas(`lost-${n}`), { status: 500, error: `boom-${n}` });
+  await input.fill(`lost-${n}`);
+  await input.press('Enter');
+  await expect.poll(() => send.count).toBe(1);
+  send.release();
+  await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
+  await page.unrouteAll({ behavior: 'wait' });
+  await attach(page, n);
+  await expect(page.getByText(`att-${n}.txt`)).toBeVisible();
+  await input.fill(`newer draft ${n}`);
+
+  await page.locator(sel('queueItem')).getByRole('button', { name: /return .*editor|edit/i }).click();
+  await expect(input).toHaveValue(queued);
+  await expect(page.getByText(`att-${n}.txt`)).toHaveCount(0);
+  await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toHaveCount(0);
+  await expect(page.locator(sel('queueItem'))).toHaveCount(0);
+  await expect(input).toBeFocused();
+  expect(await input.evaluate((e: HTMLTextAreaElement) => [e.selectionStart, e.selectionEnd])).toEqual([queued.length, queued.length]);
+  await runtime.openGate(gate);
+});
+
+test('@ux-compose-005 Keep upload progress separate from sending state', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  const upload = await holdWrites(page, uploadOf(`att-${n}.txt`));
+  const message = await holdWrites(page, bodyHas(`msg-${n}`));
+  await attach(page, n);
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[reply:ok-${n}] msg-${n}`);
+  await input.press('Enter');
+  await expect.poll(() => upload.count).toBe(1);
+  const uploadStatus = page.getByRole('status').filter({ hasText: `att-${n}.txt` });
+  await expect(uploadStatus).toBeVisible();
+  await expect(uploadStatus.getByRole('progressbar')).toBeVisible();
+  await expect(page.getByRole('button', { name: /upload/i })).toBeDisabled();
+
+  upload.release();
+  await expect.poll(() => message.count).toBe(1);
+  await expect(uploadStatus).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /sending/i })).toBeDisabled();
+  message.release();
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
+});
+
+test('@ux-compose-006 Submit captures the destination chat', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  const other = await runtime.newSession();
+  const mine = await runtime.newSession();
+  await page.goto(mine.url);
+  const upload = await holdWrites(page, uploadOf(`att-${n}.txt`));
+  await attach(page, n);
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[reply:ok-${n}] msg-${n}`);
+  await input.press('Enter');
+  await expect.poll(() => upload.count).toBe(1);
+
+  // Switch sessions through the in-app picker while the upload is held.
+  const otherName = other.id.replace(/^web:/, '');
+  await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
+  await page.getByRole('searchbox', { name: /search sessions/i }).fill(otherName);
+  await page.getByRole('option', { name: new RegExp(`@${otherName}\\b`) }).click();
+  await expect(page.getByRole('button', { name: new RegExp(`@${otherName}\\b`) }).first()).toBeVisible();
+
+  upload.release();
+  // The logged prompt is only its last line (attachments follow the text), so match the directive.
+  await expect.poll(async () => (await runtime.modelLog()).some(e => JSON.stringify(e.directives ?? '').includes(`ok-${n}`)), { timeout: 15_000 }).toBe(true);
+  await page.waitForTimeout(1000);
+  await expect(page.locator(sel('timelinePost')).filter({ hasText: `msg-${n}` })).toHaveCount(0);
+  await page.goto(mine.url);
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
+  await page.goto(other.url);
+  await expect(page.locator(sel('composeInput'))).toBeVisible();
+  await expect(page.locator(sel('timelinePost')).filter({ hasText: `msg-${n}` })).toHaveCount(0);
 });

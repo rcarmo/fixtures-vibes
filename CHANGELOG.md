@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.1.0-rc.11
+
+- Reconciled against Piclaw 3.2.5 with specs, all six projects:
+  - composer `@ux-compose-002/004/005/006`: failed-send restore, Return to editor (replace), upload vs sending state,
+    destination chat captured at submit
+  - Steer `@ux-original-019`
+  - synthetic "Replies exist" retry prompt `@ux-timeline-019`
+  Wording now states only observable behaviour; reference merging in 002/004 is out of the contract (no portable way to add references).
+- New `@ux-original-030` (split from 019): a failed Steer warns and the item returns to the stack. Piclaw 3.2.5 keeps it
+  hidden until reload although `/agent/queue-state` still lists it; listed as a 3.2.5 known defect.
+- `@ux-timeline-018` is `@oracle-defect`: documents the 3.2.5 orphaning of stored replies on non-cascade delete (checked
+  over the public API). It is not a compliance requirement and has no spec.
+- `@ux-shared-031`: web agent text is HTML-escaped at store time (deliberate) and the SVG fence renderer runs before
+  entity decoding, so agent-authored SVG shows `&lt;svg` source instead of the sanitised image (#1505).
+- Reference run (rc.11): 264 tests; 38 scenario IDs pass in all six projects; gate OK with three listed known defects.
+- Piclaw 3.2.5 known defects now have issues: rcarmo/piclaw#1505 (`@ux-shared-031`), #1506 (`@ux-original-030`),
+  #1507 (`@ux-chat-lifecycle-002`, WebKit desktop only: the drafting status is received but not rendered).
+- Skips: optional `projects` (scope a skip to some Playwright projects) and `intermittent` (known defects that do not
+  reproduce every run are not stale when they pass).
+- `suite/net.ts`: hold or fail browser writes by body marker, multipart upload name (WebKit omits file bytes) or "first
+  write to a new endpoint" (background presence/visibility writes are learned first). No runtime route names.
+- `make suite` deletes previous results and reports first; the report records its results file, run start time, skips
+  file and listed IDs. A run that writes no results can no longer be reported from an older run's JSON.
+
 ## v0.1.0-rc.10
 
 - Isolation: lifecycle runtimes now start per Playwright worker. A failed test replaces the worker, so the next test gets a

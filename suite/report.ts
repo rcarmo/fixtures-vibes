@@ -69,12 +69,17 @@ const rows = [...catalogue].map(([id, sc]) => {
   const outs = results.get(id) ?? [];
   const missingCaps = sc.caps.filter(c => !profile.capabilities.includes(c));
   const skip = skipById.get(id);
+  // A skip may cover only some projects; failures elsewhere are unlisted.
+  const listed = (o: Outcome) => Boolean(skip) && (!skip.projects || skip.projects.includes(o.project));
+  const failing = outs.filter(o => o.status !== 'passed' && o.status !== 'skipped');
+  const unlisted = failing.filter(o => !listed(o));
   let status: string;
   if (!outs.length) status = 'no-suite-test';
   else if (outs.every(o => o.status === 'skipped')) status = skip ? `skipped:${skip.reason}` : missingCaps.length ? 'skipped:capability-absent(unlisted)' : 'skipped';
-  else if (outs.some(o => o.status !== 'passed' && o.status !== 'skipped')) status = skip ? `failing-but-skipped:${skip.reason}` : 'failed';
-  else status = 'passed';
-  if (status === 'failed') problems.push(`${id} failed in ${outs.filter(o => o.status !== 'passed').map(o => o.project).join(', ')}`);
+  else if (unlisted.length) status = 'failed';
+  else if (failing.length) status = `failing-but-skipped:${skip.reason}`;
+  else status = skip?.intermittent ? `passed-this-run:${skip.reason}(intermittent)` : 'passed';
+  if (status === 'failed') problems.push(`${id} failed in ${unlisted.map(o => o.project).join(', ')}`);
   if (status === 'passed' && skip) problems.push(`stale skip ${id}: scenario passes`);
   if (status === 'skipped:capability-absent(unlisted)') problems.push(`${id} skipped for missing ${missingCaps.join(', ')} but not listed in the skips file`);
   return { id, name: sc.name, uri: sc.uri, capabilities: sc.caps, status, projects: outs.map(o => `${o.project}:${o.status}`) };
@@ -84,8 +89,11 @@ const count = (p: (s: string) => boolean) => rows.filter(r => p(r.status)).lengt
 const summary = {
   runtime: profile.runtime, version: profile.version, scenarios: rows.length,
   passed: count(s => s === 'passed'), failed: count(s => s === 'failed'), skipped: count(s => s.startsWith('skipped')),
-  listedFailing: count(s => s.startsWith('failing-but-skipped')),
-  noSuiteTest: count(s => s === 'no-suite-test'), problems,
+  listedFailing: count(s => s.startsWith('failing-but-skipped') || s.startsWith('passed-this-run')),
+  noSuiteTest: count(s => s === 'no-suite-test'),
+  // Provenance, so a report built from stale results or another skips file is visible.
+  resultsFile: resultsPath, resultsStartedAt: raw.stats?.startTime ?? null, skipsFile: skipsPath,
+  skipsListed: skips.map(s => s.id), problems,
 };
 writeFileSync(join(outDir, `compliance-report-${profile.runtime}.json`), JSON.stringify({ summary, rows }, null, 2));
 writeFileSync(join(outDir, `evidence-${profile.runtime}.json`), JSON.stringify({
@@ -96,6 +104,8 @@ writeFileSync(join(outDir, `evidence-${profile.runtime}.json`), JSON.stringify({
 const md = [`# Compliance: ${profile.runtime} ${profile.version}`, '',
   `| Scenarios | Passed | Failed | Skipped | Listed failing | No suite test yet |`, '|---:|---:|---:|---:|---:|---:|',
   `| ${summary.scenarios} | ${summary.passed} | ${summary.failed} | ${summary.skipped} | ${summary.listedFailing} | ${summary.noSuiteTest} |`, '',
+  `Results: \`${resultsPath}\` (run started ${summary.resultsStartedAt ?? 'unknown'})`,
+  `Skips: ${skipsPath ? `\`${skipsPath}\` (${skips.length} listed)` : 'none'}`, '',
   ...(problems.length ? ['## Gate problems', '', ...problems.map(p => `- ${p}`)] : ['Gate: OK']),
   '', '## Covered scenarios', '', ...rows.filter(r => r.status !== 'no-suite-test').map(r => `- \`${r.id}\` ${r.status} — ${r.name}`)];
 writeFileSync(join(outDir, `compliance-report-${profile.runtime}.md`), md.join('\n') + '\n');

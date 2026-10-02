@@ -172,15 +172,24 @@ Feature: Classic Piclaw interaction model
     Then the client optimistically hides that row and requests server removal
     And a failure clears its dismissal marker, shows a warning and refreshes the queue
 
-  @ux-original-019 @queue @steer @current-behavior @cap-queue @cap-steer @reconcile-3.2.5
+  @ux-original-019 @queue @steer @current-behavior @cap-queue @cap-steer
   Scenario: Steer a queued item using the backend-authoritative action
-    Given the Classic follow-up stack offers Steer for a queued item
-    When I activate Steer
-    Then the client optimistically hides the item and calls the steer endpoint with its row and chat identifiers
-    And the backend determines whether to steer an active run or send immediately after the stream ends
-    And a failure shows a warning and refreshes queue state
+    Given a follow-up is queued behind a running turn
+    When I activate Steer on the queued item
+    Then the item leaves the follow-up stack at once
+    And the agent receives the follow-up exactly once and replies to it
     # The input PR's @safety-deviation proposed disabling idle Steer.
     # That proposal is not the current Classic behavior and is not implemented by this specification.
+
+  @ux-original-030 @queue @steer @cap-queue @cap-steer
+  Scenario: A failed Steer warns and keeps the item queued
+    Given a follow-up is queued behind a running turn
+    And the steer request will fail
+    When I activate Steer on the queued item
+    Then a warning says the message could not be sent as steering
+    And the item is shown in the follow-up stack again without a reload
+    # Split from @ux-original-019 in rc.11. Piclaw 3.2.5 shows the warning but
+    # leaves the item hidden until reload, although the server still holds it.
 
   @ux-original-020 @model-picker @cap-model-picker
   Scenario: Select a model for the selected chat

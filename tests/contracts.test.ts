@@ -41,6 +41,10 @@ test('skips schema enforces reason-specific fields', () => {
   expect(validate({ ...base, skips: [{ id: '@ux-original-016', reason: 'capability-absent', detail: 'Missing the capability field.' }] })).toBe(false);
   expect(validate({ ...base, skips: [{ id: '@ux-original-016', reason: 'known-defect', detail: 'Failing without an issue link.' }] })).toBe(false);
   expect(validate({ ...base, skips: [{ id: '@ux-original-016', reason: 'intentional-divergence', detail: 'Missing sign-off on purpose.' }] })).toBe(false);
+  const defect = { id: '@ux-original-016', reason: 'known-defect', issue: 'https://example.invalid/1', detail: 'Fails about half the runs.' };
+  expect(validate({ ...base, skips: [{ ...defect, intermittent: true, projects: ['webkit-desktop'] }] })).toBe(true);
+  expect(validate({ ...base, skips: [{ ...defect, projects: ['webkit-watch'] }] })).toBe(false);
+  expect(validate({ ...base, skips: [{ ...defect, reason: 'not-implemented', intermittent: true }] })).toBe(false);
 });
 
 // Fixture model behaviour, exercised over HTTP on a private port.
