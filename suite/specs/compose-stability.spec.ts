@@ -151,3 +151,25 @@ test('@ux-compose-006 Submit captures the destination chat', async ({ page, runt
   await expect(page.locator(sel('composeInput'))).toBeVisible();
   await expect(page.locator(sel('timelinePost')).filter({ hasText: `msg-${n}` })).toHaveCount(0);
 });
+
+test('@ux-compose-012 A failed send keeps its uploaded attachment for the retry', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  await attach(page, n);
+  const send = await holdWrites(page, bodyHas(`msg-${n}`), { status: 500, error: `boom-${n}` });
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[reply:ok-${n}] msg-${n}`);
+  await input.press('Enter');
+  await expect.poll(() => send.count).toBe(1);
+  send.release();
+  await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
+  await expect(input).toHaveValue(`[reply:ok-${n}] msg-${n}`);
+  await expect(page.locator('.compose-box').getByText(`att-${n}.txt`)).toBeVisible();
+
+  // The second send reaches the runtime (the hold fails only the first matching write).
+  send.disarm();
+  await input.press('Enter');
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
+  await expect(page.locator(sel('userPost')).filter({ hasText: `msg-${n}` }).filter({ hasText: `att-${n}.txt` })).toHaveCount(1);
+  expect((await runtime.modelLog()).filter(e => JSON.stringify(e.directives ?? '').includes(`ok-${n}`))).toHaveLength(1);
+});

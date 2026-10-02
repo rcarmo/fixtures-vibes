@@ -54,3 +54,13 @@ Feature: Classic composer draft and queue behavior
     When the upload finishes
     Then the message is delivered to the session where it was submitted
     And it does not appear in the session that is now selected
+
+  @ux-compose-012 @cap-attachments
+  Scenario: A failed send keeps its uploaded attachment for the retry
+    Given a draft with an attachment whose upload has finished
+    When sending the message fails
+    Then the composer shows the text and the attachment again
+    When I send again
+    Then the message is delivered once with that attachment
+    # Piclaw 3.2.5 uploads the file again on retry (the draft keeps the file, not the media ID). Re-uploading is
+    # allowed; only the delivered result is in the contract.

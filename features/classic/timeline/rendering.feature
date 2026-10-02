@@ -51,3 +51,10 @@ Feature: Timeline rendering and post actions
     When I start Read aloud on a different agent post
     Then the earlier speech playback should be cancelled
     And the new post should become the active speaking post
+
+  @ux-timeline-029 @timestamp
+  Scenario: Post times are shown in the viewer's time zone
+    Given the browser time zone is five hours forty-five minutes ahead of UTC
+    When the agent replies
+    Then the reply shows a relative time
+    And its absolute send time, read in the browser time zone, matches when the reply was sent

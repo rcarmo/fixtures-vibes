@@ -56,3 +56,9 @@ Feature: Separate the conversation from transient agent activity
     Then it does not recreate an active or completed tool pane
     # This scenario does not prescribe how a durable error notice is stored.
     # The probe verifies transient status and idle reload, not error persistence.
+
+  @ux-chat-lifecycle-006 @stream @draft
+  Scenario: A streaming draft keeps every chunk in order
+    Given the agent streams its response in several chunks and then pauses
+    Then the Draft pane shows every chunk received so far, in order, not only the latest
+    And the final reply contains all chunks in the same order

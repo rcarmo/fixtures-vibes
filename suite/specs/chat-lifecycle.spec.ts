@@ -112,3 +112,21 @@ test('@ux-chat-lifecycle-005 A terminal provider error is not a user input or a 
   await expect.poll(async () => /^\s*- text: Output\s*$/im.test(await page.locator('body').ariaSnapshot())).toBe(false);
   await expect(page.getByText(/^completed$/i)).toHaveCount(0);
 });
+
+test('@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order', async ({ page, runtime, sel }) => {
+  const n = nonce();
+  const gate = gateName('chunks');
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  await input.fill(`[say:alpha-${n} ][say:beta-${n} ][say:gamma-${n}][gate:${gate}] chunks ${n}`);
+  await input.press('Enter');
+  await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0).toBe(1);
+  // The draft is transient UI outside the timeline; it must hold all three chunks in order.
+  const inOrder = new RegExp(`alpha-${n}\\s*beta-${n}\\s*gamma-${n}`);
+  await expect.poll(async () => inOrder.test(await page.locator('body').innerText().then(t => t.replace(new RegExp(`\\[say:[^\\]]*\\]`, 'g'), '')))).toBe(true);
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `gamma-${n}` })).toHaveCount(0);
+  await runtime.openGate(gate);
+  const reply = page.locator(sel('agentPost')).filter({ hasText: `gamma-${n}` });
+  await expect(reply).toHaveCount(1);
+  expect((await reply.innerText()).replace(/\s+/g, ' ')).toMatch(inOrder);
+});

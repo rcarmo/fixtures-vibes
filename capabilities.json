@@ -190,6 +190,10 @@
     "@cap-agent-avatar": {
       "area": "mobile",
       "description": "A configurable agent avatar used for the PWA manifest icons; the profile supplies commands.setAgentAvatar/clearAgentAvatar."
+    },
+    "@cap-upload-cancel": {
+      "area": "compose",
+      "description": "An in-progress attachment upload can be cancelled from the composer (Piclaw 3.2.5 has no such control)."
     }
   }
 }

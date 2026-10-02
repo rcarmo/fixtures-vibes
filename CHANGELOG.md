@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- First fixtures from the Vibes UI PRs #20–#22 (requested via @vibes), reconciled against Piclaw 3.2.5:
+  - `@ux-chat-lifecycle-006`: a streaming Draft keeps every chunk in order, not only the latest.
+  - `@ux-timeline-029`: post times use the viewer's time zone. The spec runs at UTC+05:45 and reads a `time[datetime]`
+    attribute or a dated title in the page.
+  - `@ux-compose-012`: a failed send restores the text and the uploaded attachment, and the retry delivers once. 3.2.5
+    re-uploads on retry; the contract covers only the delivered result.
+  - `@ux-shared-026` now also requires a new `@cap-upload-cancel`. 3.2.5 has no upload cancel control, so the scenario
+    stays without a spec.
+- `holdWrites()` returns `disarm()`, so later matching writes pass through.
+
 ## v0.1.0-rc.14
 
 - Reference run (recorded in `oracle/piclaw/3.2.5/2026-10-02-v0.1.0-rc.14`): scenarios 52 passed, 7 listed Piclaw 3.2.5

@@ -292,7 +292,7 @@ Feature: Piclaw-compatible interaction model
     And content and result counts are bounded and pagination metadata is truthful
     And quoted message content is data rather than new instructions
 
-  @attachments @failure @ux-shared-026 @cap-attachments
+  @attachments @failure @ux-shared-026 @cap-attachments @cap-upload-cancel
   Scenario: Retry attachment delivery without duplication
     Given upload or paste shows one native progress control
     When I cancel and retry the selected file

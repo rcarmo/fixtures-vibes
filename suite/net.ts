@@ -17,10 +17,10 @@ export const uploadOf = (fileName: string) => (req: Request) =>
 export async function holdWrites(page: Page, match: (req: Request) => boolean, fail?: { status: number; error: string }) {
   let release!: () => void;
   const held = new Promise<void>(r => (release = r));
-  const state = { count: 0, release };
+  const state = { count: 0, release, armed: true, disarm: () => { state.armed = false; } };
   await page.route('**/*', async route => {
     const req = route.request();
-    if (req.method() === 'GET' || !match(req)) return route.fallback();
+    if (!state.armed || req.method() === 'GET' || !match(req)) return route.fallback();
     state.count++;
     await held;
     if (fail) return route.fulfill({ status: fail.status, contentType: 'application/json', body: JSON.stringify({ error: fail.error }) });
