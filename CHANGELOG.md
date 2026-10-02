@@ -1,6 +1,13 @@
 # Changelog
 
-## Unreleased
+## v0.1.0-rc.15
+
+Gate run rc15b executed `387422e` against Piclaw 3.2.5: Gate OK. 306 scenarios: 59 passed, 0 failed, 12 listed failing,
+235 without a suite test. The tag commit adds only the skips listings below and this changelog.
+
+- WebKit listings for rcarmo/piclaw#1507, a transient-status render defect: `@ux-chat-lifecycle-003`, `-007` and
+  `-008`, and `@ux-shared-015`, each for webkit-phone, webkit-tablet and webkit-desktop. Isolated reproduction failed 7
+  of 20 runs, and 5 of 20 with the EventSource confirmed open.
 
 - First fixtures from the Vibes UI PRs #20–#22 (requested via @vibes), reconciled against Piclaw 3.2.5:
   - `@ux-chat-lifecycle-006`: a streaming Draft keeps every chunk in order, not only the latest.

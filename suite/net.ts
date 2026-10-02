@@ -94,3 +94,4 @@ export async function installSseDrop(page: Page) {
   });
   return { drop: () => page.evaluate(() => (window as any).__fixturesDropSse() as number) };
 }
+
