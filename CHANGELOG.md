@@ -47,6 +47,10 @@
   - "Unknown context" and "local estimates" cannot be constructed with fixture models, which report usage.
   - On phone widths, 3.2.5's disabled Thinking level select covers part of the session button (rcarmo/piclaw#1518).
     The spec opens the picker by keyboard.
+- `@ux-shared-015` has a spec:
+  - A rejected pin leaves the picker open, with the search, entry and selection usable.
+  - Pinning round-trips and survives a reload.
+  - A running session cannot be removed: 3.2.5 refuses the archive, and the turn continues.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.
 - The fixture model now prefers the *latest* user message that carries directives. An aborted turn leaves no

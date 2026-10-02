@@ -176,6 +176,8 @@ Feature: Piclaw-compatible interaction model
     Then pin, archive, restore, rename, delete and child-session creation are enabled only when implemented by the native API
     And running or unknown-count sessions cannot be deleted
     And a failed mutation keeps the picker and selection recoverable
+    # Piclaw 3.2.5: the picker offers Pin per entry, plus New branch, New root, Rename current and Delete current.
+    # Deleting a root session archives it; for a running session the server refuses with no visible error.
 
   @queue @fifo @ux-shared-016 @cap-queue
   Scenario: Queue two follow-ups exactly once
