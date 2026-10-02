@@ -24,6 +24,11 @@
 - `@ux-shared-007` and `@ux-shared-008` corrected to the oracle: inserting a command replaces the composer text with
   exactly the command (`@ux-original-007`). The previous wording, which kept the existing draft and added a trailing
   space, contradicted Piclaw 3.2.5.
+- `@ux-shared-014` has a spec. While "main"'s status, queue and commands reads are delayed, "research" is chosen by
+  keyboard. After the late responses arrive, the timeline, model, session label and composer destination still belong
+  to "research". The composer itself is shared across sessions in 3.2.5. Delaying "main"'s first timeline page instead
+  leaves the picker empty (rcarmo/piclaw#1515), so the spec does not delay that read.
+- `suite/net.ts` adds `holdReads()`.
 - The fixture model log records `skills`: the names of expanded `<skill name="…">` blocks in the turn's prompt.
 - `holdWrites()` returns `disarm()`, so later matching writes pass through.
 

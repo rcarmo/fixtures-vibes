@@ -48,3 +48,18 @@ export async function failNextNewWrite(page: Page, fail: { status: number; error
   });
   return state;
 }
+
+/** Hold matching GETs (e.g. one session's reads) until `release()`; they then reach the runtime late. */
+export async function holdReads(page: Page, match: (req: Request) => boolean) {
+  let release!: () => void;
+  const held = new Promise<void>(r => (release = r));
+  const state = { count: 0, release };
+  await page.route('**/*', async route => {
+    const req = route.request();
+    if (req.method() !== 'GET' || !match(req)) return route.fallback();
+    state.count++;
+    await held;
+    return route.fallback().catch(() => {});
+  });
+  return state;
+}
