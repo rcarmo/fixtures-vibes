@@ -68,7 +68,7 @@
     "suite/specs/quick-actions.spec.ts": "7b39c915bdbcfba038dff600670cc5509e43221f5d7e9fed61cbe2d5a7168ec5",
     "suite/specs/shared-copy.spec.ts": "a14813fe86f2f0dfc99b23b21bd6c2e663d833822ed22ec6bfdb702ef43ed6ec",
     "suite/specs/shared-messages-tool.spec.ts": "7d6b44bbe45de5bccc602960158b1edd9cb0ca58dcd165021d0f6f3008733571",
-    "suite/specs/shared-model-picker.spec.ts": "47a399789273407378c197472ba735bb095e0f598c803a852fd693d5968c2ade",
+    "suite/specs/shared-model-picker.spec.ts": "74821fd3b04dc59a7969ed9538a5b8d785ba10c40442bb61d680c55e08e7b026",
     "suite/specs/shared-queue.spec.ts": "d5d786899a3a563dff73c09098b70570e78512fe89f255100394475ae96ed6ac",
     "suite/specs/shared-quick-actions.spec.ts": "151f259100e5fee9d0a37cd0ec819ff422edbf6d1a06d55e1b8924e5ed5e3ab7",
     "suite/specs/shared-reconnect.spec.ts": "9fba88e17776670d4b21de5c0e234dcfcb96ca0f69a8ae004b903a610e8454b9",

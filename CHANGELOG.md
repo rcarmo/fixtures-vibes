@@ -39,6 +39,14 @@
   - Dropped: "timeline order" and "missing IDs are reported". 3.2.5 uses request order and reports missing IDs only in
     tool details.
   - Fixture tool arguments must escape `[`/`]`.
+- `@ux-shared-022` has a spec:
+  - A model switch still pending when the view moves to another session does not relabel that session.
+  - A rejected switch keeps the prior model and the composer draft.
+  - Models that do not advertise reasoning get no thinking level: a thinking control is disabled or offers only "off".
+  - Native compaction is actionable.
+  - "Unknown context" and "local estimates" cannot be constructed with fixture models, which report usage.
+  - On phone widths, 3.2.5's disabled Thinking level select covers part of the session button (rcarmo/piclaw#1518).
+    The spec opens the picker by keyboard.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.
 - The fixture model now prefers the *latest* user message that carries directives. An aborted turn leaves no

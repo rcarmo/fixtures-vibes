@@ -5,6 +5,7 @@
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
+import { holdWrites, bodyHas } from '../net';
 
 const modelButton = (page: Page) => page.getByRole('button', { name: /model picker/i }).first();
 const modelList = (page: Page) => page.getByRole('listbox', { name: /models/i });
@@ -57,3 +58,66 @@ for (const input of ['pointer', 'keyboard'] as const) {
     expect(await modelUsed(runtime, m)).toEqual(['fixture-1']);
   });
 }
+
+test('@ux-shared-022 Reject stale or unsupported model state', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  const research = await runtime.newSession();
+  const main = await runtime.newSession();
+  const composer = page.locator(sel('composeInput'));
+  const pickFixtureTwo = async () => {
+    await modelButton(page).click();
+    await expect(modelList(page)).toBeVisible();
+    await page.keyboard.type('fixture-2');
+    await modelList(page).getByRole('option', { name: /fixture model two|fixture-2/i }).click();
+  };
+  // A turn in each session, so both show an authoritative model label.
+  for (const s of [research, main]) {
+    await page.goto(s.url);
+    await composer.fill(`[reply:warm-${n}] warm ${n}`);
+    await composer.press('Enter');
+    await expect(page.locator(sel('agentPost')).filter({ hasText: `warm-${n}` })).toHaveCount(1);
+    await expect(modelButton(page)).toContainText(/fixture-1|fixture model$/i);
+  }
+
+  // A switch is pending for "main" when the view moves to "research"; the late result must not relabel "research".
+  const pending = await holdWrites(page, bodyHas('fixture-2'));
+  await pickFixtureTwo();
+  await expect.poll(() => pending.count).toBe(1);
+  const key = research.id.replace(/^[a-z]+:/, '');
+  // Keyboard: on phone widths 3.2.5's disabled Thinking level select overlaps the session button (rcarmo/piclaw#1518).
+  await page.getByRole('button', { name: /manage sessions/i }).first().focus();
+  await page.keyboard.press('Enter');
+  await page.getByRole('searchbox', { name: /search sessions/i }).fill(key);
+  await expect(page.getByRole('listbox', { name: /sessions/i }).getByRole('option')).toHaveCount(1);
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: /manage sessions/i }).first()).toHaveAccessibleName(new RegExp(key));
+  pending.release();
+  await page.waitForTimeout(2000);
+  await expect(modelButton(page)).toContainText(/fixture-1|fixture model$/i);
+
+  // A rejected switch keeps the prior model and the composer draft.
+  pending.disarm();
+  const rejected = await holdWrites(page, bodyHas('fixture-2'), { status: 500, error: `rejected-${n}` });
+  await composer.fill(`draft-${n}`);
+  await pickFixtureTwo();
+  await expect.poll(() => rejected.count).toBe(1);
+  rejected.release();
+  await page.waitForTimeout(1500);
+  await expect(modelButton(page)).toContainText(/fixture-1|fixture model$/i);
+  await expect(composer).toHaveValue(`draft-${n}`);
+  rejected.disarm();
+  await composer.fill(`[reply:still-${n}] still ${n}`);
+  await composer.press('Enter');
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `still-${n}` })).toHaveCount(1);
+  expect(await modelUsed(runtime, `still ${n}`)).toEqual(['fixture-1']);
+
+  // The fixture models advertise no reasoning, so no thinking level is offered: any visible thinking control is
+  // disabled or offers only "off" (3.2.5 shows such a select). Context is known (usage is reported), so the
+  // "unknown context" and "local estimate" clauses are not constructible here; native compaction is actionable.
+  for (const control of await page.getByLabel(/thinking|reasoning/i).all()) {
+    if (!(await control.isVisible()) || (await control.isDisabled())) continue;
+    const levels = await control.evaluate(el => el instanceof HTMLSelectElement ? [...el.options].map(o => o.value) : ['?']);
+    expect(levels).toEqual(['off']);
+  }
+  await expect(page.getByRole('button', { name: /compact/i }).first()).toBeEnabled();
+});
