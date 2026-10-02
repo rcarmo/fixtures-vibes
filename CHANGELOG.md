@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.0-rc.2
+
+- Fix `bun.lock` so `bun install --frozen-lockfile` works on a clean checkout (Bun 1.3.14).
+
 ## v0.1.0-rc.1
 
 - Classic Gherkin: 267 scenarios with preserved `@ux-<area>-NNN` IDs and 29 shared scenarios minted as `@ux-shared-001..029`.

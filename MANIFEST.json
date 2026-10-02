@@ -13,7 +13,7 @@
   },
   "files": {
     "Makefile": "c959f268483c0708fbd07af771e93546c0185c3dacd268b008dad5b01ab60c67",
-    "bun.lock": "30a36403f2c85c54f1bbfc97b09da2465fbd7517efbea5d4fc3c19f721b97f41",
+    "bun.lock": "4ccd41dec45019c0aeae33122abe8a7e56b58d6d0c857ea9dc5b143617416341",
     "capabilities.json": "551e06ef08b8bd5194c5eef25889d85ea9105eace38cf74d7b50984aeb846b1c",
     "control/fixture-model-server.ts": "a4ddaf6d3d8f588f8ea7940f387c1d5b7f1f90d7bd412be4bb4c3f4637c522b3",
     "features/canonical/shared-id-map.json": "b3d2969f72d9682127da2c7d366a632be66b723efb1162408b0fdde3a7ef02e2",

@@ -75,7 +75,7 @@ skipped automatically when the profile lacks a `@cap-*` tag of its scenario.
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.1",
+  "fixturesVibes": "v0.1.0-rc.2",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]
