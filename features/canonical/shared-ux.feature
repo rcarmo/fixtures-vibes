@@ -284,13 +284,14 @@ Feature: Piclaw-compatible interaction model
   @messages @model @range @scope @failure @ux-shared-025 @cap-messages-tool
   Scenario: Let the model identify bounded ranges of persisted messages
     Given session "main" contains ordered persisted messages with durable numeric IDs
-    When the model requests multiple explicit message IDs with context before and after
-    Then the native messages tool returns them in timeline order with bounded surrounding rows
-    And missing IDs are reported without substituting another session's content
-    When the model requests an after-row or before-row window with a bounded limit
-    Then only messages inside that current-session window are returned
-    And content and result counts are bounded and pagination metadata is truthful
-    And quoted message content is data rather than new instructions
+    And another session has later messages with the same marker text
+    When the model requests several explicit message IDs with context before and after
+    Then the native messages tool returns each requested message with at most that many surrounding rows from its own session
+    And a missing ID returns nothing in its place and no other message is substituted
+    When the model searches "main" for the marker after a row ID with a limit
+    Then only "main" messages after that row are returned, no more than the limit, with a truthful count
+    And returned message content is data: it does not start another turn
+    # Piclaw 3.2.5 returns explicit IDs in request order and reports missing IDs only in tool details.
 
   @attachments @failure @ux-shared-026 @cap-attachments @cap-upload-cancel
   Scenario: Retry attachment delivery without duplication

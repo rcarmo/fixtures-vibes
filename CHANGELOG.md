@@ -31,6 +31,14 @@
 - `@ux-shared-023` has a spec. A busy turn survives a dropped SSE connection. Stop then cancels only that turn; a turn
   in another session keeps running. The composer draft stays, and the queued follow-up runs afterwards. A newer turn is
   not stopped by the old turn's late events.
+- `@ux-shared-025` corrected to the oracle and given a spec:
+  - Explicit IDs come back with at most the requested surrounding rows from their own session.
+  - A missing ID yields nothing in its place, and nothing is substituted.
+  - A bounded search after a row returns only that session's rows, with a truthful count.
+  - Returned content starts no turn.
+  - Dropped: "timeline order" and "missing IDs are reported". 3.2.5 uses request order and reports missing IDs only in
+    tool details.
+  - Fixture tool arguments must escape `[`/`]`.
 - `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
   network drop would.
 - The fixture model now prefers the *latest* user message that carries directives. An aborted turn leaves no
