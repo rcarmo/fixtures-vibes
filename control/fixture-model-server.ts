@@ -168,7 +168,8 @@ async function completion(req: Request): Promise<Response> {
     const messages: any[] = body.messages || [];
     const last = messages[messages.length - 1];
     // The current turn's user messages: runtimes may append context (e.g. a Plan) as extra user messages after the
-    // prompt, and tool follow-ups add assistant tool_calls + tool results. Prefer the one that carries directives.
+    // prompt, and tool follow-ups add assistant tool_calls + tool results. Prefer the latest one that carries
+    // directives: an aborted turn leaves no assistant reply, so its prompt can precede the current one.
     const turnUsers: any[] = [];
     for (let i = messages.length - 1; i >= 0; i--) {
       const m = messages[i];
@@ -176,7 +177,7 @@ async function completion(req: Request): Promise<Response> {
       if (m.role !== "user") break;
       turnUsers.unshift(m);
     }
-    const lastUser = turnUsers.find((m) => HAS_DIRECTIVE.test(textOf(m.content)))
+    const lastUser = [...turnUsers].reverse().find((m) => HAS_DIRECTIVE.test(textOf(m.content)))
       ?? [...messages].reverse().find((m) => m.role === "user");
     const prompt = textOf(lastUser?.content);
     const p = plan(prompt);

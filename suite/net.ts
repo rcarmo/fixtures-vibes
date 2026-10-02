@@ -63,3 +63,34 @@ export async function holdReads(page: Page, match: (req: Request) => boolean) {
   });
   return state;
 }
+
+/**
+ * Let a test drop the page's SSE connections. Call before navigation. `dropSse()` closes every open EventSource and
+ * fires its `error` event, which is what the page sees when the network drops; the runtime's own reconnect logic
+ * takes over from there. Returns how many connections were dropped.
+ */
+export async function installSseDrop(page: Page) {
+  await page.addInitScript(() => {
+    const Native = window.EventSource;
+    const open = new Set<EventSource>();
+    class Tracked extends Native {
+      constructor(url: string | URL, init?: EventSourceInit) {
+        super(url, init);
+        open.add(this);
+      }
+    }
+    (window as any).EventSource = Tracked;
+    (window as any).__fixturesDropSse = () => {
+      let dropped = 0;
+      for (const source of open) {
+        open.delete(source);
+        if (source.readyState === Native.CLOSED) continue;
+        source.close();
+        source.dispatchEvent(new Event('error'));
+        dropped++;
+      }
+      return dropped;
+    };
+  });
+  return { drop: () => page.evaluate(() => (window as any).__fixturesDropSse() as number) };
+}

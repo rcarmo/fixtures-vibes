@@ -28,7 +28,13 @@
   keyboard. After the late responses arrive, the timeline, model, session label and composer destination still belong
   to "research". The composer itself is shared across sessions in 3.2.5. Delaying "main"'s first timeline page instead
   leaves the picker empty (rcarmo/piclaw#1515), so the spec does not delay that read.
-- `suite/net.ts` adds `holdReads()`.
+- `@ux-shared-023` has a spec. A busy turn survives a dropped SSE connection. Stop then cancels only that turn; a turn
+  in another session keeps running. The composer draft stays, and the queued follow-up runs afterwards. A newer turn is
+  not stopped by the old turn's late events.
+- `suite/net.ts` adds `holdReads()`, and `installSseDrop()`, which closes the page's EventSources and fires `error` as a
+  network drop would.
+- The fixture model now prefers the *latest* user message that carries directives. An aborted turn leaves no
+  assistant reply, so its prompt can precede the next one.
 - The fixture model log records `skills`: the names of expanded `<skill name="…">` blocks in the turn's prompt.
 - `holdWrites()` returns `disarm()`, so later matching writes pass through.
 
