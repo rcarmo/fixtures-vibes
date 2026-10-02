@@ -39,6 +39,14 @@
   untested context-window and references clauses were dropped.
 - The fixture server advertises `fixture-1` and `fixture-2` (it already answered any model ID). Profiles that claim
   `@cap-model-picker` must register both. The Piclaw reference registers `fixture-2` ("Fixture Model Two").
+- Profile `rateLimit: {path, perMinute}` paces matching browser writes under a known limit, using a sliding minute
+  per worker. The Piclaw reference paces `^/agent/[^/]+/message$` at 28/min (its limit is 30). 429 backoff stays as a
+  fallback. Without pacing, the larger suite hit the limit for long stretches, and backoff then pushed late tests
+  past their timeouts.
+- Spec races reported by @gi:
+  - `@ux-shared-016` polls the queue order, because a runtime may replace an optimistic row with its durable row
+    mid-read.
+  - `@ux-compose-003` takes its baseline after the seed's own user post is shown.
 - New canonical selector `userPost` (`.timeline .post:not(.agent-post)`).
 
 ## v0.1.0-rc.13

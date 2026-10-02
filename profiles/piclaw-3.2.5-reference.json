@@ -82,5 +82,9 @@
   },
   "selectors": {
     "quickActionHighlight": ".timeline-quick-actions-item.active"
+  },
+  "rateLimit": {
+    "path": "^/agent/[^/]+/message$",
+    "perMinute": 28
   }
 }

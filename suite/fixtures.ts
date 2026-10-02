@@ -4,6 +4,23 @@ import { startRuntime } from './lifecycle';
 import { loadCatalogue, titleId } from './catalogue';
 
 const profile = loadProfile();
+
+/**
+ * Optional pacing for runtimes with a known write rate limit (profile `rateLimit`). Matching writes wait until fewer
+ * than `perMinute` were sent in the last 60 s. One Playwright worker talks to one runtime, so worker-level state is
+ * the right scope.
+ */
+const paced = profile.rateLimit ? new RegExp(profile.rateLimit.path) : null;
+const sent: number[] = [];
+async function pace(pathname: string) {
+  if (!paced || !paced.test(pathname)) return;
+  for (;;) {
+    const now = Date.now();
+    while (sent.length && now - sent[0] >= 60_000) sent.shift();
+    if (sent.length < profile.rateLimit!.perMinute) { sent.push(now); return; }
+    await new Promise(r => setTimeout(r, 60_000 - (now - sent[0]) + 50));
+  }
+}
 const catalogue = loadCatalogue();
 
 export const test = base.extend<{ runtime: Runtime; sel: (key: string) => string; scenarioGate: void }, { server: { baseUrl: string } }>({
@@ -30,6 +47,7 @@ export const test = base.extend<{ runtime: Runtime; sel: (key: string) => string
     // Registered first, so spec-level request control (suite/net.ts) runs before it and falls back to it.
     await page.route('**/*', async route => {
       if (route.request().method() === 'GET') return route.fallback();
+      await pace(new URL(route.request().url()).pathname);
       let response = await route.fetch();
       for (const delay of [2000, 4000, 8000, 8000, 8000]) {
         if (response.status() !== 429) break;

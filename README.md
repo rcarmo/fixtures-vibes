@@ -77,6 +77,16 @@ shell command given `{"command": "..."}` (default `bash`). Mapping a name adapts
 `"approval": {"button": "^Allow "}` makes the suite click the matching control whenever it appears. Prefer configuring
 approval in `prepare` when the runtime allows it.
 
+`selectors` overrides canonical CSS selectors, only where markup cannot match them. Specs prefer accessible roles and
+names; the canonical selectors are `appShell`, `composeInput`, `sendButton`, `stopButton`, `queueItem`, `timeline`,
+`timelinePost`, `agentPost`, `userPost` and `quickActionHighlight` (see `suite/runtime.ts`).
+
+`commands` holds composer text the suite types to seed settings that have no shared API. Today:
+`setAgentAvatar` (with `{source}`, a PNG data URL) and `clearAgentAvatar`, both required for `@cap-agent-avatar`.
+
+The fixture model advertises `fixture-1` and `fixture-2`. A profile that claims `@cap-model-picker` must register both
+(the second may be named "Fixture Model Two") so selection can be tested without any real provider.
+
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
 Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such
 scenario then needs its own skips entry (`not-implemented`, `known-defect` or `intentional-divergence`); do not drop a claim
@@ -104,20 +114,29 @@ pass from being reported as a stale skip; give the observed failure rate in `det
 
 ## Status
 
-Scenarios tagged `@reconcile-3.2.5` are still being checked against the installed Piclaw 3.2.5 and may change wording.
-Shared IDs were minted per scenario; `features/canonical/shared-id-map.json` maps the old positional IDs.
+Only the 26 passkey `@proposal` scenarios still carry `@reconcile-3.2.5`. Shared IDs were minted per scenario;
+`features/canonical/shared-id-map.json` maps the old positional IDs. Many scenarios have no spec yet; the report lists
+them as "no suite test yet", which does not fail the gate.
 
 ## Test lifecycle
 
-For each isolation group the suite:
+For lifecycle profiles, `make compliance PROFILE=…`:
 
-1. creates a fresh temp root and runs the profile's `prepare` (fresh store/workspace, provider pointed at the fixture model),
-2. starts the fixture model and the runtime, and waits for the readiness probe,
-3. creates or opens a session through the runtime's public interface,
-4. runs scenarios, driving turns with fixture-model directives,
-5. stops the runtime, then resets the fixture model.
+1. deletes previous results and reports, so a report can never describe an older run;
+2. starts one fixture model for the run (global setup);
+3. per Playwright worker, creates a fresh temp root, runs `prepare`, starts the runtime and waits for readiness. A failed
+   test replaces the worker, so the next test gets a fresh runtime;
+4. after every test, releases held turns and ends any simulated outage;
+5. stops the runtime, then the fixture model.
 
 Never reset the fixture model under a live runtime: held requests fail and runtimes may retry them.
+
+Writes answered with HTTP 429 are retried with backoff (2/4/8/8/8 s, or `Retry-After`); rate limits are not under test.
+Specs that need slow or failing requests use `suite/net.ts`, which matches requests by what the page sends, never by
+runtime route names.
+
+`make oracle PROFILE=…` records the last run as immutable evidence under `oracle/<runtime>/<version>/` when its gate is
+OK. Only the Piclaw reference is recorded there.
 
 ## Fixture model directives
 

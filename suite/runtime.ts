@@ -24,6 +24,7 @@ export type Profile = {
   tools?: { shell?: string; activate?: string };
   approval?: { button: string };
   commands?: { setAgentAvatar?: string; clearAgentAvatar?: string };
+  rateLimit?: { path: string; perMinute: number };
 };
 
 export function profilePath(): string {

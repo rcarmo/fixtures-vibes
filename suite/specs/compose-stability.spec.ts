@@ -29,6 +29,8 @@ test('@ux-compose-003 Reject an entirely empty submission', async ({ page, runti
   await input.fill(`[reply:ok-${n}] seed ${n}`);
   await input.press('Enter');
   await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
+  // The seed's own user post may arrive after its reply; take the baseline once both are shown.
+  await expect(page.locator(sel('userPost')).filter({ hasText: `seed ${n}` })).toHaveCount(1);
   const posts = await page.locator(sel('timelinePost')).count();
   const before = (await runtime.modelLog()).length;
   await input.fill('   \n  ');

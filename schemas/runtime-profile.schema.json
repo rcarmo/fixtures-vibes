@@ -225,6 +225,27 @@
         }
       },
       "description": "Composer commands the suite types to seed runtime settings that have no shared API. Required for the capabilities that use them (@cap-agent-avatar)."
+    },
+    "rateLimit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "perMinute"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Regular expression for the URL path of rate-limited writes."
+        },
+        "perMinute": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum matching writes per sliding minute."
+        }
+      },
+      "description": "Pace browser writes to a known rate limit instead of hitting it; rate limits are not under test."
     }
   },
   "oneOf": [

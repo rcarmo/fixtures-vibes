@@ -38,7 +38,8 @@ test('@ux-shared-016 Queue two follow-ups exactly once', async ({ page, runtime,
   const n = nonce();
   const other = await runtime.newSession();
   const { gate } = await heldWithQueue(page, runtime, sel, n, ['a', 'b']);
-  expect(await queueTexts(page, sel, n)).toEqual(['a', 'b']);
+  // Poll: runtimes may replace an optimistic queue row with its durable row while it is being read.
+  await expect.poll(() => queueTexts(page, sel, n)).toEqual(['a', 'b']);
   await page.reload();
   await expect.poll(() => queueTexts(page, sel, n)).toEqual(['a', 'b']);
 
