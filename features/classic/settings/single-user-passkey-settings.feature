@@ -1,13 +1,9 @@
-@shared @implemented @browser-verified @single-user @passkeys @settings
+@proposal @single-user @passkeys @settings
 Feature: Manage multiple single-user passkeys in Settings
   As the sole instance owner
   I want to add, recognise, rename and remove passkeys from Settings
   So that I can sign in from several authenticators without managing credentials in chat
 
-  # Acceptance contract: Bun/Playwright mappings and manual-device limits are in
-  # docs/reviews/single-user-passkey-settings.md. No generated Cucumber steps.
-  # Run UI scenarios in Classic and Visual; the test matrix is in
-  # docs/design/single-user-passkey-settings.md.
   # A passkey is a registered credential, not a count of physical devices.
   # Policies below are the conservative defaults used for the requested implementation.
 
@@ -19,7 +15,7 @@ Feature: Manage multiple single-user passkeys in Settings
 
   Rule: The owner can recognise and manage each registered credential
 
-    @ux-single-passkeys-001 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-001 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Open the same passkey controls in either Settings skin
       Given I am signed in as the owner
       And passkeys are enabled by the login policy
@@ -34,9 +30,8 @@ Feature: Manage multiple single-user passkeys in Settings
       Examples:
         | skin    |
         | Classic |
-        | Visual  |
 
-    @ux-single-passkeys-002 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-002 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Add a first passkey from an authenticated TOTP session
       Given the login policy accepts TOTP and passkeys
       And no passkeys are registered
@@ -48,7 +43,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And TOTP sign-in remains available
       And no enrolment token is put in a navigation URL or posted to chat
 
-    @ux-single-passkeys-003 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-003 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Add another passkey without a TOTP prerequisite
       Given the login policy is passkey-only
       And no TOTP factor is configured
@@ -61,7 +56,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And the existing "Laptop" credential is unchanged
       And I am not asked to configure TOTP or use a chat enrolment link
 
-    @ux-single-passkeys-004 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-004 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Either passkey can independently sign in after a restart
       Given "Laptop" and "Backup key" are registered for "piclaw.test"
       And the instance restarts with its persistent store intact
@@ -76,14 +71,14 @@ Feature: Manage multiple single-user passkeys in Settings
         | Laptop     |
         | Backup key |
 
-    @ux-single-passkeys-005 @manual-device @cap-auth-passkey @cap-physical-device @cap-settings-dialog
+    @ux-single-passkeys-005 @manual-device @cap-auth-passkey @cap-physical-device @cap-settings-dialog @reconcile-3.2.5
     Scenario: A synced credential is not displayed as several physical devices
       Given "Synced key" represents one credential available on two devices
       When each device successfully signs in with that credential
       Then Settings continues to show one row for "Synced key"
       And Settings does not claim to inventory the devices holding that credential
 
-    @ux-single-passkeys-006 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-006 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Rename an existing or previously unnamed credential
       Given two passkeys have no saved names
       And I have recently proved possession of an accepted factor
@@ -93,7 +88,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And the name remains after I reload Settings
       And its credential ID, relying party ID, public key and sign counter are unchanged
 
-    @ux-single-passkeys-007 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-007 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Validate names without changing authentication material
       Given I have recently proved possession of an accepted factor
       And I am editing the name of "Laptop"
@@ -108,7 +103,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | a name containing a control character | a validation error with the old name intact |
         | a name containing HTML markup         | the saved name as literal text              |
 
-    @ux-single-passkeys-008 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-008 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Confirm removal of one key without touching the other
       Given "Laptop" and "Backup key" are registered for "piclaw.test"
       And I have recently proved possession of an accepted factor
@@ -121,7 +116,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And a fresh sign-in using "Backup key" succeeds
       And "Backup key" has not been renamed or replaced
 
-    @ux-single-passkeys-009 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-009 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Cancel a destructive confirmation
       Given "Laptop" and "Backup key" are registered
       When I choose Remove for "Laptop"
@@ -132,7 +127,7 @@ Feature: Manage multiple single-user passkeys in Settings
 
   Rule: Native prompts and failures do not leave misleading Settings state
 
-    @ux-single-passkeys-010 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-010 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Cancel native passkey creation and retry deliberately
       Given I have recently proved possession of an accepted factor
       And one passkey is registered
@@ -143,7 +138,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And Add passkey is available for an explicit retry with a fresh ceremony
       And the application does not reopen the native prompt automatically
 
-    @ux-single-passkeys-011 @native-focus-manual @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-011 @native-focus-manual @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: The native prompt may temporarily take focus away from the page
       Given an authorised passkey creation ceremony is pending
       When the browser's native prompt takes focus away from Settings
@@ -151,7 +146,7 @@ Feature: Manage multiple single-user passkeys in Settings
       Then the registration can complete once
       And page blur alone has not cancelled the ceremony or opened another prompt
 
-    @ux-single-passkeys-012 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-012 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: A duplicate credential never replaces the existing passkey
       Given "Laptop" is registered for "piclaw.test"
       When I start adding another passkey
@@ -160,7 +155,7 @@ Feature: Manage multiple single-user passkeys in Settings
       Then the server rejects the duplicate without replacing the existing row
       And Settings does not report a second registered passkey
 
-    @ux-single-passkeys-013 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-013 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Show failed reads and writes truthfully
       Given Settings previously loaded a passkey named "Laptop"
       When <operation> fails with a server or network error
@@ -174,7 +169,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | saving a new name        | the last confirmed name remains visible                   |
         | sending a removal        | the row is not silently removed from the displayed list    |
 
-    @ux-single-passkeys-014 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-014 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Reconcile an uncertain registration result without blindly retrying
       Given the server has stored a newly created passkey
       But the registration response does not reach the browser
@@ -183,7 +178,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And the new credential appears once
       And the application does not automatically repeat registration with the consumed challenge
 
-    @ux-single-passkeys-025 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-025 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Explain an unregistered credential left on the authenticator
       Given the native authenticator has created a new local credential
       But the server rejects its registration finish request
@@ -193,7 +188,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And it does not claim to have removed that local credential
       And existing registered credentials are unchanged
 
-    @ux-single-passkeys-015 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-015 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Explain unavailable passkey creation
       Given <condition>
       When I open Settings then Authentication
@@ -208,7 +203,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | the login policy is TOTP-only                  | passkeys are disabled by the login policy |
         | single-user authentication is not configured   | authentication must be configured first  |
 
-    @ux-single-passkeys-016 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-016 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Settings remains operable at narrow widths and with a keyboard
       Given I am signed in as the owner in <skin>
       And the viewport is 390 CSS pixels wide
@@ -222,11 +217,10 @@ Feature: Manage multiple single-user passkeys in Settings
       Examples:
         | skin    |
         | Classic |
-        | Visual  |
 
   Rule: Registration and management are bound to the authenticated single user
 
-    @ux-single-passkeys-017 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-017 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Reject requests outside the management authority
       Given <request_context>
       When a caller directly requests <operation>
@@ -243,7 +237,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | a single-user management request selecting another account | list that account's passkeys   |
         | the instance is in family-shared mode                | use the single-user management route |
 
-    @ux-single-passkeys-018 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-018 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Fail closed when registration proof or its binding is invalid
       Given an authenticated owner has started a registration ceremony
       When the finish request contains <invalid_condition>
@@ -265,7 +259,7 @@ Feature: Manage multiple single-user passkeys in Settings
     # Policy: reuse the account flow's five-minute freshness model.
     # Listing is allowed for a valid owner session; writes require fresh proof.
 
-    @ux-single-passkeys-019 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-019 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Refresh authentication before changing a passkey
       Given I have a valid owner session with authentication older than five minutes
       When I attempt to <operation>
@@ -281,7 +275,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | rename a passkey |
         | remove a passkey |
 
-    @ux-single-passkeys-026 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-026 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Fresh proof in one browser does not authorise another browser
       Given two browser sessions belong to the same owner
       And neither session has recent authentication
@@ -294,7 +288,7 @@ Feature: Manage multiple single-user passkeys in Settings
     # Policy: usability is determined by current server policy and current RP ID.
     # Active sessions, internal tokens and credentials for another RP are not factors.
 
-    @ux-single-passkeys-020 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-020 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario Outline: Decide last-key removal from effective login methods
       Given I have recently proved possession of an accepted factor
       And "Laptop" is the selected registered passkey for "piclaw.test"
@@ -314,7 +308,7 @@ Feature: Manage multiple single-user passkeys in Settings
         | either       | no other accepted factor is configured                    | refuses  | add another sign-in method before removing this key |
         | either       | a pending TOTP enrolment exists but has not been verified | refuses  | unverified TOTP setup is not a sign-in method |
 
-    @ux-single-passkeys-021 @security @concurrency @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-021 @security @concurrency @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Two concurrent removals cannot delete both remaining usable keys
       Given "Laptop" and "Backup key" are the only accepted sign-in methods
       And two recently authenticated browser sessions display both keys
@@ -323,7 +317,7 @@ Feature: Manage multiple single-user passkeys in Settings
       And the other is refused by the server's write-time lockout check
       And both lists can refresh to show the one remaining key
 
-    @ux-single-passkeys-022 @security @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-022 @security @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Recheck policy and recovery methods at commit time
       Given a removal confirmation was opened while TOTP was an accepted fallback
       And the effective policy changes to passkey-only before removal is committed
@@ -331,7 +325,7 @@ Feature: Manage multiple single-user passkeys in Settings
       Then the server refuses removal
       And Settings refreshes the reason instead of trusting the earlier enabled button
 
-    @ux-single-passkeys-023 @security @legacy @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-023 @security @legacy @cap-auth-passkey @cap-settings-dialog @cap-slash-commands @reconcile-3.2.5
     Scenario: Slash commands cannot bypass the last-factor guard
       Given "Laptop" is the only sign-in method accepted by the current policy
       When an authenticated owner submits a legacy passkey delete command for "Laptop"
@@ -340,7 +334,7 @@ Feature: Manage multiple single-user passkeys in Settings
 
   Rule: Removing a passkey does not silently revoke existing login sessions
 
-    @ux-single-passkeys-024 @cap-auth-passkey @cap-settings-dialog
+    @ux-single-passkeys-024 @cap-auth-passkey @cap-settings-dialog @reconcile-3.2.5
     Scenario: Explain the difference between removing a passkey and signing out a device
       Given I have recently proved possession of an accepted factor
       And another usable sign-in method will remain

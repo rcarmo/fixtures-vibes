@@ -226,7 +226,7 @@ Feature: Classic Piclaw interaction model
     And unavailable context information is not treated as an authoritative measured token count
     And a model response for a superseded chat is rejected by the model-state guard
 
-  @ux-original-023 @turn @reconnect @cap-reconnect
+  @ux-original-023 @turn @reconnect @cap-reconnect @cap-stop
   Scenario: Refresh active-turn state after reconnect and request stop
     Given the client reconnects its SSE channel
     When reconnect refresh handlers run
@@ -248,7 +248,7 @@ Feature: Classic Piclaw interaction model
     And cancelling the confirmation preserves the message
     And accepted deletion removes the targeted message and confirmed replies
 
-  @ux-original-025 @messages @model-facing
+  @ux-original-025 @messages @model-facing @cap-messages-tool
   Scenario: Retrieve explicit message IDs and bounded row windows
     Given the messages tool is available in an authorised session
     When the model requests multiple explicit message IDs with surrounding context

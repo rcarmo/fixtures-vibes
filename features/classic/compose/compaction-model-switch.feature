@@ -17,7 +17,7 @@ Feature: Classic compaction and model controls
     And completion updates follow the accepted terminal event and usage refresh
     # No fixed SSE delivery deadline or immediate atomic refresh is promised.
 
-  @ux-compaction-003 @cap-compaction
+  @ux-compaction-003 @cap-compaction @cap-stop
   Scenario: Request stop through the visible compaction control
     Given the composer renders a stop control for active work
     When I activate stop while compaction is active

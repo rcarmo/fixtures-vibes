@@ -175,13 +175,17 @@
       "area": "compose",
       "description": "Theme and tint switching (/theme, appearance settings)."
     },
-    "@cap-annotation": {
+    "@cap-messages-tool": {
       "area": "timeline",
-      "description": "Inline image annotation and persistent text highlights (image markup limited to iPad-class devices)."
+      "description": "Model-facing messages tool: bounded, session-scoped lookup of persisted message ranges."
     },
-    "@cap-message-range": {
+    "@cap-image-annotation": {
       "area": "timeline",
-      "description": "Model-facing lookup of bounded, session-scoped ranges of persisted messages."
+      "description": "Inline image markup and rasterised annotation (iPad-class devices)."
+    },
+    "@cap-text-highlights": {
+      "area": "timeline",
+      "description": "Persistent text highlights and annotations on timeline messages."
     }
   }
 }

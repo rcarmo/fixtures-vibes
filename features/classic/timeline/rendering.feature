@@ -36,7 +36,7 @@ Feature: Timeline rendering and post actions
     Then the post metadata should show the timestamp first
     And the outcome chip should render after the timestamp on the same metadata row
 
-  @ux-timeline-027
+  @ux-timeline-027 @cap-read-aloud
 
   Scenario: Read aloud appears only when browser speech support and speakable text both exist
     Given an agent post has speakable text
@@ -44,7 +44,7 @@ Feature: Timeline rendering and post actions
     Then the post should show a Read aloud action
     But without speech synthesis support the Read aloud action should not be shown
 
-  @ux-timeline-028
+  @ux-timeline-028 @cap-read-aloud
 
   Scenario: Starting read aloud on another post transfers playback ownership
     Given one agent post is already being read aloud

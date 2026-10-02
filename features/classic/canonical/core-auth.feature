@@ -119,7 +119,7 @@ Feature: Classic core auth UX
     And confirmation succeeds only for the claimed account binding
     And the page stays on /auth/invitation with no session cookies
 
-  @ux-auth-012 @invitation @passkey @cancellation @cap-auth-login @cap-auth-passkey @cap-multi-user @cap-stop
+  @ux-auth-012 @invitation @passkey @cancellation @cap-auth-login @cap-auth-passkey @cap-multi-user
   Scenario Outline: Leaving a passkey invitation flow discards the one-use ceremony
     Given a passkey invitation is waiting for native credential creation
     When I <action>

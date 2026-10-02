@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.0-rc.3
+
+- Owner review (@tau, @gi): `@cap-stop` moved from `@ux-auth-012` (leaving an invitation) to `@ux-original-023`, `@ux-shared-023`
+  and `@ux-compaction-003`; `@cap-message-delete` on `@ux-original-024`/`@ux-shared-024`; `@cap-read-aloud` on
+  `@ux-timeline-027/028`; `@cap-slash-commands` on `@ux-single-passkeys-023`.
+- New `@cap-messages-tool` (`@ux-original-025`, `@ux-shared-025`) replaces the misleading model-picker requirement;
+  `@ux-shared-012` (Plan tool) needs `@cap-plan-sidebar` + `@cap-tool-output`, not add-ons or the model picker.
+- `@cap-annotation` split into `@cap-image-annotation` (`@ux-timeline-001..007`) and `@cap-text-highlights` (`008..012`).
+- Passkey Settings scenarios are a `@proposal`, not 3.2.5 observations: Classic rows only, all `@reconcile-3.2.5`.
+- Known follow-ups: split multi-picker scenarios (`@ux-original-021`, `@ux-shared-021`); environment gating for
+  browser/device-specific mobile scenarios.
+
 ## v0.1.0-rc.2
 
 - Fix `bun.lock` so `bun install --frozen-lockfile` works on a clean checkout (Bun 1.3.14).

@@ -265,7 +265,7 @@ Feature: Piclaw-compatible interaction model
     And local token estimates are labelled estimates
     And compaction is actionable only when natively supported
 
-  @turn @reconnect @scope @ux-shared-023 @cap-reconnect
+  @turn @reconnect @scope @ux-shared-023 @cap-reconnect @cap-stop
   Scenario: Cancel the captured active turn across reconnect
     Given a busy turn has captured session, turn and runtime owner
     When SSE disconnects and reconnects
@@ -288,7 +288,7 @@ Feature: Piclaw-compatible interaction model
     Then only that message remains or is removed according to the authoritative response
     And no other session, message reference or composer draft changes
 
-  @messages @model @range @scope @failure @ux-shared-025 @cap-message-range
+  @messages @model @range @scope @failure @ux-shared-025 @cap-messages-tool
   Scenario: Let the model identify bounded ranges of persisted messages
     Given session "main" contains ordered persisted messages with durable numeric IDs
     When the model requests multiple explicit message IDs with context before and after
