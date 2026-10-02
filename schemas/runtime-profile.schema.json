@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rcarmo/fixtures-vibes/schemas/runtime-profile.schema.json",
+  "title": "fixtures-vibes runtime profile",
+  "description": "Data a runtime supplies so the shared compliance suite can start, reach and reset it. Profiles carry no assertions and no scenario-specific branching.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runtime",
+    "version",
+    "readiness",
+    "session",
+    "capabilities"
+  ],
+  "properties": {
+    "runtime": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Stable runtime name, e.g. piclaw, gi, vibes-python, vibes-go, tau-prime."
+    },
+    "version": {
+      "type": "string",
+      "description": "Runtime commit or release under test."
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prepare",
+        "start"
+      ],
+      "description": "Shell commands run by the suite. Each receives FIXTURES_ROOT (fresh temp dir), FIXTURES_PORT, FIXTURE_MODEL_URL (OpenAI-compatible base URL), FIXTURE_MODEL_ID.",
+      "properties": {
+        "prepare": {
+          "type": "string",
+          "description": "Create fresh store/workspace/config under FIXTURES_ROOT pointing the model provider at FIXTURE_MODEL_URL."
+        },
+        "start": {
+          "type": "string",
+          "description": "Start the server in the foreground; the suite owns the process."
+        },
+        "reset": {
+          "type": "string",
+          "description": "Optional: restore a clean state between scenarios without restarting. Default: stop, prepare, start."
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "default": 200
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "default": 30000
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "open"
+      ],
+      "description": "How the suite reaches a usable chat session through the runtime's public interface.",
+      "properties": {
+        "create": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "path"
+          ],
+          "properties": {
+            "method": {
+              "enum": [
+                "POST",
+                "PUT"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "body": {},
+            "idField": {
+              "type": "string",
+              "description": "JSON pointer-ish dotted path to the new session id in the response."
+            }
+          }
+        },
+        "open": {
+          "type": "string",
+          "description": "URL path template to open a session, e.g. '/' or '/?session={id}'."
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "bearer",
+            "cookie"
+          ]
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^@cap-[a-z0-9-]+$"
+      },
+      "uniqueItems": true,
+      "description": "Capabilities from capabilities.json this runtime claims. Scenarios requiring an unclaimed capability must appear in the skips file."
+    },
+    "skips": {
+      "type": "string",
+      "description": "Path (relative to the profile) of the skips file."
+    },
+    "selectors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Only where markup cannot match the canonical role/name selector. Keys are canonical selector names from the suite."
+    },
+    "routes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Only for HTTP routes the suite must call directly (seeding through public API). Keys are canonical route names."
+    },
+    "external": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseUrl",
+        "modelControlUrl"
+      ],
+      "description": "Already-running instance (e.g. the shared Piclaw reference). The suite cannot restart it, so isolation uses fresh sessions and model reset only when the instance is idle.",
+      "properties": {
+        "baseUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "modelControlUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "lifecycle"
+      ]
+    },
+    {
+      "required": [
+        "external"
+      ]
+    }
+  ]
+}

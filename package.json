@@ -1,0 +1,16 @@
+{
+  "name": "fixtures-vibes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test tests",
+    "suite": "playwright test -c suite/playwright.config.ts"
+  },
+  "devDependencies": {
+    "@cucumber/gherkin": "42.0.1",
+    "@cucumber/messages": "34.2.1",
+    "@playwright/test": "1.63.0",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1"
+  }
+}

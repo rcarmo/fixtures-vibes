@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/rcarmo/fixtures-vibes/schemas/skips.schema.json",
+  "title": "fixtures-vibes skips file",
+  "description": "Every canonical scenario a runtime does not pass must be listed here with a reason. Unknown IDs, duplicate entries and skips for scenarios that now pass are failures.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runtime", "fixturesVibes", "skips"],
+  "properties": {
+    "runtime": { "type": "string" },
+    "fixturesVibes": { "type": "string", "description": "fixtures-vibes tag or commit these skips were reviewed against." },
+    "skips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "reason", "detail"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^@(ux|shared)-[a-z0-9-]+$" },
+          "reason": {
+            "enum": ["capability-absent", "intentional-divergence", "not-implemented", "environment-limit", "known-defect"],
+            "description": "capability-absent: requires a capability the profile does not claim. intentional-divergence: product decision, needs owner sign-off. not-implemented: planned work. environment-limit: cannot run headless/CI (e.g. physical device). known-defect: failing bug, issue required."
+          },
+          "capability": { "type": "string", "pattern": "^@cap-[a-z0-9-]+$" },
+          "detail": { "type": "string", "minLength": 10 },
+          "issue": { "type": "string", "description": "Issue/PR URL; required for not-implemented and known-defect." },
+          "approvedBy": { "type": "string", "description": "Required for intentional-divergence." }
+        },
+        "allOf": [
+          { "if": { "properties": { "reason": { "const": "capability-absent" } } }, "then": { "required": ["capability"] } },
+          { "if": { "properties": { "reason": { "enum": ["not-implemented", "known-defect"] } } }, "then": { "required": ["issue"] } },
+          { "if": { "properties": { "reason": { "const": "intentional-divergence" } } }, "then": { "required": ["approvedBy"] } }
+        ]
+      }
+    }
+  }
+}
