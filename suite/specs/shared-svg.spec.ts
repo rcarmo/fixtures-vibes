@@ -46,3 +46,31 @@ test('@ux-shared-031 Render safe model-generated SVG as an isolated image', asyn
   await expect(post.locator('svg title', { hasText: `chart ${n}` })).toHaveCount(0);
   await expect(post.getByText('<rect', { exact: false }).first()).toBeAttached();
 });
+
+test('@ux-original-029 Render a safe fenced SVG as an isolated image and retain source', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+  // A user-authored post exercises the Classic renderer directly.
+  await input.fill('```svg\n<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20"><title>user chart ' + n + '</title><rect width="40" height="20" fill="#3b82f6"/></svg>\n```');
+  await input.press('Enter');
+  const safe = page.locator(sel('timelinePost')).filter({ has: page.getByRole('img', { name: `user chart ${n}` }) });
+  await expect(safe).toHaveCount(1);
+  await expect(safe.getByRole('img', { name: `user chart ${n}` })).toHaveAttribute('src', /^data:image\/svg\+xml/);
+  await expect(safe.locator('svg title', { hasText: `user chart ${n}` })).toHaveCount(0);
+  await expect(safe.getByText('<rect', { exact: false }).first()).toBeAttached();
+
+  const probe = `/fixtures-probe-u${n}.png`;
+  const fetched: string[] = [];
+  page.on('request', r => { if (r.url().includes(probe)) fetched.push(r.url()); });
+  await page.evaluate(() => { (window as any).__svgPwned = 0; });
+  await input.fill('```svg\n<svg xmlns="http://www.w3.org/2000/svg" onload="window.__svgPwned=1"><title>bad ' + n + '</title><script>window.__svgPwned=2</script><image href="' + runtime.baseUrl + probe + '" width="9" height="9"/></svg>\n```');
+  await input.press('Enter');
+  const unsafe = page.locator(sel('timelinePost')).filter({ hasText: `bad ${n}` }).first();
+  await expect(unsafe).toBeVisible();
+  await expect(unsafe.getByText('__svgPwned', { exact: false }).first()).toBeVisible();
+  await expect(unsafe.locator('img[src^="data:image/svg+xml"]')).toHaveCount(0);
+  await page.waitForTimeout(1000);
+  expect(await page.evaluate(() => (window as any).__svgPwned)).toBe(0);
+  expect(fetched).toEqual([]);
+});

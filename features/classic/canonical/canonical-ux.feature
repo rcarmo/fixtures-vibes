@@ -291,14 +291,12 @@ Feature: Classic Piclaw interaction model
     When I copy a code block
     Then the copy path uses code text instead of highlighted HTML
 
-  @ux-original-029 @svg @markdown @piclaw-3.2.4 @cap-svg-render @reconcile-3.2.5
+  @ux-original-029 @svg @markdown @piclaw-3.2.4 @cap-svg-render
   Scenario: Render a safe fenced SVG as an isolated image and retain source
     Given a post contains a fenced SVG with safe vector geometry and a title
-    When the Classic Markdown renderer processes it with sanitization enabled
-    Then the post renders an accessible image whose source is a sanitized data:image/svg+xml URL
-    And the original SVG source remains available to the code-copy path
-    And model SVG geometry is not injected as privileged inline DOM descendants
+    Then the post renders an image named by the SVG title from a data:image/svg+xml URL
+    And the original SVG source remains available to copy
+    And the SVG is not inserted into the page as inline elements
     When another fence contains scripts, event handlers or external references
     Then that unsafe fence remains visible as escaped source without a preview image
     And it cannot execute script or fetch an external resource
-    # Malformed/oversized cases and additional unsafe categories need separate evidence.

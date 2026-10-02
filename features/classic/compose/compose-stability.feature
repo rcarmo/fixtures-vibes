@@ -2,13 +2,12 @@
 Feature: Classic composer draft and queue behavior
   The installed Piclaw reference release is the oracle.
 
-  @ux-compose-001 @reconcile-3.2.5
+  @ux-compose-001
   Scenario: Clear captured content while allowing a new draft
     Given the composer contains text and references
     When I submit the draft
-    Then the client captures text, references, media and chat identifier for that submission
-    And it clears the displayed draft before awaiting the background send
-    And further typing belongs to the new displayed draft
+    Then the displayed draft clears while the submitted turn is still in flight
+    And text typed afterwards belongs to the new draft and survives the reply
 
   @ux-compose-002 @reconcile-3.2.5
   Scenario: Restore a failed submission alongside newer text
@@ -19,11 +18,11 @@ Feature: Classic composer draft and queue behavior
     And captured references are merged with current references
     And the failure is reported without claiming delivery succeeded
 
-  @ux-compose-003 @reconcile-3.2.5
+  @ux-compose-003
   Scenario: Reject an entirely empty submission
     Given there is no non-whitespace text, media or file, folder or message reference
-    When the submission handler runs
-    Then it returns without beginning a message submission
+    When I submit the composer
+    Then no message is posted and no turn starts
 
   @ux-compose-004 @reconcile-3.2.5
   Scenario: Return a queued message replaces the current editor draft
