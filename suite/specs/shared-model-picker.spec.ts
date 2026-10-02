@@ -29,7 +29,12 @@ for (const input of ['pointer', 'keyboard'] as const) {
     const second = modelList(page).getByRole('option', { name: /fixture model two|fixture-2/i });
     await expect(second).toHaveCount(1);
     if (input === 'pointer') await second.click();
-    else await page.keyboard.press('Enter');
+    else {
+      // Enter acts on the highlighted entry; wait until the search field's active descendant is the filtered option.
+      const id = await second.getAttribute('id');
+      await expect(page.getByRole('combobox').first()).toHaveAttribute('aria-activedescendant', id!);
+      await page.keyboard.press('Enter');
+    }
     // The switch may be a rate-limited chat command; allow for the suite's 429 backoff.
     await expect(modelList(page)).toHaveCount(0, { timeout: 40_000 });
     await expect(modelButton(page)).toContainText(/fixture-2|fixture model two/i);

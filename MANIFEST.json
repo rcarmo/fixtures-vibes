@@ -67,7 +67,7 @@
     "suite/specs/queue-steer.spec.ts": "521dd506d85f2d73adcf0e55e607957bc340a613ce5a868ce22215a721672fcf",
     "suite/specs/quick-actions.spec.ts": "c848b213d036c7d6b88591f2f80ac1a3bcdd3214c6300f277b90b80ebea080ba",
     "suite/specs/shared-copy.spec.ts": "a14813fe86f2f0dfc99b23b21bd6c2e663d833822ed22ec6bfdb702ef43ed6ec",
-    "suite/specs/shared-model-picker.spec.ts": "2839b6dbf7fc6ab15fb55b7bedc8cb7448766010b4b99f0f6ba0a4c531e53417",
+    "suite/specs/shared-model-picker.spec.ts": "47a399789273407378c197472ba735bb095e0f598c803a852fd693d5968c2ade",
     "suite/specs/shared-queue.spec.ts": "27b70104105a6020564e83c6ee0735c61d5cd20049d4945f2e49a8e44b39ba93",
     "suite/specs/shared-quick-actions.spec.ts": "6065648037c5fd0097459d1f6b3b18891f198c8dc93bf9ab0b41e550c88bcd2f",
     "suite/specs/shared-shell.spec.ts": "25b715986ed7f2336e437d1bce5587304a46bddbfffdf3ebf014b2ce8f3bdada",
