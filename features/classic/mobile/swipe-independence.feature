@@ -32,6 +32,8 @@ Feature: Classic session swipe target rules
     When swipe target eligibility is evaluated
     Then that ancestor permits the target through the interactive-target exclusion
     And gesture direction and selection guards still apply
+    # Not constructible against Piclaw 3.2.5: the live thinking/status panel renders outside the timeline element that
+    # listens for swipes, so no gesture starting in it reaches the eligibility check. No spec.
 
   @ux-mobile-004 @cap-touch
   Scenario: Keep swipe order stable as the selected chat changes
