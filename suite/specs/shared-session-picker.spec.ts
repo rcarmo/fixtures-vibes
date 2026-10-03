@@ -1,10 +1,13 @@
-/** Session picker coherence (features/canonical/shared-ux.feature @ux-shared-014). */
+/** Session picker (shared-ux.feature @ux-shared-014/015; canonical-ux.feature @ux-original-014/015, same bodies). */
 import { test, expect } from '../fixtures';
 import { holdReads, holdWrites } from '../net';
 import { gateName } from '../runtime';
 import { randomUUID } from 'node:crypto';
 
-test('@ux-shared-014 Select one coherent session view', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-014', 'Select one coherent session view'],
+  ['@ux-original-014', 'Select another session through the picker'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const main = await runtime.newSession();
   const research = await runtime.newSession();
@@ -57,7 +60,10 @@ test('@ux-shared-014 Select one coherent session view', async ({ page, runtime, 
   expect(turn.map(e => e.model)).toEqual(['fixture-2']);
 });
 
-test('@ux-shared-015 Expose only supported session mutations', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-015', 'Expose only supported session mutations'],
+  ['@ux-original-015', 'Use the session actions actually supplied by the client'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const gate = gateName('busy');
   const current = await runtime.newSession();

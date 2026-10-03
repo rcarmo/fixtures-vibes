@@ -14,14 +14,32 @@ const modelList = (page: Page) => page.getByRole('listbox', { name: /models/i })
 const modelUsed = async (runtime: any, n: string) =>
   (await runtime.modelLog()).filter((e: any) => !e.toolFollowUp && String(e.prompt).includes(n)).map((e: any) => String(e.model));
 
-for (const input of ['pointer', 'keyboard'] as const) {
-  test(`@ux-shared-020 Search and select a model authoritatively: ${input}`, async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-020', 'Search and select a model authoritatively'],
+  ['@ux-original-020', 'Select a model for the selected chat'],
+] as const) for (const input of ['pointer', 'keyboard'] as const) {
+  test(`${id} ${name}: ${input}`, async ({ page, runtime, sel }) => {
     const n = randomUUID().slice(0, 8);
     const other = await runtime.newSession();
     const main = await runtime.newSession();
     await page.goto(main.url);
     const composer = page.locator(sel('composeInput'));
     await composer.fill(`unsent ${n}`);
+    if (id === '@ux-original-020') {
+      // A rejected request declares nothing: the previous model and the draft stay (3.2.5 shows no message).
+      const rejected = await holdWrites(page, bodyHas('fixture-2'), { status: 500, error: `rejected-${n}` });
+      await modelButton(page).click();
+      await page.keyboard.type('fixture-2');
+      await modelList(page).getByRole('option', { name: /fixture model two|fixture-2/i }).click();
+      await expect.poll(() => rejected.count).toBe(1);
+      rejected.release();
+      await page.waitForTimeout(1000);
+      await expect(modelButton(page)).not.toContainText(/fixture-2|fixture model two/i);
+      await expect(composer).toHaveValue(`unsent ${n}`);
+      rejected.disarm();
+      if (await modelList(page).count()) await page.keyboard.press('Escape');
+      await expect(modelList(page)).toHaveCount(0);
+    }
 
     if (input === 'pointer') await modelButton(page).click();
     else { await modelButton(page).focus(); await page.keyboard.press('Enter'); }
@@ -59,7 +77,10 @@ for (const input of ['pointer', 'keyboard'] as const) {
   });
 }
 
-test('@ux-shared-022 Reject stale or unsupported model state', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-022', 'Reject stale or unsupported model state'],
+  ['@ux-original-022', 'Render model capabilities without inventing values'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const research = await runtime.newSession();
   const main = await runtime.newSession();

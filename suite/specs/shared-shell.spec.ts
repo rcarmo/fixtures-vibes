@@ -12,8 +12,8 @@ const focusedTag = (page: Page) => page.evaluate(() => {
   return el && el !== document.body ? `${el.tagName.toLowerCase()}:${el.getAttribute('aria-label') ?? el.getAttribute('role') ?? ''}` : 'body';
 });
 
-for (const [input, dismissal] of [['pointer', 'outside pointer'], ['keyboard', 'Escape']] as const) {
-  test(`@ux-shared-001 Open and dismiss the workspace menu: ${input} / ${dismissal}`, async ({ page, runtime, sel }) => {
+for (const id of ['@ux-shared-001', '@ux-original-001'] as const) for (const [input, dismissal] of [['pointer', 'outside pointer'], ['keyboard', 'Escape']] as const) {
+  test(`${id} Open and dismiss the workspace menu: ${input} / ${dismissal}`, async ({ page, runtime, sel }) => {
     await page.goto((await runtime.newSession()).url);
     await expect(page.locator(sel('composeInput'))).toBeVisible();
     const url = page.url();
@@ -42,11 +42,15 @@ for (const [input, dismissal] of [['pointer', 'outside pointer'], ['keyboard', '
     expect(page.url()).toBe(url);
     // After keyboard dismissal focus returns to the menu button. A pointer dismissal leaves focus where the browser
     // puts it for a click on non-focusable content.
-    if (dismissal === 'Escape') await expect(menuButton(page), `focus after Escape: ${await focusedTag(page)}`).toBeFocused();
+    // (@ux-original-001 requires only that the menu opens and closes.)
+    if (dismissal === 'Escape' && id === '@ux-shared-001') await expect(menuButton(page), `focus after Escape: ${await focusedTag(page)}`).toBeFocused();
   });
 }
 
-test('@ux-shared-002 Show and hide the native workspace', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-002', 'Show and hide the native workspace'],
+  ['@ux-original-002', 'Toggle workspace visibility without submitting the draft'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const session = await runtime.newSession();
   await page.goto(session.url);
@@ -64,8 +68,11 @@ test('@ux-shared-002 Show and hide the native workspace', async ({ page, runtime
   expect(page.url()).toContain(encodeURIComponent(session.id));
 });
 
-for (const input of ['pointer', 'keyboard'] as const) {
-  test(`@ux-shared-013 Open, search and dismiss the session picker: ${input}`, async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-013', 'Open, search and dismiss the session picker'],
+  ['@ux-original-013', 'Open and dismiss the Classic session picker'],
+] as const) for (const input of ['pointer', 'keyboard'] as const) {
+  test(`${id} ${name}: ${input}`, async ({ page, runtime, sel }) => {
     const other = await runtime.newSession();
     const mine = await runtime.newSession();
     await page.goto(mine.url);

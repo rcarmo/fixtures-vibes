@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased
+
+- Classic `@ux-original-*` scenarios (Gi's reference catalogue) now have specs.
+  - Where an original states the same contract as a shared scenario, both run the same test body, each under its own
+    ID, and original-only clauses are gated by ID: 001–006 and 013–015, 017/018, 020–025, 027 (with
+    `@ux-chat-lifecycle-003`) and 028 (with `@ux-shared-029`).
+  - Original-only clauses now covered:
+    - 003: native groups.
+    - 006: the query is cleared after dismissal.
+    - 017: focus and cursor land at the end of the restored text.
+    - 018: a failed removal warns and the row comes back.
+    - 021: Control+Home/End in the model search.
+    - 024: cascade delete, cancel and accept.
+    - 025: explicit all-chat scope in single-user mode.
+    - 027: the "Waiting for model" phase after the tool, the thought surviving, no Completed footer, no panes after an
+      idle reload.
+  - `@ux-original-026` (new spec): a failed upload is reported and nothing is sent; the next successful upload reaches
+    the message.
+- Original text corrected to Piclaw 3.2.5:
+  - 015 and 020: a failed pin or a rejected model switch shows no message; the previous state stays and nothing
+    claims success.
+  - 025: `missing_row_ids` is in the tool details only.
+  - 027: no Draft is shown for assistant text before a tool call.
+- Listings: `@ux-original-005` (#1513), `@ux-original-023` (#1519), `@ux-original-027` (WebKit, #1507). Each mirrors
+  its shared or lifecycle counterpart.
+- Fixture model: `[after-tool-gate:NAME]` holds the follow-up request after a tool result.
+
 ## v0.1.0-rc.15
 
 Gate run rc15b executed `387422e` against Piclaw 3.2.5: Gate OK. 306 scenarios: 59 passed, 0 failed, 12 listed failing,

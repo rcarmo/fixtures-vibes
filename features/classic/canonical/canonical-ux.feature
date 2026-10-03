@@ -141,7 +141,8 @@ Feature: Classic Piclaw interaction model
     Given the session picker displays a session
     Then its action controls depend on the session entry and supplied callbacks
     And pinning, renaming, archiving and restoring use their respective client action paths
-    And a failed mutation reports an error instead of declaring success
+    And a failed mutation does not declare success: the session keeps its previous state and the picker stays usable
+    # Piclaw 3.2.5 shows no error message for a failed pin; the entry simply stays unpinned.
     # This does not assert that every skin offers delete or child creation in this popup.
 
   @ux-original-016 @queue @cap-queue
@@ -197,7 +198,8 @@ Feature: Classic Piclaw interaction model
     When I open the model picker and select an entry
     Then the client requests that provider and model for the captured chat
     And accepted model data updates the displayed model and context information
-    And a rejected request reports failure
+    And a rejected request keeps the previous model and declares no success
+    # Piclaw 3.2.5 shows no message for a rejected switch; the picker stays open on the previous model.
     And selecting a model does not submit the composer draft
 
   @ux-original-021 @session-picker @model-picker @keyboard @cap-model-picker @cap-session-picker
@@ -254,6 +256,8 @@ Feature: Classic Piclaw interaction model
     And in single-user mode an explicit permitted chat or all-chat scope may be requested
     And family mode restricts reads to authorised owned sessions
     # Message results are model-facing data, not a guarantee about how a model interprets text.
+    # Piclaw 3.2.5 reports missing_row_ids in the tool result details, not in the model-facing text, so the suite
+    # checks only that a missing ID yields nothing. Family mode is not exercised by the single-user reference.
 
   @ux-original-026 @attachments @cap-attachments
   Scenario: Keep attachment upload state separate from message submission
@@ -278,6 +282,7 @@ Feature: Classic Piclaw interaction model
     When a terminal turn event is followed by an authoritative idle reload
     Then active tool and preview panes are absent
     # Timing, concurrent calls and reduced-motion parity need additional evidence.
+    # Piclaw 3.2.5 shows no Draft for assistant text emitted before a tool call; the thought preview is what survives.
 
   @ux-original-028 @copy @speech @capability @cap-read-aloud
   Scenario: Copy code and transfer post speech ownership

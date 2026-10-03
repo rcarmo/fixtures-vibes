@@ -96,6 +96,29 @@
       ],
       "detail": "Intermittent in WebKit: the Stop button after reloading a page with a running turn is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+    },
+    {
+      "id": "@ux-original-005",
+      "reason": "known-defect",
+      "detail": "Same body and defect as @ux-shared-005. Already-prevented and repeated keydowns on timeline content open Quick actions (no defaultPrevented/repeat check); whitespace, composing and modified keys are ignored correctly. All six projects.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1513"
+    },
+    {
+      "id": "@ux-original-023",
+      "reason": "known-defect",
+      "detail": "Same body and defect as @ux-shared-023. Intermittent: after an SSE reconnect and Stop with a queued follow-up, the next turn can run with no Stop button, Draft or status (stale terminal state applied to the newer turn). Seen in Chromium tablet and WebKit phone/tablet/desktop; passes in other runs.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1519"
+    },
+    {
+      "id": "@ux-original-027",
+      "reason": "known-defect",
+      "projects": [
+        "webkit-phone",
+        "webkit-tablet",
+        "webkit-desktop"
+      ],
+      "detail": "Same body and defect as @ux-chat-lifecycle-003. Intermittent in WebKit: the Output status pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
     }
   ]
 }

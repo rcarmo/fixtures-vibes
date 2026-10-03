@@ -173,3 +173,29 @@ test('@ux-compose-012 A failed send keeps its uploaded attachment for the retry'
   await expect(page.locator(sel('userPost')).filter({ hasText: `msg-${n}` }).filter({ hasText: `att-${n}.txt` })).toHaveCount(1);
   expect((await runtime.modelLog()).filter(e => JSON.stringify(e.directives ?? '').includes(`ok-${n}`))).toHaveLength(1);
 });
+
+test('@ux-original-026 Keep attachment upload state separate from message submission', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  const input = page.locator(sel('composeInput'));
+
+  // A failed upload is reported and is not treated as an uploaded attachment: nothing is sent.
+  const failing = await holdWrites(page, uploadOf(`att-${n}.txt`), { status: 500, error: `upload-failed-${n}` });
+  await attach(page, n);
+  await input.fill(`[reply:none-${n}] first ${n}`);
+  await input.press('Enter');
+  await expect.poll(() => failing.count).toBe(1);
+  failing.release();
+  await expect(page.getByText(`upload-failed-${n}`).first()).toBeVisible();
+  await page.waitForTimeout(1000);
+  await expect(page.locator(sel('timelinePost')).filter({ hasText: `first ${n}` })).toHaveCount(0);
+  expect((await runtime.modelLog()).filter(e => e.prompt.includes(`first ${n}`))).toHaveLength(0);
+  await expect(input).toHaveValue(`[reply:none-${n}] first ${n}`);
+
+  // Once the upload succeeds, its media reaches the submitted message.
+  failing.disarm();
+  await input.fill(`[reply:ok-${n}] second ${n}`);
+  await input.press('Enter');
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
+  await expect(page.locator(sel('userPost')).filter({ hasText: `second ${n}` }).filter({ hasText: `att-${n}.txt` })).toHaveCount(1);
+});

@@ -54,13 +54,20 @@ test('@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separat
   await expect(page.getByText('Draft', { exact: true })).toHaveCount(0);
 });
 
-test('@ux-chat-lifecycle-003 Tool output belongs to the Output status pane', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-chat-lifecycle-003', 'Tool output belongs to the Output status pane'],
+  ['@ux-original-027', 'Route tool execution through the Classic status and Output panes'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = nonce();
+  const follow = gateName('follow');
   const session = await runtime.newSession();
   await page.goto(session.url);
   const input = page.locator(sel('composeInput'));
   const cmd = JSON.stringify({ command: `echo out-start-${n}; sleep 4; echo out-end-${n}` });
-  await input.fill(`[tool:${runtime.toolName('shell')} ${cmd}][after-tool:Tool finished ${n}] run tool ${n}`);
+  // @ux-original-027 also streams a thought and holds the model's follow-up after the tool, to observe that phase.
+  const extra = id === '@ux-original-027' ? `[think:thought-${n}]` : '';
+  const hold = id === '@ux-original-027' ? `[after-tool-gate:${follow}]` : '';
+  await input.fill(`${extra}[tool:${runtime.toolName('shell')} ${cmd}]${hold}[after-tool:Tool finished ${n}] run tool ${n}`);
   await input.press('Enter');
 
   // While the tool runs, its streamed output is shown in the Output pane and the status names the tool.
@@ -74,8 +81,24 @@ test('@ux-chat-lifecycle-003 Tool output belongs to the Output status pane', asy
       && own.some(l => l.includes(runtime.toolName('shell')));
   }, { timeout: 15_000 }).toBe(true);
 
+  if (id === '@ux-original-027') {
+    // After the last tool finishes the turn waits for the model; the thought preview survives that transition.
+    // (3.2.5 shows no Draft for assistant text emitted before a tool call, so only the thought is checked.)
+    await expect.poll(async () => (await runtime.gates())[follow]?.waiting ?? 0, { timeout: 20_000 }).toBe(1);
+    await expect(page.getByText(/waiting for model/i).first()).toBeVisible();
+    await expect(page.getByText(`thought-${n}`, { exact: true })).toBeVisible();
+    await runtime.openGate(follow);
+  }
   const reply = page.locator(sel('agentPost')).filter({ hasText: `Tool finished ${n}` });
   await expect(reply).toHaveCount(1, { timeout: 20_000 });
+  if (id === '@ux-original-027') {
+    // The completed call is metadata, not a persistent footer; after an idle reload no tool or preview pane remains.
+    await expect(reply).not.toContainText(/completed/i);
+    await page.reload();
+    await expect(page.locator(sel('composeInput'))).toBeVisible();
+    await expect(page.getByText(/waiting for model|running:/i)).toHaveCount(0);
+    await expect(page.getByText(`thought-${n}`, { exact: true })).toHaveCount(0);
+  }
   // Raw tool results are not conversation posts and are never attributed to the user.
   await expect(page.locator(sel('timelinePost')).filter({ hasText: `out-end-${n}` }).filter({ hasNotText: 'run tool' })).toHaveCount(0);
   await expect(page.locator(`${sel('timelinePost')}:not(.agent-post)`).filter({ hasText: `out-start-${n}` }).filter({ hasNotText: 'run tool' })).toHaveCount(0);

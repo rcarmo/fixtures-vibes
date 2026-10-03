@@ -4,7 +4,10 @@ import { gateName } from '../runtime';
 import { installSseDrop } from '../net';
 import { randomUUID } from 'node:crypto';
 
-test('@ux-shared-023 Cancel the captured active turn across reconnect', async ({ page, context, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-023', 'Cancel the captured active turn across reconnect'],
+  ['@ux-original-023', 'Refresh active-turn state after reconnect and request stop'],
+] as const) test(`${id} ${name}`, async ({ page, context, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const held = gateName('main'), otherGate = gateName('other'), newer = gateName('newer');
   const main = await runtime.newSession();

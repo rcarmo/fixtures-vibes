@@ -20,12 +20,16 @@ async function recordClipboard(page: Page) {
   return async () => (await page.evaluate(() => (window as any).__clip.splice(0))) as string[];
 }
 
-test('@ux-shared-024 Copy and delete timeline messages through native actions', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-024', 'Copy and delete timeline messages through native actions'],
+  ['@ux-original-024', 'Copy and delete messages using their actual controls'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = nonce();
   const clipboard = await recordClipboard(page);
   const fault = await failNextNewWrite(page, { status: 500, error: `delete-boom-${n}` });
   const other = await runtime.newSession();
-  await page.goto((await runtime.newSession()).url);
+  const main = await runtime.newSession();
+  await page.goto(main.url);
   const input = page.locator(sel('composeInput'));
   const markdown = `**Bold ${n}** and \`a < b\``;
   const code = 'const x = 1 < 2;';
@@ -70,6 +74,32 @@ test('@ux-shared-024 Copy and delete timeline messages through native actions', 
   await page.goto(other.url);
   await expect(page.locator(sel('composeInput'))).toBeVisible();
   await expect(page.locator(sel('timelinePost')).filter({ hasText: n })).toHaveCount(0);
+
+  if (id === '@ux-original-024') {
+    // Deleting a message with a reply follows the cascade confirmation: cancel keeps both, accept removes both.
+    await page.goto(main.url);
+    const m = nonce();
+    const box = page.locator(sel('composeInput'));
+    await box.fill(`[reply:child-${m}] parent-${m}`);
+    await box.press('Enter');
+    const parent = page.locator(sel('timelinePost')).filter({ hasText: `parent-${m}` });
+    const child = page.locator(sel('agentPost')).filter({ hasText: `child-${m}` });
+    await expect(child).toHaveCount(1);
+    page.once('dialog', d => void d.dismiss());
+    await parent.hover();
+    await parent.getByRole('button', { name: /^delete message$/i }).click();
+    await page.waitForTimeout(800);
+    await expect(parent).toHaveCount(1);
+    await expect(child).toHaveCount(1);
+    page.once('dialog', d => void d.accept());
+    await parent.hover();
+    await parent.getByRole('button', { name: /^delete message$/i }).click();
+    await expect(parent).toHaveCount(0);
+    await expect(child).toHaveCount(0);
+    await page.reload();
+    await expect(page.locator(sel('composeInput'))).toBeVisible();
+    await expect(page.locator(sel('timelinePost')).filter({ hasText: m })).toHaveCount(0);
+  }
 });
 
 /** A speech engine that never finishes on its own; cancel() ends the current utterance asynchronously. */
@@ -83,7 +113,10 @@ const fakeSpeech = () => {
   Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: synth });
 };
 
-test('@ux-shared-029 Copy and read assistant content truthfully', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-029', 'Copy and read assistant content truthfully'],
+  ['@ux-original-028', 'Copy code and transfer post speech ownership'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = nonce();
   const clipboard = await recordClipboard(page);
   await page.addInitScript(fakeSpeech);

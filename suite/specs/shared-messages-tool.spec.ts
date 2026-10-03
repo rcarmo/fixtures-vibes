@@ -2,7 +2,10 @@
 import { test, expect } from '../fixtures';
 import { randomUUID } from 'node:crypto';
 
-test('@ux-shared-025 Let the model identify bounded ranges of persisted messages', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-025', 'Let the model identify bounded ranges of persisted messages'],
+  ['@ux-original-025', 'Retrieve explicit message IDs and bounded row windows'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const main = await runtime.newSession();
   const other = await runtime.newSession();
@@ -51,6 +54,12 @@ test('@ux-shared-025 Let the model identify bounded ranges of persisted messages
   expect(rows).toHaveLength(count);
   expect(rows.every(id => id > u2)).toBe(true);
   expect(found).not.toContain(`foreign ${n}`);
+
+  if (id === '@ux-original-025') {
+    // Single-user mode: an explicit all-chat scope may be requested and then reaches other sessions.
+    const all = await callTool('all', { action: 'search', query: `foreign ${n}`, chat_jid: '*', limit: 5 });
+    expect(all).toContain(`foreign ${n}`);
+  }
 
   // Returned content is data: no further model turn starts from it.
   await page.waitForTimeout(1500);

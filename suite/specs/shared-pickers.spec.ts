@@ -15,7 +15,10 @@ async function leaveSearch(page: Page, list: Locator) {
   await expect(page.getByRole('searchbox').or(page.getByRole('combobox')).first()).not.toBeFocused();
 }
 
-test('@ux-shared-021 Find and activate picker entries without changing unsupported state: session picker', async ({ page, runtime }) => {
+for (const [id, name] of [
+  ['@ux-shared-021', 'Find and activate picker entries without changing unsupported state'],
+  ['@ux-original-021', 'Navigate the Classic picker lists'],
+] as const) test(`${id} ${name}: session picker`, async ({ page, runtime }) => {
   const n = randomUUID().replace(/-/g, '').slice(0, 6).replace(/^\d/, 'q');
   const home = await runtime.newSession();
   await runtime.newSession(`zz-ta${n}`);
@@ -60,7 +63,10 @@ test('@ux-shared-021 Find and activate picker entries without changing unsupport
   expect(prefix.id).toContain(`ta${n}`);
 });
 
-test('@ux-shared-021 Find and activate picker entries without changing unsupported state: model picker', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-021', 'Find and activate picker entries without changing unsupported state'],
+  ['@ux-original-021', 'Navigate the Classic picker lists'],
+] as const) test(`${id} ${name}: model picker`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   await page.goto((await runtime.newSession()).url);
   const composer = page.locator(sel('composeInput'));
@@ -103,6 +109,13 @@ test('@ux-shared-021 Find and activate picker entries without changing unsupport
     await expect.poll(activeName, { message: key }).toMatch(two ? /^fixture model two/i : /^fixture model(?! two)/i);
   }
   await fixtureOnly();
+  if (id === '@ux-original-021') {
+    // With focus in the search input, Home/End need Control or Meta to move the highlight.
+    await page.keyboard.press('Control+End');
+    await expect.poll(activeName).toMatch(/^fixture model two/i);
+    await page.keyboard.press('Control+Home');
+    await expect.poll(activeName).toMatch(/^fixture model(?! two)/i);
+  }
 
   // Escape closes and restores focus without changing the model.
   await page.keyboard.press('Escape');

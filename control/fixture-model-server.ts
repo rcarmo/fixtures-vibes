@@ -14,6 +14,7 @@
  *   [usage:P]          report usage.prompt_tokens = P (completion = visible length/4, min 1)
  *   [tool:NAME JSON]   respond with one tool call NAME(JSON) instead of content
  *   [after-tool:TEXT]  reply used for the follow-up request that carries the tool result
+ *   [after-tool-gate:NAME]  hold that follow-up request at gate NAME before it replies
  *   [fail:STATUS]      respond with HTTP STATUS before streaming
  *   [after-tool-fail:STATUS]  respond with HTTP STATUS to the request that carries the tool result
  * A literal backslash-n (\n) inside a directive value becomes a newline.
@@ -67,7 +68,7 @@ const textOf = (content: unknown): string =>
       : "";
 
 // Values may contain escaped brackets (\[ and \]) so tool arguments can carry Markdown checklists.
-const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool-fail|after-tool|fail):((?:\\[\[\]]|[^\]])*)\]/g;
+const DIRECTIVE = /\[(think|gate|say|reply|chunks|usage|tool|after-tool-fail|after-tool-gate|after-tool|fail):((?:\\[\[\]]|[^\]])*)\]/g;
 const HAS_DIRECTIVE = new RegExp(DIRECTIVE.source);
 const unbracket = (v: string) => v.replace(/\\([\[\]])/g, "$1");
 
@@ -97,7 +98,7 @@ function plan(text: string) {
     toolCall = { name: sp < 0 ? tool : tool.slice(0, sp), args: sp < 0 ? "{}" : tool.slice(sp + 1) };
   }
   return {
-    steps, toolCall, afterTool: first("after-tool"), afterToolFail: first("after-tool-fail"), fail: first("fail"),
+    steps, toolCall, afterTool: first("after-tool"), afterToolGate: first("after-tool-gate"), afterToolFail: first("after-tool-fail"), fail: first("fail"),
     usage: first("usage") ? Number(first("usage")) : undefined, directives: all,
   };
 }
@@ -211,7 +212,7 @@ async function completion(req: Request): Promise<Response> {
     if (toolFollowUp) {
       toolCall = null;
       const reply = p.afterTool ?? `Fixture tool result: ${textOf(last.content).slice(0, 200)}`;
-      steps = [{ kind: "say", text: reply }];
+      steps = p.afterToolGate ? [{ kind: "gate", name: p.afterToolGate }, { kind: "say", text: reply }] : [{ kind: "say", text: reply }];
     }
 
     const id = `fixture-${++seq}`;

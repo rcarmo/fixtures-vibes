@@ -1,4 +1,7 @@
-/** Shared Quick actions contract (features/canonical/shared-ux.feature @ux-shared-003, 006). */
+/**
+ * Quick actions contract: features/canonical/shared-ux.feature @ux-shared-003..006 and the equivalent Classic
+ * features/classic/canonical/canonical-ux.feature @ux-original-003..006 (same bodies; original-only clauses by id).
+ */
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { quietTimelinePoint } from '../points';
@@ -12,7 +15,10 @@ async function focusTimeline(page: Page, sel: (k: string) => string) {
 
 const searchBox = (page: Page) => page.getByRole('textbox', { name: /jump|quick action|slash command/i });
 
-test('@ux-shared-003 Type on the idle timeline to open Quick actions', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-003', 'Type on the idle timeline to open Quick actions'],
+  ['@ux-original-003', 'Open Quick Actions by typing outside interactive controls'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   await page.goto((await runtime.newSession()).url);
   const input = page.locator(sel('composeInput'));
   await input.fill('existing draft');
@@ -50,6 +56,14 @@ test('@ux-shared-003 Type on the idle timeline to open Quick actions', async ({ 
   await page.keyboard.press('ArrowDown');
   expect(await settled(), 'ArrowDown from the last result wraps to the first').toBe(first);
 
+  if (id === '@ux-original-003') {
+    // Results come from the enabled native groups.
+    await searchBox(page).fill('/');
+    await expect(page.getByText('Slash commands', { exact: true })).toBeVisible();
+    await searchBox(page).fill('workspace');
+    await expect(page.getByText(/show workspace/i).first()).toBeVisible();
+  }
+
   // Enter runs the highlighted action once and keeps the composer draft.
   await searchBox(page).fill('Show workspace');
   // Wait until the highlight has settled on the action (the filtered list may re-render after the query changes).
@@ -60,8 +74,11 @@ test('@ux-shared-003 Type on the idle timeline to open Quick actions', async ({ 
   await expect(input).toHaveValue('existing draft');
 });
 
-for (const dismissal of ['Escape', 'outside pointer'] as const) {
-  test(`@ux-shared-006 Dismiss Quick actions without side effects: ${dismissal}`, async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-006', 'Dismiss Quick actions without side effects'],
+  ['@ux-original-006', 'Dismiss Quick Actions without executing a result'],
+] as const) for (const dismissal of ['Escape', 'outside pointer'] as const) {
+  test(`${id} ${name}: ${dismissal}`, async ({ page, runtime, sel }) => {
     const session = await runtime.newSession();
     await page.goto(session.url);
     const input = page.locator(sel('composeInput'));
@@ -75,6 +92,13 @@ for (const dismissal of ['Escape', 'outside pointer'] as const) {
     await expect(input).toHaveValue('existing draft');
     expect(page.url()).toContain(encodeURIComponent(session.id));
     await expect(page.getByRole('complementary').filter({ hasText: /workspace/i }).first()).toBeHidden();
+    if (id === '@ux-original-006') {
+      // The query was cleared: reopening starts from the new character only.
+      await focusTimeline(page, sel);
+      await page.keyboard.type('y');
+      await expect(searchBox(page)).toHaveValue('y');
+      await page.keyboard.press('Escape');
+    }
   });
 }
 
@@ -112,8 +136,11 @@ const surfaces: Record<string, (page: Page, sel: (k: string) => string) => Promi
   },
 };
 
-for (const [surface, prepare] of Object.entries(surfaces)) {
-  test(`@ux-shared-004 Do not steal typing from an interactive surface: ${surface}`, async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-004', 'Do not steal typing from an interactive surface'],
+  ['@ux-original-004', 'Do not open timeline typeahead from excluded targets'],
+] as const) for (const [surface, prepare] of Object.entries(surfaces)) {
+  test(`${id} ${name}: ${surface}`, async ({ page, runtime, sel }) => {
     await page.goto((await runtime.newSession()).url);
     await expect(page.locator(sel('composeInput'))).toBeVisible();
     const received = await prepare(page, sel);
@@ -140,7 +167,10 @@ const ignoredKeys: Record<string, (page: Page) => Promise<void>> = {
   },
 };
 
-test('@ux-shared-005 Ignore consumed, modified and composing keys', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-005', 'Ignore consumed, modified and composing keys'],
+  ['@ux-original-005', 'Ignore consumed and modified typeahead events'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   // Installed before the app so it runs first and consumes the key, as another component would.
   await page.addInitScript(() => window.addEventListener('keydown', e => {
     if ((window as any).__preventNext) { (window as any).__preventNext = false; e.preventDefault(); }

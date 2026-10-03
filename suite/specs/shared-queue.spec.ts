@@ -53,12 +53,21 @@ test('@ux-shared-016 Queue two follow-ups exactly once', async ({ page, runtime,
   await expect(page.locator(sel('timelinePost')).filter({ hasText: n })).toHaveCount(0);
 });
 
-test('@ux-shared-017 Return a queued item to the editor', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-017', 'Return a queued item to the editor'],
+  ['@ux-original-017', 'Return a queued follow-up to the Classic editor'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = nonce();
   const { gate, input, items } = await heldWithQueue(page, runtime, sel, n, ['a']);
   await items.getByRole('button', { name: /return .*editor|edit in compose/i }).click();
   await expect(input).toHaveValue(`[reply:r-a-${n}] q-a ${n}`);
   await expect(items).toHaveCount(0);
+  if (id === '@ux-original-017') {
+    // Focus and cursor land at the end of the restored text.
+    const length = `[reply:r-a-${n}] q-a ${n}`.length;
+    await expect(input).toBeFocused();
+    expect(await input.evaluate((el: HTMLTextAreaElement) => [el.selectionStart, el.selectionEnd])).toEqual([length, length]);
+  }
   await page.reload();
   await expect(page.locator(sel('composeInput'))).toBeVisible();
   await page.waitForTimeout(1500);
@@ -74,7 +83,10 @@ test('@ux-shared-017 Return a queued item to the editor', async ({ page, runtime
   expect((await deliveredPrompts(runtime, n)).filter(p => p.includes(`q-a ${n}`))).toHaveLength(1);
 });
 
-test('@ux-shared-018 Reorder and remove by durable identity', async ({ page, runtime, sel }) => {
+for (const [id, name] of [
+  ['@ux-shared-018', 'Reorder and remove by durable identity'],
+  ['@ux-original-018', 'Reorder and remove queued follow-ups with reconciliation'],
+] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = nonce();
   const other = await runtime.newSession();
   const { gate, input, items } = await heldWithQueue(page, runtime, sel, n, ['a', 'b', 'c']);
@@ -84,6 +96,17 @@ test('@ux-shared-018 Reorder and remove by durable identity', async ({ page, run
   await expect.poll(() => queueTexts(page, sel, n)).toEqual(['b', 'a', 'c']);
   await page.reload();
   await expect.poll(() => queueTexts(page, sel, n)).toEqual(['b', 'a', 'c']);
+
+  if (id === '@ux-original-018') {
+    // A failed removal warns and the row comes back after reconciliation.
+    const failing = await failNextNewWrite(page, { status: 500, error: `remove-${n}` });
+    failing.arm();
+    await items.filter({ hasText: `q-c ${n}` }).getByRole('button', { name: /cancel|remove/i }).click();
+    await expect.poll(() => failing.failed).not.toBeNull();
+    await expect(page.getByText(/fail|error|could not|unable/i).first()).toBeVisible();
+    await expect.poll(() => queueTexts(page, sel, n)).toEqual(['b', 'a', 'c']);
+    await page.unrouteAll({ behavior: 'ignoreErrors' });
+  }
 
   await items.filter({ hasText: `q-a ${n}` }).getByRole('button', { name: /cancel|remove/i }).click();
   await expect.poll(() => queueTexts(page, sel, n)).toEqual(['b', 'c']);
