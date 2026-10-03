@@ -14,6 +14,10 @@ It does **not** own, and must not contain:
 * **Product code**: no UI source, assets or build (the uniform Classic UI lives in its own repository), and no
   runtime adapters.
 
+The suite also owns the **general Playwright UI tests** for shared behaviour. Runtimes do not keep their own copies of
+browser tests for shared UX: they contribute them here, bound to a scenario ID (add the scenario if none fits), and keep
+only adapter and runtime-specific tests.
+
 When a scenario or spec needs a runtime detail to work, the detail goes in that runtime's profile, or the scenario is
 rewritten in terms of what a user sees. If neither works, the behaviour is not shared and belongs to the runtime.
 
