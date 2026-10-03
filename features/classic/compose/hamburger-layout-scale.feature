@@ -44,8 +44,9 @@ Feature: Classic workspace menu and layout controls
     @ux-shell-006
     Scenario: Hamburger button visible and above safe area
       Given the Classic composer is rendered in a supported mobile viewport
-      Then the menu trigger remains within the composer layout
-      And safe-area padding follows the shipped CSS variables
+      Then the menu trigger is fully visible, below the top safe-area inset, and clear of the composer
+      # Piclaw 3.2.5 places the menu trigger at the top-left of the timeline (not inside the composer); the shell
+      # container pads its top with env(safe-area-inset-top).
 
     @ux-shell-007
     Scenario: Tab close does not activate tab
@@ -58,6 +59,8 @@ Feature: Classic workspace menu and layout controls
     Scenario: Menu contains display scale control
       Given the Classic workspace menu is open
       Then the display scale control reflects the stored client scale setting
+      # Piclaw 3.2.5 offers the control only when installed as an app (display-mode standalone or fullscreen);
+      # browser tabs cannot emulate that display mode, so suites record this scenario as an environment limit there.
       When I choose another supported scale
       Then the client applies and stores that scale
 
