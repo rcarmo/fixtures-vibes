@@ -1,6 +1,6 @@
 # Agent rules for fixtures-vibes
 
-## Scope: shared UX behaviour only
+## Scope: shared Web UX behaviour only
 
 This repository owns **only shared, user-visible Classic web UI behaviour**: the Gherkin features, the black-box
 compliance suite that checks them, the deterministic fixture model it drives, and the reference evidence.
@@ -19,7 +19,7 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
 
 ## Rules
 
-* Scope is the **Classic** web UI only. Visual-interface and runtime-internal behaviour stay in each runtime.
+* Scope is the **Classic** web UI only. Visual-interface is out of scope and runtime-internal behaviour stay in each runtime.
 * The installed Piclaw release is the oracle for any divergence. Record the version and full asset hashes with every
   piece of evidence. Never relabel older evidence as a newer version; add new evidence alongside it.
 * Scenario IDs are stable. Never renumber, reuse or delete an ID; deprecate it with a tag and a note instead.
