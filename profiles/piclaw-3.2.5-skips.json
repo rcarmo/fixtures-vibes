@@ -146,6 +146,13 @@
       "intermittent": true
     },
     {
+      "id": "@ux-context-004",
+      "reason": "known-defect",
+      "detail": "Intermittent: after manual compaction starts from the context meter, the client drops its compacting state (meter label, elapsed time and the Stop control) about 30 ms after showing it, while the summary request is still running. Observed: 3/5 isolated chromium-desktop runs; 14/18 across @ux-compaction-001..003 in a six-project run.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1522",
+      "intermittent": true
+    },
+    {
       "id": "@ux-compaction-008",
       "reason": "known-defect",
       "detail": "An unknown model in the model command ('/model fixture/nope-\u2026') is rejected by the server (command.status 'error', 'Model not found') but the client shows no error; the model is correctly left unchanged. All six projects.",

@@ -14,6 +14,8 @@ Feature: Classic context meter tooltip
     When the context pie renders
     Then its usage label contains the supplied percentage without fabricated token values
     And unavailable formatted numeric values use the formatter's unknown marker
+    # Not constructible in a black-box suite against Piclaw 3.2.5: the meter appears only after a turn, and every
+    # turn carries a token count (provider usage or the runtime's estimate). No spec until a runtime can omit it.
 
   @ux-context-003 @cap-context-meter
   Scenario: Offer compaction only when a callback exists

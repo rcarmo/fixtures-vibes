@@ -82,6 +82,27 @@ test('@ux-compaction-004 Use refreshed usage rather than assume compaction alway
   expect(await meterName(page)).toMatch(/\d[\d.]*K? \/ [\d.]+K/);
 });
 
+test('@ux-context-003 Offer compaction only when a callback exists', async ({ page, runtime, sel }) => {
+  const gate = gateName('compact');
+  // The runtime offers compaction here, so the meter names the action and clicking it starts a compaction (the
+  // helper waits for the summary request). The no-callback branch is not constructible from the UI.
+  const before = await compacting(page, runtime, sel, gate);
+  expect(before).toMatch(/compact context/i);
+  await expect(meter(page)).toBeEnabled();
+  await runtime.openGate(gate);
+});
+
+test('@ux-context-004 Show the supplied compaction title and elapsed label', async ({ page, runtime, sel }) => {
+  const gate = gateName('compact');
+  await compacting(page, runtime, sel, gate);
+  // While compacting, the tooltip names the compaction (supplied title or the "Smart compaction" fallback) with its
+  // elapsed label, in place of the ordinary "Compact context" suffix; the elapsed label also shows beside the pie.
+  await expect.poll(() => meterName(page)).toMatch(/compact\w*.*\d+:\d{2}/is);
+  expect(await meterName(page)).not.toMatch(/compact context/i);
+  await expect(meter(page)).toContainText(/\d+:\d{2}/);
+  await runtime.openGate(gate);
+});
+
 test('@ux-compaction-006 Check model context compatibility before switching', async ({ page, runtime, sel }) => {
   await page.goto((await runtime.newSession()).url);
   // Reported usage beyond every fixture model's 128K window: the other model cannot take this context.
