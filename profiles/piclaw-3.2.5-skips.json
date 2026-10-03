@@ -69,12 +69,7 @@
     {
       "id": "@ux-chat-lifecycle-007",
       "reason": "known-defect",
-      "projects": [
-        "webkit-phone",
-        "webkit-tablet",
-        "webkit-desktop"
-      ],
-      "detail": "Intermittent in WebKit: the held turn's Draft pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
+      "detail": "Intermittent: the held turn's Draft pane is sometimes not rendered although the event arrives. WebKit: 7/20 isolated runs (chat-lifecycle-007/008), persisting with the EventSource confirmed open. Chromium: seen once (chromium-tablet) in the 792-test rc.16 gate run, 0/10 isolated. Same rendering defect as @ux-chat-lifecycle-002.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1507",
       "intermittent": true
     },

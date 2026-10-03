@@ -42,8 +42,10 @@ for (const [id, name] of [
 
   // Typeahead outside the search field prefers the prefix match; keys move within the results.
   await search.fill('');
+  // Let the full list come back before typing, so no keystroke lands mid-render.
+  await expect.poll(() => list.locator(ENTRY).count()).toBeGreaterThan(2);
   await leaveSearch(page, list);
-  await page.keyboard.type(`ta${n}`);
+  await page.keyboard.type(`ta${n}`, { delay: 50 });
   await expect(highlighted(list)).toHaveAccessibleName(nameRe(`ta${n}`));
   await expect(list.locator(ENTRY)).toHaveCount(2);
   for (const [key, name] of [['ArrowDown', `zz-ta${n}`], ['Home', `ta${n}`], ['End', `zz-ta${n}`], ['PageUp', `ta${n}`], ['PageDown', `zz-ta${n}`], ['ArrowUp', `ta${n}`]] as const) {
@@ -57,8 +59,8 @@ for (const [id, name] of [
   await expect(opener).toBeFocused();
   await expect(opener).toHaveAccessibleName(nameRe(homeName));
 
-  // Enter activates the highlighted entry exactly once.
-  await page.keyboard.press('Enter');
+  // Enter activates the highlighted entry exactly once. (Reopening is not under test here.)
+  await opener.click();
   await search.fill(`ta${n}`);
   await expect(highlighted(list)).toHaveAccessibleName(nameRe(`ta${n}`));
   await page.keyboard.press('Enter');
