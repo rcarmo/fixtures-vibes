@@ -34,8 +34,7 @@ Feature: Classic context meter tooltip
 
   @ux-context-005 @cap-context-meter
   Scenario: Apply the coded usage warning colours
-    Given the context pie has a supplied usage percentage
-    When it renders
-    Then values above ninety use the red context token
-    And values above seventy-five through ninety use the amber context token
-    And values up to seventy-five use the green context token
+    Given a turn has reported its context usage
+    Then the context meter is red above 90%
+    And amber above 75% up to 90%
+    And green up to 75%
