@@ -343,6 +343,8 @@ Feature: Piclaw-compatible interaction model
     When I activate Steer for that item
     Then the queued item is delivered to session "main" exactly once
     And it leaves the queue
+    # No spec yet: against Piclaw 3.2.5 a session never stays idle with a queued item (the queue drains after a
+    # completed, stopped or failed turn), so the reference cannot show this state. Specify once a runtime can.
 
   @queue @failure @ux-shared-032 @cap-queue
   Scenario Outline: A rejected queue action keeps the item recoverable
