@@ -189,7 +189,8 @@
       "propertyNames": {
         "enum": [
           "shell",
-          "activate"
+          "activate",
+          "openFile"
         ]
       },
       "description": "Optional map from canonical tool names used by specs to the runtime's tool names. 'shell' runs a POSIX shell command with a 'command' string argument (default 'bash'). 'activate', when set, names a tool taking {\"names\": [...]} that must be called before using tools that are not active by default."

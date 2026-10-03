@@ -21,7 +21,7 @@ export type Profile = {
   skips?: string;
   selectors?: Record<string, string>;
   routes?: Record<string, string>;
-  tools?: { shell?: string; activate?: string };
+  tools?: { shell?: string; activate?: string; openFile?: string };
   approval?: { button: string };
   commands?: { setAgentAvatar?: string; clearAgentAvatar?: string; selectModel?: string };
   compaction?: { when?: string; summaries: string[] };
@@ -84,7 +84,9 @@ export class Runtime {
   has(cap: string) { return this.profile.capabilities.includes(cap); }
 
   /** Runtime name of a canonical tool; 'shell' takes {"command": string}. */
-  toolName(canonical: 'shell') { return this.profile.tools?.[canonical] ?? 'bash'; }
+  toolName(canonical: 'shell' | 'openFile') {
+    return this.profile.tools?.[canonical] ?? { shell: 'bash', openFile: 'open_workspace_file' }[canonical];
+  }
 
   /** Directive prefix turn that activates `names` when the runtime gates tools behind an activation tool. */
   activationTurn(names: string[]): string | null {

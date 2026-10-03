@@ -52,3 +52,24 @@ Feature: Editor pane
       Then the workspace sidebar should be hidden
       And the chat container should be hidden
       And the editor pane should remain visible
+
+  Rule: The agent opens workspace files in the editor
+
+    @ux-editor-006 @cap-editor @cap-workspace
+    Scenario: The agent opens a workspace file in an editor tab
+      Given a workspace file exists
+      When the agent asks to open it in a tab during my turn
+      Then the file opens in an active editor tab showing its text
+      And the turn completes
+
+    @ux-editor-007 @cap-editor @cap-workspace
+    Scenario: The agent asks to open a file that cannot be opened
+      When the agent asks to open a file that does not exist, or a path outside the workspace
+      Then no editor tab opens
+      And the turn completes
+
+    @ux-editor-008 @cap-editor @cap-workspace
+    Scenario: Another chat's request does not open files here
+      Given I am viewing one chat
+      When the agent opens a file during a turn in another chat
+      Then no editor tab opens in the chat I am viewing

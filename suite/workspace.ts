@@ -147,9 +147,9 @@ export async function editorFile(page: Page, sel: (k: string) => string, content
   return name;
 }
 
-/** On narrow layouts the workspace pane overlays the editor: hide it while editing (openWorkspace shows it again). */
-export async function uncoverEditor(page: Page, sel: (k: string) => string) {
-  const covered = await editorText(page, sel).evaluate(el => {
+/** On narrow layouts the workspace pane overlays other panes: hide it while `target` is covered (openWorkspace shows it again). */
+export async function uncover(page: Page, target: Locator) {
+  const covered = await target.evaluate(el => {
     const r = el.getBoundingClientRect();
     const hit = document.elementFromPoint(r.left + Math.min(20, r.width / 2), r.top + Math.min(10, r.height / 2));
     return !!hit && !el.contains(hit) && !!hit.closest('aside, [role=complementary]');
@@ -159,6 +159,9 @@ export async function uncoverEditor(page: Page, sel: (k: string) => string) {
   await page.getByRole('menuitem', { name: /hide workspace/i }).click();
   await expect(pane(page)).toBeHidden();
 }
+
+/** Make the active editor reachable (see uncover). */
+export const uncoverEditor = (page: Page, sel: (k: string) => string) => uncover(page, editorText(page, sel));
 
 /** Type at the end of the active editor and check the text arrived (a click can land before the editor takes focus). */
 export async function typeInEditor(page: Page, sel: (k: string) => string, text: string) {
