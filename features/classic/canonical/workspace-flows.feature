@@ -168,6 +168,16 @@ Feature: Classic workspace flows
     Then the tab no longer reports unsaved changes
     And nothing is written to the file
 
+  @ux-workspace-019 @editor @save @cap-editor @cap-workspace
+  Scenario: Keep edits made while a save is in progress
+    Given an editor tab has unsaved text
+    When I invoke Save
+    And I type more text before the save completes
+    Then after the save completes the editor still shows all the text
+    And the tab still reports unsaved changes
+    When I save again
+    Then the file holds all the text
+
   @ux-workspace-018 @editor @conflict @cap-editor @cap-workspace
   Scenario: Resolve an editor file conflict with the supplied actions
     Given the editor conflict monitor exposes a file-changed notice

@@ -3,7 +3,8 @@
  * the UI again, so specs leave the runtime's workspace as they found it.
  */
 import { expect } from '@playwright/test';
-import type { Locator, Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import type { Browser, Locator, Page } from '@playwright/test';
 
 export const menu = (page: Page) => page.getByRole('button', { name: /^menu$|workspace menu/i }).first();
 export const pane = (page: Page) => page.getByRole('complementary').filter({ hasText: /workspace/i }).first();
@@ -54,14 +55,22 @@ export async function newFile(page: Page) {
     return `${text.match(/path:\s*(\S+)/)?.[1] ?? ''}|${text.match(/modified:\s*([^\n]+)/)?.[1] ?? ''}|${text.match(/size:\s*([^\n]+)/)?.[1] ?? ''}`;
   };
   const previous = await shown();
+  const writes: string[] = [];
+  const log = (r: any) => { if (r.request().method() !== 'GET' && /file/i.test(r.url())) writes.push(`${r.request().method()} ${r.status()} ${(r.request().postData() ?? '').slice(0, 60)}`); };
+  page.on('response', log);
+  // If the proposed name is taken, the runtime may ask for one: accept its suggestion, as a user would.
+  const prompt = (d: any) => { writes.push(`dialog ${d.type()} "${d.message().slice(0, 40)}" default="${d.defaultValue()}"`); if (d.type() === 'prompt') void d.accept(d.defaultValue()).catch(() => {}); };
+  page.on('dialog', prompt);
   let created = '';
   const changed = async () => { const now = await shown(); created = now.split('|')[0]; return created !== '' && now !== previous && /^0\s*B$/i.test(now.split('|')[2]); };
   for (let attempt = 1; ; attempt++) {
-    await pane(page).getByRole('button', { name: /^new file$/i }).first().click();
+    const button = pane(page).getByRole('button', { name: /^new file$/i }).first();
+    writes.push(`click ${attempt} enabled=${await button.isEnabled().catch(() => '?')}`);
+    await button.click();
     // Setup only: with a stale tree (rcarmo/piclaw#1520) the client may propose a taken name and create nothing until
     // the tree is refreshed.
     if (await expect.poll(changed, { timeout: 4_000 }).toBe(true).then(() => true, () => false)) break;
-    if (attempt === 4) throw new Error(`newFile: nothing created (preview ${await shown()})`);
+    if (attempt === 4) { page.off('response', log); page.off('dialog', prompt); throw new Error(`newFile: nothing created (preview ${await shown()}; writes ${JSON.stringify(writes)})`); }
     if (attempt === 3) {
       // A refresh can stay stale; a reload lists the real tree.
       await page.reload();
@@ -73,29 +82,67 @@ export async function newFile(page: Page) {
     await page.waitForTimeout(500);
     if (await changed()) break;
   }
+  page.off('response', log);
+  page.off('dialog', prompt);
   return created;
 }
 
 /** Runtimes may keep one hidden editor per inactive tab: the visible one is the active tab's. */
 export const editorText = (page: Page, sel: (k: string) => string) => page.locator(sel('editorText')).filter({ visible: true }).first();
 
+/** Names of files the suite creates by upload: unique per call, recognisable for cleanup. */
+export const fixtureName = () => `fx-${Math.random().toString(16).slice(2, 10)}.md`;
+const FIXTURE_FILE = /\bfx-[0-9a-f]{8}\.md\b/g;
+
+/** Upload `name` holding `content` through a page's workspace pane ("Upload files to this folder"). */
+async function uploadThrough(page: Page, name: string, content: string) {
+  await openWorkspace(page);
+  // The pane's file input behind its (hover-revealed) "Upload files to this folder" actions, given a file as if picked.
+  await pane(page).locator('input[type=file]').first().evaluate((input, [n, text]) => {
+    const files = new DataTransfer();
+    files.items.add(new File([text], n, { type: 'text/markdown' }));
+    (input as HTMLInputElement).files = files.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, [name, content]);
+  // A root entry can stay unlisted until the tree is refreshed (rcarmo/piclaw#1520).
+  await expect.poll(async () => {
+    if (await treeRow(page, name)) return true;
+    await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
+    return false;
+  }, { message: `uploaded ${name}` }).toBe(true);
+}
+
+let helper: Browser | null = null;
 /**
- * Create a file, open it in an editor tab and, when given, type and save `content`. `onCreated` receives the name as
- * soon as the file exists, so callers can clean up even if a later step fails.
+ * Upload a file with `content` to the workspace root. Returns its name. Setup only: Playwright's WebKit on Linux sends
+ * file uploads without their bytes, so WebKit tests upload through a helper Chromium page in the same session.
  */
-export async function editorFile(page: Page, sel: (k: string) => string, content?: string, onCreated?: (name: string) => void) {
-  const name = await newFile(page);
-  onCreated?.(name);
-  // "Open in editor", not "Review file" (a separate review view).
-  await pane(page).getByRole('button', { name: /^open in editor$/i }).click();
-  await expect(tab(page, name)).toHaveAttribute('aria-selected', 'true');
-  await uncoverEditor(page, sel);
-  if (content !== undefined) {
-    // A new file is empty: wait for its editor (another tab's editor may still be showing).
-    await expect(editorText(page, sel)).toHaveText('');
-    await typeInEditor(page, sel, content);
-    await save(page, name, { retry: true });
+export async function uploadFile(page: Page, content: string, name = fixtureName()) {
+  if (page.context().browser()?.browserType().name() !== 'webkit') {
+    await uploadThrough(page, name, content);
+    return name;
   }
+  helper ??= await chromium.launch();
+  const context = await helper.newContext({ storageState: await page.context().storageState() });
+  try {
+    const other = await context.newPage();
+    await other.goto(page.url());
+    await uploadThrough(other, name, content);
+  } finally {
+    await context.close();
+  }
+  return name;
+}
+
+/**
+ * Create a file (by upload) holding `content` and open it in an editor tab. `onCreated` receives the name as soon as
+ * the file exists, so callers can clean up even if a later step fails.
+ */
+export async function editorFile(page: Page, sel: (k: string) => string, content = '', onCreated?: (name: string) => void) {
+  const name = await uploadFile(page, content);
+  onCreated?.(name);
+  await openInEditor(page, sel, name);
+  await expect(editorText(page, sel)).toHaveText(content);
   return name;
 }
 
@@ -190,7 +237,8 @@ export async function purgeUntitled(page: Page) {
     for (let i = 0, reloaded = false; i < 40; i++) {
       await pane(page).getByRole('button', { name: /^refresh tree$/i }).click(t).catch(() => {});
       await page.waitForTimeout(400);
-      const names = [...new Set((await pane(page).innerText().catch(() => '')).match(/\buntitled(?:-\d+)?\.md\b/g) ?? [])];
+      const text = await pane(page).innerText().catch(() => '');
+      const names = [...new Set([...(text.match(/\buntitled(?:-\d+)?\.md\b/g) ?? []), ...(text.match(FIXTURE_FILE) ?? [])])];
       let row = null;
       for (const name of names) if ((row = await treeRow(page, name).catch(() => null))) break;
       if (!row) {
@@ -231,4 +279,30 @@ export async function clickVisible(page: Page, target: Locator, button: 'left' |
     if (exposed) { await page.mouse.click(x, y, { button }); return; }
   }
   throw new Error('clickVisible: target is fully covered');
+}
+
+/** Open an existing file in an editor tab (reusing an open tab) and make the editor reachable. */
+export async function openInEditor(page: Page, sel: (k: string) => string, name: string) {
+  if (!(await tab(page, name).count())) {
+    await openWorkspace(page);
+    let row = await treeRow(page, name);
+    if (!row) {
+      await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
+      await page.waitForTimeout(500);
+      row = await treeRow(page, name);
+    }
+    if (!row) {
+      // A refresh can leave root entries stale (rcarmo/piclaw#1520); a reload lists them.
+      await page.reload();
+      await openWorkspace(page);
+      await expect.poll(async () => (await treeRow(page, name)) !== null, { message: `tree row ${name}` }).toBe(true);
+      row = await treeRow(page, name);
+    }
+    await row!.click();
+    await expect.poll(() => previewPath(page)).toBe(name);
+    await pane(page).getByRole('button', { name: /^open in editor$/i }).click();
+  }
+  await uncoverEditor(page, sel);
+  await clickVisible(page, tab(page, name));
+  await expect(tab(page, name)).toHaveAttribute('aria-selected', 'true');
 }

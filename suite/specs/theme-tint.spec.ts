@@ -8,7 +8,11 @@ import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
 type Look = { background: string; accent: string; dark: boolean };
-const rgb = (c: string) => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+/** Channels 0-255 from a computed colour: rgb()/rgba(), or color(srgb …) with 0-1 channels (e.g. from color-mix()). */
+const rgb = (c: string) => {
+  const n = (c.replace(/^color\(\s*srgb/i, '').match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+  return /^color\(\s*srgb/i.test(c) ? n.map(v => Math.round(v * 255)) : n;
+};
 const hex = (h: string) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
 
 /** What the page looks like now: background, accent (hovered send button with a draft), and whether it is dark. */

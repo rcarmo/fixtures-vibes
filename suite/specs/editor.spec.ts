@@ -5,16 +5,18 @@
 import { test, expect } from '../fixtures';
 import { bodyHas, holdWrites } from '../net';
 import type { Page } from '@playwright/test';
-import { clickVisible, closeControl, editorFile, editorText, openWorkspace, pane, purgeUntitled, removeFiles, previewPath, save, saveButton, tab, tabs, typeInEditor, uncoverEditor } from '../workspace';
+import { clickVisible, closeControl, editorFile, editorText, openWorkspace, pane, purgeUntitled, openInEditor, removeFiles, previewPath, save, saveButton, tab, tabs, treeRow, typeInEditor, uncoverEditor } from '../workspace';
 
 type Sel = (k: string) => string;
 // Files are created and removed through the UI on every test: allow for that setup.
 test.describe.configure({ timeout: 120_000 });
 let created: string[] = [];
 
+let sessionUrl = '';
 async function start(page: Page, runtime: any) {
   created = [];
-  await page.goto((await runtime.newSession()).url);
+  sessionUrl = (await runtime.newSession()).url;
+  await page.goto(sessionUrl);
   await openWorkspace(page);
   await purgeUntitled(page);
 }
@@ -204,4 +206,99 @@ test('@ux-workspace-017 Avoid writing an unchanged editor document', async ({ pa
   await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
   await page.waitForTimeout(800);
   expect(writes).toEqual([]);
+});
+
+/** Change and save `name` from a second page of the same browser session (another user tab). */
+async function remoteEdit(page: Page, sel: Sel, name: string, text: string) {
+  const other = await page.context().newPage();
+  try {
+    await other.goto(sessionUrl);
+    await openInEditor(other, sel, name);
+    await expect(editorText(other, sel)).not.toHaveText('');
+    await typeInEditor(other, sel, text);
+    await save(other, name);
+  } finally {
+    await other.close();
+  }
+  await page.bringToFront();
+}
+
+/** The file's text as a fresh page loads it. */
+async function diskText(page: Page, sel: Sel, name: string) {
+  const other = await page.context().newPage();
+  try {
+    await other.goto(sessionUrl);
+    await openInEditor(other, sel, name);
+    await expect(editorText(other, sel)).not.toHaveText('');
+    return (await editorText(other, sel).textContent()) ?? '';
+  } finally {
+    await other.close();
+  }
+}
+
+test('@ux-workspace-018 Resolve an editor file conflict with the supplied actions', async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  page.on('dialog', d => void d.accept());
+  const name = await file(page, sel, 'v1');
+  // The notice's text can collapse on narrow layouts; its action buttons are what a user sees.
+  const notice = page.getByText(/file changed on disk/i);
+  const resolved = () => expect(page.getByRole('button', { name: 'Reload', exact: true }).first()).toBeHidden();
+  const action = (label: string) => page.getByRole('button', { name: label, exact: true }).filter({ visible: true }).first();
+  /** Local unsaved text, then the same file changed elsewhere: the editor offers the conflict actions. */
+  const conflict = async (round: string) => {
+    await typeInEditor(page, sel, ` local-${round}`);
+    await remoteEdit(page, sel, name, ` remote-${round}`);
+    await expect(action('Reload')).toBeVisible({ timeout: 15_000 });
+    await expect(notice).not.toHaveCount(0);
+  };
+
+  // Reload: the file's text replaces the editor's, which is clean again.
+  await conflict('reload');
+  await clickVisible(page, action('Reload'));
+  await expect(editorText(page, sel)).toHaveText('v1 remote-reload');
+  await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
+  await resolved();
+
+  // Overwrite: the editor's text is saved over the file.
+  await conflict('overwrite');
+  await clickVisible(page, action('Overwrite'));
+  await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
+  await resolved();
+  expect(await diskText(page, sel, name)).toBe('v1 remote-reload local-overwrite');
+
+  // Save copy: the editor's text goes to a new file next to it.
+  await conflict('copy');
+  const listed = async () => new Set((await pane(page).innerText().catch(() => '')).split('\n').map(l => l.trim()).filter(Boolean));
+  await openWorkspace(page);
+  const before = await listed();
+  await uncoverEditor(page, sel);
+  await clickVisible(page, action('Save copy'));
+  await openWorkspace(page);
+  let copy = '';
+  await expect.poll(async () => {
+    await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
+    copy = [...await listed()].find(l => !before.has(l) && /\.\w+$/.test(l)) ?? '';
+    return copy;
+  }, { message: 'a copy appears in the workspace tree' }).not.toBe('');
+  created.push(copy);
+  await (await treeRow(page, copy))!.click();
+  await expect.poll(() => pane(page).innerText()).toContain('local-copy');
+});
+
+test('@ux-workspace-019 Keep edits made while a save is in progress', async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  const name = await file(page, sel);
+  await typeInEditor(page, sel, 'first');
+  const held = await holdWrites(page, bodyHas(name));
+  await saveButton(page).click();
+  await expect.poll(() => held.count).toBe(1);
+  // Typed while the write is still in flight.
+  await typeInEditor(page, sel, ' second');
+  held.disarm();
+  held.release();
+  await page.waitForTimeout(1000);
+  await expect(editorText(page, sel)).toHaveText('first second');
+  await expect(closeControl(page, name)).toHaveAccessibleName(/unsaved changes/i);
+  await save(page, name);
+  expect(await diskText(page, sel, name)).toBe('first second');
 });
