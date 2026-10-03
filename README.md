@@ -1,6 +1,18 @@
 # fixtures-vibes
 
-Shared references and the compliance suite for the **Classic** web UI implemented by Gi, Vibes (Python and Go) and tau-prime.
+This repository contains shared references and the compliance suite for the "Classic" web UI I designed for `vibes` and then adopted for `piclaw`, `gi`, various `vibes` experiments (Python and Go) and `tau-prime`. Since they were all reinventing a few wheels, I decided to centralize the core behaviors and assets for non-`piclaw` projects here.
+
+This is managed by a `piclaw` instance, which acts as oracle and orchestrates the capture of UX behavior into fixtures:
+
+- The agent inspects itself or another running copy of `piclaw`
+- It captures live test fixtures and behaviors as HTML/JS/Gherkin files
+- It then validates and tags feature files accordingly and asks the sub-agents in charge of each project to adopt the feature files
+- They then implement their own backend-specific tests in whatever language they run
+
+Any local deviations are either specific to the runtime or tool (`gi` and `tau-prime` both have TUIs, which are out of scope here) or corrected to align with the web UX.
+
+# Agent Guidance
+
 The installed Piclaw release is the behavioural oracle; the current reference is **Piclaw 3.2.5**.
 
 This repository holds behaviour, not product code:
