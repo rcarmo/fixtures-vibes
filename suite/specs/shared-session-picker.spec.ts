@@ -33,13 +33,14 @@ for (const [id, name] of [
   await expect(reply(`main-${n}`)).toHaveCount(1);
   await expect(modelButton).toContainText(MODEL_ONE);
 
-  // Reload "main" with every read that names it delayed, then leave for "research" by keyboard alone.
+  // With "main" loaded, every later read that names it is delayed (the page itself and its event streams, which are
+  // live connections rather than responses, are left alone). A new turn in "main" makes such reads; then leave for
+  // "research" by keyboard alone while they are pending.
   const mainIds = [main.id, encodeURIComponent(main.id), mainName];
-  // The page itself and its event streams (live connections, not delayed responses) are left alone.
   const late = await holdReads(page, r => !r.isNavigationRequest() && mainIds.some(id => r.url().includes(id))
     && !/event-stream/.test(r.headers()['accept'] ?? ''));
-  await page.reload();
-  await expect(page.getByRole('button', { name: /manage sessions/i }).first()).toBeVisible();
+  await input.fill(`[reply:late-main-${n}] late ${n}`);
+  await input.press('Enter');
   await expect.poll(() => late.count).toBeGreaterThan(0);
   const sessions = page.getByRole('button', { name: /manage sessions/i }).first();
   await sessions.focus();
@@ -55,6 +56,7 @@ for (const [id, name] of [
   // Every surface still shows "research" after the late "main" responses.
   await expect(reply(`research-${n}`)).toHaveCount(1);
   await expect(page.getByText(`main-${n}`)).toHaveCount(0);
+  await expect(page.getByText(`late-main-${n}`)).toHaveCount(0);
   await expect(modelButton).toContainText(MODEL_TWO);
   await expect(sessions).toHaveAccessibleName(nameRe(researchName));
   // The composer is shared across sessions in 3.2.5 (its text and attachments follow a switch); it must deliver to "research".

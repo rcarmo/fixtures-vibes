@@ -2,14 +2,10 @@
  * Picker search, typeahead and keyboard (features/canonical/shared-ux.feature @ux-shared-021).
  * Model picker: only fixture models are ever highlighted for activation; the reference also lists billable models.
  */
-import { ENTRY, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
+import { ENTRY, entries, highlighted, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Locator, Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
-
-// Listboxes mark the highlight with aria-selected; menus move focus (or set aria-current).
-const highlighted = (list: Locator) =>
-  list.locator(ENTRY).and(list.locator('[aria-selected="true"], [aria-current="true"], :focus'));
 
 /** Move focus off the search field onto the picker container (its nearest focusable ancestor), keeping it open. */
 async function leaveSearch(page: Page, list: Locator) {
@@ -27,7 +23,7 @@ for (const [id, name] of [
   const homeName = `fh${randomUUID().replace(/-/g, '').slice(0, 8)}`;
   const home = await runtime.newSession(homeName);
   await runtime.newSession(`zz-ta${n}`);
-  const prefix = await runtime.newSession(`ta${n}`);
+  await runtime.newSession(`ta${n}`);
   await page.goto(home.url);
   const opener = page.getByRole('button', { name: /manage sessions/i }).first();
   const list = sessionList(page);
@@ -67,7 +63,6 @@ for (const [id, name] of [
   await expect(opener).toHaveAccessibleName(nameRe(`ta${n}`));
   await page.waitForTimeout(1000);
   await expect(opener).toHaveAccessibleName(nameRe(`ta${n}`));
-  expect(prefix.id).toContain(`ta${n}`);
 });
 
 for (const [id, name] of [

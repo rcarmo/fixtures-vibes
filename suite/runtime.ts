@@ -121,6 +121,13 @@ export class Runtime {
     return { id, url: this.baseUrl + fill(this.profile.session.open, { ...vars, id: encodeURIComponent(id) }) };
   }
 
+  /** Script the next model requests (any kind, e.g. a compaction summary) with directive strings, in order. Replaces
+   *  any earlier script; test cleanup clears it. */
+  async script(prompts: string[]) {
+    const r = await fetch(`${this.modelUrl}/control/script`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ prompts }) });
+    if (!r.ok) throw new Error(`script: ${r.status}`);
+  }
+
   async openGate(name: string) {
     const r = await fetch(`${this.modelUrl}/control/gates/${encodeURIComponent(name)}/open`, { method: 'POST' });
     if (!r.ok) throw new Error(`gate ${name}: ${r.status}`);
@@ -139,6 +146,7 @@ export class Runtime {
   /** Test cleanup: release held turns, end any outage, and wait until the runtime stops talking to the model. */
   async releaseAll(timeoutMs = 30_000) {
     await fetch(`${this.modelUrl}/control/gates/open-all`, { method: 'POST' });
+    await this.script([]);
     await this.outage(500, 0);
     const end = Date.now() + timeoutMs;
     while (Date.now() < end) {

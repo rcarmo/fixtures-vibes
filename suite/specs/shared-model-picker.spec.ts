@@ -30,7 +30,7 @@ for (const [id, name] of [
       const rejected = await holdWrites(page, bodyHas('fixture-2'), { status: 500, error: `rejected-${n}` });
       await modelButton(page).click();
       await page.keyboard.type('fixture-2');
-      await modelList(page).locator(ENTRY).filter({ hasText: MODEL_TWO }).click();
+      await entries(modelList(page), MODEL_TWO).click();
       await expect.poll(() => rejected.count).toBe(1);
       rejected.release();
       await page.waitForTimeout(1000);
@@ -45,7 +45,7 @@ for (const [id, name] of [
     else { await modelButton(page).focus(); await page.keyboard.press('Enter'); }
     await expect(modelList(page)).toBeVisible();
     await page.keyboard.type('fixture-2');
-    const second = modelList(page).locator(ENTRY).filter({ hasText: MODEL_TWO });
+    const second = entries(modelList(page), MODEL_TWO);
     await expect(second).toHaveCount(1);
     if (input === 'pointer') await second.click();
     else {
@@ -90,7 +90,7 @@ for (const [id, name] of [
     await modelButton(page).click();
     await expect(modelList(page)).toBeVisible();
     await page.keyboard.type('fixture-2');
-    await modelList(page).locator(ENTRY).filter({ hasText: MODEL_TWO }).click();
+    await entries(modelList(page), MODEL_TWO).click();
   };
   // A turn in each session, so both show an authoritative model label.
   for (const s of [research, main]) {
