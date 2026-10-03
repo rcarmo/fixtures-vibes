@@ -21,6 +21,18 @@ async function pace(pathname: string) {
     await new Promise(r => setTimeout(r, 60_000 - (now - sent[0]) + 50));
   }
 }
+/** Wait until at least `free` paced writes are available in the current minute; returns the time waited (ms). */
+async function headroom(free: number) {
+  if (!paced) return 0;
+  const limit = Math.max(0, profile.rateLimit!.perMinute - free);
+  const start = Date.now();
+  for (;;) {
+    const now = Date.now();
+    while (sent.length && now - sent[0] >= 60_000) sent.shift();
+    if (sent.length <= limit) return Date.now() - start;
+    await new Promise(r => setTimeout(r, 60_000 - (now - sent[sent.length - 1 - limit]) + 50));
+  }
+}
 const catalogue = loadCatalogue();
 
 export const test = base.extend<{ runtime: Runtime; sel: (key: string) => string; scenarioGate: void }, { server: { baseUrl: string } }>({
@@ -38,6 +50,10 @@ export const test = base.extend<{ runtime: Runtime; sel: (key: string) => string
     if (!entry) throw new Error(`test title must start with a known scenario ID: ${info.title}`);
     const missing = entry.caps.filter(c => !profile.capabilities.includes(c));
     info.skip(missing.length > 0, `capability-absent: ${missing.join(', ')}`);
+    // Start each test with write headroom, so pacing rarely stalls a send mid-test behind a short expectation.
+    // The wait is added to this test's timeout.
+    const waited = await headroom(12);
+    if (waited) info.setTimeout(info.timeout + waited);
     await use();
   }, { auto: true }],
   // Opt-in: runtimes that always ask before running a tool get the approval clicked for fixture tool calls.

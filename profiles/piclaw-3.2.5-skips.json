@@ -51,7 +51,8 @@
       "id": "@ux-shared-023",
       "reason": "known-defect",
       "detail": "Intermittent: after an SSE reconnect and Stop with a queued follow-up, the next turn can run with no Stop button, Draft or status (stale terminal state applied to the newer turn). Seen in Chromium tablet and WebKit phone/tablet/desktop; passes in other runs.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1519"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1519",
+      "intermittent": true
     },
     {
       "id": "@ux-chat-lifecycle-003",
@@ -62,7 +63,8 @@
         "webkit-desktop"
       ],
       "detail": "Intermittent in WebKit: the Output status pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true
     },
     {
       "id": "@ux-chat-lifecycle-007",
@@ -73,7 +75,8 @@
         "webkit-desktop"
       ],
       "detail": "Intermittent in WebKit: the held turn's Draft pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true
     },
     {
       "id": "@ux-chat-lifecycle-008",
@@ -84,7 +87,8 @@
         "webkit-desktop"
       ],
       "detail": "Intermittent in WebKit: the running-tool status line is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true
     },
     {
       "id": "@ux-shared-015",
@@ -95,7 +99,8 @@
         "webkit-desktop"
       ],
       "detail": "Intermittent in WebKit: the Stop button after reloading a page with a running turn is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true
     },
     {
       "id": "@ux-original-005",
@@ -107,7 +112,8 @@
       "id": "@ux-original-023",
       "reason": "known-defect",
       "detail": "Same body and defect as @ux-shared-023. Intermittent: after an SSE reconnect and Stop with a queued follow-up, the next turn can run with no Stop button, Draft or status (stale terminal state applied to the newer turn). Seen in Chromium tablet and WebKit phone/tablet/desktop; passes in other runs.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1519"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1519",
+      "intermittent": true
     },
     {
       "id": "@ux-original-027",
@@ -118,7 +124,8 @@
         "webkit-desktop"
       ],
       "detail": "Same body and defect as @ux-chat-lifecycle-003. Intermittent in WebKit: the Output status pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
-      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true
     },
     {
       "id": "@ux-shared-014",
