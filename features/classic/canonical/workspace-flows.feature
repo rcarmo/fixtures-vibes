@@ -153,6 +153,8 @@ Feature: Classic workspace flows
     And clipboard send returns immediately in read-only mode
     When the VNC proxy, display protocol, or session load fails
     Then the pane reports proxy, protocol, or session-load error text in its status and display chrome
+    # Against Piclaw 3.2.5 only the runtime failure is constructible: the reference host allows direct connections
+    # and has no saved (or read-only) targets.
 
   @ux-workspace-016 @editor @save @cap-editor @cap-workspace
   Scenario: Save changed editor content
