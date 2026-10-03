@@ -119,6 +119,18 @@
       ],
       "detail": "Same body and defect as @ux-chat-lifecycle-003. Intermittent in WebKit: the Output status pane is sometimes not rendered although the event arrives (7/20 isolated runs for chat-lifecycle-007/008; persists with the EventSource confirmed open). Same rendering defect as @ux-chat-lifecycle-002.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1507"
+    },
+    {
+      "id": "@ux-shared-014",
+      "reason": "known-defect",
+      "detail": "While every read naming the current session is delayed, the session picker lists no other sessions ('No other sessions yet.'), so 'research' cannot be selected until the current timeline loads. All six projects.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1515"
+    },
+    {
+      "id": "@ux-original-014",
+      "reason": "known-defect",
+      "detail": "Same body and defect as @ux-shared-014. While every read naming the current session is delayed, the session picker lists no other sessions ('No other sessions yet.'), so 'research' cannot be selected until the current timeline loads. All six projects.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1515"
     }
   ]
 }

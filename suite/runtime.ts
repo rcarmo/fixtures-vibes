@@ -50,6 +50,7 @@ export const canonicalSelectors: Record<string, string> = {
   userPost: '.timeline .post:not(.agent-post)',
   /** The keyboard-highlighted Quick actions result. */
   quickActionHighlight: '[role="option"][aria-selected="true"]',
+  quickActionItem: '[role="option"]',
 };
 
 export function selector(profile: Profile, key: string): string {

@@ -17,12 +17,13 @@ test('@ux-timeline-029 Post times are shown in the viewer\'s time zone', async (
   const shownAt = Date.now();
   await expect(reply.getByText(/just now|now|seconds? ago|\d+s ago/i).first()).toBeVisible();
 
-  // Absolute time: an ISO datetime attribute, or a date-bearing title. Parsed in the page, so in the browser time zone.
+  // Absolute time: an ISO datetime attribute, or a date-bearing title. Parsed in the page: a zone-less
+  // title is read in the browser time zone; an ISO title keeps its own Z/offset.
   const parsed = await reply.evaluate(el => {
     const iso = el.querySelector('time[datetime]')?.getAttribute('datetime');
     if (iso) return Date.parse(iso);
     for (const t of Array.from(el.querySelectorAll('[title]')).map(e => e.getAttribute('title') ?? '')) {
-      const m = t.match(/(\d{1,2}\/\d{1,2}\/\d{4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*[AP]M)/i) ?? t.match(/(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2})?)/);
+      const m = t.match(/(\d{1,2}\/\d{1,2}\/\d{4},?\s+\d{1,2}:\d{2}(?::\d{2})?\s*[AP]M)/i) ?? t.match(/(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)/);
       if (m) return new Date(m[1]).getTime();
     }
     return NaN;

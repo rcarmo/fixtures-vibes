@@ -15,20 +15,6 @@ for (const [id, name] of [
     await input.press('Enter');
     await expect(page.locator(sel('agentPost')).filter({ hasText: reply })).toHaveCount(1);
   };
-  // Durable row IDs, read from each post's permalink.
-  const rowIds = () => page.locator(sel('timelinePost')).evaluateAll(els =>
-    els.map(e => Number((e.querySelector('a[href^="#msg-"]')?.getAttribute('href') ?? '').replace('#msg-', ''))));
-
-  await page.goto(main.url);
-  for (const k of [1, 2, 3]) await turn(`u${k} ${n}`, `r${k}-${n}`);
-  const [u1, r1, u2, r2, u3, r3] = await rowIds();
-  expect([u1, r1, u2, r2, u3, r3].every((id, i, all) => id > 0 && (i === 0 || id > all[i - 1]))).toBe(true);
-
-  await page.goto(other.url);
-  await turn(`foreign ${n}`, `foreign-${n}`);
-  await page.goto(main.url);
-  await expect(page.locator(sel('agentPost')).filter({ hasText: `r3-${n}` })).toHaveCount(1);
-
   const callTool = async (tag: string, args: object) => {
     const json = JSON.stringify(args).replace(/[[\]]/g, m => `\\${m}`);
     await input.fill(`[tool:messages ${json}][after-tool:done-${tag}-${n}] ${tag} ${n}`);
@@ -39,6 +25,21 @@ for (const [id, name] of [
     return String(followUps[0].toolResult);
   };
   const rowsIn = (text: string) => [...text.matchAll(/\[(\d+)\]/g)].map(m => Number(m[1]));
+
+  await page.goto(main.url);
+  for (const k of [1, 2, 3]) await turn(`u${k} ${n}`, `r${k}-${n}`);
+  // Durable row IDs, as the messages tool itself reports them ("[row] Author: text"): a reply's line ends with its
+  // reply text; a user line ends with its own text (its directive is not at the end).
+  const listed = (await callTool('ids', { action: 'search', query: n, limit: 20 })).split('\n');
+  const rowOf = (end: string) => Number(listed.find(l => /^\[\d+\]/.test(l) && l.trimEnd().endsWith(end))?.match(/^\[(\d+)\]/)?.[1]);
+  const [u1, r1, u2, r2, u3, r3] = [1, 2, 3].flatMap(k => [rowOf(` u${k} ${n}`), rowOf(` r${k}-${n}`)]);
+  expect([u1, r1, u2, r2, u3, r3].every((id, i, all) => id > 0 && (i === 0 || id > all[i - 1]))).toBe(true);
+
+  await page.goto(other.url);
+  await turn(`foreign ${n}`, `foreign-${n}`);
+  await page.goto(main.url);
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `r3-${n}` })).toHaveCount(1);
+
 
   const missing = 2_000_000_000;
   const got = await callTool('get', { action: 'get', row_ids: [u2, u3, missing], context_before: 1, context_after: 1 });

@@ -87,11 +87,19 @@ test('@ux-shared-008 Discover loaded skills through canonical slash commands', a
   expect(turn).toHaveLength(1);
   expect(turn[0].skills).toEqual([pick!.name.slice('/skill:'.length)]);
 
-  // An unknown skill fails visibly, invokes no model turn and leaves the composer usable.
-  await input.fill(`/skill:missing-${n} [reply:none-${n}] run ${n}b`);
+  // An unknown skill fails visibly (inline or as a dialog), invokes no model turn and loses nothing: the command is
+  // either restored to the composer (rejected before sending) or kept in the timeline (Piclaw 3.2.5).
+  const draft = `/skill:missing-${n} [reply:none-${n}] run ${n}b`;
+  const unknown = new RegExp(`unknown skill.*missing-${n}`, 'i');
+  const dialogs: string[] = [];
+  page.on('dialog', d => { dialogs.push(d.message()); void d.accept().catch(() => {}); });
+  await input.fill(draft);
   await input.press('Enter');
-  await expect(page.locator(sel('timeline')).getByText(new RegExp(`skill:missing-${n}`)).last()).toBeVisible();
-  await expect(page.getByText(new RegExp(`unknown skill.*missing-${n}`, "i")).first()).toBeVisible();
+  await expect.poll(async () => dialogs.some(m => unknown.test(m)) || (await page.getByText(unknown).count()) > 0,
+    { message: 'unknown-skill failure shown' }).toBe(true);
+  await expect.poll(async () => (await input.inputValue()) === draft
+    || (await page.locator(sel('timeline')).getByText(new RegExp(`skill:missing-${n}`)).count()) > 0,
+    { message: 'rejected command kept in the composer or the timeline' }).toBe(true);
   await page.waitForTimeout(1000);
   expect((await runtime.modelLog()).filter(e => JSON.stringify(e).includes(`missing-${n}`) || e.prompt.includes(`${n}b`))).toHaveLength(0);
   await expect(input).toBeEditable();

@@ -2,6 +2,7 @@
  * Quick actions contract: features/canonical/shared-ux.feature @ux-shared-003..006 and the equivalent Classic
  * features/classic/canonical/canonical-ux.feature @ux-original-003..006 (same bodies; original-only clauses by id).
  */
+import { ENTRY } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { quietTimelinePoint } from '../points';
@@ -28,13 +29,9 @@ for (const [id, name] of [
   await expect(searchBox(page)).toBeFocused();
   await expect(searchBox(page)).toHaveValue('S');
 
-  // An exact title is preferred over a longer prefix match; the highlight wraps in both directions.
+  // The highlight wraps in both directions through the runtime's own slash commands.
   const highlight = page.locator(sel('quickActionHighlight'));
-  await searchBox(page).fill('/abort');
-  await expect(highlight).toHaveCount(1);
-  await expect(highlight).toContainText(/\/abort(?!-)/);
-  const text = async () => ((await highlight.textContent()) ?? '').replace(/\s+/g, ' ').trim();
-  // The palette re-renders after a query change or key press; read the highlight once it is stable.
+  const text = async () => ((await highlight.count()) ? await highlight.first().innerText() : '').replace(/\s+/g, ' ').trim();
   const settled = async () => {
     let value = '';
     await expect.poll(async () => {
@@ -45,16 +42,25 @@ for (const [id, name] of [
     }).toBe(true);
     return value;
   };
+  await searchBox(page).fill('/');
+  await expect(highlight).toHaveCount(1);
+  const commands = [...new Set((await page.locator(sel('quickActionItem')).allInnerTexts())
+    .map(t => t.match(/\/[\w:.-]+/)?.[0]).filter((c): c is string => Boolean(c)))];
+  expect(commands.length, 'Quick actions lists at least two slash commands').toBeGreaterThanOrEqual(2);
   const first = await settled();
-  await page.keyboard.press('ArrowDown');
-  const second = await settled();
-  expect(second, 'the "/abort" query matches at least two results').not.toBe(first);
-  await page.keyboard.press('ArrowUp');
-  expect(await settled()).toBe(first);
   await page.keyboard.press('ArrowUp');
   expect(await settled(), 'ArrowUp from the first result wraps to the last').not.toBe(first);
   await page.keyboard.press('ArrowDown');
   expect(await settled(), 'ArrowDown from the last result wraps to the first').toBe(first);
+  await page.keyboard.press('ArrowDown');
+  expect(await settled()).not.toBe(first);
+
+  // An exact title is preferred over a longer one it prefixes (when the catalogue has such a pair), and over the
+  // first listed result otherwise.
+  const exact = commands.find(c => commands.some(o => o !== c && o.startsWith(c))) ?? commands[commands.length - 1];
+  await searchBox(page).fill(exact);
+  const exactRe = new RegExp(`${exact.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}(?![\\w:.-])`);
+  await expect.poll(async () => exactRe.test(await settled())).toBe(true);
 
   if (id === '@ux-original-003') {
     // Results come from the enabled native groups.
@@ -130,9 +136,9 @@ const surfaces: Record<string, (page: Page, sel: (k: string) => string) => Promi
   },
   'session or model picker': async page => {
     await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
-    const option = page.getByRole('option').or(page.getByRole('menuitem')).first();
+    const option = page.locator(ENTRY).or(page.getByRole('menuitem')).first();
     await option.focus();
-    return async () => expect(page.getByRole('option').or(page.getByRole('menuitem')).first()).toBeVisible();
+    return async () => expect(page.locator(ENTRY).or(page.getByRole('menuitem')).first()).toBeVisible();
   },
 };
 

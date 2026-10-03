@@ -81,7 +81,8 @@
     "clearAgentAvatar": "/agent-avatar clear"
   },
   "selectors": {
-    "quickActionHighlight": ".timeline-quick-actions-item.active"
+    "quickActionHighlight": ".timeline-quick-actions-item.active",
+    "quickActionItem": ".timeline-quick-actions-item"
   },
   "rateLimit": {
     "path": "^/agent/[^/]+/message$",

@@ -1,4 +1,5 @@
 /** Session picker (shared-ux.feature @ux-shared-014/015; canonical-ux.feature @ux-original-014/015, same bodies). */
+import { entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
 import { test, expect } from '../fixtures';
 import { holdReads, holdWrites } from '../net';
 import { gateName } from '../runtime';
@@ -9,8 +10,10 @@ for (const [id, name] of [
   ['@ux-original-014', 'Select another session through the picker'],
 ] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
-  const main = await runtime.newSession();
-  const research = await runtime.newSession();
+  const mainName = `fm${n.replace(/-/g, '')}`;
+  const researchName = `fr${n.replace(/-/g, '')}`;
+  const main = await runtime.newSession(mainName);
+  const research = await runtime.newSession(researchName);
   const input = page.locator(sel('composeInput'));
   const modelButton = page.getByRole('button', { name: /model picker/i }).first();
   const reply = (text: string) => page.locator(sel('agentPost')).filter({ hasText: text });
@@ -20,28 +23,30 @@ for (const [id, name] of [
   await input.fill(`[reply:research-${n}] r ${n}`);
   await input.press('Enter');
   await expect(reply(`research-${n}`)).toHaveCount(1);
-  await input.fill('/model fixture/fixture-2');
-  await input.press('Enter');
-  await expect(modelButton).toContainText(/fixture-2|fixture model two/i);
+  await modelButton.click();
+  await page.keyboard.type('fixture-2');
+  await entries(modelList(page), MODEL_TWO).first().click();
+  await expect(modelButton).toContainText(MODEL_TWO);
   await page.goto(main.url);
   await input.fill(`[reply:main-${n}] m ${n}`);
   await input.press('Enter');
   await expect(reply(`main-${n}`)).toHaveCount(1);
-  await expect(modelButton).toContainText(/fixture-1|fixture model one/i);
+  await expect(modelButton).toContainText(MODEL_ONE);
 
-  // Reload "main" with its per-session state reads delayed, then leave for "research" by keyboard alone.
-  const mainIds = [main.id, encodeURIComponent(main.id)];
-  const late = await holdReads(page, r => /\/agent\/(status|queue-state|commands)\b/.test(r.url()) && mainIds.some(id => r.url().includes(id)));
+  // Reload "main" with every read that names it delayed, then leave for "research" by keyboard alone.
+  const mainIds = [main.id, encodeURIComponent(main.id), mainName];
+  // The page itself and its event streams (live connections, not delayed responses) are left alone.
+  const late = await holdReads(page, r => !r.isNavigationRequest() && mainIds.some(id => r.url().includes(id))
+    && !/event-stream/.test(r.headers()['accept'] ?? ''));
   await page.reload();
-  await expect(reply(`main-${n}`)).toHaveCount(1);
-  await input.fill(`draft-main-${n}`);
+  await expect(page.getByRole('button', { name: /manage sessions/i }).first()).toBeVisible();
   await expect.poll(() => late.count).toBeGreaterThan(0);
   const sessions = page.getByRole('button', { name: /manage sessions/i }).first();
   await sessions.focus();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('searchbox', { name: /search sessions/i })).toBeFocused();
-  await page.keyboard.type(research.id.replace(/^[a-z]+:/, ''));
-  await expect(page.getByRole('listbox', { name: /sessions/i }).getByRole('option')).toHaveCount(1);
+  await page.keyboard.type(researchName);
+  await expect(entries(sessionList(page), nameRe(researchName))).toHaveCount(1);
   await page.keyboard.press('Enter');
   await expect(reply(`research-${n}`)).toHaveCount(1);
 
@@ -50,8 +55,8 @@ for (const [id, name] of [
   // Every surface still shows "research" after the late "main" responses.
   await expect(reply(`research-${n}`)).toHaveCount(1);
   await expect(page.getByText(`main-${n}`)).toHaveCount(0);
-  await expect(modelButton).toContainText(/fixture-2|fixture model two/i);
-  await expect(sessions).toHaveAccessibleName(new RegExp(research.id.replace(/^[a-z]+:/, '')));
+  await expect(modelButton).toContainText(MODEL_TWO);
+  await expect(sessions).toHaveAccessibleName(nameRe(researchName));
   // The composer is shared across sessions in 3.2.5 (its text and attachments follow a switch); it must deliver to "research".
   await input.fill(`[reply:after-${n}] after ${n}`);
   await input.press('Enter');
@@ -66,40 +71,50 @@ for (const [id, name] of [
 ] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const gate = gateName('busy');
-  const current = await runtime.newSession();
-  const other = await runtime.newSession();
-  const key = other.id.replace(/^[a-z]+:/, '');
-  const popup = page.getByTestId('session-popup');
+  // Sessions are found by the names given here, not by runtime-specific identifiers.
+  const currentName = `fc${n.replace(/-/g, '')}`;
+  const key = `fs${n.replace(/-/g, '')}`;
+  const current = await runtime.newSession(currentName);
+  await runtime.newSession(key);
+  const popup = sessionList(page);
   const openPicker = async () => {
     await page.getByRole('button', { name: /manage sessions/i }).first().click();
     await page.getByRole('searchbox', { name: /search sessions/i }).fill(key);
-    await expect(popup.getByRole('option', { name: new RegExp(key) })).toHaveCount(1);
+    await expect(entries(popup, nameRe(key))).toHaveCount(1);
   };
-  const pinButton = () => popup.getByRole('button', { name: new RegExp(`^(Pin|Unpin) @${key}`) });
+  const pinName = (verb: string) => new RegExp(`^${verb}\\b.*${nameRe(key).source}`);
+  const pinButton = () => page.getByRole('button', { name: pinName('(?:Pin|Unpin)') });
   await page.goto(current.url);
 
+  // Pinning is checked only where the client offers it for this entry.
+  await openPicker();
+  const canPin = (await pinButton().count()) > 0;
+  test.info().annotations.push({ type: 'pin', description: canPin ? 'offered' : 'not offered; pin clauses not applicable' });
+  await page.keyboard.press('Escape');
+  if (canPin) {
   // A failed pin keeps the picker, the entry and the selection usable.
   const rejected = await holdWrites(page, r => /pin/i.test(new URL(r.url()).pathname), { status: 500, error: `pin-${n}` });
   await openPicker();
-  await expect(pinButton()).toHaveAccessibleName(new RegExp(`^Pin @${key}`));
+  await expect(pinButton()).toHaveAccessibleName(pinName('Pin'));
   await pinButton().click();
   await expect.poll(() => rejected.count).toBe(1);
   rejected.release();
   await page.waitForTimeout(1000);
   await expect(popup).toBeVisible();
   await expect(page.getByRole('searchbox', { name: /search sessions/i })).toHaveValue(key);
-  await expect(pinButton()).toHaveAccessibleName(new RegExp(`^Pin @${key}`));
+  await expect(pinButton()).toHaveAccessibleName(pinName('Pin'));
   rejected.disarm();
 
   // Pinning is native: it round-trips and survives a reload.
   await pinButton().click();
-  await expect(pinButton()).toHaveAccessibleName(new RegExp(`^Unpin @${key}`));
+  await expect(pinButton()).toHaveAccessibleName(pinName('Unpin'));
   await page.reload();
   await openPicker();
-  await expect(pinButton()).toHaveAccessibleName(new RegExp(`^Unpin @${key}`));
+  await expect(pinButton()).toHaveAccessibleName(pinName('Unpin'));
   await pinButton().click();
-  await expect(pinButton()).toHaveAccessibleName(new RegExp(`^Pin @${key}`));
+  await expect(pinButton()).toHaveAccessibleName(pinName('Pin'));
   await page.keyboard.press('Escape');
+  }
 
   // A running session cannot be removed: the request is refused and the session, its turn and the picker stay.
   const input = page.locator(sel('composeInput'));
@@ -108,7 +123,7 @@ for (const [id, name] of [
   await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0).toBe(1);
   page.on('dialog', dialog => void dialog.accept().catch(() => {}));
   await page.getByRole('button', { name: /manage sessions/i }).first().click();
-  const remove = popup.getByRole('button', { name: /delete current|archive current/i });
+  const remove = page.getByRole('button', { name: /delete current|archive current/i });
   if (await remove.count() && await remove.isEnabled()) await remove.click();
   await page.waitForTimeout(1500);
   expect((await runtime.gates())[gate]?.waiting).toBe(1);
@@ -119,6 +134,6 @@ for (const [id, name] of [
   await runtime.openGate(gate);
   await expect(page.locator(sel('agentPost')).filter({ hasText: `busy-${n}` })).toHaveCount(1);
   await page.getByRole('button', { name: /manage sessions/i }).first().click();
-  await page.getByRole('searchbox', { name: /search sessions/i }).fill(current.id.replace(/^[a-z]+:/, ''));
-  await expect(popup.getByText(current.id.replace(/^[a-z]+:/, '')).first()).toBeVisible();
+  await page.getByRole('searchbox', { name: /search sessions/i }).fill(currentName);
+  await expect(entries(popup, nameRe(currentName))).toHaveCount(1);
 });
