@@ -1,5 +1,6 @@
 /** Context meter (features/classic/compose/context-meter-tooltip.feature). Usage comes from the fixture model (128K window). */
 import { test, expect } from '../fixtures';
+import { rgb } from '../colour';
 import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
@@ -31,7 +32,7 @@ test('@ux-context-001 Show supplied usage in the context tooltip', async ({ page
 async function fillHue(page: Page) {
   const strokes = await meter(page).locator('circle, path').evaluateAll(es => es.map(e => getComputedStyle(e).stroke));
   const hsl = strokes.map(c => {
-    const [r, g, b] = (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(n => Number(n) / 255);
+    const [r, g, b] = rgb(c).map(n => n / 255);
     const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
     const h = d === 0 ? 0 : max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
     return { hue: (h * 60 + 360) % 360, sat: d };
