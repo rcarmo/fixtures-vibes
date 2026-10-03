@@ -95,7 +95,9 @@ for (const [id, name] of [
   await page.keyboard.press('Escape');
   if (canPin) {
   // A failed pin keeps the picker, the entry and the selection usable.
-  const rejected = await holdWrites(page, r => /pin/i.test(new URL(r.url()).pathname), { status: 500, error: `pin-${n}` });
+  // Runtimes pin through a /pin route or a generic session update whose body names the pin action.
+  const isPin = (r: any) => /pin/i.test(new URL(r.url()).pathname) || /"action"\s*:\s*"pin"|"pinned"\s*:\s*true/.test(r.postData() ?? "");
+  const rejected = await holdWrites(page, isPin, { status: 500, error: `pin-${n}` });
   await openPicker();
   await expect(pinButton()).toHaveAccessibleName(pinName('Pin'));
   await pinButton().click();
