@@ -302,3 +302,60 @@ test('@ux-workspace-019 Keep edits made while a save is in progress', async ({ p
   await save(page, name);
   expect(await diskText(page, sel, name)).toBe('first second');
 });
+
+test('@ux-editor-004 Markdown preview is stable during splitter resize', async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  const name = await file(page, sel, '# Preview title\n\nbody text');
+  await openContextMenu(page, name);
+  await menuItem(page, /^preview$/i).click();
+  const heading = page.getByRole('heading', { name: 'Preview title' }).filter({ visible: true }).first();
+  await expect(heading).toBeVisible();
+  const splitter = page.locator(sel('previewSplitter')).filter({ visible: true }).first();
+  const box = (await splitter.boundingBox())!;
+  const vertical = box.width >= box.height;
+  // The splitter's position stands for the preview's size.
+  const at = async () => { const b = (await splitter.boundingBox())!; return vertical ? b.y : b.x; };
+  const before = await at();
+  // Drag the splitter by 80 px; the preview stays rendered throughout.
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  for (let i = 1; i <= 8; i++) {
+    await page.mouse.move(box.x + box.width / 2 + (vertical ? 0 : -10 * i), box.y + box.height / 2 + (vertical ? -10 * i : 0));
+    await expect(heading).toBeVisible();
+  }
+  const during = await at();
+  await page.mouse.up();
+  await page.waitForTimeout(500);
+  expect(Math.abs(during - before)).toBeGreaterThan(20);
+  // The size reached while dragging is kept after release.
+  expect(Math.abs((await at()) - during)).toBeLessThanOrEqual(2);
+  await expect(heading).toBeVisible();
+});
+
+test('@ux-workspace-013 Gate dock, popout, reattach, and standalone viewer routes from the tab context menu', async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  const name = await file(page, sel, 'window text');
+  await openContextMenu(page, name);
+  const popup = page.waitForEvent('popup');
+  await menuItem(page, /^open in window$/i).click();
+  const win = await popup;
+  try {
+    // The window shows only the editor with the file; the main window gives the tab up while it is detached.
+    await expect(win.locator(sel('editorText')).filter({ visible: true }).first()).toHaveText('window text');
+    await expect(win.locator(sel('composeInput'))).toHaveCount(0);
+    await expect(tab(page, name)).toHaveCount(0);
+  } finally {
+    await win.close();
+  }
+  // Closing the window returns the tab.
+  await expect(tab(page, name)).toBeVisible();
+});
+
+test("@ux-workspace-020 Show a file's external changes in a clean editor tab", async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  const name = await file(page, sel, 'v1');
+  await remoteEdit(page, sel, name, ' remote');
+  await expect(editorText(page, sel)).toHaveText('v1 remote', { timeout: 15_000 });
+  await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
+  await expect(page.getByRole('button', { name: 'Reload', exact: true }).first()).toBeHidden();
+});

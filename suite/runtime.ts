@@ -45,6 +45,7 @@ export const canonicalSelectors: Record<string, string> = {
   // A focused menu item, or the aria-selected option of a listbox.
   pickerHighlight: ':is([role="menuitem"], [role="menuitemradio"], [role="option"]):focus, [role="option"][aria-selected="true"]',
   editorText: '.cm-content',
+  previewSplitter: '.md-preview-splitter',
   composeInput: '.compose-box textarea',
   sendButton: '[data-testid="send-button"]',
   stopButton: '[data-testid="stop-button"]',

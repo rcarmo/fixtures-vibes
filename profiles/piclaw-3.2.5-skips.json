@@ -162,6 +162,16 @@
       "reason": "known-defect",
       "detail": "Save completion ignores edits typed while the write was pending: Chromium keeps the text but marks the tab clean; WebKit reverts the editor to the saved text.",
       "issue": "https://github.com/rcarmo/piclaw/issues/1526"
+    },
+    {
+      "id": "@ux-workspace-020",
+      "reason": "known-defect",
+      "detail": "At phone width a clean editor tab keeps the old text after the file changes elsewhere (no refresh, no notice); tablet and desktop widths refresh it.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1527",
+      "projects": [
+        "chromium-phone",
+        "webkit-phone"
+      ]
     }
   ]
 }

@@ -142,7 +142,8 @@ export async function editorFile(page: Page, sel: (k: string) => string, content
   const name = await uploadFile(page, content);
   onCreated?.(name);
   await openInEditor(page, sel, name);
-  await expect(editorText(page, sel)).toHaveText(content);
+  // Editors render one element per line: compare without the line breaks.
+  await expect(editorText(page, sel)).toHaveText(content.replace(/\n/g, ''));
   return name;
 }
 

@@ -178,6 +178,13 @@ Feature: Classic workspace flows
     When I save again
     Then the file holds all the text
 
+  @ux-workspace-020 @editor @conflict @cap-editor @cap-workspace
+  Scenario: Show a file's external changes in a clean editor tab
+    Given a file is open in an editor tab with no unsaved changes
+    When the file is changed and saved elsewhere
+    Then the tab shows the new text
+    And it still reports no unsaved changes and offers no conflict actions
+
   @ux-workspace-018 @editor @conflict @cap-editor @cap-workspace
   Scenario: Resolve an editor file conflict with the supplied actions
     Given the editor conflict monitor exposes a file-changed notice
