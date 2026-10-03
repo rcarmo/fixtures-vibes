@@ -291,7 +291,7 @@ Feature: Classic Settings dialog core UX
   Scenario: Save local editor preferences from the registered pane
     Given the Classic Editor settings pane is registered and open
     When I change Vim mode, whitespace display, Markdown live preview, font size or font family
-    Then the pane writes the corresponding localStorage preference
+    Then the preference persists after a reload
     And the font-size control is bounded from 10 to 24 with fallback 13
     And no server settings save is sent by this pane
 
@@ -301,6 +301,6 @@ Feature: Classic Settings dialog core UX
     When I enable developer mode
     Then catalogue, additional catalogue and repository URL fields become visible
     And SSE and tool-call logging toggles become visible
-    And edits write the corresponding localStorage preferences
+    And edited preferences persist after a reload
     When I disable developer mode
     Then those additional controls are hidden without deleting their stored values

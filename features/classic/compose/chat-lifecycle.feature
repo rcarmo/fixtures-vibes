@@ -1,4 +1,4 @@
-@classic @piclaw-3.2.4 @chat-lifecycle
+@classic @chat-lifecycle
 Feature: Separate the conversation from transient agent activity
   # Oracle: installed Piclaw 3.2.4 event translator and shipped Classic UI.
   # Conversation/idle fixes have bounded native coverage; none is fully mapped.

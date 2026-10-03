@@ -1,6 +1,5 @@
-@classic @piclaw-3.2.4 @pwa @source-reviewed
+@classic @pwa
 Feature: PWA manifest and home screen icon responses
-  Source: runtime/src/channels/web/manifest.ts and http/dispatch-shell.ts.
   Home-screen installation itself is browser-controlled.
 
   @ux-pwa-001 @cap-pwa

@@ -1,6 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic accepted message visibility
-  Source: runtime/web/src/components/compose-box.ts and UI timeline refresh paths.
   Network latency is not a product-level one-second delivery guarantee.
 
   @ux-compose-007

@@ -1,7 +1,6 @@
 @canonical @auth @classic
 Feature: Classic core auth UX
   Classic login, invitation, and provider OOBE expose the currently shipped browser behavior.
-  These scenarios describe observed code paths in runtime/web and existing runtime/test/web coverage.
 
   Background:
     Given Classic auth is served from the shipped web bundles

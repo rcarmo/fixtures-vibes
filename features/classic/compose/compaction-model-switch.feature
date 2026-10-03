@@ -1,6 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic compaction and model controls
-  Source: compose-box ContextPie, model-picker, app-agent-turn-events and model-state helpers.
 
   @ux-compaction-001 @cap-compaction
   Scenario: Render compaction using supplied status state

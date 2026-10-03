@@ -1,4 +1,4 @@
-@canonical @source-reviewed @classic
+@canonical @classic
 Feature: Classic additional core interaction surfaces
   These flows are scoped to the Classic client.
   Capability boundaries remain explicit; no cross-port parity is implied.

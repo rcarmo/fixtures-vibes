@@ -1,8 +1,8 @@
 /**
  * Classic compaction and model controls (features/classic/compose/compaction-model-switch.feature).
  * Compaction needs history beyond the runtime's kept tail: a short first turn, then two large ones (each under the
- * 100 KB message limit). Summary requests are scripted on the fixture model (control/script), since runtimes word
- * their summary prompts differently; the scripted summaries follow the structured checkpoint format Piclaw validates.
+ * 100 KB message limit). Summary requests are scripted on the fixture model (control/script); their wording and the
+ * accepted summary format are runtime data (profile `compaction`).
  */
 import { test, expect } from '../fixtures';
 import { gateName } from '../runtime';
@@ -10,11 +10,6 @@ import { entries, modelList, MODEL_ONE, MODEL_TWO } from '../pickers';
 import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
-const md = (heads: string[], chunk: boolean) => heads.map(h => `## ${h}\\n` + (h !== 'Progress' ? `- fixture ${h.toLowerCase()}.`
-  : chunk ? '- Done: fixture turns.\\n- In progress: none.\\n- Blocked: none.'
-  : '### Done\\n- fixture turns.\\n### In Progress\\n- none.\\n### Blocked\\n- none.')).join('\\n\\n');
-const CHUNK = md(['Chunk Range', 'Goals / User Intent', 'Constraints & Preferences', 'Decisions', 'Files / Commands / Tool Outcomes', 'Progress', 'Open Questions / Next Steps', 'Key Continuity Facts'], true);
-const FINAL = md(['Goal', 'Current Active Topic', 'Historical / Background Context', 'Constraints & Preferences', 'Progress', 'Key Decisions', 'Next Steps', 'Critical Context'], false);
 
 const meter = (page: Page) => page.getByRole('button', { name: /^context/i }).first();
 const modelButton = (page: Page) => page.getByRole('button', { name: /model picker/i }).first();
@@ -34,8 +29,10 @@ async function compacting(page: Page, runtime: any, sel: Sel, gate: string) {
   await turn(page, sel, `[reply:big-ok] ${filler}`, 'big-ok');
   await turn(page, sel, `[reply:big2-ok] ${filler}`, 'big2-ok');
   const before = await meterName(page);
-  // Only summary requests take the script: runtimes may make other model calls (titles, estimates) meanwhile.
-  await runtime.script([{ when: 'summar', prompt: `[gate:${gate}][reply:${CHUNK}]` }, { when: 'summar', prompt: `[reply:${FINAL}]` }]);
+  // Summary replies in the runtime's own format (profile data); only summary requests take them, since runtimes may
+  // make other model calls (titles, estimates) meanwhile. The first one is held at the gate.
+  const { when, summaries } = runtime.profile.compaction ?? { summaries: ['Summary of the earlier conversation.'] };
+  await runtime.script(summaries.map((text: string, i: number) => ({ when, prompt: `${i === 0 ? `[gate:${gate}]` : ''}[reply:${text}]` })));
   await meter(page).click();
   await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0, { timeout: 30_000 }).toBe(1);
   return before;

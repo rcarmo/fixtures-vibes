@@ -1,4 +1,4 @@
-@classic @piclaw-3.2.4 @source-reviewed
+@classic
 Feature: Classic composer draft and queue behavior
   The installed Piclaw reference release is the oracle.
 

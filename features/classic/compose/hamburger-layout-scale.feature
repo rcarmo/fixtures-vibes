@@ -1,7 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic workspace menu and layout controls
-  Source: runtime/web/src/components/timeline-menu.ts and components/tab-strip.ts.
-  Inline-code styling is in runtime/extensions/viewers/editor/markdown/theme.ts (.cm-md-inline-code).
   Classic controls and stored scale settings are not a guarantee of Visual parity.
 
   Rule: Workspace menu actions
@@ -20,8 +18,9 @@ Feature: Classic workspace menu and layout controls
     Scenario: Menu contains hidden files toggle
       Given the workspace is visible
       When I activate the hidden files toggle
-      Then the stored workspaceShowHidden setting changes
-      And the client dispatches the hidden-files change event
+      Then the workspace tree shows its hidden entries
+      When I activate the toggle again
+      Then the hidden entries are no longer shown
 
     @ux-shell-003
     Scenario: Workspace items disabled in chat-only mode

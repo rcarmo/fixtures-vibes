@@ -40,7 +40,7 @@ test('@ux-compose-003 Reject an entirely empty submission', async ({ page, runti
   expect((await runtime.modelLog()).length).toBe(before);
 });
 
-const attach = (page: Page, n: string) => page.locator('.compose-box input[type=file]')
+const attach = (page: Page, sel: (k: string) => string, n: string) => page.locator(sel('composeBox')).locator('input[type=file]')
   .setInputFiles({ name: `att-${n}.txt`, mimeType: 'text/plain', buffer: Buffer.from(`filebody-${n}\n`) });
 
 test('@ux-compose-002 Restore a failed submission alongside newer text', async ({ page, runtime, sel }) => {
@@ -82,7 +82,7 @@ test('@ux-compose-004 Return a queued message replaces the current editor draft'
   await expect.poll(() => send.count).toBe(1);
   send.release();
   await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
-  await attach(page, n);
+  await attach(page, sel, n);
   await expect(page.getByText(`att-${n}.txt`)).toBeVisible();
   await input.fill(`newer draft ${n}`);
 
@@ -101,7 +101,7 @@ test('@ux-compose-005 Keep upload progress separate from sending state', async (
   await page.goto((await runtime.newSession()).url);
   const upload = await holdWrites(page, uploadOf(`att-${n}.txt`));
   const message = await holdWrites(page, bodyHas(`msg-${n}`));
-  await attach(page, n);
+  await attach(page, sel, n);
   const input = page.locator(sel('composeInput'));
   await input.fill(`[reply:ok-${n}] msg-${n}`);
   await input.press('Enter');
@@ -126,7 +126,7 @@ test('@ux-compose-006 Submit captures the destination chat', async ({ page, runt
   const mine = await runtime.newSession();
   await page.goto(mine.url);
   const upload = await holdWrites(page, uploadOf(`att-${n}.txt`));
-  await attach(page, n);
+  await attach(page, sel, n);
   const input = page.locator(sel('composeInput'));
   await input.fill(`[reply:ok-${n}] msg-${n}`);
   await input.press('Enter');
@@ -155,7 +155,7 @@ test('@ux-compose-006 Submit captures the destination chat', async ({ page, runt
 test('@ux-compose-012 A failed send keeps its uploaded attachment for the retry', async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   await page.goto((await runtime.newSession()).url);
-  await attach(page, n);
+  await attach(page, sel, n);
   const send = await holdWrites(page, bodyHas(`msg-${n}`), { status: 500, error: `boom-${n}` });
   const input = page.locator(sel('composeInput'));
   await input.fill(`[reply:ok-${n}] msg-${n}`);
@@ -164,7 +164,7 @@ test('@ux-compose-012 A failed send keeps its uploaded attachment for the retry'
   send.release();
   await expect(page.getByRole('alert').filter({ hasText: `boom-${n}` })).toBeVisible();
   await expect(input).toHaveValue(`[reply:ok-${n}] msg-${n}`);
-  await expect(page.locator('.compose-box').getByText(`att-${n}.txt`)).toBeVisible();
+  await expect(page.locator(sel('composeBox')).getByText(`att-${n}.txt`)).toBeVisible();
 
   // The second send reaches the runtime (the hold fails only the first matching write).
   send.disarm();
@@ -181,7 +181,7 @@ test('@ux-original-026 Keep attachment upload state separate from message submis
 
   // A failed upload is reported and is not treated as an uploaded attachment: nothing is sent.
   const failing = await holdWrites(page, uploadOf(`att-${n}.txt`), { status: 500, error: `upload-failed-${n}` });
-  await attach(page, n);
+  await attach(page, sel, n);
   await input.fill(`[reply:none-${n}] first ${n}`);
   await input.press('Enter');
   await expect.poll(() => failing.count).toBe(1);

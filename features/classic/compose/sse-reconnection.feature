@@ -1,6 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic SSE reconnection and refresh
-  Source: runtime/web/src/ui/app-connection-lifecycle.ts.
 
   @ux-reconnect-001 @cap-reconnect
   Scenario: Clear transient agent displays while disconnected

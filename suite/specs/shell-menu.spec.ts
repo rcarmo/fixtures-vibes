@@ -41,21 +41,17 @@ test('@ux-shell-001 Menu contains New file, Refresh tree, Reindex workspace', as
 test('@ux-shell-002 Menu contains hidden files toggle', async ({ page, runtime, sel }) => {
   await open(page, runtime, sel);
   await setWorkspace(page, true);
-  const stored = () => page.evaluate(() => localStorage.getItem('workspaceShowHidden'));
-  const before = await stored();
-  // The workspace listing changes with the setting: the dot-entries of the workspace root appear or disappear.
-  const dotEntries = () => page.getByText(/^\.pi(claw)?$/).count();
+  // The workspace root's hidden (dot) entries appear and disappear with the setting.
+  const dotEntries = () => page.getByText(/^\.[\w.-]+$/).count();
   const shownBefore = await dotEntries();
   await openMenu(page);
   await item(page, HIDDEN).click();
   try {
-    await expect.poll(stored).not.toBe(before);
     await expect.poll(dotEntries).not.toBe(shownBefore);
   } finally {
-    // The setting is stored by the runtime too: always toggle it back.
+    // The setting persists on the runtime: always toggle it back.
     await openMenu(page);
     await item(page, HIDDEN).click();
-    await expect.poll(stored).toBe(before ?? 'false');
   }
   await expect.poll(dotEntries).toBe(shownBefore);
 });

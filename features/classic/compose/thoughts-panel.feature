@@ -1,4 +1,4 @@
-@classic @source-reviewed
+@classic
 Feature: Classic thought and draft panel disclosure
   Observed on the installed Piclaw reference release.
   # Reconciled 2026-09-28: generic more…/less controls, nine-line tail windows,

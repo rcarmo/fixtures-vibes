@@ -1,6 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic session selection
-  Source: runtime/web/src/ui/compose-session-switcher.ts and chat-scoped refresh orchestration.
 
   @ux-session-001 @cap-session-picker
   Scenario: Show the selected chat's timeline

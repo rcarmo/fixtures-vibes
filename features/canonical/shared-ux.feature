@@ -1,4 +1,4 @@
-@canonical @piclaw-baseline
+@canonical
 Feature: Piclaw-compatible interaction model
   Every runtime exposes the same observable user flows as Piclaw through native UI and APIs.
   Unsupported capabilities fail their tagged scenario rather than being simulated.

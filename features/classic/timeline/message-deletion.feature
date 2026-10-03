@@ -1,4 +1,4 @@
-@classic @piclaw-3.2.4 @source-reviewed
+@classic
 Feature: Message deletion from timeline
   The installed Piclaw reference counts replies in the loaded view before prompting.
   Direct deletion does not guard against replies outside that view.

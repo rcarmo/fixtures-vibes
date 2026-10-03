@@ -1,7 +1,6 @@
 @classic @settings
 Feature: Classic settings dialog
   This audit scopes the shipped Classic Settings dialog only.
-  It keeps only source-backed expectations from runtime/web and the current tests.
 
   Background:
     Given I am authenticated and on the main chat in the Classic shell

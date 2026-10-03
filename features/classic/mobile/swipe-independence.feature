@@ -1,6 +1,5 @@
-@classic @touch @source-reviewed
+@classic @touch
 Feature: Classic session swipe target rules
-  Source: runtime/web/src/ui/chat-swipe-navigation.ts.
   Eligibility depends on the gesture target and active selection, not merely which panes are visible.
 
   @ux-mobile-001 @cap-touch

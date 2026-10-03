@@ -251,6 +251,30 @@
         }
       },
       "description": "Pace browser writes to a known rate limit instead of hitting it; rate limits are not under test."
+    },
+    "compaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summaries"
+      ],
+      "properties": {
+        "when": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Case-insensitive regex that identifies the runtime's summary requests to the model (matched against system and user text)."
+        },
+        "summaries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Reply text for each summary request of one compaction, in order, in the format the runtime accepts. A literal \\\\n is a newline."
+        }
+      },
+      "description": "How the fixture model answers this runtime's compaction summary requests (@cap-compaction). Defaults to one plain summary for any request."
     }
   },
   "oneOf": [

@@ -39,7 +39,6 @@ test('@ux-pwa-001 Serve a manifest with declared application icons', async ({ pa
 
 test('@ux-pwa-003 Fall back to static icons without an avatar', async ({ page, request, runtime }) => {
   const { json, base } = await manifest(page, request, runtime.baseUrl + '/');
-  test.skip(Boolean(json.piclaw_avatar), 'environment-limit: reference has an avatar configured');
   for (const icon of json.icons) {
     const r = await request.get(new URL(icon.src, base).toString());
     expect(r.ok(), icon.src).toBe(true);

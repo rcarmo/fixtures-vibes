@@ -1,6 +1,5 @@
-@classic @source-reviewed
+@classic
 Feature: Classic context meter tooltip
-  Source: ContextPie in runtime/web/src/components/compose-box.ts.
 
   @ux-context-001 @cap-context-meter
   Scenario: Show supplied usage in the context tooltip

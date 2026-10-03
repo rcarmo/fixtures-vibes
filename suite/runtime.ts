@@ -24,6 +24,7 @@ export type Profile = {
   tools?: { shell?: string; activate?: string };
   approval?: { button: string };
   commands?: { setAgentAvatar?: string; clearAgentAvatar?: string; selectModel?: string };
+  compaction?: { when?: string; summaries: string[] };
   rateLimit?: { path: string; perMinute: number };
 };
 
@@ -40,6 +41,7 @@ export function loadProfile(path = profilePath()): Profile & { dir: string } {
 /** Canonical selectors. Profiles may override a key only when markup cannot match. */
 export const canonicalSelectors: Record<string, string> = {
   appShell: '.app-shell',
+  composeBox: '.compose-box',
   composeInput: '.compose-box textarea',
   sendButton: '[data-testid="send-button"]',
   stopButton: '[data-testid="stop-button"]',

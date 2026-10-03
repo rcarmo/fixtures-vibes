@@ -1,4 +1,4 @@
-@canonical @piclaw-3.2.4 @classic @source-reviewed
+@canonical @classic
 Feature: Classic Piclaw interaction model
   The installed Piclaw reference release is the oracle.
   Visual differences and optional add-on behavior are not implied to be identical.
@@ -295,7 +295,7 @@ Feature: Classic Piclaw interaction model
     When I copy a code block
     Then the copy path uses code text instead of highlighted HTML
 
-  @ux-original-029 @svg @markdown @piclaw-3.2.4 @cap-svg-render
+  @ux-original-029 @svg @markdown @cap-svg-render
   Scenario: Render a safe fenced SVG as an isolated image and retain source
     Given a post contains a fenced SVG with safe vector geometry and a title
     Then the post renders an image named by the SVG title from a data:image/svg+xml URL

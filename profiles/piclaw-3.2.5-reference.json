@@ -88,5 +88,12 @@
   "rateLimit": {
     "path": "^/agent/[^/]+/message$",
     "perMinute": 28
+  },
+  "compaction": {
+    "when": "summar",
+    "summaries": [
+      "## Chunk Range\\n- fixture chunk range.\\n\\n## Goals / User Intent\\n- fixture goals / user intent.\\n\\n## Constraints & Preferences\\n- fixture constraints & preferences.\\n\\n## Decisions\\n- fixture decisions.\\n\\n## Files / Commands / Tool Outcomes\\n- fixture files / commands / tool outcomes.\\n\\n## Progress\\n- Done: fixture turns.\\n- In progress: none.\\n- Blocked: none.\\n\\n## Open Questions / Next Steps\\n- fixture open questions / next steps.\\n\\n## Key Continuity Facts\\n- fixture key continuity facts.",
+      "## Goal\\n- fixture goal.\\n\\n## Current Active Topic\\n- fixture current active topic.\\n\\n## Historical / Background Context\\n- fixture historical / background context.\\n\\n## Constraints & Preferences\\n- fixture constraints & preferences.\\n\\n## Progress\\n### Done\\n- fixture turns.\\n### In Progress\\n- none.\\n### Blocked\\n- none.\\n\\n## Key Decisions\\n- fixture key decisions.\\n\\n## Next Steps\\n- fixture next steps.\\n\\n## Critical Context\\n- fixture critical context."
+    ]
   }
 }

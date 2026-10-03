@@ -1,22 +1,36 @@
 /**
- * Classic /theme and /tint commands (features/classic/compose/theme-tint.feature).
+ * Classic /theme and /tint commands (features/classic/compose/theme-tint.feature), judged by what a user sees: the page
+ * background and the accent colour (the send button under the pointer, with a message ready).
  * Theme state persists on the runtime, so every test restores "/theme default" (which also clears the tint).
  */
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
-const state = (page: Page) => page.evaluate(() => {
-  const root = document.documentElement;
-  const css = getComputedStyle(root);
-  return {
-    theme: root.dataset.theme ?? '', color: root.dataset.colorTheme ?? '', tint: root.dataset.tint ?? '',
-    bgVar: root.style.getPropertyValue('--bg-primary').trim(), accentVar: root.style.getPropertyValue('--accent-color').trim(),
-    bgComputed: css.getPropertyValue('--bg-primary').trim(), accentComputed: css.getPropertyValue('--accent-color').trim(),
-    storedTheme: localStorage.getItem('piclaw_theme'), storedTint: localStorage.getItem('piclaw_tint') ?? '',
-    background: getComputedStyle(document.body).backgroundColor,
-  };
-});
+type Look = { background: string; accent: string; dark: boolean };
+const rgb = (c: string) => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+const hex = (h: string) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+
+/** What the page looks like now: background, accent (hovered send button with a draft), and whether it is dark. */
+async function appearance(page: Page, sel: Sel): Promise<Look> {
+  const input = page.locator(sel('composeInput'));
+  const draft = await input.inputValue();
+  await input.fill('x');
+  // The accent shows on the send button under the pointer; it animates, so read once it is opaque and has settled.
+  await page.locator(sel('sendButton')).hover();
+  const read = () => page.locator(sel('sendButton')).evaluate(e => getComputedStyle(e).backgroundColor);
+  let accent = '';
+  await expect.poll(async () => {
+    const first = await read();
+    await page.waitForTimeout(300);
+    accent = await read();
+    return first === accent && !/rgba\(0, 0, 0, 0\)|transparent/.test(accent);
+  }).toBe(true);
+  await input.fill(draft);
+  const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  const [r, g, b] = rgb(background);
+  return { background, accent: rgb(accent).join(','), dark: 0.2126 * r + 0.7152 * g + 0.0722 * b < 128 };
+}
 
 /** Send a slash command and wait for a new reply containing `expected`. */
 async function run(page: Page, sel: Sel, command: string, expected: RegExp) {
@@ -28,14 +42,14 @@ async function run(page: Page, sel: Sel, command: string, expected: RegExp) {
   await page.locator(sel('sendButton')).click();
   await expect(input).toHaveValue('');
   // Command replies go through the agent queue and can lag under load.
-  await expect(replies).toHaveCount(before + 1, { timeout: 30_000 });
+  await expect(replies).toHaveCount(before + 1, { timeout: 60_000 });
 }
 
 async function open(page: Page, runtime: any, sel: Sel) {
   await page.goto((await runtime.newSession()).url);
   await expect(page.locator(sel('composeInput'))).toBeVisible();
   await run(page, sel, '/theme default', /Theme set to/);
-  return state(page);
+  return appearance(page, sel);
 }
 
 test.afterEach(async ({ page, sel }) => {
@@ -50,80 +64,64 @@ test('@ux-theme-001 /theme with no arguments shows available themes', async ({ p
 test('@ux-theme-002 /theme ristretto applies dark theme visually', async ({ page, runtime, sel }) => {
   const before = await open(page, runtime, sel);
   await run(page, sel, '/theme ristretto', /Theme set to/);
-  const after = await state(page);
-  expect(after.background).not.toBe(before.background);
-  expect(after).toMatchObject({ theme: 'dark', color: 'ristretto', tint: '', storedTheme: 'ristretto' });
-  expect(after.bgVar).not.toBe('');
-  expect(after.accentVar).not.toBe('');
+  const after = await appearance(page, sel);
+  expect(after.dark).toBe(true);
+  expect(after.accent).not.toBe(before.accent);
 });
 
 test('@ux-theme-003 /theme default restores from ristretto visually', async ({ page, runtime, sel }) => {
   const original = await open(page, runtime, sel);
   await run(page, sel, '/theme ristretto', /Theme set to/);
-  const dark = await state(page);
   await run(page, sel, '/theme default', /Theme set to/);
-  const after = await state(page);
-  expect(after.background).not.toBe(dark.background);
-  expect(after).toMatchObject({ color: 'default', tint: '', storedTheme: 'default' });
-  // The untinted default no longer carries ristretto's values: what applies is the plain default again.
-  expect(after.bgComputed).toBe(original.bgComputed);
-  expect(after.accentComputed).toBe(original.accentComputed);
+  expect(await appearance(page, sel)).toEqual(original);
 });
 
 test('@ux-theme-004 /theme dark returns error — not a valid theme name', async ({ page, runtime, sel }) => {
   const before = await open(page, runtime, sel);
   await run(page, sel, '/theme dark', /Unknown theme/);
-  const after = await state(page);
-  expect({ theme: after.theme, color: after.color, background: after.background }).toEqual({ theme: before.theme, color: before.color, background: before.background });
+  expect(await appearance(page, sel)).toEqual(before);
 });
 
 test('@ux-theme-005 /theme survives page refresh', async ({ page, runtime, sel }) => {
   await open(page, runtime, sel);
   await run(page, sel, '/theme ristretto', /Theme set to/);
+  const dark = await appearance(page, sel);
   await page.reload();
   await expect(page.locator(sel('composeInput'))).toBeVisible();
-  await expect.poll(async () => (await state(page)).theme).toBe('dark');
-  expect((await state(page)).storedTheme).toBe('ristretto');
+  expect(await appearance(page, sel)).toEqual(dark);
 });
 
 test('@ux-theme-006 /tint hex changes accent and background on default theme', async ({ page, runtime, sel }) => {
   const before = await open(page, runtime, sel);
   await run(page, sel, '/tint #e11d48', /Tint set to/);
-  const after = await state(page);
-  expect(after).toMatchObject({ color: 'default', tint: '#e11d48' });
-  expect(after.bgVar).not.toBe('');
-  expect(after.bgComputed).not.toBe(before.bgComputed);
-  expect(after.accentVar).not.toBe('');
-  expect(after.storedTint).toContain('e11d48');
+  const after = await appearance(page, sel);
+  expect(after.accent).toBe(hex('#e11d48').join(','));
+  expect(after.background).not.toBe(before.background);
 });
 
 test('@ux-theme-007 /tint named color works on default theme', async ({ page, runtime, sel }) => {
   const before = await open(page, runtime, sel);
   await run(page, sel, '/tint orange', /Tint set to/);
-  const after = await state(page);
-  expect(after).toMatchObject({ color: 'default', tint: 'orange', storedTint: 'orange' });
-  expect(after.bgComputed).not.toBe(before.bgComputed);
-  expect(after.accentVar).not.toBe('');
+  const after = await appearance(page, sel);
+  expect(after.accent).not.toBe(before.accent);
+  expect(after.background).not.toBe(before.background);
 });
 
 test('@ux-theme-008 Switching tints visibly changes accent color', async ({ page, runtime, sel }) => {
   await open(page, runtime, sel);
   await run(page, sel, '/tint #e11d48', /Tint set to/);
-  const first = await state(page);
+  const first = await appearance(page, sel);
   await run(page, sel, '/tint #3b82f6', /Tint set to/);
-  const second = await state(page);
-  expect(second.accentVar).not.toBe(first.accentVar);
-  expect(second.bgVar).not.toBe(first.bgVar);
+  const second = await appearance(page, sel);
+  expect(second.accent).not.toBe(first.accent);
+  expect(second.background).not.toBe(first.background);
 });
 
 test('@ux-theme-009 /tint off clears tint and restores vanilla default', async ({ page, runtime, sel }) => {
   const original = await open(page, runtime, sel);
   await run(page, sel, '/tint #3b82f6', /Tint set to/);
   await run(page, sel, '/tint off', /Tint cleared/);
-  const after = await state(page);
-  expect(after).toMatchObject({ color: 'default', tint: '' });
-  expect(after.bgComputed).toBe(original.bgComputed);
-  expect(after.accentComputed).toBe(original.accentComputed);
+  expect(await appearance(page, sel)).toEqual(original);
 });
 
 test('@ux-theme-010 /tint with no args shows usage', async ({ page, runtime, sel }) => {
@@ -134,44 +132,43 @@ test('@ux-theme-010 /tint with no args shows usage', async ({ page, runtime, sel
 test('@ux-theme-011 /tint invalid value returns error', async ({ page, runtime, sel }) => {
   const before = await open(page, runtime, sel);
   await run(page, sel, '/tint $$notacolor', /Invalid tint/);
-  const after = await state(page);
-  expect({ tint: after.tint, bg: after.bgComputed }).toEqual({ tint: before.tint, bg: before.bgComputed });
+  expect(await appearance(page, sel)).toEqual(before);
 });
 
 test('@ux-theme-012 /tint survives page refresh', async ({ page, runtime, sel }) => {
   await open(page, runtime, sel);
   await run(page, sel, '/tint #e11d48', /Tint set to/);
-  const tinted = await state(page);
+  const tinted = await appearance(page, sel);
   await page.reload();
   await expect(page.locator(sel('composeInput'))).toBeVisible();
-  await expect.poll(async () => (await state(page)).tint).not.toBe('');
-  expect((await state(page)).bgVar).toBe(tinted.bgVar);
+  expect(await appearance(page, sel)).toEqual(tinted);
 });
 
 test('@ux-theme-013 Tint on default, switch to ristretto, switch back', async ({ page, runtime, sel }) => {
-  await open(page, runtime, sel);
+  const original = await open(page, runtime, sel);
   await run(page, sel, '/tint #e11d48', /Tint set to/);
   await run(page, sel, '/theme ristretto', /Theme set to/);
-  expect((await state(page)).color).toBe('ristretto');
+  expect((await appearance(page, sel)).dark).toBe(true);
   await run(page, sel, '/theme default', /Theme set to/);
-  expect(await state(page)).toMatchObject({ color: 'default', tint: '' });
+  expect(await appearance(page, sel)).toEqual(original);
 });
 
 test('@ux-theme-014 /tint on ristretto switches to default+tint', async ({ page, runtime, sel }) => {
   await open(page, runtime, sel);
   await run(page, sel, '/theme ristretto', /Theme set to/);
   await run(page, sel, '/tint #3b82f6', /Tint set to/);
-  expect(await state(page)).toMatchObject({ color: 'default', tint: '#3b82f6' });
+  const after = await appearance(page, sel);
+  expect(after.dark).toBe(false);
+  expect(after.accent).toBe(hex('#3b82f6').join(','));
 });
 
 test('@ux-theme-015 Round-trip visual consistency', async ({ page, runtime, sel }) => {
   const original = await open(page, runtime, sel);
   await run(page, sel, '/tint #e11d48', /Tint set to/);
-  const tinted = await state(page);
+  const tinted = await appearance(page, sel);
   expect(tinted.background).not.toBe(original.background);
   await run(page, sel, '/theme ristretto', /Theme set to/);
-  const dark = await state(page);
-  expect(dark.background).not.toBe(tinted.background);
+  expect((await appearance(page, sel)).background).not.toBe(tinted.background);
   await run(page, sel, '/theme default', /Theme set to/);
-  expect((await state(page)).background).toBe(original.background);
+  expect(await appearance(page, sel)).toEqual(original);
 });
