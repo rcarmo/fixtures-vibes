@@ -12,9 +12,8 @@ export const sessionList = (page: Page) => list(page, /sessions/i);
 export const entries = (container: Locator, name?: RegExp | string) =>
   name === undefined ? container.locator(ENTRY)
     : container.getByRole('option', { name }).or(container.getByRole('menuitem', { name })).or(container.getByRole('menuitemradio', { name }));
-/** The keyboard highlight: a focused menu item, or the aria-selected option of a listbox (never merely "current"). */
-export const highlighted = (container: Locator) =>
-  container.locator(':is([role="menuitem"], [role="menuitemradio"], [role="option"]):focus, [role="option"][aria-selected="true"]');
+/** The keyboard highlight (canonical selector `pickerHighlight`): never merely the "current" entry. */
+export const highlighted = (container: Locator, sel: (k: string) => string) => container.locator(sel('pickerHighlight'));
 export const MODEL_ONE = /fixture-1(?!\d)|fixture model(?! two)/i;
 export const MODEL_TWO = /fixture-2(?!\d)|fixture model two/i;
 /** Matches a session or agent name as a whole token (so "ta1" does not match "zz-ta1"), with or without a leading "@". */

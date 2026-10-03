@@ -141,5 +141,6 @@ for (const [id, name] of [
     const levels = await control.evaluate(el => el instanceof HTMLSelectElement ? [...el.options].map(o => o.value) : ['?']);
     expect(levels).toEqual(['off']);
   }
-  await expect(page.getByRole('button', { name: /compact/i }).first()).toBeEnabled();
+  // Compaction starts from the context meter (as in compaction.spec.ts): it stays actionable.
+  await expect(page.getByRole('button', { name: /^context/i }).first()).toBeEnabled();
 });

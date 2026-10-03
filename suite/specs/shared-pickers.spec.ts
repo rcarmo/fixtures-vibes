@@ -17,7 +17,7 @@ async function leaveSearch(page: Page, list: Locator) {
 for (const [id, name] of [
   ['@ux-shared-021', 'Find and activate picker entries without changing unsupported state'],
   ['@ux-original-021', 'Navigate the Classic picker lists'],
-] as const) test(`${id} ${name}: session picker`, async ({ page, runtime }) => {
+] as const) test(`${id} ${name}: session picker`, async ({ page, runtime, sel }) => {
   const n = randomUUID().replace(/-/g, '').slice(0, 6).replace(/^\d/, 'q');
   // The home name shares nothing with n: typeahead may match loosely.
   const homeName = `fh${randomUUID().replace(/-/g, '').slice(0, 8)}`;
@@ -43,7 +43,7 @@ for (const [id, name] of [
   await leaveSearch(page, list);
   await page.keyboard.type(`ta${n}`, { delay: 50 });
   // Only the highlight is contract: runtimes may or may not also filter the list while typing ahead.
-  await expect(highlighted(list)).toHaveAccessibleName(nameRe(`ta${n}`));
+  await expect(highlighted(list, sel)).toHaveAccessibleName(nameRe(`ta${n}`));
 
   // Keys move within the search results.
   await search.fill(`ta${n}`);
@@ -51,7 +51,7 @@ for (const [id, name] of [
   await leaveSearch(page, list);
   for (const [key, name] of [['Home', `ta${n}`], ['ArrowDown', `zz-ta${n}`], ['End', `zz-ta${n}`], ['PageUp', `ta${n}`], ['PageDown', `zz-ta${n}`], ['ArrowUp', `ta${n}`]] as const) {
     await page.keyboard.press(key);
-    await expect(highlighted(list), key).toHaveAccessibleName(nameRe(name));
+    await expect(highlighted(list, sel), key).toHaveAccessibleName(nameRe(name));
   }
 
   // Escape closes and restores focus without changing the session.
@@ -63,7 +63,7 @@ for (const [id, name] of [
   // Enter activates the highlighted entry exactly once. (Reopening is not under test here.)
   await opener.click();
   await search.fill(`ta${n}`);
-  await expect(highlighted(list)).toHaveAccessibleName(nameRe(`ta${n}`));
+  await expect(highlighted(list, sel)).toHaveAccessibleName(nameRe(`ta${n}`));
   await page.keyboard.press('Enter');
   await expect(opener).toHaveAccessibleName(nameRe(`ta${n}`));
   await page.waitForTimeout(1000);
