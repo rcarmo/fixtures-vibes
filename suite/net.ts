@@ -95,3 +95,19 @@ export async function installSseDrop(page: Page) {
   return { drop: () => page.evaluate(() => (window as any).__fixturesDropSse() as number) };
 }
 
+
+/**
+ * Keep the page offline for event streams: while blocked, new EventSource connections fail (the page's own
+ * reconnect attempts keep failing). Pair with installSseDrop to cut the open ones.
+ */
+export async function blockSse(page: Page) {
+  const state = { blocked: false, attempts: 0 };
+  await page.route('**/*', route => {
+    const req = route.request();
+    if (!/event-stream/.test(req.headers()['accept'] ?? '')) return route.fallback();
+    if (!state.blocked) return route.fallback();
+    state.attempts++;
+    return route.abort('internetdisconnected');
+  });
+  return { block: () => { state.blocked = true; state.attempts = 0; }, unblock: () => { state.blocked = false; }, get attempts() { return state.attempts; } };
+}
