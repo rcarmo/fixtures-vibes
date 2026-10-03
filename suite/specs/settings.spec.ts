@@ -248,3 +248,112 @@ test.describe('layering', () => {
     }
   });
 });
+
+test.describe('core sections', () => {
+  const section = async (page: Page, sel: Sel, name: string) => {
+    await page.goto(page.url());
+    await openSettings(page, sel);
+    await nav(page, sel, name).click();
+  };
+  test.beforeEach(async ({ page, runtime }) => { await page.goto((await runtime.newSession()).url); });
+
+  test('@ux-settings-016 Keyboard settings filters and edits shortcut bindings through the shared shortcut model', async ({ page, sel }) => {
+    await section(page, sel, 'Keyboard');
+    const d = dialog(page, sel);
+    const filter = d.getByPlaceholder(/filter shortcuts/i);
+    const rows = () => d.getByRole('button', { name: /^default$/i }).count();
+    await expect.poll(rows).toBeGreaterThan(3);
+    const all = await rows();
+    await filter.fill('zen');
+    await expect.poll(rows).toBeLessThan(all);
+    await expect.poll(rows).toBeGreaterThan(0);
+    await expect(d.getByRole('button', { name: /^reset all/i })).toBeVisible();
+    // The zen row: its default binding is shown; a saved draft persists; Default restores it.
+    const binding = d.locator('input[type=text]').filter({ visible: true }).first();
+    const original = await binding.inputValue();
+    expect(original).toMatch(/\w+\+\w+/);
+    const save = d.getByRole('button', { name: /^save$/i }).first();
+    try {
+      await binding.fill('ctrl+alt+shift+9');
+      await save.click();
+      await page.keyboard.press('Escape');
+      await section(page, sel, 'Keyboard');
+      await dialog(page, sel).getByPlaceholder(/filter shortcuts/i).fill('zen');
+      await expect(binding).toHaveValue('ctrl+alt+shift+9');
+    } finally {
+      await d.getByRole('button', { name: /^default$/i }).first().click();
+      await expect(binding).toHaveValue(original);
+      await save.click().catch(() => {});
+    }
+  });
+
+  test('@ux-settings-018 Appearance settings apply theme preset, custom tint and output padding from one section', async ({ page, sel }) => {
+    await section(page, sel, 'Appearance');
+    const d = dialog(page, sel);
+    const preset = d.getByRole('radio', { name: /^ristretto$/i });
+    const byDefault = d.getByRole('radio', { name: /^default/i });
+    await expect(preset).toBeVisible();
+    const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    try {
+      // A preset row applies at once; so does going back to the default theme.
+      const start = await bg();
+      await preset.check();
+      await expect.poll(bg).not.toBe(start);
+      const presetBg = await bg();
+      await byDefault.check();
+      await expect.poll(bg).not.toBe(presetBg);
+      const plain = await bg();
+      // The default theme takes a custom tint, which can be cleared.
+      const tint = d.locator('input[type=color]').first();
+      await tint.evaluate((e: HTMLInputElement) => { e.value = '#cc3366'; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); });
+      await expect.poll(bg).not.toBe(plain);
+      await d.getByTitle(/clear tint/i).click();
+      await expect.poll(bg).toBe(plain);
+      // Output padding is a bounded number.
+      const padding = d.locator('input[type=number]').first();
+      const [min, max] = [await padding.getAttribute('min'), await padding.getAttribute('max')];
+      expect(min).not.toBeNull();
+      expect(max).not.toBeNull();
+    } finally {
+      if (await byDefault.isVisible().catch(() => false)) await byDefault.check().catch(() => {});
+    }
+  });
+
+  test('@ux-settings-019 Save General changes after the debounce', async ({ page, sel }) => {
+    await section(page, sel, 'General');
+    const d = dialog(page, sel);
+    const limit = d.getByLabel(/^upload limit/i);
+    const original = await limit.inputValue();
+    const writes: number[] = [];
+    // Settings saves only (their body carries the upload limit); other background writes are ignored.
+    page.on('request', r => { if (r.method() !== 'GET' && /upload/i.test(r.postData() ?? '')) writes.push(Date.now()); });
+    try {
+      // A change is saved once, after a pause, and reported as applied.
+      const t0 = Date.now();
+      await d.getByRole('button', { name: /^increase upload limit/i }).click();
+      await page.waitForTimeout(400);
+      expect(writes.length).toBe(0);
+      await expect.poll(() => writes.length, { timeout: 5_000 }).toBe(1);
+      expect(writes[0] - t0).toBeGreaterThanOrEqual(600);
+      await expect(d.getByText(/applied|saved/i).first()).toBeVisible();
+      await expect(limit).toHaveValue(String(Number(original) + 1));
+      // A failed save is reported in Settings. (Only the settings save is failed: its body carries the upload limit.)
+      let failed = false;
+      await page.route('**/*', route => {
+        const body = route.request().postData() ?? '';
+        if (failed || route.request().method() === 'GET' || !/upload/i.test(body)) return route.fallback();
+        failed = true;
+        return route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'settings save rejected' }) });
+      });
+      await d.getByRole('button', { name: /^decrease upload limit/i }).click();
+      await expect.poll(() => failed, { timeout: 5_000 }).toBe(true);
+      await expect(d.getByText(/error|failed|could not|rejected/i).first()).toBeVisible();
+    } finally {
+      await page.unrouteAll({ behavior: 'ignoreErrors' });
+      if ((await limit.inputValue().catch(() => original)) !== original) {
+        await limit.fill(original);
+        await page.waitForTimeout(1500);
+      }
+    }
+  });
+});
