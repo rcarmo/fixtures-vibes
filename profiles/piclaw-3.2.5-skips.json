@@ -179,6 +179,15 @@
         "chromium-phone",
         "webkit-phone"
       ]
+    },
+    {
+      "id": "@ux-terminal-006",
+      "reason": "known-defect",
+      "projects": [
+        "webkit-desktop"
+      ],
+      "detail": "WebKit: after the terminal pop-out window closes, the terminal never returns to the original window (3/3 runs; Chromium returns it within a second).",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1531"
     }
   ]
 }

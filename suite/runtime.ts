@@ -45,6 +45,8 @@ export const canonicalSelectors: Record<string, string> = {
   // A focused menu item, or the aria-selected option of a listbox.
   pickerHighlight: ':is([role="menuitem"], [role="menuitemradio"], [role="option"]):focus, [role="option"][aria-selected="true"]',
   editorText: '.cm-content',
+  /** The terminal's labelled region; its text includes what the terminal shows. */
+  terminal: '[aria-label^="Terminal" i]:not(textarea)',
   previewSplitter: '.md-preview-splitter',
   imageModal: '.image-modal',
   composeInput: '.compose-box textarea',

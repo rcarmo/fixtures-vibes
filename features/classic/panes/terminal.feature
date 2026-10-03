@@ -50,7 +50,11 @@ Feature: Terminal pane — standalone mode
   Scenario: Pop out terminal to new window (desktop)
     Given a terminal pane is open
     When I use the terminal pop-out control
-    Then the original shell should expose a reattach affordance for the terminal
+    Then the terminal should open in a separate window
+    And the original shell should no longer show that terminal
+    When I close the separate window
+    Then the terminal should return to the original shell
+    # Reconciled with Piclaw 3.2.5: closing the pop-out window is the reattach path; no separate control is shown.
 
   @ux-terminal-007 @cap-terminal
 
