@@ -3,10 +3,10 @@ Feature: Classic context meter tooltip
 
   @ux-context-001 @cap-context-meter
   Scenario: Show supplied usage in the context tooltip
-    Given context usage contains token, context-window and percentage values
-    When the context pie renders
-    Then its title, tooltip data and accessible label include formatted token values and rounded percentage
-    And the pie fill uses percentage clamped between zero and one hundred
+    Given a turn has reported its context usage
+    Then the context meter's label shows the used and total tokens in compact form and the rounded percentage
+    When usage exceeds the context window
+    Then the meter keeps its size and reports at least 100%
 
   @ux-context-002 @cap-context-meter
   Scenario: Display missing token counts without inventing them
