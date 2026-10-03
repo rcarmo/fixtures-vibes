@@ -49,6 +49,8 @@ export const canonicalSelectors: Record<string, string> = {
   terminal: '[aria-label^="Terminal" i]:not(textarea)',
   previewSplitter: '.md-preview-splitter',
   imageModal: '.image-modal',
+  /** The Settings dialog (Classic markup gives it no dialog role). */
+  settingsDialog: '[data-testid="settings-dialog"]',
   composeInput: '.compose-box textarea',
   sendButton: '[data-testid="send-button"]',
   stopButton: '[data-testid="stop-button"]',

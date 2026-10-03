@@ -310,3 +310,16 @@ export async function openInEditor(page: Page, sel: (k: string) => string, name:
   await clickVisible(page, tab(page, name));
   await expect(tab(page, name)).toHaveAttribute('aria-selected', 'true');
 }
+
+/** A workspace tree row, refreshing (and finally reloading) while a root entry is stale (rcarmo/piclaw#1520). */
+export async function rowOf(page: Page, name: string) {
+  await openWorkspace(page);
+  for (let i = 0; i < 6; i++) {
+    const row = await treeRow(page, name);
+    if (row) return row;
+    if (i === 3) { await page.reload(); await openWorkspace(page); }
+    else await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
+    await page.waitForTimeout(700);
+  }
+  throw new Error(`no tree row ${name}`);
+}

@@ -2,7 +2,7 @@
 import { test, expect } from '../fixtures';
 import { gateName } from '../runtime';
 import { holdWrites, bodyHas } from '../net';
-import { uploadFile, pane, treeRow, removeFiles, openWorkspace, uncover } from '../workspace';
+import { uploadFile, pane, treeRow, removeFiles, openWorkspace, uncover, rowOf } from '../workspace';
 import { randomUUID } from 'node:crypto';
 import type { Page, Request } from '@playwright/test';
 
@@ -12,19 +12,6 @@ const writes = (page: Page) => {
   page.on('request', r => { if (r.method() !== 'GET') seen.push(r); });
   return seen;
 };
-
-/** A workspace tree row, refreshing (and finally reloading) while a root entry is stale (rcarmo/piclaw#1520). */
-async function rowOf(page: Page, name: string) {
-  await openWorkspace(page);
-  for (let i = 0; i < 6; i++) {
-    const row = await treeRow(page, name);
-    if (row) return row;
-    if (i === 3) { await page.reload(); await openWorkspace(page); }
-    else await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
-    await page.waitForTimeout(700);
-  }
-  throw new Error(`no tree row ${name}`);
-}
 
 test('@ux-compose-007 Display an accepted text submission', async ({ page, runtime, sel }) => {
   const n = tag();
