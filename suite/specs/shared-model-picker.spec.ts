@@ -8,7 +8,8 @@ import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
 import { holdWrites, bodyHas } from '../net';
 
-const modelButton = (page: Page) => page.getByRole('button', { name: /model picker/i }).first();
+// Excludes the picker's own close control, which some runtimes name "Close model picker".
+const modelButton = (page: Page) => page.getByRole('button', { name: /^(?!close\b).*model picker/i }).first();
 
 /** The model the fixture server saw for the turn carrying this nonce. */
 const modelUsed = async (runtime: any, n: string) =>

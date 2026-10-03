@@ -42,9 +42,14 @@ for (const [id, name] of [
   await expect.poll(() => list.locator(ENTRY).count()).toBeGreaterThan(2);
   await leaveSearch(page, list);
   await page.keyboard.type(`ta${n}`, { delay: 50 });
+  // Only the highlight is contract: runtimes may or may not also filter the list while typing ahead.
   await expect(highlighted(list)).toHaveAccessibleName(nameRe(`ta${n}`));
+
+  // Keys move within the search results.
+  await search.fill(`ta${n}`);
   await expect(list.locator(ENTRY)).toHaveCount(2);
-  for (const [key, name] of [['ArrowDown', `zz-ta${n}`], ['Home', `ta${n}`], ['End', `zz-ta${n}`], ['PageUp', `ta${n}`], ['PageDown', `zz-ta${n}`], ['ArrowUp', `ta${n}`]] as const) {
+  await leaveSearch(page, list);
+  for (const [key, name] of [['Home', `ta${n}`], ['ArrowDown', `zz-ta${n}`], ['End', `zz-ta${n}`], ['PageUp', `ta${n}`], ['PageDown', `zz-ta${n}`], ['ArrowUp', `ta${n}`]] as const) {
     await page.keyboard.press(key);
     await expect(highlighted(list), key).toHaveAccessibleName(nameRe(name));
   }
