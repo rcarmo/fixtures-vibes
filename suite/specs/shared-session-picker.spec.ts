@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto';
 for (const [id, name] of [
   ['@ux-shared-014', 'Select one coherent session view'],
   ['@ux-original-014', 'Select another session through the picker'],
+  ['@ux-session-001', "Show the selected chat's timeline"],
 ] as const) test(`${id} ${name}`, async ({ page, runtime, sel }) => {
   const n = randomUUID().slice(0, 8);
   const mainName = `fm${n.replace(/-/g, '')}`;
