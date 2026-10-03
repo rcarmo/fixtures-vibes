@@ -3,7 +3,7 @@
  * found with rowOf, which refreshes past the stale-root listing defect (rcarmo/piclaw#1520).
  */
 import { test, expect } from '../fixtures';
-import { pane, menu, openWorkspace, previewPath, treeRow, newFile, uploadFile, removeFiles, purgeUntitled, rowOf, fixtureName } from '../workspace';
+import { pane, menu, openWorkspace, previewPath, treeRow, newFile, uploadFile, removeFiles, purgeUntitled, rowOf, fixtureName, openInEditor, tab, tabs, closeControl } from '../workspace';
 import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
 
@@ -230,5 +230,41 @@ for (const [id, title] of [
     await expect.poll(async () => (await editor())?.disabled).toBe(true);
   } finally {
     await removeFiles(page, Object.values(names));
+  }
+});
+
+test('@ux-workspace-012 Rename tracked tab identities without dropping active or MRU state', async ({ page, sel }) => {
+  test.setTimeout(120_000);
+  const first = await uploadFile(page, 'first tab');
+  const second = await uploadFile(page, 'second tab');
+  const renamed = fixtureName();
+  try {
+    await openInEditor(page, sel, first);
+    await openInEditor(page, sel, second);
+    await openInEditor(page, sel, first);
+    const order = async () => tabs(page).getByRole('tab').evaluateAll(es => es.map(e => (e.textContent ?? '').trim()));
+    const before = await order();
+    expect(before.some(t => t.includes(first))).toBe(true);
+    // Rename the open, active file in the explorer.
+    await openWorkspace(page);
+    await (await rowOf(page, first)).click();
+    await expect.poll(() => previewPath(page)).toBe(first);
+    await (await rowOf(page, first)).dblclick();
+    const box = pane(page).locator('input:not([type=file]):not([type=hidden])').first();
+    await expect(box).toBeFocused();
+    await box.fill(renamed);
+    await box.press('Enter');
+    // The tab follows: new label, still active, no duplicate, and the old identity is gone. (Visual tab order is not
+    // part of the contract; 3.2.5 moves the renamed tab to the end of the strip.)
+    await expect(tab(page, renamed)).toHaveCount(1);
+    await expect(tab(page, first)).toHaveCount(0);
+    expect((await order()).length).toBe(before.length);
+    await expect(tab(page, renamed)).toHaveAttribute('aria-selected', 'true');
+  } finally {
+    for (const name of [renamed, first, second]) {
+      if (await tab(page, name).count()) await closeControl(page, name).click({ timeout: 5_000 }).catch(() => {});
+    }
+    page.on('dialog', d => void d.dismiss().catch(() => {}));
+    await removeFiles(page, [renamed, first, second]);
   }
 });
