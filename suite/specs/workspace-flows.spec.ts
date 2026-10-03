@@ -175,3 +175,60 @@ test('@ux-workspace-007 Upload files to the resolved folder with progress and ov
     await removeFiles(page, [a, b]);
   }
 });
+
+/** Upload one file (bytes) through the explorer and select it. */
+async function placeFile(page: Page, name: string, bytes: Buffer, type: string) {
+  await pane(page).locator('input[type=file]').first().evaluate((input, f) => {
+    const dt = new DataTransfer();
+    dt.items.add(new File([Uint8Array.from(atob(f.b64), c => c.charCodeAt(0))], f.name, { type: f.type }));
+    (input as HTMLInputElement).files = dt.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }, { name, b64: bytes.toString('base64'), type });
+  await (await rowOf(page, name)).click();
+  await page.waitForTimeout(800);
+}
+const previewButtons = (page: Page) => pane(page).locator('button').evaluateAll(es => es.map(e => ({
+  name: e.getAttribute('aria-label') || e.getAttribute('title') || e.textContent?.trim() || '', disabled: (e as HTMLButtonElement).disabled })));
+
+for (const [id, title] of [
+  ['@ux-workspace-008', 'Render workspace previews by preview kind and content type'],
+  ['@ux-workspace-009', 'Gate open-in-tab and open-in-editor actions by file capabilities'],
+] as const) test(`${id} ${title}`, async ({ page }, info) => {
+  test.skip(/webkit/.test(info.project.name), "environment limit: Playwright's WebKit on Linux uploads files without their bytes");
+  test.setTimeout(120_000);
+  const n = randomUUID().replace(/-/g, '').slice(0, 8);
+  const names = { md: `fx-${n}.md`, txt: `fx-${n}.txt`, png: `fx-${n}.png`, bin: `fx-${n}.bin`, big: `fx-big-${n}.txt` };
+  const { png } = await import('../png');
+  const editor = async () => (await previewButtons(page)).find(b => /editor|editable|edit/i.test(b.name));
+  try {
+    // Markdown renders as markdown and offers the editor; metadata names kind, extension and path.
+    await placeFile(page, names.md, Buffer.from(`# Heading ${n}\n\ntext`), 'text/markdown');
+    await expect(pane(page).getByRole('heading', { name: `Heading ${n}` })).toBeVisible();
+    await expect(pane(page)).toContainText(/kind:\s*markdown/i);
+    await expect(pane(page)).toContainText(/extension:\s*md/i);
+    await expect.poll(() => previewPath(page)).toBe(names.md);
+    expect(await editor()).toMatchObject({ disabled: false });
+    // Other text is shown escaped, as code.
+    await placeFile(page, names.txt, Buffer.from(`<b>bold ${n}</b>`), 'text/plain');
+    await expect(pane(page).getByText(`<b>bold ${n}</b>`)).toBeVisible();
+    expect(await pane(page).locator('b', { hasText: `bold ${n}` }).count()).toBe(0);
+    expect(await editor()).toMatchObject({ disabled: false });
+    // Images render as images; they open in a tab, not the editor.
+    await placeFile(page, names.png, png(16, 16), 'image/png');
+    await expect(pane(page).locator('img').filter({ visible: true }).first()).toBeVisible();
+    const pngButtons = await previewButtons(page);
+    expect(pngButtons.some(b => /open in tab/i.test(b.name))).toBe(true);
+    expect(await editor()).toMatchObject({ disabled: true });
+    // Binary files say to download; no editor, no tab.
+    await placeFile(page, names.bin, Buffer.from([0, 1, 2, 3, 255, 254, 0, 0]), 'application/octet-stream');
+    await expect(pane(page)).toContainText(/download/i);
+    await expect(pane(page)).toContainText(/kind:\s*binary/i);
+    expect(await editor()).toMatchObject({ disabled: true });
+    expect((await previewButtons(page)).some(b => /open in tab/i.test(b.name))).toBe(false);
+    // Text over 256 KiB is not offered to the editor.
+    await placeFile(page, names.big, Buffer.from('x'.repeat(300 * 1024)), 'text/plain');
+    await expect.poll(async () => (await editor())?.disabled).toBe(true);
+  } finally {
+    await removeFiles(page, Object.values(names));
+  }
+});
