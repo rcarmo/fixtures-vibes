@@ -23,7 +23,7 @@ export type Profile = {
   routes?: Record<string, string>;
   tools?: { shell?: string; activate?: string };
   approval?: { button: string };
-  commands?: { setAgentAvatar?: string; clearAgentAvatar?: string };
+  commands?: { setAgentAvatar?: string; clearAgentAvatar?: string; selectModel?: string };
   rateLimit?: { path: string; perMinute: number };
 };
 
@@ -123,7 +123,7 @@ export class Runtime {
 
   /** Script the next model requests (any kind, e.g. a compaction summary) with directive strings, in order. Replaces
    *  any earlier script; test cleanup clears it. */
-  async script(prompts: string[]) {
+  async script(prompts: (string | { when?: string; prompt: string })[]) {
     const r = await fetch(`${this.modelUrl}/control/script`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ prompts }) });
     if (!r.ok) throw new Error(`script: ${r.status}`);
   }

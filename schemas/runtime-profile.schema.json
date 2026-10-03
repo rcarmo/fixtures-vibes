@@ -222,9 +222,14 @@
           "type": "string",
           "minLength": 1,
           "description": "Composer text that restores the default agent avatar."
+        },
+        "selectModel": {
+          "type": "string",
+          "pattern": "\\{model\\}",
+          "description": "Composer text of the native model command; {model} is replaced by a fixture model ID (fixture-1, fixture-2) or by an unknown ID."
         }
       },
-      "description": "Composer commands the suite types to seed runtime settings that have no shared API. Required for the capabilities that use them (@cap-agent-avatar)."
+      "description": "Composer commands the suite types to seed runtime settings that have no shared API, or that a scenario exercises. Required for the capabilities that use them (@cap-agent-avatar: setAgentAvatar/clearAgentAvatar; @cap-compaction: selectModel)."
     },
     "rateLimit": {
       "type": "object",

@@ -78,7 +78,8 @@
   },
   "commands": {
     "setAgentAvatar": "/agent-avatar {source}",
-    "clearAgentAvatar": "/agent-avatar clear"
+    "clearAgentAvatar": "/agent-avatar clear",
+    "selectModel": "/model fixture/{model}"
   },
   "selectors": {
     "quickActionHighlight": ".timeline-quick-actions-item.active",

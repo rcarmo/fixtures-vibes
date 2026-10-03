@@ -37,6 +37,9 @@ Feature: Classic compaction and model controls
     When that notification is handled
     Then the status notice identifies temporary suppression
     And available retry or failure detail is displayed
+    # Not constructible in a black-box suite against Piclaw 3.2.5: suppression is logged by the agent pool
+    # ("Suppressed upstream unbounded auto-compaction during managed prompt") and no client notification for it
+    # could be triggered from the UI. No spec until a runtime exposes a way to provoke it.
 
   @ux-compaction-006 @cap-compaction
   Scenario: Check model context compatibility before switching

@@ -24,9 +24,10 @@
  *   GET  /control/health
  *   POST /control/reset            fail held requests, forget all gates, clear the log and any outage
  *   POST /control/fail?status=S&count=N  fail the next N completion requests with HTTP S (count=0 clears)
- *   POST /control/script          {prompts: string[]}: the next completion requests (any kind, e.g. a summary)
- *                                  use these directive strings, in order, instead of their own prompt; replaces any
- *                                  earlier script ([] clears it)
+ *   POST /control/script          {prompts: (string | {when, prompt})[]}: the next completion requests (any kind,
+ *                                  e.g. a summary) use these directive strings, in order, instead of their own prompt.
+ *                                  `when` (case-insensitive regex) limits an item to requests whose system/user text
+ *                                  matches. Replaces any earlier script ([] clears it).
  *   GET  /control/gates            { name: { open, waiting } }
  *   POST /control/gates/NAME/open
  *   POST /control/gates/open-all   release every held request (cleanup between tests)
@@ -43,7 +44,7 @@ type Step =
 const gates = new Map<string, Gate>();
 let outage: { status: number; remaining: number } | null = null;
 // Scripted plans for the next completion requests, whatever their prompt (runtimes word internal requests differently).
-const scripted: string[] = [];
+const scripted: { when?: RegExp; prompt: string }[] = [];
 let inflight = 0;
 const log: Array<Record<string, unknown>> = [];
 
@@ -132,8 +133,9 @@ Bun.serve({
     }
     if (url.pathname === "/control/script" && req.method === "POST") {
       const { prompts } = (await req.json()) as { prompts?: unknown };
-      if (!Array.isArray(prompts) || !prompts.every((x) => typeof x === "string")) return json({ error: "prompts must be strings" }, 400);
-      scripted.splice(0, scripted.length, ...(prompts as string[]));
+      const ok = (x: any) => typeof x === "string" || (x && typeof x.prompt === "string" && (x.when === undefined || typeof x.when === "string"));
+      if (!Array.isArray(prompts) || !prompts.every(ok)) return json({ error: "prompts must be strings or {when, prompt}" }, 400);
+      scripted.splice(0, scripted.length, ...prompts.map((x: any) => typeof x === "string" ? { prompt: x } : { when: x.when ? new RegExp(x.when, "i") : undefined, prompt: x.prompt }));
       return json({ ok: true, queued: scripted.length });
     }
     if (url.pathname === "/control/fail" && req.method === "POST") {
@@ -193,7 +195,9 @@ async function completion(req: Request): Promise<Response> {
     const lastUser = [...turnUsers].reverse().find((m) => HAS_DIRECTIVE.test(textOf(m.content)))
       ?? [...messages].reverse().find((m) => m.role === "user");
     const prompt = textOf(lastUser?.content);
-    const script = scripted.shift();
+    const requestText = messages.filter((m) => m.role === "system" || m.role === "user").map((m) => textOf(m.content)).join("\n");
+    const at = scripted.findIndex((x) => !x.when || x.when.test(requestText));
+    const script = at < 0 ? undefined : scripted.splice(at, 1)[0].prompt;
     const p = plan(script ?? prompt);
     const toolFollowUp = last?.role === "tool";
     const entry: Record<string, unknown> = {
