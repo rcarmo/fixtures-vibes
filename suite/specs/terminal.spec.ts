@@ -309,3 +309,26 @@ test('@ux-terminal-006 Pop out terminal to new window (desktop)', async ({ page,
   await expect(termTab(page)).toBeVisible({ timeout: 15_000 });
   await closeTab(page);
 });
+
+test('@ux-workspace-014 Surface terminal load, availability, reconnect, and exit states', async ({ page, runtime, sel }) => {
+  // Every WebSocket the page opens passes through, so an unexpected close can be injected.
+  const sockets: { close: () => Promise<void> }[] = [];
+  await page.routeWebSocket(/.*/, ws => { ws.connectToServer(); sockets.push({ close: () => ws.close({ code: 4001, reason: 'dropped by test' }) }); });
+  await page.goto((await runtime.newSession()).url);
+  await openTerminalTab(page, sel);
+  await expect(terminal(page, sel)).toHaveAccessibleName(/connected/i);
+  const n = nonce();
+  await run(page, sel, `echo a-$((2+2))-${n}`, `a-4-${n}`);
+  // The connection drops: the pane reconnects on its own and the shell answers again.
+  const opened = sockets.length;
+  for (const s of sockets.splice(0)) await s.close().catch(() => {});
+  await expect.poll(() => sockets.length, { timeout: 20_000 }).toBeGreaterThan(0);
+  expect(opened).toBeGreaterThan(0);
+  await expect(terminal(page, sel)).toHaveAccessibleName(/connected/i, { timeout: 20_000 });
+  await run(page, sel, `echo b-$((3+3))-${n}`, `b-6-${n}`);
+  // The shell exits: an exited marker and status.
+  await run(page, sel, 'exit', /exited/i);
+  await expect(terminal(page, sel)).toHaveAccessibleName(/exited/i);
+  // Load failure and an unavailable backend are not constructible against the reference instance.
+  await closeTab(page);
+});

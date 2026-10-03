@@ -139,6 +139,8 @@ Feature: Classic workspace flows
     Then the pane schedules a reconnect attempt
     When the backend emits terminal exit state
     Then the pane appends a terminal exited marker and the status becomes exited
+    # Against Piclaw 3.2.5 the reconnect and exit states are constructible; xterm bootstrap failure and a disabled
+    # terminal backend are not (the reference instance has a working terminal).
 
   @ux-workspace-015 @vnc @errors @cap-vnc @cap-workspace
   Scenario: Surface VNC configuration, read-only, and runtime error gates
