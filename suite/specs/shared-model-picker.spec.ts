@@ -2,7 +2,7 @@
  * Shared model picker contract (features/canonical/shared-ux.feature @ux-shared-020).
  * Only fixture models are ever selected: reference instances may list real, billable providers too.
  */
-import { ENTRY, entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
+import { ENTRY, entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
@@ -109,7 +109,7 @@ for (const [id, name] of [
   // Keyboard: on phone widths 3.2.5's disabled Thinking level select overlaps the session button (rcarmo/piclaw#1518).
   await page.getByRole('button', { name: /manage sessions/i }).first().focus();
   await page.keyboard.press('Enter');
-  await page.getByRole('searchbox', { name: /search sessions/i }).fill(key);
+  await searchField(page, /search sessions/i).fill(key);
   await expect(entries(sessionList(page), nameRe(key))).toHaveCount(1);
   await page.keyboard.press('Enter');
   await expect(page.getByRole('button', { name: /manage sessions/i }).first()).toHaveAccessibleName(nameRe(key));

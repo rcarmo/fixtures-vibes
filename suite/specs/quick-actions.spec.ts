@@ -1,12 +1,13 @@
 /** Quick Actions command insertion (features/classic/canonical/canonical-ux.feature). */
 import { test, expect } from '../fixtures';
+import { searchField } from '../pickers';
 import type { Page } from '@playwright/test';
 
 async function openQuickActions(page: Page, sel: (k: string) => string, query: string) {
   await page.locator(sel('composeInput')).fill('existing text');
   await page.locator(sel('timeline')).click({ position: { x: 40, y: 40 } });
   await page.keyboard.type(query);
-  const box = page.getByRole('textbox', { name: /slash command/i });
+  const box = searchField(page, /slash command/i);
   await expect(box).toBeVisible();
   return box;
 }

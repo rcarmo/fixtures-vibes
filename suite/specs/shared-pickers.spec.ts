@@ -2,7 +2,7 @@
  * Picker search, typeahead and keyboard (features/canonical/shared-ux.feature @ux-shared-021).
  * Model picker: only fixture models are ever highlighted for activation; the reference also lists billable models.
  */
-import { ENTRY, entries, highlighted, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
+import { ENTRY, entries, highlighted, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Locator, Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
@@ -27,7 +27,7 @@ for (const [id, name] of [
   await page.goto(home.url);
   const opener = page.getByRole('button', { name: /manage sessions/i }).first();
   const list = sessionList(page);
-  const search = page.getByRole('searchbox', { name: /search sessions/i });
+  const search = searchField(page, /search sessions/i);
 
   // Search by native identifier: only matching entries remain.
   await opener.click();

@@ -18,3 +18,7 @@ export const MODEL_ONE = /fixture-1(?!\d)|fixture model(?! two)/i;
 export const MODEL_TWO = /fixture-2(?!\d)|fixture model two/i;
 /** Matches a session or agent name as a whole token (so "ta1" does not match "zz-ta1"), with or without a leading "@". */
 export const nameRe = (name: string) => new RegExp(`(?:^|[^\\w-])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w-])`);
+
+/** A search field by name: runtimes expose it as a searchbox, a textbox or an ARIA combobox (autocomplete list). */
+export const searchField = (scope: Pick<Page, 'getByRole'> | Pick<Locator, 'getByRole'>, name: RegExp) =>
+  scope.getByRole('searchbox', { name }).or(scope.getByRole('combobox', { name })).or(scope.getByRole('textbox', { name })).first();

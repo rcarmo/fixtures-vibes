@@ -1,5 +1,5 @@
 /** Session picker (shared-ux.feature @ux-shared-014/015; canonical-ux.feature @ux-original-014/015, same bodies). */
-import { entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO } from '../pickers';
+import { entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField } from '../pickers';
 import { test, expect } from '../fixtures';
 import { holdReads, holdWrites } from '../net';
 import { gateName } from '../runtime';
@@ -45,7 +45,7 @@ for (const [id, name] of [
   const sessions = page.getByRole('button', { name: /manage sessions/i }).first();
   await sessions.focus();
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('searchbox', { name: /search sessions/i })).toBeFocused();
+  await expect(searchField(page, /search sessions/i)).toBeFocused();
   await page.keyboard.type(researchName);
   await expect(entries(sessionList(page), nameRe(researchName))).toHaveCount(1);
   await page.keyboard.press('Enter');
@@ -81,7 +81,7 @@ for (const [id, name] of [
   const popup = sessionList(page);
   const openPicker = async () => {
     await page.getByRole('button', { name: /manage sessions/i }).first().click();
-    await page.getByRole('searchbox', { name: /search sessions/i }).fill(key);
+    await searchField(page, /search sessions/i).fill(key);
     await expect(entries(popup, nameRe(key))).toHaveCount(1);
   };
   const pinName = (verb: string) => new RegExp(`^${verb}\\b.*${nameRe(key).source}`);
@@ -105,7 +105,7 @@ for (const [id, name] of [
   rejected.release();
   await page.waitForTimeout(1000);
   await expect(popup).toBeVisible();
-  await expect(page.getByRole('searchbox', { name: /search sessions/i })).toHaveValue(key);
+  await expect(searchField(page, /search sessions/i)).toHaveValue(key);
   await expect(pinButton()).toHaveAccessibleName(pinName('Pin'));
   rejected.disarm();
 
@@ -138,6 +138,6 @@ for (const [id, name] of [
   await runtime.openGate(gate);
   await expect(page.locator(sel('agentPost')).filter({ hasText: `busy-${n}` })).toHaveCount(1);
   await page.getByRole('button', { name: /manage sessions/i }).first().click();
-  await page.getByRole('searchbox', { name: /search sessions/i }).fill(currentName);
+  await searchField(page, /search sessions/i).fill(currentName);
   await expect(entries(popup, nameRe(currentName))).toHaveCount(1);
 });

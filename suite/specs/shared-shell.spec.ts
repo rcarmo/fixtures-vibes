@@ -2,6 +2,7 @@
  * Shared shell and session-picker contract (features/canonical/shared-ux.feature @ux-shared-001, 002, 013).
  */
 import { test, expect } from '../fixtures';
+import { searchField } from '../pickers';
 import { quietTimelinePoint } from '../points';
 import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
@@ -80,7 +81,7 @@ for (const [id, name] of [
     const trigger = page.getByRole('button', { name: /manage sessions|sessions/i }).first();
     if (input === 'pointer') await trigger.click();
     else { await trigger.focus(); await page.keyboard.press('Enter'); }
-    const search = page.getByRole('searchbox', { name: /search sessions/i });
+    const search = searchField(page, /search sessions/i);
     await expect(search).toBeFocused();
     const key = (id: string) => id.replace(/^[a-z]+:/, '');
     for (const s of [mine, other]) {

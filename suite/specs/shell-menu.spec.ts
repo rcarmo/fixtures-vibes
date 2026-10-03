@@ -4,7 +4,7 @@
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 
-const menuButton = (page: Page) => page.getByRole('button', { name: /^menu$/i }).first();
+const menuButton = (page: Page) => page.getByRole('button', { name: /^menu$|workspace menu/i }).first();
 const item = (page: Page, name: RegExp) => page.getByRole('menuitem', { name });
 const WORKSPACE_ACTIONS = [/^new file$/i, /^refresh tree$/i, /^reindex workspace$/i];
 const HIDDEN = /hidden files/i;

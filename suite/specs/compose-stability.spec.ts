@@ -1,5 +1,6 @@
 /** Composer draft behaviour (features/classic/compose/compose-stability.feature). */
 import { test, expect } from '../fixtures';
+import { searchField } from '../pickers';
 import { gateName } from '../runtime';
 import { randomUUID } from 'node:crypto';
 import type { Page } from '@playwright/test';
@@ -137,7 +138,7 @@ test('@ux-compose-006 Submit captures the destination chat', async ({ page, runt
   const otherKey = other.id.replace(/^[a-z]+:/, '');
   const entryName = new RegExp(otherKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
-  await page.getByRole('searchbox', { name: /search sessions/i }).fill(otherKey);
+  await searchField(page, /search sessions/i).fill(otherKey);
   await page.getByRole('option', { name: entryName }).or(page.getByRole('menuitem', { name: entryName })).first().click();
 
   upload.release();

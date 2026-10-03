@@ -2,7 +2,7 @@
  * Quick actions contract: features/canonical/shared-ux.feature @ux-shared-003..006 and the equivalent Classic
  * features/classic/canonical/canonical-ux.feature @ux-original-003..006 (same bodies; original-only clauses by id).
  */
-import { ENTRY } from '../pickers';
+import { ENTRY, searchField } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { quietTimelinePoint } from '../points';
@@ -14,7 +14,7 @@ async function focusTimeline(page: Page, sel: (k: string) => string) {
   await page.mouse.click(point![0], point![1]);
 }
 
-const searchBox = (page: Page) => page.getByRole('textbox', { name: /jump|quick action|slash command/i });
+const searchBox = (page: Page) => searchField(page, /jump|quick action|slash command/i);
 
 for (const [id, name] of [
   ['@ux-shared-003', 'Type on the idle timeline to open Quick actions'],
@@ -117,7 +117,7 @@ const surfaces: Record<string, (page: Page, sel: (k: string) => string) => Promi
   },
   'input or select': async page => {
     await page.getByRole('button', { name: /manage sessions|sessions/i }).first().click();
-    const search = page.getByRole('searchbox', { name: /search sessions/i });
+    const search = searchField(page, /search sessions/i);
     await search.focus();
     return async () => expect(search).toHaveValue('k');
   },
