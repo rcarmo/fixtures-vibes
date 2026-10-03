@@ -36,6 +36,9 @@ Feature: Classic SSE reconnection and refresh
       | composer state |
       | draft-filled   |
       | clean          |
+    # Not constructible in a black-box suite against Piclaw 3.2.5: the advertised version arrives inside the live event
+    # stream, which a test cannot rewrite, and the reference instance serves a single build. No spec until a runtime
+    # offers a way to advertise a different version.
 
   @ux-reconnect-005 @cap-reconnect
   Scenario: Avoid duplicate initial refresh after recent chat activation
@@ -43,3 +46,4 @@ Feature: Classic SSE reconnection and refresh
     When initial-connection cleanup finishes
     Then the recent-activation guard may skip redundant refresh calls
     # This does not specify a fixed reconnect duration or exactly-once event delivery.
+    # No spec: the guard is permissive ("may skip"), so no observable outcome is required of a runtime.
