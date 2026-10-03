@@ -41,6 +41,7 @@ Feature: Classic additional core interaction surfaces
       When the client resolves an unfinished live artifact
       Then it can represent a streaming widget before the final content exists
       And loading, streaming, final and error are distinct artifact states
+      # Against Piclaw 3.2.5 only the persisted half is constructible: widgets arrive from a tool call already final.
 
     @ux-extra-005 @classic @widgets @cap-widgets
     Scenario: Keep widget dismissal separate from queue mutation
