@@ -1,6 +1,21 @@
 # Changelog
 
-## Unreleased
+## v0.1.0 — 2026-10-03
+
+First release for adoption. Evidence: the full rc.16 reference gate against Piclaw 3.2.5
+(`oracle/piclaw/3.2.5/2026-10-03-v0.1.0-rc.16`), plus targeted six-project runs for each change since.
+
+Changes since rc.16:
+- Picker helpers match entries by accessible name and treat only the keyboard highlight as highlighted.
+- shared/original-014 delays a session's reads only after it has loaded.
+- New specs for shell menu and layout (`@ux-shell-001..009`) and compaction and model controls
+  (`@ux-compaction-001..004`, `006..008`).
+- The fixture model accepts `POST /control/script` (optionally with `when`).
+- Runtime profiles can declare `commands.selectModel`, which `@cap-compaction` requires.
+
+Scenarios without a spec are reported as "No suite test yet"; coverage grows in later releases.
+
+## Earlier release candidates
 
 - Classic `@ux-original-*` scenarios (Gi's reference catalogue) now have specs.
   - Where an original states the same contract as a shared scenario, both run the same test body, each under its own
