@@ -35,4 +35,6 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
   selector/route maps). No assertions and no scenario branching.
 * Hashes in `MANIFEST.json` are for fixture provenance only, never for judging generated output or screenshots.
 * Every change runs `bun test` here and the suite against the Piclaw reference before tagging.
+* Test runs (Rui): focused runs come first (one spec or scenario, the projects that matter). A full or otherwise
+  massive run (the whole suite, or every project at once) happens at most once every 4 hours per agent.
 * Git: never rebase; commit as Rui Carmo <rui.carmo@gmail.com>.

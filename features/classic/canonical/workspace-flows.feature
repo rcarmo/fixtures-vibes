@@ -95,17 +95,16 @@ Feature: Classic workspace flows
 
   @ux-workspace-010 @tabs @dirty @cap-workspace
   Scenario: Show dirty tab affordances and compare-to-saved gating
-    Given a tab is tracked with unsaved changes
-    Then the tab strip marks that tab as dirty
-    And the close affordance changes from the close icon to the unsaved dot styling
-    And the close button title and aria-label report unsaved changes
-    And "Compare to Saved" is offered only when the tab can compare to saved content and the tab is dirty or diff is already open
+    Given an editor tab has unsaved changes
+    Then the tab reports unsaved changes
+    And its close control reports unsaved changes instead of offering a plain close
+    And the tab's context menu offers "Compare to Saved", which a tab without changes does not offer
 
   @ux-workspace-011 @tabs @close @cap-workspace
   Scenario: Close tabs with MRU fallback while preserving pinned tabs in bulk close flows
-    Given several tabs are open in the Classic tab store
+    Given several editor tabs are open
     When I close the active tab
-    Then the next active tab comes from MRU order when available
+    Then the most recently used remaining tab becomes active, not merely its neighbour
     When I close other tabs from one tab's context
     Then pinned tabs stay open
     When I close all tabs
@@ -155,19 +154,19 @@ Feature: Classic workspace flows
 
   @ux-workspace-016 @editor @save @cap-editor @cap-workspace
   Scenario: Save changed editor content
-    Given the generic editor has unsaved text, an active view and no save in progress
+    Given an editor tab has unsaved text
     When I invoke Save
-    Then it writes the captured text to the workspace file endpoint
-    And success updates the saved baseline and modification time and clears dirty state
-    And failure displays a Save failed status and releases the saving flag
-    # After the asynchronous write succeeds, this handler clears dirty state without rechecking for edits made during the write.
+    Then the text is written to the file once and the tab no longer reports unsaved changes
+    And reopening the file shows the saved text
+    When a save fails
+    Then the editor shows a "Save failed" status, keeps the unsaved changes and lets me save again
 
   @ux-workspace-017 @editor @save @cap-editor @cap-workspace
   Scenario: Avoid writing an unchanged editor document
-    Given the editor has a dirty flag but its text equals the saved baseline
+    Given an editor tab whose text was changed back to the saved text
     When I invoke Save
-    Then the dirty flag clears with All changes saved feedback
-    And no workspace file update is sent
+    Then the tab no longer reports unsaved changes
+    And nothing is written to the file
 
   @ux-workspace-018 @editor @conflict @cap-editor @cap-workspace
   Scenario: Resolve an editor file conflict with the supplied actions
