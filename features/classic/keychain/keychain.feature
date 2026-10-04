@@ -6,9 +6,10 @@ Feature: Keychain and shell secret substitution
   different: only the behaviour below is required, not its layout, wording or extra columns.
 
   Rule: Environment variable names derive from entry names
-    An entry name maps to one shell variable name: each run of "/", "-" or "." becomes "_", any other character outside
-    A-Z, a-z, 0-9 and "_" is dropped, and the result is upper-cased. A name that maps to nothing, or to something that
-    starts with a digit, has no shell variable.
+    An entry name that is already a shell identifier ([A-Za-z_][A-Za-z0-9_]*) is its variable name, unchanged. Any other
+    name maps by turning each run of "/", "-" or "." into "_", dropping any other character outside A-Z, a-z, 0-9 and
+    "_", and upper-casing. A name that maps to nothing, or to something that starts with a digit, has no shell variable.
+    The full detection, retrieval and expansion rules are in shell-environment/shell-environment.feature.
 
   Background:
     Given I am authenticated and on the main chat in the Classic shell

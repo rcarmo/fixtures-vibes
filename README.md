@@ -104,6 +104,11 @@ only). The keychain scenarios (`features/classic/keychain/`) carry no `@cap-*` t
 runtime must keep a Piclaw-like keychain, manage it in Settings (the section may be simpler and look different; the specs
 find controls by role and loose names and check behaviour only) and apply the same shell substitution rules (`$NAME` /
 `${NAME}` injection from entry names, `keychain:<name>[:field]` placeholders). Failures there are defects, not skips.
+`features/classic/shell-environment/` pins the shell tool to Piclaw 3.2.5 exactly: shell detection (`$SHELL`, then bash;
+on Windows PowerShell before cmd, under `@cap-windows-shell`), textual detection of `$NAME`, `${NAME}`, `$env:NAME` and
+`%NAME%` references with retrieval of only the referenced keychain entries, Piclaw's variable naming (identifiers kept,
+collisions resolved by name order), placeholder failures, and the Settings Environment section (overrides applied to
+later commands, persisted, keychain variables excluded). Those scenarios are mandatory too.
 
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
 Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such

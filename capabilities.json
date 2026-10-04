@@ -198,6 +198,11 @@
     "@cap-tool-pane": {
       "area": "compose",
       "description": "A disclosable per-call tool pane with running/terminal glyphs, timer and persisted lifecycle (Piclaw 3.2.5 shows only a running-tool status line)."
+    },
+    "@cap-windows-shell": {
+      "area": "shell-environment",
+      "description": "The runtime runs on Windows and its shell tool detects PowerShell/cmd as Piclaw does. No Windows reference instance; scenarios derive from Piclaw 3.2.5 source.",
+      "reference": false
     }
   }
 }
