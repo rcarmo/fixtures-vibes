@@ -52,7 +52,11 @@ test('@ux-compose-008 Serialize text and references into one submission', async 
     await uncover(page, seed.getByRole('link').first());
     await seed.getByRole('link').first().click();
     await expect.poll(async () => (await box.innerText()).length).toBeGreaterThan(before.length);
-    const messageId = /(\d+)/.exec((await box.innerText()).split('\n').find(l => !before.split('\n').includes(l)) ?? '')?.[1];
+    // The reference carries the message's canonical ID, which its timestamp link (or the post itself) points at; the
+    // composer label is free to show something else, such as a row number.
+    const link = seed.getByRole('link').first();
+    const messageId = /(\d+)\D*$/.exec(await link.getAttribute('href') ?? '')?.[1]
+      ?? /(\d+)\D*$/.exec(await seed.getAttribute('id') ?? '')?.[1];
     expect(messageId).toBeTruthy();
 
     const sent = writes(page);

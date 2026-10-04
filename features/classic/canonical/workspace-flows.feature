@@ -93,14 +93,14 @@ Feature: Classic workspace flows
     And "Open in editor" is disabled unless the preview is text, the selection is not a directory, and the preview is at most 256 KiB
     And the menu routes editor opens through the current open-editor callback
 
-  @ux-workspace-010 @tabs @dirty @cap-workspace
+  @ux-workspace-010 @tabs @dirty @cap-workspace @cap-editor
   Scenario: Show dirty tab affordances and compare-to-saved gating
     Given an editor tab has unsaved changes
     Then the tab reports unsaved changes
     And its close control reports unsaved changes instead of offering a plain close
     And the tab's context menu offers "Compare to Saved", which a tab without changes does not offer
 
-  @ux-workspace-011 @tabs @close @cap-workspace
+  @ux-workspace-011 @tabs @close @cap-workspace @cap-editor
   Scenario: Close tabs with MRU fallback while preserving pinned tabs in bulk close flows
     Given several editor tabs are open
     When I close the active tab
@@ -110,7 +110,7 @@ Feature: Classic workspace flows
     When I close all tabs
     Then pinned tabs still stay open
 
-  @ux-workspace-012 @tabs @rename @cap-session-manage @cap-workspace
+  @ux-workspace-012 @tabs @rename @cap-session-manage @cap-workspace @cap-editor
   Scenario: Rename tracked tab identities without dropping active or MRU state
     Given a workspace-backed tab is already open
     When the tab store renames that tab path
@@ -119,7 +119,7 @@ Feature: Classic workspace flows
     And the active tab id follows the renamed tab when it was active
     And the MRU order keeps the renamed tab in the same position
 
-  @ux-workspace-013 @tabs @popout @cap-workspace
+  @ux-workspace-013 @tabs @popout @cap-workspace @cap-editor
   Scenario: Gate dock, popout, reattach, and standalone viewer routes from the tab context menu
     Given the Classic tab context menu is open for a tab
     Then the terminal dock toggle is rendered only for the active tab when dock support is present

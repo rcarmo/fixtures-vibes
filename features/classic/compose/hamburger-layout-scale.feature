@@ -63,7 +63,7 @@ Feature: Classic workspace menu and layout controls
       When I choose another supported scale
       Then the client applies and stores that scale
 
-    @ux-shell-009
+    @ux-shell-009 @cap-editor
     Scenario: Inline code in editor preview is monospaced
       Given an editor Markdown preview contains inline code
       Then the preview styles inline code with the code font family
