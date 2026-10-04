@@ -7,7 +7,7 @@ import {
   getEnvironmentSettings,
   setEnvironmentOverride,
   clearEnvironmentOverride
-} from "./app-p6ps6fhm.js";
+} from "./app-bwr52y1h.js";
 
 // web/src/gi-settings-environment.ts
 var NAME = /^[A-Za-z_][A-Za-z0-9_]*$/;

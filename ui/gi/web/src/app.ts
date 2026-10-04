@@ -18,6 +18,7 @@ import { dedupePosts } from './ui/timeline-utils.js';
 import { useAgentState } from './ui/use-agent-state.js';
 import { useSseConnection } from './ui/use-sse-connection.js';
 import { handleAppSseEvent } from './ui/app-sse-events.js';
+import { forwardPlanSidebarEvent, setPlanSidebarChat } from './gi-plan-sidebar.js';
 import { initTheme } from './ui/theme.js';
 import { initGiAppearance } from './gi-appearance.js';
 import { installGiDisplayScale } from './gi-display-scale.js';
@@ -440,6 +441,7 @@ function GiApp() {
     } = useAgentState();
 
     const currentChatJid = useMemo(() => sessionId ? sessionToChatJid(sessionId) : '', [sessionId]);
+    useEffect(() => setPlanSidebarChat(currentChatJid), [currentChatJid]);
     const localNotifications = useGiNotifications(currentChatJid, chat => {
         if (chat.startsWith('gi:')) void handleSwitchChat(chat);
     });
@@ -670,6 +672,7 @@ function GiApp() {
     const handleSseEvent = useCallback((eventType: string, data: any) => {
         if (!selection.current() || data?.chat_jid !== sessionToChatJid(selection.current()!)) return;
         void localNotifications.event(eventType, data);
+        forwardPlanSidebarEvent(eventType, data);
         if(eventType==='connected'&&versionGuard.observe(data?.app_asset_version))setNewUIVersion(data.app_asset_version);
         const staleTerminal = staleTerminalEvent(eventType, data, currentTurnIdRef.current);
         if (eventType === 'tool_activity_changed') {

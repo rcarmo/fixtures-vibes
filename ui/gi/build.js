@@ -2,6 +2,7 @@ import { resolve, dirname } from 'path';
 import { mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, rmSync, copyFileSync, cpSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { piclawStatusAdapter } from './scripts/piclaw-status-adapter.mjs';
+import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
 import {piclawSvgAdapter, patchMarkdownSvg, patchPostSvg, verifyPiclawSvg} from './scripts/piclaw-svg-adapter.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
@@ -105,7 +106,7 @@ const appBuild = await Bun.build({
   target: 'browser', format: 'esm', sourcemap: SOURCEMAPS ? 'linked' : 'none', splitting: true, modulePreload: false,
   naming: { entry: 'app.bundle.[ext]', chunk: 'chunks/[name]-[hash].[ext]', asset: 'assets/[name]-[hash].[ext]' },
   external: ['/editor-vendor/codemirror.js'],
-  plugins: [piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), { name: 'gi-post-speech', setup(build) {
+  plugins: [piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-post-speech', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]post\.ts$/ }, async args => ({
       contents: patchPostSvg(patchPostRecoveryControl(patchPostOutcomes(patchPostSpeech(await Bun.file(args.path).text())))), loader: 'ts',
     }));

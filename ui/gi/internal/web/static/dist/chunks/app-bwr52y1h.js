@@ -2989,6 +2989,100 @@ function useSseConnection({ handleSseEvent, handleConnectionStatusChange, loadPo
   }, [chatJid, selectionKey]);
 }
 
+// web/src/ui/extension-ui-events.ts
+var EXTENSION_UI_EVENT_TYPES = new Set([
+  "extension_ui_request",
+  "extension_ui_timeout",
+  "extension_ui_notify",
+  "extension_ui_status",
+  "extension_ui_working",
+  "extension_ui_working_indicator",
+  "extension_ui_widget",
+  "extension_ui_title",
+  "extension_ui_editor_text",
+  "extension_ui_error"
+]);
+var EXTENSION_UI_BROWSER_EVENT = "piclaw-extension-ui";
+function isExtensionUiEventType(eventType) {
+  return EXTENSION_UI_EVENT_TYPES.has(String(eventType || "").trim());
+}
+function toExtensionUiBrowserEventName(eventType) {
+  const normalized = String(eventType || "").trim();
+  if (!normalized.startsWith("extension_ui_"))
+    return EXTENSION_UI_BROWSER_EVENT;
+  return `${EXTENSION_UI_BROWSER_EVENT}:${normalized.slice("extension_ui_".length).replace(/_/g, "-")}`;
+}
+function dispatchExtensionUiBrowserEvent(eventType, payload, target = globalThis.window) {
+  if (!target || typeof target.dispatchEvent !== "function" || typeof CustomEvent === "undefined") {
+    return false;
+  }
+  const detail = { type: eventType, payload };
+  target.dispatchEvent(new CustomEvent(EXTENSION_UI_BROWSER_EVENT, { detail }));
+  target.dispatchEvent(new CustomEvent(toExtensionUiBrowserEventName(eventType), { detail }));
+  return true;
+}
+
+// web/src/gi-plan-sidebar.ts
+var PLAN_PATH = "/agent/addons/api/plan-sidebar/plan";
+var MESSAGE_PATH = "/agent/default/message";
+function sessionOf(chatJid) {
+  const sessionId = chatJid?.startsWith("gi:") ? chatJid.slice(3) : "";
+  if (!sessionId)
+    throw new Error("No active session");
+  return sessionId;
+}
+async function json(url, init = {}) {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    ...init,
+    headers: { "Content-Type": "application/json", ...init.headers || {} }
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || payload?.ok === false)
+    throw new Error(payload?.error || `${response.status} ${response.statusText}`);
+  return payload;
+}
+async function giPlanSidebarRequest(url, options = {}) {
+  const target = new URL(url, location.origin);
+  const chatJid = target.searchParams.get("chat_jid");
+  if (target.pathname === PLAN_PATH) {
+    const planUrl = `/api/sessions/${encodeURIComponent(sessionOf(chatJid))}/plan`;
+    if ((options.method || "GET").toUpperCase() === "GET")
+      return (await json(planUrl)).plan;
+    const body = JSON.parse(String(options.body || "{}"));
+    const payload = body.action === "reset" ? { action: "reset" } : { markdown: String(body.markdown ?? "") };
+    return json(planUrl, { method: "POST", body: JSON.stringify(payload) });
+  }
+  if (target.pathname === MESSAGE_PATH) {
+    const body = JSON.parse(String(options.body || "{}"));
+    sessionOf(chatJid);
+    await sendAgentMessage("default", String(body.content || ""), null, [], "prompt", chatJid);
+    return { ok: true };
+  }
+  throw new Error(`Unsupported Plan request: ${target.pathname}`);
+}
+var currentChatJid = "";
+var installed = false;
+function setPlanSidebarChat(chatJid) {
+  if (chatJid === currentChatJid)
+    return;
+  currentChatJid = chatJid;
+  const web = globalThis.__piclaw_web ||= {};
+  web.getCurrentChatJid = () => currentChatJid;
+  window.dispatchEvent(new CustomEvent("piclaw:current-chat-changed", { detail: { chatJid } }));
+  if (!installed && chatJid) {
+    installed = true;
+    import("./index-xb1f77xk.js");
+  }
+}
+function forwardPlanSidebarEvent(eventType, data) {
+  if (!isExtensionUiEventType(eventType))
+    return;
+  if (data?.chat_jid && data.chat_jid !== currentChatJid)
+    return;
+  dispatchExtensionUiBrowserEvent(eventType, data);
+}
+
 // web/src/gi-theme-text-contrast.ts
 var hex = (value) => {
   const input = String(value || "").trim();
@@ -23111,14 +23205,14 @@ function NumberStepper({
 
 // web/src/gi-settings-lazy.ts
 var loaders = {
-  models: () => import("./gi-settings-models-4bkmdc3v.js").then((module) => module.Models),
-  appearance: () => import("./gi-settings-appearance-ygqw7p8k.js").then((module) => module.Appearance),
-  keyboard: () => import("./keyboard-bzpwfg2b.js").then((module) => module.KeyboardSection),
-  compaction: () => import("./gi-settings-compaction-76h1nawv.js").then((module) => module.GiSettingsCompaction),
-  providers: () => import("./gi-settings-providers-2s3jxrbh.js").then((module) => module.GiSettingsProviders),
-  keychain: () => import("./gi-settings-keychain-d9hyxmwf.js").then((module) => module.GiSettingsKeychain),
-  environment: () => import("./gi-settings-environment-6rxwytrc.js").then((module) => module.GiSettingsEnvironment),
-  authentication: () => import("./gi-settings-authentication-2d5jv8nb.js").then((module) => module.GiSettingsAuthentication)
+  models: () => import("./gi-settings-models-4z80mj8b.js").then((module) => module.Models),
+  appearance: () => import("./gi-settings-appearance-rndh7pzt.js").then((module) => module.Appearance),
+  keyboard: () => import("./keyboard-jyzs5vj7.js").then((module) => module.KeyboardSection),
+  compaction: () => import("./gi-settings-compaction-bg741054.js").then((module) => module.GiSettingsCompaction),
+  providers: () => import("./gi-settings-providers-sk5775z2.js").then((module) => module.GiSettingsProviders),
+  keychain: () => import("./gi-settings-keychain-511cj80g.js").then((module) => module.GiSettingsKeychain),
+  environment: () => import("./gi-settings-environment-9qzmxhgj.js").then((module) => module.GiSettingsEnvironment),
+  authentication: () => import("./gi-settings-authentication-knbahev0.js").then((module) => module.GiSettingsAuthentication)
 };
 var labels = { models: "Models", appearance: "Appearance", keyboard: "Keyboard", compaction: "Compaction", providers: "Providers", keychain: "Keychain", environment: "Environment", authentication: "Authentication" };
 var components = new Map;
@@ -24810,6 +24904,7 @@ function GiApp() {
     draftExpandedRef
   } = useAgentState();
   const currentChatJid = u_(() => sessionId ? sessionToChatJid2(sessionId) : "", [sessionId]);
+  K_(() => setPlanSidebarChat(currentChatJid), [currentChatJid]);
   const localNotifications = useGiNotifications(currentChatJid, (chat) => {
     if (chat.startsWith("gi:"))
       handleSwitchChat(chat);
@@ -25128,6 +25223,7 @@ function GiApp() {
     if (!selection.current() || data?.chat_jid !== sessionToChatJid2(selection.current()))
       return;
     localNotifications.event(eventType, data);
+    forwardPlanSidebarEvent(eventType, data);
     if (eventType === "connected" && versionGuard.observe(data?.app_asset_version))
       setNewUIVersion(data.app_asset_version);
     const staleTerminal = staleTerminalEvent(eventType, data, currentTurnIdRef.current);
@@ -26030,6 +26126,7 @@ export {
   getAgentModels,
   selectAgentThinking,
   selectAgentModel,
+  giPlanSidebarRequest,
   normalizeOutputPad,
   appearancePresets,
   currentAppearance,
