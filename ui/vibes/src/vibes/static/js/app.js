@@ -11,6 +11,8 @@ import { createQueueSteeringGuard } from './components/queue-steering.js';
 import { formatRelativeTime as formatTime } from './components/timestamps.js';
 import { html, render, useState, useEffect, useLayoutEffect, useCallback, useRef, useMemo } from './vendor/preact-htm.js';
 import { getTimeline, getPostsByHashtag, searchPosts, getThread, createPost, deletePost, uploadMedia, getThumbnailUrl, getMediaUrl, getMediaInfo, respondToAgentRequest, addToWhitelist, getAgents, getAgentTurnPreview, setAgentTurnPanelExpanded, getWorkspaceFile, updateWorkspaceFile, getAgentContext, getAgentStatus, removeAgentQueueItem, steerAgentQueueItem, reorderAgentQueueItem, SSEClient } from './api.js';
+import { UncertainFollowups } from './components/uncertain-followups.js';
+import { discardUncertainFollowup } from './api.js';
 import { ComposeBox } from './components/compose-box.js';
 import { QuickActions } from './components/quick-actions.js';
 import { SystemMeters } from './components/system-meters.js';
@@ -787,7 +789,7 @@ function App() {
         setCurrentHashtag(null); setSearchQuery(null); setSearchOpen(false);
         setAgentStatus(null); setAgentDraft(null); setAgentPlan(null); setAgentThought(null);
         setContextUsage(null); setActiveModel(null); setActiveThinkingLevel(null); setIsCompacting(false);
-        setQueuedFollowups([]); setPendingRequest(null);
+        setQueuedFollowups([]); setUncertainFollowups([]); setPendingRequest(null);
         clearAgentRunState();
         setSessionPickerOpen(false);
     };
@@ -810,6 +812,7 @@ function App() {
     const turnEventGeneration = useRef(0);
     const [steerQueuedTurnId, setSteerQueuedTurnId] = useState(null);
     const [queuedFollowups, setQueuedFollowups] = useState([]);
+    const [uncertainFollowups, setUncertainFollowups] = useState([]);
     const [agents, setAgents] = useState({});
     const [activeModel, setActiveModel] = useState(null);
     const [activeThinkingLevel, setActiveThinkingLevel] = useState(null);
@@ -933,7 +936,10 @@ function App() {
         const generation = ++queueRefreshGeneration.current;
         const selection = switchGeneration.current;
         const result = await getAgentQueue(null, null, session);
-        if (generation === queueRefreshGeneration.current && selection === switchGeneration.current && session === selectedSessionRef.current) setQueuedFollowups(result.items || []);
+        if (generation === queueRefreshGeneration.current && selection === switchGeneration.current && session === selectedSessionRef.current) {
+            setQueuedFollowups(result.items || []);
+            setUncertainFollowups(Array.isArray(result.uncertain) ? result.uncertain : []);
+        }
     };
     useEffect(() => {
         let disposed = false;
@@ -942,7 +948,10 @@ function App() {
             const selection = switchGeneration.current;
             try {
                 const result = await getAgentQueue(null, null, selectedSession);
-                if (!disposed && generation === queueRefreshGeneration.current && selection === switchGeneration.current) setQueuedFollowups(result.items || []);
+                if (!disposed && generation === queueRefreshGeneration.current && selection === switchGeneration.current) {
+                    setQueuedFollowups(result.items || []);
+                    setUncertainFollowups(Array.isArray(result.uncertain) ? result.uncertain : []);
+                }
             } catch (error) { console.warn('Queue refresh failed:', error); }
         };
         refresh();
@@ -2210,7 +2219,7 @@ function App() {
 
         // Handle agent requests (permission, choices)
         if (eventType === 'agent_request') {
-            console.log('Agent request:', data);
+            if (data.session_id && data.session_id !== selectedSessionRef.current) return;
             if (turnId && currentTurnIdRef.current && turnId !== currentTurnIdRef.current) {
                 return;
             }
@@ -2222,6 +2231,7 @@ function App() {
         }
 
         if (eventType === 'agent_request_closed') {
+            if (data.session_id && data.session_id !== selectedSessionRef.current) return;
             // Closing one request must not dismiss a newer concurrent prompt or
             // report that the whole turn stopped: the runtime can continue after denial.
             if (pendingRequestRef.current?.request_id === data.request_id) {
@@ -2233,6 +2243,7 @@ function App() {
         }
 
         if (eventType === 'agent_request_timeout') {
+            if (data.session_id && data.session_id !== selectedSessionRef.current) return;
             console.log('Agent request timeout:', data);
             if (turnId && currentTurnIdRef.current && turnId !== currentTurnIdRef.current) {
                 return;
@@ -2651,6 +2662,14 @@ function App() {
                     getTurnColor=${getTurnColor}
                     onExpandPanel=${expandAgentPanel}
                     onPanelExpandedChange=${handlePanelExpandedChange}
+                />
+                <${UncertainFollowups} key=${selectedSession} items=${uncertainFollowups}
+                    onDiscard=${async (rowId) => {
+                        const session = selectedSession;
+                        if (selectedSessionRef.current !== session) return;
+                        await discardUncertainFollowup(rowId, session);
+                        if (selectedSessionRef.current === session) await refreshSelectedQueue();
+                    }}
                 />
                 <${ComposeBox} key=${selectedSession} sessionId=${selectedSession}
                     prefillRequest=${composePrefill}
