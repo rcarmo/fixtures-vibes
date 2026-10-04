@@ -4,14 +4,15 @@ The shared Classic web UI is the `ui/gi` tree: Piclaw 3.2.5's own web components
 adapter layer (`web/src/api.ts`, `web/src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
 implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
-- **Reference implementation:** rcarmo/gi `internal/web` (handler names below). Request and response shapes are
-  those of the reference handlers and the Gi docs cited; where they disagree, the reference handler wins.
+- **Reference implementation:** rcarmo/gi `internal/web` at **5a68f40** (handler names below), with the Gi docs cited at
+  the same revision. Request and response shapes are those of the reference handlers; where a doc disagrees, the
+  handler wins. Terminal and VNC follow Piclaw **v3.2.5** (rcarmo/piclaw, `runtime/src/channels/web/{terminal,vnc}/`)
+  until Gi implements them. This file names the revision it was checked against; update it when the UI changes.
 - **Acceptance:** the fixtures-vibes compliance suite against the runtime's profile. This file lists the surface;
   the Gherkin features and specs define the behaviour.
-- **Sessions:** the UI addresses a session as `chat_jid = gi:<session-id>`; HTTP routes take the bare
-  `<session-id>`. The SSE stream takes `chat_jid`.
+- **Sessions:** the UI addresses a session as `chat_jid = gi:<session-id>` for every runtime (`gi:` is the UI's
+  literal prefix, not a runtime name); HTTP routes take the bare `<session-id>`. The SSE stream takes `chat_jid`.
 - **Errors:** non-2xx responses carry JSON `{error, code?}`; the UI shows `error`.
-- Methods marked `?` were inferred from call sites (default GET); confirm against the reference handler.
 
 ## Static assets
 
@@ -53,7 +54,7 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | POST | `/api/sessions/{s}/queue/{id}/steer` | `steerAgentQueueItem` | " (ADR 0018) |
 | GET, POST | `/api/sessions/{s}/compaction` | `getSessionCompaction`, `compactSession` | " (ADR 0022) |
 | POST | `/api/sessions/{s}/peer-message` | `sendPeerAgentMessage` | " |
-| GET, POST? | `/api/sessions/{s}/media`, GET `/api/sessions/{s}/media/{id}` | `uploadMedia`, `recoverQueueDraft` | " (`media-ingestion-contract.md`) |
+| GET, POST (multipart upload) | `/api/sessions/{s}/media`; GET `/api/sessions/{s}/media/{id}` | `uploadMedia`, `recoverQueueDraft` | " (`media-ingestion-contract.md`) |
 | GET | `/api/media/{id}`, `/api/media/{id}/raw`; `/media/{id}` (post bodies) | `getMediaInfo`, `getMediaUrl`, `Post` | `handleMediaLookup` |
 
 ## Models and settings
@@ -67,15 +68,15 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | GET, PATCH | `/api/settings/identity` | `getGiIdentity`, `saveGiIdentity` | `handleSettingsIdentity` |
 | GET, PATCH | `/api/settings/compaction` | `getGiCompactionPolicy`, `saveGiCompactionPolicy` | `handleCompactionPolicy` |
 | GET, PATCH, DELETE | `/api/settings/providers` | `getGiProviders`, `saveGiProviderKey`, `removeGiProviderKey` | `handleProviderSettings` |
-| GET?, POST | `/api/settings/general` | `getGeneralSettings`, `saveGeneralSettings` | `handleGeneralSettings` |
+| GET, POST | `/api/settings/general` | `getGeneralSettings`, `saveGeneralSettings` | `handleGeneralSettings` |
 
 ## Keychain and environment
 
 | Method | Path | UI caller | Reference |
 |---|---|---|---|
-| GET?, POST, DELETE | `/api/settings/keychain` | `listKeychain`, `saveKeychainEntry`, `deleteKeychainEntry` | `handleKeychain` (`keychain.md`) |
+| GET, POST, DELETE | `/api/settings/keychain` | `listKeychain`, `saveKeychainEntry`, `deleteKeychainEntry` | `handleKeychain` (`keychain.md`) |
 | POST | `/api/settings/keychain/reveal` `{name, master_password?}` (401 `needs_master_password`) | `revealKeychainEntry` | `handleKeychainReveal` |
-| GET?, POST | `/api/settings/environment` `{name, value}` | `getEnvironmentSettings`, `setEnvironmentOverride`, `clearEnvironmentOverride` | `handleEnvironment` (`shell-environment.md`) |
+| GET, POST | `/api/settings/environment` `{name, value}` | `getEnvironmentSettings`, `setEnvironmentOverride`, `clearEnvironmentOverride` | `handleEnvironment` (`shell-environment.md`) |
 
 ## Workspace
 
@@ -96,13 +97,19 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | GET, POST | `/api/sessions/{s}/plan` (`{markdown}` or `{action: reset}`) | `gi-plan-sidebar.ts` (vendored Piclaw add-on) | `handleSessionSubroutes` (`session-plan.md`) |
 | GET | `/api/sessions/{s}/widgets/{id}` | widget refresh | " (`dashboard-widgets.md`) |
 
-## Terminal and VNC (Piclaw routes; reference implementation pending, gi#45, gi#47)
+## Terminal and VNC (Piclaw v3.2.5 routes; Gi implementation pending, gi#45, gi#47)
+
+Session, handoff and WebSocket frame shapes are those of Piclaw v3.2.5 `terminal-session-service.ts` and
+`vnc-session-service.ts`, as consumed by the UI's `panes/terminal-pane.ts` and `panes/vnc-pane.ts`.
 
 | Method | Path | UI caller |
 |---|---|---|
-| GET | `/terminal/session`; WebSocket `/terminal/ws` | `fetchTerminalSession`, terminal pane |
+| GET | `/terminal/session` | `fetchTerminalSession` |
+| WebSocket | `/terminal/ws` | terminal pane |
 | POST | `/terminal/handoff` | `requestTerminalHandoff` |
 | GET | `/vnc/session` | `fetchVncSession` |
+| WebSocket | `/vnc/ws` | VNC pane (remote-display decoder) |
+| POST | `/vnc/handoff` | VNC pop-out |
 
 ## Authentication (when the runtime offers auth)
 
@@ -111,7 +118,13 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 `/api/auth/passkeys/{op}/start|finish`, and the login page's `/auth/verify`, `/auth/webauthn/login/start|finish`
 (`gi-auth.ts`, `gi-passkeys.ts`, `gi-settings-authentication.ts`, `gi-settings-setup.ts`, `login.ts`; reference
 `internal/web/auth*.go`, `passkeys.md`). The app does not mount until `GET /api/auth/status` answers, so a runtime
-without auth must still serve it with fields that let `parseAuthPolicy` (`gi-auth-policy.ts`) admit the browser.
+without auth must still serve it. `parseAuthPolicy` (`gi-auth-policy.ts`) requires `mode: "single-user"` and boolean
+`enrolled`, `authenticated`, `totp_enabled`, `browser_login_available`; an auth-free runtime answers:
+
+```json
+{"mode":"single-user","enrolled":false,"authenticated":true,"totp_enabled":false,"browser_login_available":false,
+ "setup_available":false,"totp_login_available":false,"passkeys_enabled":false,"passkey_login_available":false}
+```
 
 ## Other calls
 
