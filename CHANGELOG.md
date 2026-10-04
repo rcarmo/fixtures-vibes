@@ -11,6 +11,8 @@
 - `@ux-shell-009` and `@ux-workspace-010..013` require `@cap-editor`.
 - `@ux-compose-008` states that a message reference shows the message's own ID (`msg:<id>`).
 - Adaptive Cards removed from the suite (Rui, 2026-10-04): `@ux-extra-002/003` and `@cap-adaptive-cards` are retired.
+- Text highlights and image annotation removed from the suite (Rui, 2026-10-04): `@ux-timeline-001..012`,
+  `@cap-image-annotation` and `@cap-text-highlights` are retired. Widgets (`@ux-extra-004/005`) stay.
 
 ## v0.1.0 — 2026-10-03
 
