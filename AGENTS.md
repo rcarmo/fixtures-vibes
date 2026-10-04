@@ -38,3 +38,11 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
 * Test runs (Rui): focused runs come first (one spec or scenario, the projects that matter). A full or otherwise
   massive run (the whole suite, or every project at once) happens at most once every 4 hours per agent.
 * Git: never rebase; commit as Rui Carmo <rui.carmo@gmail.com>.
+
+## Suite changes requested by runtime owners
+
+Piclaw 3.2.5 is the oracle. Change a spec only when it is wrong against Piclaw: asserting something Piclaw does not
+do, relying on an unstated Piclaw implementation detail outside the scenario, or missing a capability tag the scenario
+needs. Never loosen a spec to fit a port's limitation or quirk (a different label, a missing control, a global lock);
+that is a runtime defect, fixed in the runtime or recorded as a skip with an issue. Check the claim against the oracle
+(source and a run) before editing.
