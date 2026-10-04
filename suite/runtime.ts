@@ -22,6 +22,7 @@ export type Profile = {
   selectors?: Record<string, string>;
   routes?: Record<string, string>;
   tools?: { shell?: string; activate?: string; openFile?: string };
+  keychain?: { masterPassword?: string };
   approval?: { button: string };
   commands?: { setAgentAvatar?: string; clearAgentAvatar?: string; selectModel?: string };
   compaction?: { when?: string; summaries: string[] };

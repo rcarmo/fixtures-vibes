@@ -276,6 +276,18 @@
         }
       },
       "description": "How the fixture model answers this runtime's compaction summary requests (@cap-compaction). Defaults to one plain summary for any request."
+    },
+    "keychain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "masterPassword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Password that unlocks keychain reveal in Settings (test instances only)."
+        }
+      },
+      "description": "Keychain settings needed by the keychain specs."
     }
   },
   "oneOf": [
