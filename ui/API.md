@@ -1,7 +1,7 @@
 # Classic web UI backend contract
 
-The shared Classic web UI is the `ui/gi` tree: Piclaw 3.2.5's own web components, its Plan sidebar add-on, and an
-adapter layer (`web/src/api.ts`, `web/src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
+The shared Classic web UI is the `ui/classic` tree: Piclaw 3.2.5's own web components, its Plan sidebar add-on, and an
+adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
 implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
 - **Reference implementation:** rcarmo/gi `internal/web` at **5a68f40** (handler names below), with the Gi docs cited at
@@ -16,10 +16,10 @@ implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
 ## Static assets
 
-Serve `ui/gi/internal/web/static` at `/` (Gi embeds it as `giui.Static`): `index.html` for `/` and unknown app
+Serve `ui/classic/static` at `/` (Gi embeds it as `giui.Static`): `index.html` for `/` and unknown app
 routes, plus `/dist/`, `/css/`, `/fonts/`, `/js/`, `/editor-vendor/`, icons. Also `/manifest.json`,
 `/avatar/agent`, and `/static/icon-192.png`, `/static/icon-512.png`, `/static/js/vendor/*` (panes load vendor
-scripts under `/static/`). `ui/gi/internal/web/theme_catalogue.json` backs the `/theme` command.
+scripts under `/static/`). `ui/classic/theme-catalogue.json` backs the `/theme` command.
 
 ## Event stream
 

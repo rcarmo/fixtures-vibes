@@ -1,11 +1,14 @@
 # tau-prime web front-end
 
-Owned by the fixtures-vibes front-end owner. Yanked verbatim from rcarmo/tau-prime `src/tau_web/{vibes,static}` at the
-revision in `SOURCE-REVISION`, keeping that layout so `vibes/build.js` (which also reads `../static`) runs unchanged:
+Legacy imported Vibes front-end for tau-prime, kept in maintenance until tau-prime adopts `../classic` (see
+`../README.md`). Imported from rcarmo/tau-prime `src/tau_web/{vibes,static}` at the revision in `SOURCE-REVISION`.
 
-- `vibes/` — the imported Vibes front-end (see `vibes/UPSTREAM.md`), built bundle in `vibes/static/dist/`
-- `static/` — extension UI, frontend SDK and widget bridge scripts plus licence notices
-- `vibes/tests/` — front-end adapter tests (`bun test`) and browser harnesses
+| Path | Contents |
+|---|---|
+| `static/` | The served tree, including the committed bundle in `static/dist/` |
+| `sdk/` | Extension UI, frontend SDK and widget bridge scripts, plus licence notices (served under `/static/`) |
+| `tests/` | Adapter unit tests (`make test`) and browser harnesses |
+| `UPSTREAM.md`, `source-revision.txt` | Provenance of the imported Vibes front-end |
 
-`make build` rewrites `vibes/static/dist` (commit it); `make test` and `make lint` check the sources.
-tau-prime serves and packages these from its `references/fixtures-vibes` submodule.
+`make build` rewrites `static/dist` (commit it); `make test` and `make lint` check the sources.
+tau-prime links `src/tau_web/vibes` to this directory and `src/tau_web/static` to `sdk/`.

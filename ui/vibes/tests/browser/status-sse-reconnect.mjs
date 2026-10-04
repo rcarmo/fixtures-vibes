@@ -1,7 +1,7 @@
 import { chromium, webkit } from '@playwright/test';
 
 // Real EventSource transport; synthetic server snapshots, not a provider fixture.
-const root = process.cwd() + '/src/vibes/static';
+const root = process.cwd() + '/static';
 const encoder = new TextEncoder();
 let connections = 0;
 let statusReads = 0;

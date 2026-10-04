@@ -3,8 +3,8 @@ test-results/
 playwright-report/
 .fixtures-run/
 
-# ui/gi build intermediates (web/src must hold sources only; maps are not shipped)
-ui/gi/web/src/**/*.js
-ui/gi/web/src/**/*.js.map
-!ui/gi/web/src/ui/status-dot.js
-ui/gi/internal/web/static/**/*.map
+# ui/classic build intermediates (web/src must hold sources only; maps are not shipped)
+ui/classic/src/**/*.js
+ui/classic/src/**/*.js.map
+!ui/classic/src/ui/status-dot.js
+ui/classic/static/**/*.map

@@ -4,9 +4,10 @@ BUN ?= bun
 deps:
 	$(BUN) install --frozen-lockfile
 build: deps
+	$(BUN) scripts/build-vendor.mjs
 	$(BUN) run build.js
 test: deps
-	$(BUN) test tests/frontend
+	$(BUN) test ./tests/unit/
 lint: deps
 	$(BUN) run lint:frontend
 browser: deps

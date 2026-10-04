@@ -1,5 +1,5 @@
 import { chromium, webkit } from '@playwright/test';
-const root = process.cwd() + '/src/vibes/static';
+const root = process.cwd() + '/static';
 const server = Bun.serve({port:0, async fetch(req) { const path = new URL(req.url).pathname; if(path==='/') return new Response('<div id="root"></div>',{headers:{'Content-Type':'text/html'}}); const file=Bun.file(root+path); return new Response(file); }});
 const engine = process.argv[2] || 'chromium';
 if (!['chromium', 'webkit'].includes(engine)) throw Error('Expected chromium or webkit');

@@ -14,7 +14,7 @@ import { fileURLToPath } from "url";
 import { createHash } from "node:crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const staticDir = resolve(__dirname, "src/vibes/static");
+const staticDir = resolve(__dirname, "static");
 const distDir = resolve(staticDir, "dist");
 
 // ── JS bundle ─────────────────────────────────────────────────────────────

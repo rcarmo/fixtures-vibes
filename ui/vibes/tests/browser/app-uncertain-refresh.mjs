@@ -1,7 +1,7 @@
 import { chromium, webkit } from '@playwright/test';
 
 // Full built application with real EventSource; synthetic backend, not provider acceptance.
-const root = process.cwd() + '/src/vibes/static';
+const root = process.cwd() + '/static';
 const encoder = new TextEncoder();
 let queueReads = 0;
 let releaseOldQueue;

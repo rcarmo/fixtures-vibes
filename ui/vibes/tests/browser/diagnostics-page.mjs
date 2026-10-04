@@ -1,5 +1,5 @@
 import { chromium, webkit } from '@playwright/test';
-const root = process.cwd() + '/src/vibes/static';
+const root = process.cwd() + '/static';
 let reads = 0;
 let wrongSession = false;
 const server = Bun.serve({ port: 0, async fetch(req) {

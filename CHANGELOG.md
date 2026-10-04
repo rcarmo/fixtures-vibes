@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Canonical front-end layout (Rui): `ui/gi` is now `ui/classic` (`src/`, `piclaw/<name>-<version>/`, `static/`,
+  `theme-catalogue.json`, `tests/unit/`, `tests/fixtures/`); `ui/vibes` serves `static/` with `tests/unit/`; `ui/tau` serves
+  `static/` with the SDK scripts in `sdk/`. Consumers link or import the new paths.
+- Fresh UI libraries (Rui): every `ui/*` dependency is at its latest release (preact 11, KaTeX 0.19, marked 18.0.14,
+  current CodeMirror 6); the legacy trees rebuild their vendored preact/htm, CodeMirror and KaTeX assets from npm
+  (`scripts/build-vendor.mjs`). xterm.js and Adaptive Cards were already current. `ui/classic` now applies the pinned
+  status-panel resize patch again (its filter still named Piclaw 3.2.4).
 - `@ux-extra-014`: widget bridge `submit` sends to the chat that opened the widget without touching the composer
   draft; bridge `close` leaves a queued follow-up alone (Piclaw 3.2.5 6/6).
 - `ui/gi` widgets run isolated (Rui, 2026-10-04): no `allow-same-origin` in the iframe sandbox, and bridge messages are

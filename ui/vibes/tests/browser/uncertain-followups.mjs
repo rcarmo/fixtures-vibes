@@ -1,6 +1,6 @@
 import { chromium, webkit, expect } from '@playwright/test';
 const engine = process.argv[2] || 'chromium';
-const root = process.cwd() + '/src/vibes/static';
+const root = process.cwd() + '/static';
 const server = Bun.serve({ port: 0, async fetch(req) {
     const path = new URL(req.url).pathname;
     if (path !== '/') return new Response(Bun.file(root + path));

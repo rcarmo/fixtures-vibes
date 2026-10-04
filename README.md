@@ -200,5 +200,5 @@ Without directives the reply is `Fixture reply: <last line of the prompt>`.
 ## Web front-ends
 
 `ui/` holds the web front-end of every runtime (see [ui/README.md](ui/README.md)); runtimes consume it through this
-submodule. `ui/gi` is the shared Classic UI and [ui/API.md](ui/API.md) is the backend contract a runtime implements to
+submodule. `ui/classic` is the shared Classic UI and [ui/API.md](ui/API.md) is the backend contract a runtime implements to
 adopt it.
