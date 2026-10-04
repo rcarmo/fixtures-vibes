@@ -87,14 +87,14 @@ Feature: Classic Piclaw interaction model
     Then its command text replaces the existing draft like other slash commands
     And selection alone does not submit the command
 
-  @ux-original-009 @plan @addon-dependent @cap-plan-sidebar
+  @ux-original-009 @plan @addon-dependent
   Scenario: Save Markdown through the Plan sidebar
     Given the Plan sidebar shows the selected chat's Markdown
     When I edit the Markdown and activate Save
     Then the session-scoped "plan" tool reads the saved Markdown
     And a reload shows the saved Markdown
 
-  @ux-original-010 @plan @addon-dependent @cap-plan-sidebar
+  @ux-original-010 @plan @addon-dependent
   Scenario: Keep dirty Plan text when a remote update arrives
     Given the Plan editor contains unsaved edits
     When the "plan" tool stores different text for the same chat
@@ -102,7 +102,7 @@ Feature: Classic Piclaw interaction model
     When I explicitly activate Refresh, accepting any discard confirmation
     Then the editor shows the stored text
 
-  @ux-original-011 @plan @addon-dependent @cap-plan-sidebar
+  @ux-original-011 @plan @addon-dependent
   Scenario: Save a Plan before submitting it to the model
     Given the Plan sidebar is open with checklist text
     And the composer contains an unsent draft
@@ -110,7 +110,7 @@ Feature: Classic Piclaw interaction model
     Then the Plan is saved and sent as a message to the captured chat
     And the composer draft is unchanged
 
-  @ux-original-012 @plan @addon-dependent @cap-plan-sidebar
+  @ux-original-012 @plan @addon-dependent
   Scenario: Represent checklist progress in the Plan sidebar
     Given the selected chat's plan contains a heading and pending, in-progress and completed checklist items
     Then the editor shows "- [ ]", "- [-]" and "- [x]" lines and the heading as Markdown

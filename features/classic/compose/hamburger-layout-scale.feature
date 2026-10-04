@@ -27,7 +27,7 @@ Feature: Classic workspace menu and layout controls
       Given the workspace is not visible
       Then the New file, Refresh tree, Reindex workspace and hidden-files actions are disabled
 
-    @ux-shell-004 @cap-terminal @cap-vnc
+    @ux-shell-004
     Scenario: Terminal and VNC menu controls depend on callbacks
       Given the client supplies terminal or VNC opening callbacks
       Then the corresponding menu actions are offered
@@ -47,7 +47,7 @@ Feature: Classic workspace menu and layout controls
       # Piclaw 3.2.5 places the menu trigger at the top-left of the timeline (not inside the composer); the shell
       # container pads its top with env(safe-area-inset-top).
 
-    @ux-shell-007 @cap-terminal
+    @ux-shell-007
     Scenario: Tab close does not activate tab
       Given multiple workspace tabs are open
       When I activate a tab's close control
@@ -63,7 +63,7 @@ Feature: Classic workspace menu and layout controls
       When I choose another supported scale
       Then the client applies and stores that scale
 
-    @ux-shell-009 @cap-editor
+    @ux-shell-009
     Scenario: Inline code in editor preview is monospaced
       Given an editor Markdown preview contains inline code
       Then the preview styles inline code with the code font family

@@ -359,3 +359,31 @@ test("@ux-workspace-020 Show a file's external changes in a clean editor tab", a
   await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
   await expect(page.getByRole('button', { name: 'Reload', exact: true }).first()).toBeHidden();
 });
+
+test('@ux-editor-009 Edit with Vim keybindings', async ({ page, runtime, sel }) => {
+  await start(page, runtime);
+  await file(page, sel, 'one two\nthree four');
+  const ed = editorText(page, sel);
+  // The editor's own Vim control (Piclaw: a "Vim" status-bar button, Alt+V).
+  const vim = page.getByRole('button', { name: /^vim\b|vim mode/i }).or(page.getByRole('switch', { name: /vim/i })).filter({ visible: true }).first();
+  await vim.click();
+  await expect(page.getByText(/\bvim\b/i).filter({ visible: true }).filter({ hasNotText: /toggle/i }).last()).toBeVisible();
+  await ed.click();
+  await expect(ed).toBeFocused();
+  for (const k of ['g', 'g', 'x']) await page.keyboard.press(k);
+  await expect(ed).toHaveText('ne twothree four');
+  for (const k of ['d', 'd']) await page.keyboard.press(k);
+  await expect(ed).toHaveText('three four');
+  await page.keyboard.press('i');
+  await page.keyboard.type('Z');
+  await page.keyboard.press('Escape');
+  await expect(ed).toHaveText('Zthree four');
+  await expect(ed).toBeFocused();
+  await page.keyboard.press('x');
+  await expect(ed).toHaveText('three four');
+  await vim.click();
+  await ed.click();
+  await page.keyboard.press('ControlOrMeta+Home');
+  await page.keyboard.type('Q');
+  await expect(ed).toHaveText('Qthree four');
+});

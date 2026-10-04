@@ -4,7 +4,7 @@
  * skips file. Writes test-results/compliance-report.{json,md} and an evidence manifest. Exits 1 when:
  *  - a scenario covered by the suite fails in any project,
  *  - a skip names an unknown ID, is duplicated, or is stale (the scenario passed),
- *  - a capability-absent skip names a capability the profile claims,
+ *  - a capability-absent skip names a capability the profile claims, or one the scenario does not require,
  *  - a suite test title does not start with a known scenario ID.
  * Scenarios without a shared spec yet are reported as "no-suite-test" and do not fail the gate.
  */
@@ -61,6 +61,8 @@ for (const s of skips) {
   if (!catalogue.has(s.id)) problems.push(`skip for unknown ID ${s.id}`);
   if (skipById.has(s.id)) problems.push(`duplicate skip ${s.id}`);
   if (s.reason === 'capability-absent' && profile.capabilities.includes(s.capability)) problems.push(`skip ${s.id} claims ${s.capability} absent but the profile claims it`);
+  // Core scenarios carry no capability: a capability-absent skip must name one the scenario actually requires.
+  if (s.reason === 'capability-absent' && catalogue.has(s.id) && !catalogue.get(s.id)!.caps.includes(s.capability)) problems.push(`skip ${s.id} names ${s.capability}, which the scenario does not require (core scenarios need not-implemented or known-defect with an issue)`);
   skipById.set(s.id, s);
 }
 

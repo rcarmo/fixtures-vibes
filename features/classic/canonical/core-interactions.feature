@@ -20,7 +20,7 @@ Feature: Classic additional core interaction surfaces
   # decision (too complex for the compliance contract). The IDs are retired and must not be reused.
 
   Rule: Classic generated widgets
-    @ux-extra-004 @classic @widgets @cap-widgets
+    @ux-extra-004 @classic @widgets
     Scenario: Interpret persisted and live widget artifacts separately
       Given widget metadata identifies an HTML or SVG artifact
       When the client resolves a persisted timeline artifact
@@ -30,7 +30,7 @@ Feature: Classic additional core interaction surfaces
       And loading, streaming, final and error are distinct artifact states
       # Against Piclaw 3.2.5 only the persisted half is constructible: widgets arrive from a tool call already final.
 
-    @ux-extra-005 @classic @widgets @cap-widgets
+    @ux-extra-005 @classic @widgets
     Scenario: Keep widget dismissal separate from queue mutation
       Given a live floating widget is visible
       When I close the floating pane

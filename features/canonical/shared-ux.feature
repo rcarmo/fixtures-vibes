@@ -108,7 +108,7 @@ Feature: Piclaw-compatible interaction model
     And execution expands only the skill loaded by the captured session
     And an unknown or stale skill command fails recoverably without invoking another skill
 
-  @plan @pointer @keyboard @ux-shared-009 @cap-plan-sidebar
+  @plan @pointer @keyboard @ux-shared-009
   Scenario Outline: Open Plan and edit the stored Markdown
     Given session "main" has a stored Plan
     When I open Plan using <input>
@@ -122,7 +122,7 @@ Feature: Piclaw-compatible interaction model
       | pointer  |
       | keyboard |
 
-  @plan @race @failure @ux-shared-010 @cap-plan-sidebar
+  @plan @race @failure @ux-shared-010
   Scenario: Preserve dirty Plan text on a remote update
     Given the open Plan editor has unsaved local text
     When the "plan" tool stores different text for the same session
@@ -131,7 +131,7 @@ Feature: Piclaw-compatible interaction model
     When I refresh the dirty Plan, accepting any discard confirmation
     Then the editor shows the stored remote text
 
-  @plan @scope @submit @ux-shared-011 @cap-plan-sidebar
+  @plan @scope @submit @ux-shared-011
   Scenario: Submit Plan to the captured session
     Given Plan and composer both contain unsent content
     When I choose "Submit to model"
@@ -140,7 +140,7 @@ Feature: Piclaw-compatible interaction model
     And composer text, media and references remain unchanged
     And switching sessions before the save completes cancels the submission instead of retargeting it
 
-  @plan @tool @model @truthful-ui @ux-shared-012 @cap-plan-sidebar @cap-tool-output
+  @plan @tool @model @truthful-ui @ux-shared-012 @cap-tool-output
   Scenario: Expose canonical Plan Markdown and the Plan tool to the model
     Given session "main" has checklist items in pending, in-progress and completed states
     Then Plan renders them as "- [ ]", "- [-]" and "- [x]" Markdown

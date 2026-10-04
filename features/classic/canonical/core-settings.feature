@@ -144,7 +144,7 @@ Feature: Classic Settings dialog core UX
     And each row exposes save and restore-default actions for its draft binding
     And the section exposes a reset-all action for the shared shortcut settings model
 
-  @ux-settings-017 @workspace @terminal @vnc @cap-settings-dialog @cap-terminal @cap-vnc @cap-workspace
+  @ux-settings-017 @workspace @terminal @vnc @cap-settings-dialog @cap-workspace
   Scenario: Workspace settings own terminal, direct-VNC and tree scan preferences
     Given the Workspace section is open
     Then web terminal and direct-VNC are exposed as explicit toggles
@@ -179,7 +179,7 @@ Feature: Classic Settings dialog core UX
     Then the meters preference is applied locally and a meters-change event is dispatched
     And server UI-state persistence is attempted separately from General autosave
 
-  @ux-settings-021 @general @widget-token @cap-settings-dialog @cap-widgets
+  @ux-settings-021 @general @widget-token @cap-settings-dialog
   Scenario: Reveal and copy the widget token
     Given General has a widget token
     Then the displayed token starts masked
@@ -190,7 +190,7 @@ Feature: Classic Settings dialog core UX
     And a successful copy briefly shows copied feedback
     And a failed copy reports status without regenerating the token
 
-  @ux-settings-022 @general @widget-token @cap-settings-dialog @cap-widgets
+  @ux-settings-022 @general @widget-token @cap-settings-dialog
   Scenario: Confirm widget-token regeneration
     Given General has no regeneration in progress
     When I request regeneration and cancel confirmation
@@ -287,7 +287,7 @@ Feature: Classic Settings dialog core UX
     And unconfigured TOTP displays setup guidance
     # These are supplied setup fields, not a new enrolment ceremony in General.
 
-  @ux-settings-031 @editor @local-preferences @cap-editor @cap-settings-dialog
+  @ux-settings-031 @editor @local-preferences @cap-settings-dialog
   Scenario: Save local editor preferences from the registered pane
     Given the Classic Editor settings pane is registered and open
     When I change Vim mode, whitespace display, Markdown live preview, font size or font family

@@ -75,7 +75,7 @@ Feature: Classic workspace flows
     And the target subtree and workspace index status refresh
     And upload failures surface error text on the workspace surface
 
-  @ux-workspace-008 @viewer @cap-vnc @cap-workspace
+  @ux-workspace-008 @viewer @cap-workspace
   Scenario: Render workspace previews by preview kind and content type
     Given a Classic workspace preview context contains file metadata and preview content
     When the preview pane renders the selection
@@ -86,21 +86,21 @@ Feature: Classic workspace flows
     And preview metadata includes kind and file extension
     And preview metadata also includes content type, size, modified time, and path when available
 
-  @ux-workspace-009 @viewer @editor @cap-editor @cap-vnc @cap-workspace
+  @ux-workspace-009 @viewer @editor @cap-workspace
   Scenario: Gate open-in-tab and open-in-editor actions by file capabilities
     Given a Classic workspace file is selected
     Then "Open in tab" is shown only for files with a specialized workspace tab handler
     And "Open in editor" is disabled unless the preview is text, the selection is not a directory, and the preview is at most 256 KiB
     And the menu routes editor opens through the current open-editor callback
 
-  @ux-workspace-010 @tabs @dirty @cap-workspace @cap-editor
+  @ux-workspace-010 @tabs @dirty @cap-workspace
   Scenario: Show dirty tab affordances and compare-to-saved gating
     Given an editor tab has unsaved changes
     Then the tab reports unsaved changes
     And its close control reports unsaved changes instead of offering a plain close
     And the tab's context menu offers "Compare to Saved", which a tab without changes does not offer
 
-  @ux-workspace-011 @tabs @close @cap-workspace @cap-editor
+  @ux-workspace-011 @tabs @close @cap-workspace
   Scenario: Close tabs with MRU fallback while preserving pinned tabs in bulk close flows
     Given several editor tabs are open
     When I close the active tab
@@ -110,7 +110,7 @@ Feature: Classic workspace flows
     When I close all tabs
     Then pinned tabs still stay open
 
-  @ux-workspace-012 @tabs @rename @cap-session-manage @cap-workspace @cap-editor
+  @ux-workspace-012 @tabs @rename @cap-session-manage @cap-workspace
   Scenario: Rename tracked tab identities without dropping active or MRU state
     Given a workspace-backed tab is already open
     When the tab store renames that tab path
@@ -119,7 +119,7 @@ Feature: Classic workspace flows
     And the active tab id follows the renamed tab when it was active
     And the MRU order keeps the renamed tab in the same position
 
-  @ux-workspace-013 @tabs @popout @cap-workspace @cap-editor
+  @ux-workspace-013 @tabs @popout @cap-workspace
   Scenario: Gate dock, popout, reattach, and standalone viewer routes from the tab context menu
     Given the Classic tab context menu is open for a tab
     Then the terminal dock toggle is rendered only for the active tab when dock support is present
@@ -128,7 +128,7 @@ Feature: Classic workspace flows
     And "Open in new tab" uses addon standalone routes when available
     And non-addon files map to the office viewer, data viewer, image viewer, or raw workspace URL according to file type
 
-  @ux-workspace-014 @terminal @errors @cap-terminal @cap-workspace
+  @ux-workspace-014 @terminal @errors @cap-workspace
   Scenario: Surface terminal load, availability, reconnect, and exit states
     Given the Classic terminal pane is mounted
     When xterm bootstrap throws
@@ -142,7 +142,7 @@ Feature: Classic workspace flows
     # Against Piclaw 3.2.5 the reconnect and exit states are constructible; xterm bootstrap failure and a disabled
     # terminal backend are not (the reference instance has a working terminal).
 
-  @ux-workspace-015 @vnc @errors @cap-vnc @cap-workspace
+  @ux-workspace-015 @vnc @errors @cap-workspace
   Scenario: Surface VNC configuration, read-only, and runtime error gates
     Given the Classic VNC pane is mounted
     When there are no saved targets and direct connect is disabled on the host
@@ -156,7 +156,7 @@ Feature: Classic workspace flows
     # Against Piclaw 3.2.5 only the runtime failure is constructible: the reference host allows direct connections
     # and has no saved (or read-only) targets.
 
-  @ux-workspace-016 @editor @save @cap-editor @cap-workspace
+  @ux-workspace-016 @editor @save @cap-workspace
   Scenario: Save changed editor content
     Given an editor tab has unsaved text
     When I invoke Save
@@ -165,14 +165,14 @@ Feature: Classic workspace flows
     When a save fails
     Then the editor shows a "Save failed" status, keeps the unsaved changes and lets me save again
 
-  @ux-workspace-017 @editor @save @cap-editor @cap-workspace
+  @ux-workspace-017 @editor @save @cap-workspace
   Scenario: Avoid writing an unchanged editor document
     Given an editor tab whose text was changed back to the saved text
     When I invoke Save
     Then the tab no longer reports unsaved changes
     And nothing is written to the file
 
-  @ux-workspace-019 @editor @save @cap-editor @cap-workspace
+  @ux-workspace-019 @editor @save @cap-workspace
   Scenario: Keep edits made while a save is in progress
     Given an editor tab has unsaved text
     When I invoke Save
@@ -182,14 +182,14 @@ Feature: Classic workspace flows
     When I save again
     Then the file holds all the text
 
-  @ux-workspace-020 @editor @conflict @cap-editor @cap-workspace
+  @ux-workspace-020 @editor @conflict @cap-workspace
   Scenario: Show a file's external changes in a clean editor tab
     Given a file is open in an editor tab with no unsaved changes
     When the file is changed and saved elsewhere
     Then the tab shows the new text
     And it still reports no unsaved changes and offers no conflict actions
 
-  @ux-workspace-018 @editor @conflict @cap-editor @cap-workspace
+  @ux-workspace-018 @editor @conflict @cap-workspace
   Scenario: Resolve an editor file conflict with the supplied actions
     Given the editor conflict monitor exposes a file-changed notice
     When I choose Reload

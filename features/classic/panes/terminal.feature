@@ -7,7 +7,7 @@ Feature: Terminal pane — standalone mode
   Background:
     Given I am authenticated and on the main chat
 
-  @ux-terminal-001 @cap-terminal
+  @ux-terminal-001
 
   Scenario: Open terminal standalone without garbled output
     When I open a terminal pane
@@ -15,7 +15,7 @@ Feature: Terminal pane — standalone mode
     And the terminal should render a canvas or text layer
     And the terminal background should match the active theme
 
-  @ux-terminal-002 @cap-terminal
+  @ux-terminal-002
 
   Scenario: Execute ls -al in terminal
     Given a terminal pane is open
@@ -23,14 +23,14 @@ Feature: Terminal pane — standalone mode
     Then the terminal should display file listing output
     And the output should contain recognizable shell text
 
-  @ux-terminal-003 @cap-terminal
+  @ux-terminal-003
 
   Scenario: Terminal opens clean without IME active
     Given a terminal pane is freshly opened
     When I type plain ASCII "echo test123" in the terminal
     Then the terminal should echo "echo test123" as terminal text
 
-  @ux-terminal-004 @cap-terminal
+  @ux-terminal-004
 
   Scenario: Close terminal via tab close button (click)
     Given a terminal pane is open as a tab
@@ -38,14 +38,14 @@ Feature: Terminal pane — standalone mode
     Then the terminal tab should disappear
     And no terminal content should remain visible
 
-  @ux-terminal-005 @cap-terminal
+  @ux-terminal-005
 
   Scenario: Close terminal via tab close button (tap)
     Given a terminal pane is open as a tab on a touch device
     When I tap the close button on the terminal tab
     Then the terminal tab should disappear
 
-  @ux-terminal-006 @cap-terminal
+  @ux-terminal-006
 
   Scenario: Pop out terminal to new window (desktop)
     Given a terminal pane is open
@@ -56,7 +56,7 @@ Feature: Terminal pane — standalone mode
     Then the terminal should return to the original shell
     # Reconciled with Piclaw 3.2.5: closing the pop-out window is the reattach path; no separate control is shown.
 
-  @ux-terminal-007 @cap-terminal
+  @ux-terminal-007
 
   Scenario: Terminal theme matches UI theme
     Given a terminal pane is open
@@ -69,7 +69,7 @@ Feature: Terminal pane — standalone mode
     Background:
       Given a file is open in the editor
 
-    @ux-terminal-008 @cap-terminal
+    @ux-terminal-008
 
     Scenario: Toggle terminal dock via keyboard shortcut
       When I press Ctrl+Backtick
@@ -78,7 +78,7 @@ Feature: Terminal pane — standalone mode
       When I press Ctrl+Backtick again
       Then the terminal dock should hide
 
-    @ux-terminal-009 @cap-terminal
+    @ux-terminal-009
 
     Scenario: Toggle terminal dock via tab strip button
       When I click the terminal dock toggle button in the tab strip
@@ -86,7 +86,7 @@ Feature: Terminal pane — standalone mode
       When I click the toggle button again
       Then the terminal dock should hide
 
-    @ux-terminal-010 @cap-terminal
+    @ux-terminal-010
 
     Scenario: Dock splitter resizes terminal height
       Given the terminal dock is visible below the editor
@@ -97,7 +97,7 @@ Feature: Terminal pane — standalone mode
       Then the terminal dock should remain visible
       And the dock height should decrease
 
-    @ux-terminal-011 @cap-terminal
+    @ux-terminal-011
 
     Scenario: Terminal dock is interactive alongside editor
       Given the terminal dock is visible below the editor
@@ -106,7 +106,7 @@ Feature: Terminal pane — standalone mode
       When I focus the editor and type "test"
       Then the editor should receive the input
 
-    @ux-terminal-012 @cap-terminal
+    @ux-terminal-012
 
     Scenario: Dock hidden in zen mode
       Given the terminal dock is visible below the editor
@@ -118,7 +118,7 @@ Feature: Terminal pane — standalone mode
     Background:
       Given a file is open in the editor
 
-    @ux-terminal-013 @cap-terminal
+    @ux-terminal-013
 
     Scenario: Zen mode hides all chrome except the terminal/editor
       When I enter zen mode
@@ -126,7 +126,7 @@ Feature: Terminal pane — standalone mode
       And the chat container should be hidden
       And the editor or terminal pane should remain visible
 
-    @ux-terminal-014 @cap-terminal
+    @ux-terminal-014
 
     Scenario: Zen mode has a hover-discoverable exit control
       Given I am in zen mode
@@ -134,7 +134,7 @@ Feature: Terminal pane — standalone mode
       Then the zen toggle control should become visible
       And the control should be clickable
 
-    @ux-terminal-015 @cap-terminal
+    @ux-terminal-015
 
     Scenario: Clicking zen exit indicator reverts to normal layout
       Given I am in zen mode
@@ -143,7 +143,7 @@ Feature: Terminal pane — standalone mode
       And the workspace sidebar should reappear
       And the chat container should reappear
 
-    @ux-terminal-016 @cap-terminal
+    @ux-terminal-016
 
     Scenario: Escape key exits zen mode
       Given I am in zen mode
@@ -151,7 +151,7 @@ Feature: Terminal pane — standalone mode
       Then zen mode should deactivate
       And the normal layout should restore
 
-    @ux-terminal-017 @cap-terminal
+    @ux-terminal-017
 
     Scenario: Hover-reveal tab strip in zen mode
       Given I am in zen mode

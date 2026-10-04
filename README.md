@@ -109,6 +109,14 @@ on Windows PowerShell before cmd, under `@cap-windows-shell`), textual detection
 `%NAME%` references with retrieval of only the referenced keychain entries, Piclaw's variable naming (identifiers kept,
 collisions resolved by name order), placeholder failures, and the Settings Environment section (overrides applied to
 later commands, persisted, keychain variables excluded). Those scenarios are mandatory too.
+Core suite (Rui, 2026-10-04): keychain, shell environment, concurrent sessions, terminal, the CodeMirror editor
+(including Vim mode and Markdown preview), VNC, the Plan sidebar and widgets are required of every runtime and carry no
+capability tag. A runtime that lacks one lists each failing scenario as `not-implemented` (tracked gap) or
+`known-defect`, both with an issue; `capability-absent` is only for scenarios that carry the capability (the gate
+rejects it otherwise). Windows shell support is core but build-only: `@cap-windows-shell` scenarios are claimed only
+by a runtime tested on a Windows host, so Linux runtimes and the reference list them as `capability-absent`.
+Removed from the suite: Adaptive Cards, text highlights, image annotation.
+
 `@ux-chat-lifecycle-009` mandates concurrent sessions: turns in different sessions are at the model at the same time and
 complete independently, as in Piclaw. A runtime-wide single-active-session guard fails it; it is a defect, not a skip.
 

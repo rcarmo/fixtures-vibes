@@ -66,10 +66,6 @@
       "area": "timeline",
       "description": "Sanitised fenced SVG rendering."
     },
-    "@cap-widgets": {
-      "area": "timeline",
-      "description": "Dashboard widgets in panes/timeline."
-    },
     "@cap-reconnect": {
       "area": "timeline",
       "description": "SSE/stream reconnection with recovery UI."
@@ -82,10 +78,6 @@
       "area": "sessions",
       "description": "Create, rename, fork, archive sessions from the UI."
     },
-    "@cap-plan-sidebar": {
-      "area": "panes",
-      "description": "Session plan sidebar with checklist editor."
-    },
     "@cap-workspace": {
       "area": "panes",
       "description": "Workspace file tree (read)."
@@ -93,18 +85,6 @@
     "@cap-workspace-write": {
       "area": "panes",
       "description": "Workspace create/rename/move/upload/delete."
-    },
-    "@cap-editor": {
-      "area": "editor",
-      "description": "In-browser file editor."
-    },
-    "@cap-terminal": {
-      "area": "panes",
-      "description": "Web terminal pane with a real PTY."
-    },
-    "@cap-vnc": {
-      "area": "panes",
-      "description": "VNC viewer pane."
     },
     "@cap-system-meters": {
       "area": "shell",

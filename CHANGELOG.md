@@ -8,6 +8,9 @@
   syntaxes with retrieval of only referenced entries, variable naming, placeholder failures and the Settings
   Environment section. Windows scenarios need the new `@cap-windows-shell` (not claimed by the Linux reference).
 - Concurrent sessions are mandatory (`@ux-chat-lifecycle-009`).
+- Core suite: terminal, editor (with Vim mode, `@ux-editor-009`, and Markdown preview), VNC, Plan sidebar and widgets are
+  mandatory; `@cap-terminal`, `@cap-editor`, `@cap-vnc`, `@cap-plan-sidebar` and `@cap-widgets` are retired. The gate
+  rejects `capability-absent` skips naming a capability the scenario does not require.
 - `@ux-shell-009` and `@ux-workspace-010..013` require `@cap-editor`.
 - `@ux-compose-008` states that a message reference shows the message's own ID (`msg:<id>`).
 - Adaptive Cards removed from the suite (Rui, 2026-10-04): `@ux-extra-002/003` and `@cap-adaptive-cards` are retired.
