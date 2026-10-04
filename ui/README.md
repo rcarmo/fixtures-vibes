@@ -13,5 +13,6 @@ submodule. The front-end owner (see `AGENTS.md`) edits these trees; runtimes do 
 passes far more of the suite than the Vibes lineage, and takes Piclaw features (Plan, widgets) without rewrites.
 
 A runtime adopts the shared UI by implementing the backend surface in [API.md](API.md) and serving the
-`classic/static` tree; the compliance suite is the acceptance test. Once a runtime switches, its legacy tree
+`classic/static` tree; `classic/scripts/probe-api.ts` reports which listed routes a running runtime still lacks, and
+the compliance suite is the acceptance test. Once a runtime switches, its legacy tree
 is deleted.

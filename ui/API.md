@@ -9,7 +9,9 @@ implementing the HTTP and SSE surface below. The UI is not edited per runtime.
   handler wins. Terminal and VNC follow Piclaw **v3.2.5** (rcarmo/piclaw, `runtime/src/channels/web/{terminal,vnc}/`)
   until Gi implements them. This file names the revision it was checked against; update it when the UI changes.
 - **Acceptance:** the fixtures-vibes compliance suite against the runtime's profile. This file lists the surface;
-  the Gherkin features and specs define the behaviour.
+  the Gherkin features and specs define the behaviour. Before switching, `bun ui/classic/scripts/probe-api.ts
+  <base-url> [session-id]` checks the listed GET routes (parsed from this file) and the boot calls; the workspace
+  needs one file. Against Gi 5a68f40 it reports only `/workspace/{file,raw}`, `/terminal/session` and `/vnc/session`.
 - **Sessions:** the UI addresses a session as `chat_jid = gi:<session-id>` for every runtime (`gi:` is the UI's
   literal prefix, not a runtime name); HTTP routes take the bare `<session-id>`. The SSE stream takes `chat_jid`.
 - **Errors:** non-2xx responses carry JSON `{error, code?}`; the UI shows `error`.
