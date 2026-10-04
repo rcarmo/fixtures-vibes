@@ -8,5 +8,6 @@ keeping Gi's repository layout so `build.js` and its patch scripts run unchanged
 - `internal/web/theme_catalogue.json` — generated theme catalogue used by Gi's `/theme` command
 - `embed.go` — `package giui`, embedding the served tree for Gi's Go server
 
-Build: `bun install --frozen-lockfile && bun run build.js` (rewrites `internal/web/static` and the catalogue; commit both).
+Build and test: `make build` (rewrites `internal/web/static` and the catalogue; commit both) and `make test` (front-end unit
+tests in `tests/ux/support`, which import `web/src` and `scripts/` relatively).
 Gi consumes this only through its `references/fixtures-vibes` submodule.
