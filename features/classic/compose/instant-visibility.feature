@@ -12,6 +12,7 @@ Feature: Classic accepted message visibility
   @ux-compose-008
   Scenario: Serialize text and references into one submission
     Given the draft contains multiline text and file, folder and message references
+    And each message reference shows that message's own ID (Piclaw: "msg:<id>"), not its position in the timeline
     When I submit it
     Then the outgoing content contains the trimmed text and the corresponding reference blocks
     And selecting references alone is sufficient to create a non-empty submission
