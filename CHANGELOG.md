@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Keychain is mandatory (`@ux-keychain-001..007`): Settings management (may be simpler than Piclaw's), literal
+  `$NAME`/`${NAME}` injection and `keychain:` placeholders. Profiles may set `keychain.masterPassword`.
+- Shell environment is mandatory (`@ux-shell-env-001..010`): Piclaw's shell detection, reference detection in all four
+  syntaxes with retrieval of only referenced entries, variable naming, placeholder failures and the Settings
+  Environment section. Windows scenarios need the new `@cap-windows-shell` (not claimed by the Linux reference).
+- Concurrent sessions are mandatory (`@ux-chat-lifecycle-009`).
+- `@ux-shell-009` and `@ux-workspace-010..013` require `@cap-editor`.
+- `@ux-compose-008` states that a message reference shows the message's own ID (`msg:<id>`).
+- Adaptive Cards removed from the suite (Rui, 2026-10-04): `@ux-extra-002/003` and `@cap-adaptive-cards` are retired.
+
 ## v0.1.0 — 2026-10-03
 
 First release for adoption. Evidence: the full rc.16 reference gate against Piclaw 3.2.5

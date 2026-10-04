@@ -16,21 +16,8 @@ Feature: Classic additional core interaction surfaces
       When I activate enabled Retry or Inject into chat
       Then the supplied retry or inject callback runs
 
-  Rule: Classic Adaptive Cards
-    @ux-extra-002 @classic @adaptive-cards @cap-adaptive-cards
-    Scenario: Validate the identity of a card submission
-      Given the client is building an Adaptive Card submission
-      Then it requires a non-empty bounded card identifier
-      And a positive safe-integer source-post identifier
-      And a parseable submitted-at timestamp
-      And the supported submission action is Action.Submit
-
-    @ux-extra-003 @classic @adaptive-cards @cap-adaptive-cards
-    Scenario: Display a rejected card action
-      Given a rendered card action starts an asynchronous submission
-      When the submission rejects
-      Then the card action path reports the error in its UI notice
-      And it does not present the rejected action as a successful response
+  # Adaptive Cards (@ux-extra-002/003, @cap-adaptive-cards) were removed from the suite on 2026-10-04 by Rui's
+  # decision (too complex for the compliance contract). The IDs are retired and must not be reused.
 
   Rule: Classic generated widgets
     @ux-extra-004 @classic @widgets @cap-widgets

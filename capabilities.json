@@ -66,10 +66,6 @@
       "area": "timeline",
       "description": "Sanitised fenced SVG rendering."
     },
-    "@cap-adaptive-cards": {
-      "area": "timeline",
-      "description": "Adaptive Card content blocks."
-    },
     "@cap-widgets": {
       "area": "timeline",
       "description": "Dashboard widgets in panes/timeline."

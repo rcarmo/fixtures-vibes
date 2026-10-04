@@ -25,7 +25,6 @@
     "mode": "none"
   },
   "capabilities": [
-    "@cap-adaptive-cards",
     "@cap-addons",
     "@cap-agent-avatar",
     "@cap-attachments",
