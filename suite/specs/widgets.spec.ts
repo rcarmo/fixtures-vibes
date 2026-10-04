@@ -1,4 +1,4 @@
-/** Generated widgets (features/classic/canonical/core-interactions.feature @ux-extra-004/005). */
+/** Generated widgets (features/classic/canonical/core-interactions.feature @ux-extra-004/005/014). */
 import { test, expect } from '../fixtures';
 import { gateName } from '../runtime';
 import { randomUUID } from 'node:crypto';
@@ -62,4 +62,39 @@ test('@ux-extra-005 Keep widget dismissal separate from queue mutation', async (
   await runtime.openGate(gate);
   await expect(page.locator(sel('agentPost')).filter({ hasText: `follow-${n}` })).toHaveCount(1, { timeout: 30_000 });
   expect((await runtime.modelLog()).filter(e => String(e.prompt).includes(`follow ${n}`) && !e.aborted)).toHaveLength(1);
+});
+
+test('@ux-extra-014 Route widget bridge actions through the host', async ({ page, runtime, sel }) => {
+  const n = randomUUID().slice(0, 8);
+  await page.goto((await runtime.newSession()).url);
+  await activate(page, runtime, sel, n);
+  const bridge = `<p>widget body ${n}</p>`
+    + `<button onclick="piclawWidget.submit({text: '[reply:wsub-${n}] widget says ${n}'})">Send ${n}</button>`
+    + `<button onclick="piclawWidget.close()">Shut ${n}</button>`;
+  const post = await postWidget(page, sel, n, bridge);
+  await openButton(post).click();
+  await expect(widgetFrame(page, n)).toBeVisible();
+  // Submit through the bridge: the text becomes a turn in this chat; the composer draft stays.
+  await page.locator(sel('composeInput')).fill(`draft ${n}`);
+  await page.frameLocator('iframe').getByRole('button', { name: `Send ${n}` }).click();
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `wsub-${n}` })).toHaveCount(1, { timeout: 30_000 });
+  // Exactly one model turn carried the submitted text (the widget-posting turn only embeds it in tool arguments).
+  expect((await runtime.modelLog()).filter(e => (e.directives || []).some((d: any) => d.k === 'reply' && d.v === `wsub-${n}`))).toHaveLength(1);
+  await expect(page.locator(sel('composeInput'))).toHaveValue(`draft ${n}`);
+  await page.locator(sel('composeInput')).fill('');
+  // Close through the bridge while a follow-up is queued behind a held turn: the queue is untouched.
+  if (!(await widgetFrame(page, n).count())) await openButton(post).click();
+  await expect(widgetFrame(page, n)).toBeVisible();
+  const gate = gateName('widget-bridge');
+  await send(page, sel, `[gate:${gate}][reply:held-${n}] held`);
+  await expect.poll(async () => (await runtime.gates())[gate]?.waiting ?? 0).toBe(1);
+  await send(page, sel, `[reply:follow-${n}] follow ${n}`);
+  await expect(page.locator(sel('queueItem'))).toHaveCount(1);
+  await page.frameLocator('iframe').getByRole('button', { name: `Shut ${n}` }).click();
+  await expect(widgetFrame(page, n)).toHaveCount(0);
+  await page.waitForTimeout(800);
+  await expect(page.locator(sel('queueItem'))).toHaveCount(1);
+  expect((await runtime.modelLog()).filter(e => String(e.prompt).includes(`follow ${n}`))).toHaveLength(0);
+  await runtime.openGate(gate);
+  await expect(page.locator(sel('agentPost')).filter({ hasText: `follow-${n}` })).toHaveCount(1, { timeout: 30_000 });
 });

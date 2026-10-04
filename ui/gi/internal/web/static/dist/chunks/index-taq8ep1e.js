@@ -1,6 +1,6 @@
 import {
   giPlanSidebarRequest
-} from "./app-bwr52y1h.js";
+} from "./app-d537x5gw.js";
 
 // web/piclaw-plan-sidebar-0.1.25/index.ts
 var ADDON_ID = "plan-sidebar";

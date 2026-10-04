@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `@ux-extra-014`: widget bridge `submit` sends to the chat that opened the widget without touching the composer
+  draft; bridge `close` leaves a queued follow-up alone (Piclaw 3.2.5 6/6).
+- `ui/gi` widgets run isolated (Rui, 2026-10-04): no `allow-same-origin` in the iframe sandbox, and bridge messages are
+  accepted only from the widget's own iframe. Deliberate divergence from Piclaw 3.2.5.
 - Keychain is mandatory (`@ux-keychain-001..007`): Settings management (may be simpler than Piclaw's), literal
   `$NAME`/`${NAME}` injection and `keychain:` placeholders. Profiles may set `keychain.masterPassword`.
 - Shell environment is mandatory (`@ux-shell-env-001..010`): Piclaw's shell detection, reference detection in all four

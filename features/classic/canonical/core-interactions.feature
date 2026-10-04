@@ -37,6 +37,16 @@ Feature: Classic additional core interaction surfaces
       Then the client records dismissal of that widget session
       And closing the pane does not itself steer or remove a queued follow-up
 
+    @ux-extra-014 @classic @widgets
+    Scenario: Route widget bridge actions through the host
+      Given an interactive widget is open in a chat
+      When the widget submits text through its bridge
+      Then the text is sent as a message in the chat that opened the widget
+      And the composer draft is untouched
+      When the widget asks to close through its bridge while a follow-up is queued
+      Then the floating pane closes
+      And the queued follow-up is neither steered nor removed
+
   Rule: Classic notification coordination
     @ux-extra-011 @classic @notifications @cap-push-notifications
     Scenario: Coordinate local notification ownership across clients

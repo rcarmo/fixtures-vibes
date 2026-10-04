@@ -95,7 +95,13 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | Method | Path | UI caller | Reference |
 |---|---|---|---|
 | GET, POST | `/api/sessions/{s}/plan` (`{markdown}` or `{action: reset}`) | `gi-plan-sidebar.ts` (vendored Piclaw add-on) | `handleSessionSubroutes` (`session-plan.md`) |
-| GET | `/api/sessions/{s}/widgets/{id}` | widget refresh | " (`dashboard-widgets.md`) |
+| GET | `/api/sessions/{s}/widgets/{id}` | artifact lookup | " (`dashboard-widgets.md`) |
+
+Widgets render in an iframe sandboxed with `allow-scripts` but not `allow-same-origin`, so widget code has an opaque
+origin and reaches the host only through the `piclawWidget` bridge (`postMessage`; the host accepts messages only from
+that iframe). Bridge `submit` posts to `/api/sessions/{s}/prompt` for the opening session; `close` is local;
+`requestRefresh` rebuilds the dashboard snapshot from the session routes above. Static files that widgets import as ES
+modules must be served with `Access-Control-Allow-Origin: *`.
 
 ## Terminal and VNC (Piclaw v3.2.5 routes; Gi implementation pending, gi#45, gi#47)
 

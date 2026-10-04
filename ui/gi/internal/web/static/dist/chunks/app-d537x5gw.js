@@ -2468,6 +2468,11 @@ async function cancelSessionRun(chatJid, turnId) {
     throw new Error("No active run to stop");
   return request(`/api/sessions/${encodeURIComponent(chatJid.slice(3))}/activity`, { method: "POST", body: JSON.stringify({ turn_id: turnId }) });
 }
+async function getAgentContext(_agentId, chatJid = null) {
+  if (!chatJid?.startsWith("gi:"))
+    return null;
+  return (await getAgentModels(chatJid)).context_usage || null;
+}
 async function getGiProviders() {
   return request("/api/settings/providers");
 }
@@ -3072,7 +3077,7 @@ function setPlanSidebarChat(chatJid) {
   window.dispatchEvent(new CustomEvent("piclaw:current-chat-changed", { detail: { chatJid } }));
   if (!installed && chatJid) {
     installed = true;
-    import("./index-xb1f77xk.js");
+    import("./index-taq8ep1e.js");
   }
 }
 function forwardPlanSidebarEvent(eventType, data) {
@@ -3081,6 +3086,797 @@ function forwardPlanSidebarEvent(eventType, data) {
   if (data?.chat_jid && data.chat_jid !== currentChatJid)
     return;
   dispatchExtensionUiBrowserEvent(eventType, data);
+}
+
+// web/src/ui/generated-widget.ts
+function getArtifact(block) {
+  const artifact = block?.artifact || {};
+  const kind = artifact.kind || block?.kind || null;
+  if (kind !== "html" && kind !== "svg" && kind !== "session_tree")
+    return null;
+  if (kind === "html") {
+    const html = typeof artifact.html === "string" ? artifact.html : typeof block?.html === "string" ? block.html : "";
+    return html ? { kind, html } : null;
+  }
+  if (kind === "svg") {
+    const svg = typeof artifact.svg === "string" ? artifact.svg : typeof block?.svg === "string" ? block.svg : "";
+    return svg ? { kind, svg } : null;
+  }
+  const tree = artifact.tree && typeof artifact.tree === "object" ? artifact.tree : block?.tree && typeof block.tree === "object" ? block.tree : null;
+  return { kind, tree };
+}
+function readFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+function readOptionalString(value) {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+function normalizeCapabilities(input, interactiveFallback = false) {
+  const values = Array.isArray(input) ? input : interactiveFallback ? ["interactive"] : [];
+  const normalized = values.filter((value) => typeof value === "string").map((value) => value.trim().toLowerCase()).filter(Boolean);
+  return Array.from(new Set(normalized));
+}
+var GENERATED_WIDGET_WINDOW_NAME_PREFIX = "__PICLAW_WIDGET_HOST__:";
+function escapeJsonForInlineScript(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+}
+function buildGeneratedWidgetPayload(block, post) {
+  if (!block || block.type !== "generated_widget")
+    return null;
+  const artifact = getArtifact(block);
+  if (!artifact)
+    return null;
+  return {
+    title: block.title || block.name || "Generated widget",
+    subtitle: typeof block.subtitle === "string" ? block.subtitle : "",
+    description: block.description || block.subtitle || "",
+    originPostId: Number.isFinite(post?.id) ? post.id : null,
+    originChatJid: typeof post?.chat_jid === "string" ? post.chat_jid : null,
+    widgetId: block.widget_id || block.id || null,
+    artifact,
+    capabilities: normalizeCapabilities(block.capabilities, block.interactive === true),
+    source: "timeline",
+    status: "final"
+  };
+}
+function canRenderGeneratedWidget(block) {
+  return buildGeneratedWidgetPayload(block, null) !== null;
+}
+function getGeneratedWidgetSessionKey(widget) {
+  const toolCallId = readOptionalString(widget?.toolCallId) || readOptionalString(widget?.tool_call_id);
+  if (toolCallId)
+    return toolCallId;
+  const widgetId = readOptionalString(widget?.widgetId) || readOptionalString(widget?.widget_id);
+  if (widgetId)
+    return widgetId;
+  const originPostId = readFiniteNumber(widget?.originPostId) ?? readFiniteNumber(widget?.origin_post_id);
+  if (originPostId !== null)
+    return `post:${originPostId}`;
+  return null;
+}
+function isInteractiveGeneratedWidget(widget) {
+  const artifact = widget?.artifact || {};
+  const kind = artifact.kind || widget?.kind || null;
+  const capabilities = Array.isArray(widget?.capabilities) ? widget.capabilities : [];
+  const interactiveCapability = capabilities.some((value) => typeof value === "string" && value.trim().toLowerCase() === "interactive");
+  return kind === "html" && (widget?.source === "live" || interactiveCapability);
+}
+function getGeneratedWidgetIframeSandbox(widget) {
+  return isInteractiveGeneratedWidget(widget) ? "allow-downloads allow-scripts" : "allow-downloads";
+}
+function getGeneratedWidgetInitPayload(widget) {
+  return {
+    title: readOptionalString(widget?.title) || "Generated widget",
+    widgetId: readOptionalString(widget?.widgetId) || readOptionalString(widget?.widget_id),
+    toolCallId: readOptionalString(widget?.toolCallId) || readOptionalString(widget?.tool_call_id),
+    turnId: readOptionalString(widget?.turnId) || readOptionalString(widget?.turn_id),
+    capabilities: Array.isArray(widget?.capabilities) ? widget.capabilities : [],
+    source: widget?.source === "live" ? "live" : "timeline",
+    status: readOptionalString(widget?.status) || "final"
+  };
+}
+function getGeneratedWidgetHostPayload(widget) {
+  return {
+    ...getGeneratedWidgetInitPayload(widget),
+    subtitle: readOptionalString(widget?.subtitle) || "",
+    description: readOptionalString(widget?.description) || "",
+    error: readOptionalString(widget?.error) || null,
+    width: readFiniteNumber(widget?.width),
+    height: readFiniteNumber(widget?.height),
+    runtimeState: widget?.runtimeState && typeof widget.runtimeState === "object" ? widget.runtimeState : null
+  };
+}
+function getGeneratedWidgetHostWindowName(widget) {
+  return `${GENERATED_WIDGET_WINDOW_NAME_PREFIX}${JSON.stringify(getGeneratedWidgetHostPayload(widget))}`;
+}
+function getGeneratedWidgetSubmissionText(payload) {
+  if (typeof payload === "string" && payload.trim())
+    return payload.trim();
+  if (!payload || typeof payload !== "object")
+    return null;
+  const direct = readOptionalString(payload.text) || readOptionalString(payload.content) || readOptionalString(payload.message) || readOptionalString(payload.prompt) || readOptionalString(payload.value);
+  if (direct)
+    return direct;
+  const data = payload.data;
+  if (typeof data === "string" && data.trim())
+    return data.trim();
+  if (data && typeof data === "object") {
+    const nested = readOptionalString(data.text) || readOptionalString(data.content) || readOptionalString(data.message) || readOptionalString(data.prompt) || readOptionalString(data.value);
+    if (nested)
+      return nested;
+  }
+  return null;
+}
+function getGeneratedWidgetShouldCloseOnSubmit(payload) {
+  if (!payload || typeof payload !== "object")
+    return false;
+  return payload.close === true || payload.dismiss === true || payload.closeAfterSubmit === true;
+}
+function getGeneratedWidgetEmptyStateMessage(widget) {
+  const status = readOptionalString(widget?.status);
+  if (status === "loading" || status === "streaming") {
+    return "Widget is loading…";
+  }
+  if (status === "error") {
+    return readOptionalString(widget?.error) || "Widget failed to load.";
+  }
+  if ((widget?.artifact?.kind || widget?.kind) === "session_tree") {
+    return "Session tree widget is unavailable.";
+  }
+  return "Widget artifact is missing or unsupported.";
+}
+function buildWidgetBootstrapScript(widget) {
+  const meta = getGeneratedWidgetInitPayload(widget);
+  const safeMeta = escapeJsonForInlineScript(meta);
+  return `<script>
+(function () {
+  const meta = ${safeMeta};
+  function post(kind, payload) {
+    try {
+      window.parent.postMessage({
+        __piclawGeneratedWidget: true,
+        kind,
+        widgetId: meta.widgetId || null,
+        toolCallId: meta.toolCallId || null,
+        turnId: meta.turnId || null,
+        payload: payload || {}
+      }, '*');
+    } catch {
+      /* expected: parent bridge may be unavailable while the iframe is unloading. */
+    }
+  }
+
+  const windowNamePrefix = ${escapeJsonForInlineScript(GENERATED_WIDGET_WINDOW_NAME_PREFIX)};
+  let lastWindowName = null;
+  let pendingHostEnvelope = null;
+  let pendingHostEnvelopeFrame = 0;
+  let lastDispatchedEnvelopeKey = null;
+
+  function getEnvelopeKey(data) {
+    try {
+      return JSON.stringify([
+        data?.type || null,
+        data?.widgetId || null,
+        data?.toolCallId || null,
+        data?.turnId || null,
+        data?.payload || null,
+      ]);
+    } catch {
+      return null;
+    }
+  }
+
+  function flushHostEnvelope() {
+    pendingHostEnvelopeFrame = 0;
+    const data = pendingHostEnvelope;
+    pendingHostEnvelope = null;
+    if (!data) return;
+
+    window.piclawWidget.lastHostMessage = data;
+    const nextPayload = data.payload || null;
+    if (data.type === 'widget.init') {
+      const previous = window.piclawWidget.hostState && typeof window.piclawWidget.hostState === 'object'
+        ? window.piclawWidget.hostState
+        : null;
+      if (nextPayload && typeof nextPayload === 'object') {
+        window.piclawWidget.hostState = {
+          ...(previous || {}),
+          ...nextPayload,
+          ...(Object.prototype.hasOwnProperty.call(nextPayload, 'runtimeState')
+            ? {}
+            : { runtimeState: previous?.runtimeState ?? null }),
+        };
+      } else {
+        window.piclawWidget.hostState = previous || null;
+      }
+    } else if (data.type === 'widget.update' || data.type === 'widget.complete' || data.type === 'widget.error') {
+      window.piclawWidget.hostState = nextPayload;
+    }
+
+    const effectivePayload = window.piclawWidget.hostState ?? nextPayload ?? null;
+    const detail = (effectivePayload === data.payload)
+      ? data
+      : { ...data, payload: effectivePayload };
+    const envelopeKey = getEnvelopeKey(detail);
+    if (envelopeKey && envelopeKey === lastDispatchedEnvelopeKey) return;
+    lastDispatchedEnvelopeKey = envelopeKey;
+    window.dispatchEvent(new CustomEvent('piclaw:widget-message', { detail }));
+  }
+
+  function scheduleHostEnvelope(data) {
+    if (!data) return;
+    pendingHostEnvelope = data;
+    if (pendingHostEnvelopeFrame) return;
+    const schedule = typeof requestAnimationFrame === 'function'
+      ? requestAnimationFrame
+      : (cb) => setTimeout(cb, 0);
+    pendingHostEnvelopeFrame = schedule(flushHostEnvelope);
+  }
+
+  function readWindowNameState() {
+    try {
+      const raw = window.name || '';
+      if (!raw || raw === lastWindowName || !raw.startsWith(windowNamePrefix)) return;
+      lastWindowName = raw;
+      const payload = JSON.parse(raw.slice(windowNamePrefix.length));
+      scheduleHostEnvelope({
+        __piclawGeneratedWidgetHost: true,
+        type: 'widget.update',
+        widgetId: meta.widgetId || null,
+        toolCallId: meta.toolCallId || null,
+        turnId: meta.turnId || null,
+        payload,
+      });
+    } catch {
+      /* expected: host window.name payload can be absent or mid-update while polling. */
+    }
+  }
+
+  window.piclawWidget = {
+    meta,
+    lastHostMessage: null,
+    hostState: null,
+    ready(payload) { post('widget.ready', payload); },
+    close(payload) { post('widget.close', payload); },
+    requestRefresh(payload) { post('widget.request_refresh', payload); },
+    submit(payload) { post('widget.submit', payload); },
+  };
+
+  window.addEventListener('message', function (event) {
+    const data = event && event.data;
+    if (!data || data.__piclawGeneratedWidgetHost !== true) return;
+    if ((data.widgetId || null) !== (meta.widgetId || null)) return;
+    scheduleHostEnvelope(data);
+  });
+
+  function announceReady() {
+    readWindowNameState();
+    post('widget.ready', { title: document.title || meta.title || 'Generated widget' });
+  }
+
+  setInterval(readWindowNameState, 250);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', announceReady, { once: true });
+  } else {
+    announceReady();
+  }
+})();
+</script>`;
+}
+function buildWidgetSrcDoc(widget) {
+  const artifact = widget?.artifact || {};
+  const kind = artifact.kind || widget?.kind || null;
+  const rawHtml = typeof artifact.html === "string" ? artifact.html : typeof widget?.html === "string" ? widget.html : "";
+  const rawSvg = typeof artifact.svg === "string" ? artifact.svg : typeof widget?.svg === "string" ? widget.svg : "";
+  const title = typeof widget?.title === "string" && widget.title.trim() ? widget.title.trim() : "Generated widget";
+  const content = kind === "svg" ? rawSvg : rawHtml;
+  if (!content)
+    return "";
+  const interactive = isInteractiveGeneratedWidget(widget);
+  const csp = [
+    "default-src 'none'",
+    "img-src data: blob: https: http:",
+    "style-src 'unsafe-inline'",
+    "font-src 'self' data: https: http:",
+    "media-src data: blob: https: http:",
+    "connect-src 'none'",
+    "frame-src 'none'",
+    interactive ? "script-src 'unsafe-inline' 'self'" : "script-src 'none'",
+    "object-src 'none'",
+    "base-uri 'none'",
+    "form-action 'none'"
+  ].join("; ");
+  const body = kind === "svg" ? `<div class="widget-svg-shell">${content}</div>` : content;
+  const bootstrap = interactive ? buildWidgetBootstrapScript(widget) : "";
+  return `<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="${csp}" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${title.replace(/[<&>]/g, "")}</title>
+<style>
+:root { color-scheme: dark light; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #0f1117;
+  color: #f5f7fb;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+body {
+  box-sizing: border-box;
+}
+.widget-svg-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+.widget-svg-shell svg {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+${bootstrap}
+</head>
+<body>${body}</body>
+</html>`;
+}
+
+// web/src/ui/app-floating-widget.ts
+function matchesFloatingWidgetSession(current, sessionKey) {
+  const currentKey = getGeneratedWidgetSessionKey(current);
+  return Boolean(current && currentKey === sessionKey);
+}
+function mergeFloatingWidgetRuntimeState(current, sessionKey, patch) {
+  if (!matchesFloatingWidgetSession(current, sessionKey))
+    return current;
+  return {
+    ...current,
+    runtimeState: {
+      ...current?.runtimeState && typeof current.runtimeState === "object" ? current.runtimeState : {},
+      ...patch
+    }
+  };
+}
+function openFloatingWidgetState(widget, openedAt) {
+  return {
+    ...widget,
+    openedAt
+  };
+}
+function closeFloatingWidgetState(current) {
+  const sessionKey = getGeneratedWidgetSessionKey(current);
+  return {
+    nextWidget: null,
+    dismissedSessionKey: current?.source === "live" && sessionKey ? sessionKey : null
+  };
+}
+function applyFloatingWidgetSubmitPending(current, sessionKey, options) {
+  return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+    lastEventKind: options.kind,
+    lastEventPayload: options.payload || null,
+    lastSubmitAt: options.submittedAt,
+    lastHostUpdate: {
+      type: "submit_pending",
+      submittedAt: options.submittedAt,
+      preview: options.submissionText || null
+    }
+  });
+}
+function applyFloatingWidgetSubmitResult(current, sessionKey, options) {
+  if (options.errorMessage) {
+    return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+      lastHostUpdate: {
+        type: "submit_failed",
+        submittedAt: options.submittedAt,
+        preview: options.submissionText,
+        error: options.errorMessage
+      }
+    });
+  }
+  return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+    lastHostUpdate: {
+      type: options.queued === "followup" ? "submit_queued" : "submit_sent",
+      submittedAt: options.submittedAt,
+      preview: options.submissionText,
+      queued: options.queued || null
+    }
+  });
+}
+function applyFloatingWidgetHostEvent(current, sessionKey, options) {
+  return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+    lastEventKind: options.kind,
+    lastEventPayload: options.payload || null,
+    ...options.kind === "widget.ready" ? {
+      readyAt: options.eventAt,
+      lastHostUpdate: {
+        type: "ready_ack",
+        at: options.eventAt
+      }
+    } : {},
+    ...options.kind === "widget.request_refresh" ? {
+      lastRefreshRequestAt: options.eventAt,
+      refreshCount: options.nextRefreshCount,
+      lastHostUpdate: {
+        type: options.shouldBuildDashboard ? "refresh_building" : "refresh_ack",
+        at: options.eventAt,
+        count: options.nextRefreshCount,
+        echo: options.payload || null
+      }
+    } : {}
+  });
+}
+function applyFloatingWidgetDashboardResult(current, sessionKey, options) {
+  return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+    dashboard: options.dashboard,
+    lastHostUpdate: {
+      type: "refresh_dashboard",
+      at: options.at,
+      count: options.count,
+      echo: options.echo || null
+    }
+  });
+}
+function applyFloatingWidgetDashboardFailure(current, sessionKey, options) {
+  return mergeFloatingWidgetRuntimeState(current, sessionKey, {
+    lastHostUpdate: {
+      type: "refresh_failed",
+      at: options.at,
+      count: options.count,
+      error: options.errorMessage
+    }
+  });
+}
+
+// web/src/ui/app-floating-widget-dashboard.ts
+function readFulfilledResult(result) {
+  return result.status === "fulfilled" ? result.value : null;
+}
+function clampPercent(value) {
+  return Math.max(0, Math.min(100, value));
+}
+function buildFloatingWidgetDashboardSnapshot(input) {
+  const posts = Array.isArray(input.timelinePayload?.posts) ? input.timelinePayload.posts : Array.isArray(input.rawPosts) ? input.rawPosts : [];
+  const latestPost = posts.length ? posts[posts.length - 1] : null;
+  const botPosts = posts.filter((post) => post?.data?.is_bot_message).length;
+  const userPosts = posts.filter((post) => !post?.data?.is_bot_message).length;
+  const queueCount = Number(input.queuePayload?.count ?? input.followupQueueItems?.length ?? 0) || 0;
+  const activeChatsCount = Array.isArray(input.activeChatsPayload?.chats) ? input.activeChatsPayload.chats.length : Array.isArray(input.activeChatAgents) ? input.activeChatAgents.length : 0;
+  const branchCount = Array.isArray(input.branchesPayload?.chats) ? input.branchesPayload.chats.length : Array.isArray(input.currentChatBranches) ? input.currentChatBranches.length : 0;
+  const contextPercent = Number(input.contextPayload?.percent ?? input.contextUsage?.percent ?? 0) || 0;
+  const contextTokens = Number(input.contextPayload?.tokens ?? input.contextUsage?.tokens ?? 0) || 0;
+  const contextWindow = Number(input.contextPayload?.contextWindow ?? input.contextUsage?.contextWindow ?? 0) || 0;
+  const modelName = input.modelsPayload?.current ?? input.activeModel ?? null;
+  const thinkingLevel = input.modelsPayload?.thinking_level ?? input.activeThinkingLevel ?? null;
+  const supportsThinkingValue = input.modelsPayload?.supports_thinking ?? input.supportsThinking;
+  const agentState = input.statusPayload?.status || (input.isAgentTurnActive ? "active" : "idle");
+  const agentPhase = input.statusPayload?.data?.type || input.statusPayload?.type || null;
+  return {
+    generatedAt: input.generatedAt,
+    request: input.request,
+    chat: {
+      currentChatJid: input.currentChatJid,
+      rootChatJid: input.currentRootChatJid,
+      activeChats: activeChatsCount,
+      branches: branchCount
+    },
+    agent: {
+      status: agentState,
+      phase: agentPhase,
+      running: Boolean(input.isAgentTurnActive)
+    },
+    model: {
+      current: modelName,
+      thinkingLevel,
+      supportsThinking: Boolean(supportsThinkingValue)
+    },
+    context: {
+      tokens: contextTokens,
+      contextWindow,
+      percent: contextPercent
+    },
+    queue: {
+      count: queueCount
+    },
+    timeline: {
+      loadedPosts: posts.length,
+      botPosts,
+      userPosts,
+      latestPostId: latestPost?.id ?? null,
+      latestTimestamp: latestPost?.timestamp ?? null
+    },
+    bars: [
+      { key: "context", label: "Context", value: clampPercent(Math.round(contextPercent)) },
+      { key: "queue", label: "Queue", value: clampPercent(queueCount * 18) },
+      { key: "activeChats", label: "Active chats", value: clampPercent(activeChatsCount * 12) },
+      { key: "posts", label: "Timeline load", value: clampPercent(posts.length * 5) }
+    ]
+  };
+}
+
+// web/src/ui/app-floating-widget-events.ts
+function resolveFloatingWidgetSubmitToast(queued) {
+  if (queued === "followup") {
+    return {
+      title: "Widget submission queued",
+      detail: "The widget message was queued because the agent is busy.",
+      kind: "info",
+      durationMs: 3500
+    };
+  }
+  return {
+    title: "Widget submission sent",
+    detail: "The widget message was sent to the chat.",
+    kind: "info",
+    durationMs: 3500
+  };
+}
+function resolveFloatingWidgetSubmitFailureToast(errorMessage) {
+  return {
+    title: "Widget submission failed",
+    detail: errorMessage || "Could not send the widget message.",
+    kind: "warning",
+    durationMs: 5000
+  };
+}
+function resolveFloatingWidgetHostRefreshContext(payload, currentRefreshCount) {
+  return {
+    shouldBuildDashboard: Boolean(payload?.buildDashboard || payload?.dashboardKind === "internal-state"),
+    nextRefreshCount: Number(currentRefreshCount || 0) + 1
+  };
+}
+function resolveFloatingWidgetDashboardBuiltToast() {
+  return {
+    title: "Dashboard built",
+    detail: "Live dashboard state pushed into the widget.",
+    kind: "info",
+    durationMs: 3000
+  };
+}
+function resolveFloatingWidgetDashboardFailureToast(errorMessage) {
+  return {
+    title: "Dashboard build failed",
+    detail: errorMessage || "Could not build dashboard.",
+    kind: "warning",
+    durationMs: 5000
+  };
+}
+function resolveFloatingWidgetRefreshAckToast() {
+  return {
+    title: "Widget refresh requested",
+    detail: "The widget received a host acknowledgement update.",
+    kind: "info",
+    durationMs: 3000
+  };
+}
+
+// web/src/ui/app-floating-widget-followup.ts
+async function buildFloatingWidgetDashboardData(options) {
+  const {
+    requestPayload = null,
+    currentChatJid,
+    currentRootChatJid,
+    getAgentStatus,
+    getAgentContext,
+    getAgentQueueState,
+    getAgentModels,
+    getActiveChatAgents,
+    getChatBranches,
+    getTimeline,
+    rawPosts,
+    activeChatAgents,
+    currentChatBranches,
+    contextUsage,
+    followupQueueItems,
+    activeModel,
+    activeThinkingLevel,
+    supportsThinking,
+    isAgentTurnActive
+  } = options;
+  const [statusRes, contextRes, queueRes, modelsRes, activeChatsRes, branchesRes, timelineRes] = await Promise.allSettled([
+    getAgentStatus(currentChatJid),
+    getAgentContext(currentChatJid),
+    getAgentQueueState(currentChatJid),
+    getAgentModels(currentChatJid),
+    getActiveChatAgents(),
+    getChatBranches(currentRootChatJid),
+    getTimeline(20, null, currentChatJid)
+  ]);
+  return buildFloatingWidgetDashboardSnapshot({
+    generatedAt: new Date().toISOString(),
+    request: requestPayload,
+    currentChatJid,
+    currentRootChatJid,
+    statusPayload: readFulfilledResult(statusRes),
+    contextPayload: readFulfilledResult(contextRes),
+    queuePayload: readFulfilledResult(queueRes),
+    modelsPayload: readFulfilledResult(modelsRes),
+    activeChatsPayload: readFulfilledResult(activeChatsRes),
+    branchesPayload: readFulfilledResult(branchesRes),
+    timelinePayload: readFulfilledResult(timelineRes),
+    rawPosts,
+    activeChatAgents,
+    currentChatBranches,
+    contextUsage,
+    followupQueueItems,
+    activeModel,
+    activeThinkingLevel,
+    supportsThinking,
+    isAgentTurnActive
+  });
+}
+function openFloatingWidgetFromHost(options) {
+  const { widget, dismissedLiveWidgetKeysRef, setFloatingWidget } = options;
+  if (!widget || typeof widget !== "object")
+    return;
+  const sessionKey = getGeneratedWidgetSessionKey(widget);
+  if (sessionKey) {
+    dismissedLiveWidgetKeysRef.current.delete(sessionKey);
+  }
+  setFloatingWidget(openFloatingWidgetState(widget, new Date().toISOString()));
+}
+function closeFloatingWidgetFromHost(options) {
+  const { dismissedLiveWidgetKeysRef, setFloatingWidget } = options;
+  setFloatingWidget((current) => {
+    const result = closeFloatingWidgetState(current);
+    if (result.dismissedSessionKey) {
+      dismissedLiveWidgetKeysRef.current.add(result.dismissedSessionKey);
+    }
+    return result.nextWidget;
+  });
+}
+function handleFloatingWidgetEventFromHost(options) {
+  const {
+    event,
+    widget,
+    currentChatJid,
+    isComposeBoxAgentActive,
+    setFloatingWidget,
+    handleCloseFloatingWidget,
+    handleMessageResponse,
+    showIntentToast,
+    sendAgentMessage,
+    buildFloatingWidgetDashboardSnapshot
+  } = options;
+  const kind = typeof event?.kind === "string" ? event.kind : "";
+  const sessionKey = getGeneratedWidgetSessionKey(widget);
+  if (!kind || !sessionKey)
+    return;
+  if (kind === "widget.close") {
+    handleCloseFloatingWidget();
+    return;
+  }
+  if (kind === "widget.submit") {
+    const submissionText = getGeneratedWidgetSubmissionText(event?.payload);
+    const closeAfterSubmit = getGeneratedWidgetShouldCloseOnSubmit(event?.payload);
+    const submittedAt = new Date().toISOString();
+    setFloatingWidget((current) => applyFloatingWidgetSubmitPending(current, sessionKey, {
+      kind,
+      payload: event?.payload || null,
+      submittedAt,
+      submissionText
+    }));
+    if (!submissionText) {
+      showIntentToast("Widget submission received", "The widget submitted data without a message payload yet.", "info", 3500);
+      if (closeAfterSubmit)
+        handleCloseFloatingWidget();
+      return;
+    }
+    (async () => {
+      try {
+        const response = await sendAgentMessage("default", submissionText, null, [], isComposeBoxAgentActive ? "queue" : null, currentChatJid);
+        handleMessageResponse(response);
+        setFloatingWidget((current) => applyFloatingWidgetSubmitResult(current, sessionKey, {
+          submittedAt,
+          submissionText,
+          queued: response?.queued || null
+        }));
+        const submitToast = resolveFloatingWidgetSubmitToast(response?.queued);
+        showIntentToast(submitToast.title, submitToast.detail, submitToast.kind, submitToast.durationMs);
+        if (closeAfterSubmit)
+          handleCloseFloatingWidget();
+      } catch (error) {
+        setFloatingWidget((current) => applyFloatingWidgetSubmitResult(current, sessionKey, {
+          submittedAt,
+          submissionText,
+          errorMessage: error?.message || "Could not send the widget message."
+        }));
+        const submitFailureToast = resolveFloatingWidgetSubmitFailureToast(error?.message);
+        showIntentToast(submitFailureToast.title, submitFailureToast.detail, submitFailureToast.kind, submitFailureToast.durationMs);
+      }
+    })();
+    return;
+  }
+  if (kind === "widget.ready" || kind === "widget.request_refresh") {
+    const eventAt = new Date().toISOString();
+    const refreshContext = resolveFloatingWidgetHostRefreshContext(event?.payload || null, widget?.runtimeState?.refreshCount);
+    setFloatingWidget((current) => applyFloatingWidgetHostEvent(current, sessionKey, {
+      kind,
+      payload: event?.payload || null,
+      eventAt,
+      nextRefreshCount: refreshContext.nextRefreshCount,
+      shouldBuildDashboard: refreshContext.shouldBuildDashboard
+    }));
+    if (kind === "widget.request_refresh") {
+      if (refreshContext.shouldBuildDashboard) {
+        (async () => {
+          try {
+            const dashboard = await buildFloatingWidgetDashboardSnapshot(event?.payload || null);
+            setFloatingWidget((current) => applyFloatingWidgetDashboardResult(current, sessionKey, {
+              dashboard,
+              at: new Date().toISOString(),
+              count: refreshContext.nextRefreshCount,
+              echo: event?.payload || null
+            }));
+            const successToast = resolveFloatingWidgetDashboardBuiltToast();
+            showIntentToast(successToast.title, successToast.detail, successToast.kind, successToast.durationMs);
+          } catch (error) {
+            setFloatingWidget((current) => applyFloatingWidgetDashboardFailure(current, sessionKey, {
+              errorMessage: error?.message || "Could not build dashboard.",
+              at: new Date().toISOString(),
+              count: refreshContext.nextRefreshCount
+            }));
+            const failureToast = resolveFloatingWidgetDashboardFailureToast(error?.message);
+            showIntentToast(failureToast.title, failureToast.detail, failureToast.kind, failureToast.durationMs);
+          }
+        })();
+      } else {
+        const ackToast = resolveFloatingWidgetRefreshAckToast();
+        showIntentToast(ackToast.title, ackToast.detail, ackToast.kind, ackToast.durationMs);
+      }
+    }
+  }
+}
+
+// web/src/gi-floating-widget.ts
+function useGiFloatingWidget(options) {
+  const { currentChatJid, isAgentTurnActive, snapshot, onMessageResponse } = options;
+  const [floatingWidget, setFloatingWidget] = F_(null);
+  const dismissedLiveWidgetKeysRef = Q_(new Set);
+  K_(() => {
+    setFloatingWidget(null);
+  }, [currentChatJid]);
+  const openWidget = Y_((widget) => {
+    openFloatingWidgetFromHost({ widget, dismissedLiveWidgetKeysRef, setFloatingWidget });
+  }, []);
+  const closeWidget = Y_(() => {
+    closeFloatingWidgetFromHost({ dismissedLiveWidgetKeysRef, setFloatingWidget });
+  }, []);
+  const onWidgetEvent = Y_((event, widget) => {
+    const chatJid = currentChatJid;
+    handleFloatingWidgetEventFromHost({
+      event,
+      widget,
+      currentChatJid: chatJid,
+      isComposeBoxAgentActive: isAgentTurnActive,
+      setFloatingWidget,
+      handleCloseFloatingWidget: closeWidget,
+      handleMessageResponse: (response) => onMessageResponse?.(response),
+      showIntentToast: () => {},
+      sendAgentMessage,
+      buildFloatingWidgetDashboardSnapshot: (requestPayload) => buildFloatingWidgetDashboardData({
+        requestPayload,
+        currentChatJid: chatJid,
+        currentRootChatJid: chatJid,
+        getAgentStatus: (jid) => getAgentStatus("default", jid),
+        getAgentContext: (jid) => getAgentContext("default", jid),
+        getAgentQueueState: (jid) => getAgentQueueState(jid),
+        getAgentModels: (jid) => getAgentModels(jid),
+        getActiveChatAgents,
+        getChatBranches: (jid) => getChatBranches(jid),
+        getTimeline: (limit, cursor, jid) => getTimeline(limit, cursor, jid),
+        isAgentTurnActive,
+        ...snapshot()
+      })
+    });
+  }, [currentChatJid, isAgentTurnActive, snapshot, onMessageResponse, closeWidget]);
+  return { floatingWidget, openWidget, closeWidget, onWidgetEvent };
 }
 
 // web/src/gi-theme-text-contrast.ts
@@ -6525,323 +7321,6 @@ async function renderAdaptiveCard(container, block, options) {
     console.error(`[adaptive-card] Failed to render card ${block.card_id}:`, err);
     return false;
   }
-}
-
-// web/src/ui/generated-widget.ts
-function getArtifact(block) {
-  const artifact = block?.artifact || {};
-  const kind = artifact.kind || block?.kind || null;
-  if (kind !== "html" && kind !== "svg" && kind !== "session_tree")
-    return null;
-  if (kind === "html") {
-    const html = typeof artifact.html === "string" ? artifact.html : typeof block?.html === "string" ? block.html : "";
-    return html ? { kind, html } : null;
-  }
-  if (kind === "svg") {
-    const svg = typeof artifact.svg === "string" ? artifact.svg : typeof block?.svg === "string" ? block.svg : "";
-    return svg ? { kind, svg } : null;
-  }
-  const tree = artifact.tree && typeof artifact.tree === "object" ? artifact.tree : block?.tree && typeof block.tree === "object" ? block.tree : null;
-  return { kind, tree };
-}
-function readFiniteNumber(value) {
-  return typeof value === "number" && Number.isFinite(value) ? value : null;
-}
-function readOptionalString(value) {
-  return typeof value === "string" && value.trim() ? value.trim() : null;
-}
-function normalizeCapabilities(input, interactiveFallback = false) {
-  const values = Array.isArray(input) ? input : interactiveFallback ? ["interactive"] : [];
-  const normalized = values.filter((value) => typeof value === "string").map((value) => value.trim().toLowerCase()).filter(Boolean);
-  return Array.from(new Set(normalized));
-}
-var GENERATED_WIDGET_WINDOW_NAME_PREFIX = "__PICLAW_WIDGET_HOST__:";
-function escapeJsonForInlineScript(value) {
-  return JSON.stringify(value).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
-}
-function buildGeneratedWidgetPayload(block, post) {
-  if (!block || block.type !== "generated_widget")
-    return null;
-  const artifact = getArtifact(block);
-  if (!artifact)
-    return null;
-  return {
-    title: block.title || block.name || "Generated widget",
-    subtitle: typeof block.subtitle === "string" ? block.subtitle : "",
-    description: block.description || block.subtitle || "",
-    originPostId: Number.isFinite(post?.id) ? post.id : null,
-    originChatJid: typeof post?.chat_jid === "string" ? post.chat_jid : null,
-    widgetId: block.widget_id || block.id || null,
-    artifact,
-    capabilities: normalizeCapabilities(block.capabilities, block.interactive === true),
-    source: "timeline",
-    status: "final"
-  };
-}
-function canRenderGeneratedWidget(block) {
-  return buildGeneratedWidgetPayload(block, null) !== null;
-}
-function getGeneratedWidgetSessionKey(widget) {
-  const toolCallId = readOptionalString(widget?.toolCallId) || readOptionalString(widget?.tool_call_id);
-  if (toolCallId)
-    return toolCallId;
-  const widgetId = readOptionalString(widget?.widgetId) || readOptionalString(widget?.widget_id);
-  if (widgetId)
-    return widgetId;
-  const originPostId = readFiniteNumber(widget?.originPostId) ?? readFiniteNumber(widget?.origin_post_id);
-  if (originPostId !== null)
-    return `post:${originPostId}`;
-  return null;
-}
-function isInteractiveGeneratedWidget(widget) {
-  const artifact = widget?.artifact || {};
-  const kind = artifact.kind || widget?.kind || null;
-  const capabilities = Array.isArray(widget?.capabilities) ? widget.capabilities : [];
-  const interactiveCapability = capabilities.some((value) => typeof value === "string" && value.trim().toLowerCase() === "interactive");
-  return kind === "html" && (widget?.source === "live" || interactiveCapability);
-}
-function getGeneratedWidgetIframeSandbox(widget) {
-  return isInteractiveGeneratedWidget(widget) ? "allow-downloads allow-scripts allow-same-origin" : "allow-downloads";
-}
-function getGeneratedWidgetInitPayload(widget) {
-  return {
-    title: readOptionalString(widget?.title) || "Generated widget",
-    widgetId: readOptionalString(widget?.widgetId) || readOptionalString(widget?.widget_id),
-    toolCallId: readOptionalString(widget?.toolCallId) || readOptionalString(widget?.tool_call_id),
-    turnId: readOptionalString(widget?.turnId) || readOptionalString(widget?.turn_id),
-    capabilities: Array.isArray(widget?.capabilities) ? widget.capabilities : [],
-    source: widget?.source === "live" ? "live" : "timeline",
-    status: readOptionalString(widget?.status) || "final"
-  };
-}
-function getGeneratedWidgetHostPayload(widget) {
-  return {
-    ...getGeneratedWidgetInitPayload(widget),
-    subtitle: readOptionalString(widget?.subtitle) || "",
-    description: readOptionalString(widget?.description) || "",
-    error: readOptionalString(widget?.error) || null,
-    width: readFiniteNumber(widget?.width),
-    height: readFiniteNumber(widget?.height),
-    runtimeState: widget?.runtimeState && typeof widget.runtimeState === "object" ? widget.runtimeState : null
-  };
-}
-function getGeneratedWidgetHostWindowName(widget) {
-  return `${GENERATED_WIDGET_WINDOW_NAME_PREFIX}${JSON.stringify(getGeneratedWidgetHostPayload(widget))}`;
-}
-function getGeneratedWidgetEmptyStateMessage(widget) {
-  const status = readOptionalString(widget?.status);
-  if (status === "loading" || status === "streaming") {
-    return "Widget is loading…";
-  }
-  if (status === "error") {
-    return readOptionalString(widget?.error) || "Widget failed to load.";
-  }
-  if ((widget?.artifact?.kind || widget?.kind) === "session_tree") {
-    return "Session tree widget is unavailable.";
-  }
-  return "Widget artifact is missing or unsupported.";
-}
-function buildWidgetBootstrapScript(widget) {
-  const meta = getGeneratedWidgetInitPayload(widget);
-  const safeMeta = escapeJsonForInlineScript(meta);
-  return `<script>
-(function () {
-  const meta = ${safeMeta};
-  function post(kind, payload) {
-    try {
-      window.parent.postMessage({
-        __piclawGeneratedWidget: true,
-        kind,
-        widgetId: meta.widgetId || null,
-        toolCallId: meta.toolCallId || null,
-        turnId: meta.turnId || null,
-        payload: payload || {}
-      }, '*');
-    } catch {
-      /* expected: parent bridge may be unavailable while the iframe is unloading. */
-    }
-  }
-
-  const windowNamePrefix = ${escapeJsonForInlineScript(GENERATED_WIDGET_WINDOW_NAME_PREFIX)};
-  let lastWindowName = null;
-  let pendingHostEnvelope = null;
-  let pendingHostEnvelopeFrame = 0;
-  let lastDispatchedEnvelopeKey = null;
-
-  function getEnvelopeKey(data) {
-    try {
-      return JSON.stringify([
-        data?.type || null,
-        data?.widgetId || null,
-        data?.toolCallId || null,
-        data?.turnId || null,
-        data?.payload || null,
-      ]);
-    } catch {
-      return null;
-    }
-  }
-
-  function flushHostEnvelope() {
-    pendingHostEnvelopeFrame = 0;
-    const data = pendingHostEnvelope;
-    pendingHostEnvelope = null;
-    if (!data) return;
-
-    window.piclawWidget.lastHostMessage = data;
-    const nextPayload = data.payload || null;
-    if (data.type === 'widget.init') {
-      const previous = window.piclawWidget.hostState && typeof window.piclawWidget.hostState === 'object'
-        ? window.piclawWidget.hostState
-        : null;
-      if (nextPayload && typeof nextPayload === 'object') {
-        window.piclawWidget.hostState = {
-          ...(previous || {}),
-          ...nextPayload,
-          ...(Object.prototype.hasOwnProperty.call(nextPayload, 'runtimeState')
-            ? {}
-            : { runtimeState: previous?.runtimeState ?? null }),
-        };
-      } else {
-        window.piclawWidget.hostState = previous || null;
-      }
-    } else if (data.type === 'widget.update' || data.type === 'widget.complete' || data.type === 'widget.error') {
-      window.piclawWidget.hostState = nextPayload;
-    }
-
-    const effectivePayload = window.piclawWidget.hostState ?? nextPayload ?? null;
-    const detail = (effectivePayload === data.payload)
-      ? data
-      : { ...data, payload: effectivePayload };
-    const envelopeKey = getEnvelopeKey(detail);
-    if (envelopeKey && envelopeKey === lastDispatchedEnvelopeKey) return;
-    lastDispatchedEnvelopeKey = envelopeKey;
-    window.dispatchEvent(new CustomEvent('piclaw:widget-message', { detail }));
-  }
-
-  function scheduleHostEnvelope(data) {
-    if (!data) return;
-    pendingHostEnvelope = data;
-    if (pendingHostEnvelopeFrame) return;
-    const schedule = typeof requestAnimationFrame === 'function'
-      ? requestAnimationFrame
-      : (cb) => setTimeout(cb, 0);
-    pendingHostEnvelopeFrame = schedule(flushHostEnvelope);
-  }
-
-  function readWindowNameState() {
-    try {
-      const raw = window.name || '';
-      if (!raw || raw === lastWindowName || !raw.startsWith(windowNamePrefix)) return;
-      lastWindowName = raw;
-      const payload = JSON.parse(raw.slice(windowNamePrefix.length));
-      scheduleHostEnvelope({
-        __piclawGeneratedWidgetHost: true,
-        type: 'widget.update',
-        widgetId: meta.widgetId || null,
-        toolCallId: meta.toolCallId || null,
-        turnId: meta.turnId || null,
-        payload,
-      });
-    } catch {
-      /* expected: host window.name payload can be absent or mid-update while polling. */
-    }
-  }
-
-  window.piclawWidget = {
-    meta,
-    lastHostMessage: null,
-    hostState: null,
-    ready(payload) { post('widget.ready', payload); },
-    close(payload) { post('widget.close', payload); },
-    requestRefresh(payload) { post('widget.request_refresh', payload); },
-    submit(payload) { post('widget.submit', payload); },
-  };
-
-  window.addEventListener('message', function (event) {
-    const data = event && event.data;
-    if (!data || data.__piclawGeneratedWidgetHost !== true) return;
-    if ((data.widgetId || null) !== (meta.widgetId || null)) return;
-    scheduleHostEnvelope(data);
-  });
-
-  function announceReady() {
-    readWindowNameState();
-    post('widget.ready', { title: document.title || meta.title || 'Generated widget' });
-  }
-
-  setInterval(readWindowNameState, 250);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', announceReady, { once: true });
-  } else {
-    announceReady();
-  }
-})();
-</script>`;
-}
-function buildWidgetSrcDoc(widget) {
-  const artifact = widget?.artifact || {};
-  const kind = artifact.kind || widget?.kind || null;
-  const rawHtml = typeof artifact.html === "string" ? artifact.html : typeof widget?.html === "string" ? widget.html : "";
-  const rawSvg = typeof artifact.svg === "string" ? artifact.svg : typeof widget?.svg === "string" ? widget.svg : "";
-  const title = typeof widget?.title === "string" && widget.title.trim() ? widget.title.trim() : "Generated widget";
-  const content = kind === "svg" ? rawSvg : rawHtml;
-  if (!content)
-    return "";
-  const interactive = isInteractiveGeneratedWidget(widget);
-  const csp = [
-    "default-src 'none'",
-    "img-src data: blob: https: http:",
-    "style-src 'unsafe-inline'",
-    "font-src 'self' data: https: http:",
-    "media-src data: blob: https: http:",
-    "connect-src 'none'",
-    "frame-src 'none'",
-    interactive ? "script-src 'unsafe-inline' 'self'" : "script-src 'none'",
-    "object-src 'none'",
-    "base-uri 'none'",
-    "form-action 'none'"
-  ].join("; ");
-  const body = kind === "svg" ? `<div class="widget-svg-shell">${content}</div>` : content;
-  const bootstrap = interactive ? buildWidgetBootstrapScript(widget) : "";
-  return `<!doctype html>
-<html>
-<head>
-<meta charset="utf-8" />
-<meta http-equiv="Content-Security-Policy" content="${csp}" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${title.replace(/[<&>]/g, "")}</title>
-<style>
-:root { color-scheme: dark light; }
-html, body {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: #0f1117;
-  color: #f5f7fb;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-body {
-  box-sizing: border-box;
-}
-.widget-svg-shell {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  box-sizing: border-box;
-}
-.widget-svg-shell svg {
-  max-width: 100%;
-  height: auto;
-}
-</style>
-${bootstrap}
-</head>
-<body>${body}</body>
-</html>`;
 }
 
 // web/src/components/body-portal.ts
@@ -19048,7 +19527,7 @@ function FloatingWidgetPane({ widget, onClose, onWidgetEvent }) {
       });
       if (incomingKey && currentKey && incomingKey !== currentKey)
         return;
-      if (!incomingKey && iframe?.contentWindow && event.source !== iframe.contentWindow)
+      if (!iframe?.contentWindow || event.source !== iframe.contentWindow)
         return;
       onWidgetEvent?.(data, widget);
     };
@@ -23205,14 +23684,14 @@ function NumberStepper({
 
 // web/src/gi-settings-lazy.ts
 var loaders = {
-  models: () => import("./gi-settings-models-4z80mj8b.js").then((module) => module.Models),
-  appearance: () => import("./gi-settings-appearance-rndh7pzt.js").then((module) => module.Appearance),
-  keyboard: () => import("./keyboard-jyzs5vj7.js").then((module) => module.KeyboardSection),
-  compaction: () => import("./gi-settings-compaction-bg741054.js").then((module) => module.GiSettingsCompaction),
-  providers: () => import("./gi-settings-providers-sk5775z2.js").then((module) => module.GiSettingsProviders),
-  keychain: () => import("./gi-settings-keychain-511cj80g.js").then((module) => module.GiSettingsKeychain),
-  environment: () => import("./gi-settings-environment-9qzmxhgj.js").then((module) => module.GiSettingsEnvironment),
-  authentication: () => import("./gi-settings-authentication-knbahev0.js").then((module) => module.GiSettingsAuthentication)
+  models: () => import("./gi-settings-models-9c3029ap.js").then((module) => module.Models),
+  appearance: () => import("./gi-settings-appearance-amr3qcm8.js").then((module) => module.Appearance),
+  keyboard: () => import("./keyboard-5jah1ndc.js").then((module) => module.KeyboardSection),
+  compaction: () => import("./gi-settings-compaction-25x3ddm3.js").then((module) => module.GiSettingsCompaction),
+  providers: () => import("./gi-settings-providers-4s9bqp5s.js").then((module) => module.GiSettingsProviders),
+  keychain: () => import("./gi-settings-keychain-vgf7ck6c.js").then((module) => module.GiSettingsKeychain),
+  environment: () => import("./gi-settings-environment-qgrq05ap.js").then((module) => module.GiSettingsEnvironment),
+  authentication: () => import("./gi-settings-authentication-jbpq0pz7.js").then((module) => module.GiSettingsAuthentication)
 };
 var labels = { models: "Models", appearance: "Appearance", keyboard: "Keyboard", compaction: "Compaction", providers: "Providers", keychain: "Keychain", environment: "Environment", authentication: "Authentication" };
 var components = new Map;
@@ -24788,7 +25267,6 @@ function GiApp() {
   const refreshAfterConnection = Q_(() => {});
   const refreshTimer = Q_(null);
   const [optimisticQueue, setOptimisticQueue] = F_([]);
-  const [floatingWidget, setFloatingWidget] = F_(null);
   const [attachmentPreview, setAttachmentPreview] = F_(null);
   const [contextUsage, setContextUsage] = F_(null);
   const [activity, setActivity] = F_(null);
@@ -24905,6 +25383,21 @@ function GiApp() {
   } = useAgentState();
   const currentChatJid = u_(() => sessionId ? sessionToChatJid2(sessionId) : "", [sessionId]);
   K_(() => setPlanSidebarChat(currentChatJid), [currentChatJid]);
+  const widgetSnapshot = Y_(() => ({
+    rawPosts: posts,
+    activeChatAgents,
+    currentChatBranches,
+    contextUsage,
+    followupQueueItems,
+    activeModel,
+    activeThinkingLevel,
+    supportsThinking
+  }), [posts, activeChatAgents, currentChatBranches, contextUsage, followupQueueItems, activeModel, activeThinkingLevel, supportsThinking]);
+  const { floatingWidget, openWidget, closeWidget, onWidgetEvent } = useGiFloatingWidget({
+    currentChatJid,
+    isAgentTurnActive: ["running", "cancelling"].includes(activity?.status),
+    snapshot: widgetSnapshot
+  });
   const localNotifications = useGiNotifications(currentChatJid, (chat) => {
     if (chat.startsWith("gi:"))
       handleSwitchChat(chat);
@@ -25857,7 +26350,7 @@ function GiApp() {
                     onFileRef=${openEditor}
                     onPostClick=${undefined}
                     onDeletePost=${handleDeletePost}
-                    onOpenWidget=${(w) => setFloatingWidget(w)}
+                    onOpenWidget=${openWidget}
                     onOpenAttachmentPreview=${setAttachmentPreview}
                     emptyMessage=${searchState.active ? searchState.query ? "No matching messages." : "Enter a search query." : "Send a message to get started."}
                     agents=${{ ...agents, [SYSTEM_AGENT_ID]: SYSTEM_AGENT }}
@@ -25880,8 +26373,8 @@ function GiApp() {
                 />
                 <${FloatingWidgetPane}
                     widget=${floatingWidget}
-                    onClose=${() => setFloatingWidget(null)}
-                    onWidgetEvent=${() => {}}
+                    onClose=${closeWidget}
+                    onWidgetEvent=${onWidgetEvent}
                 />
                 ${attachmentPreview && fe`
                     <${AttachmentPreviewModal}

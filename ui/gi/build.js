@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, rmSync,
 import { fileURLToPath } from 'url';
 import { piclawStatusAdapter } from './scripts/piclaw-status-adapter.mjs';
 import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
+import {patchWidgetSandbox, patchWidgetMessageSource} from './scripts/patch-widget-isolation.mjs';
 import {piclawSvgAdapter, patchMarkdownSvg, patchPostSvg, verifyPiclawSvg} from './scripts/piclaw-svg-adapter.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
@@ -106,7 +107,10 @@ const appBuild = await Bun.build({
   target: 'browser', format: 'esm', sourcemap: SOURCEMAPS ? 'linked' : 'none', splitting: true, modulePreload: false,
   naming: { entry: 'app.bundle.[ext]', chunk: 'chunks/[name]-[hash].[ext]', asset: 'assets/[name]-[hash].[ext]' },
   external: ['/editor-vendor/codemirror.js'],
-  plugins: [piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-post-speech', setup(build) {
+  plugins: [piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-widget-isolation', setup(build) {
+    build.onLoad({ filter: /[\\/]ui[\\/]generated-widget\.ts$/ }, async args => ({ contents: patchWidgetSandbox(await Bun.file(args.path).text()), loader: 'ts' }));
+    build.onLoad({ filter: /[\\/]components[\\/]floating-widget-pane\.ts$/ }, async args => ({ contents: patchWidgetMessageSource(await Bun.file(args.path).text()), loader: 'ts' }));
+  } }, { name: 'gi-post-speech', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]post\.ts$/ }, async args => ({
       contents: patchPostSvg(patchPostRecoveryControl(patchPostOutcomes(patchPostSpeech(await Bun.file(args.path).text())))), loader: 'ts',
     }));

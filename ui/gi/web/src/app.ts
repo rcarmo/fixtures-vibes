@@ -19,6 +19,7 @@ import { useAgentState } from './ui/use-agent-state.js';
 import { useSseConnection } from './ui/use-sse-connection.js';
 import { handleAppSseEvent } from './ui/app-sse-events.js';
 import { forwardPlanSidebarEvent, setPlanSidebarChat } from './gi-plan-sidebar.js';
+import { useGiFloatingWidget } from './gi-floating-widget.js';
 import { initTheme } from './ui/theme.js';
 import { initGiAppearance } from './gi-appearance.js';
 import { installGiDisplayScale } from './gi-display-scale.js';
@@ -362,7 +363,6 @@ function GiApp() {
     const refreshAfterConnection = useRef<() => void>(() => {});
     const refreshTimer = useRef<any>(null);
     const [optimisticQueue, setOptimisticQueue] = useState<any[]>([]);
-    const [floatingWidget, setFloatingWidget] = useState<any>(null);
     const [attachmentPreview, setAttachmentPreview] = useState<any>(null);
     const [contextUsage, setContextUsage] = useState<any>(null);
     const [activity, setActivity] = useState<any>(null);
@@ -442,6 +442,12 @@ function GiApp() {
 
     const currentChatJid = useMemo(() => sessionId ? sessionToChatJid(sessionId) : '', [sessionId]);
     useEffect(() => setPlanSidebarChat(currentChatJid), [currentChatJid]);
+    const widgetSnapshot = useCallback(() => ({ rawPosts: posts, activeChatAgents, currentChatBranches, contextUsage,
+        followupQueueItems, activeModel, activeThinkingLevel, supportsThinking }),
+        [posts, activeChatAgents, currentChatBranches, contextUsage, followupQueueItems, activeModel, activeThinkingLevel, supportsThinking]);
+    const { floatingWidget, openWidget, closeWidget, onWidgetEvent } = useGiFloatingWidget({
+        currentChatJid, isAgentTurnActive: ['running', 'cancelling'].includes(activity?.status), snapshot: widgetSnapshot,
+    });
     const localNotifications = useGiNotifications(currentChatJid, chat => {
         if (chat.startsWith('gi:')) void handleSwitchChat(chat);
     });
@@ -1198,7 +1204,7 @@ function GiApp() {
                     onFileRef=${openEditor}
                     onPostClick=${undefined}
                     onDeletePost=${handleDeletePost}
-                    onOpenWidget=${(w: any) => setFloatingWidget(w)}
+                    onOpenWidget=${openWidget}
                     onOpenAttachmentPreview=${setAttachmentPreview}
                     emptyMessage=${searchState.active ? (searchState.query ? 'No matching messages.' : 'Enter a search query.') : 'Send a message to get started.'}
                     agents=${{...agents,[SYSTEM_AGENT_ID]:SYSTEM_AGENT}}
@@ -1221,8 +1227,8 @@ function GiApp() {
                 />
                 <${FloatingWidgetPane}
                     widget=${floatingWidget}
-                    onClose=${() => setFloatingWidget(null)}
-                    onWidgetEvent=${() => {}}
+                    onClose=${closeWidget}
+                    onWidgetEvent=${onWidgetEvent}
                 />
                 ${attachmentPreview && html`
                     <${AttachmentPreviewModal}
