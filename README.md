@@ -109,6 +109,8 @@ on Windows PowerShell before cmd, under `@cap-windows-shell`), textual detection
 `%NAME%` references with retrieval of only the referenced keychain entries, Piclaw's variable naming (identifiers kept,
 collisions resolved by name order), placeholder failures, and the Settings Environment section (overrides applied to
 later commands, persisted, keychain variables excluded). Those scenarios are mandatory too.
+`@ux-chat-lifecycle-009` mandates concurrent sessions: turns in different sessions are at the model at the same time and
+complete independently, as in Piclaw. A runtime-wide single-active-session guard fails it; it is a defect, not a skip.
 
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
 Claim a capability when the runtime exposes that user-visible surface, even if some tagged scenarios still fail. Every such

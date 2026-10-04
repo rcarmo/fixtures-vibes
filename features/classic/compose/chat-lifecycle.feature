@@ -78,3 +78,15 @@ Feature: Separate the conversation from transient agent activity
     And an elapsed time counted from when the tool started, which advances
     When the tool finishes and the agent replies
     Then the running-tool status is gone
+
+  @ux-chat-lifecycle-009 @scope @concurrency
+  Scenario: Sessions run turns at the same time
+    # Mandatory for every runtime: Piclaw 3.2.5 runs each session's turns independently. A runtime-wide "one active
+    # session" guard is a defect, not a capability choice.
+    Given session "a" has a turn waiting on the model
+    When I send a message in session "b"
+    Then session "b"'s turn also reaches the model while "a" is still waiting, without an error or a block on sending
+    And a message sent in session "c" meanwhile is answered
+    When the model answers "b" first
+    Then "b" shows its reply while "a" is still running
+    And when the model then answers "a", its reply appears only in "a"

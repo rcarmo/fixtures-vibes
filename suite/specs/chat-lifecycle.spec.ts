@@ -213,3 +213,41 @@ test('@ux-chat-lifecycle-008 A running tool shows what it is doing and for how l
   await expect(page.locator(sel('agentPost')).filter({ hasText: `done-${n}` })).toHaveCount(1, { timeout: 20_000 });
   await expect(page.getByText(new RegExp(`${tool}\\b.*sleep 6; echo tool-${n}`)).filter({ hasNotText: `run ${n}` })).toHaveCount(0);
 });
+
+test('@ux-chat-lifecycle-009 Sessions run turns at the same time', async ({ page, runtime, sel }) => {
+  const n = nonce();
+  const [a, b, c] = [await runtime.newSession(), await runtime.newSession(), await runtime.newSession()];
+  const [ga, gb] = [gateName('conc-a'), gateName('conc-b')];
+  const input = page.locator(sel('composeInput'));
+  const waiting = async (g: string) => (await runtime.gates())[g]?.waiting ?? 0;
+  const send = async (text: string) => { await input.fill(text); await input.press('Enter'); };
+  const reply = (text: string) => page.locator(sel('agentPost')).filter({ hasText: text });
+
+  await page.goto(a.url);
+  await send(`[gate:${ga}][reply:a-done-${n}] turn a ${n}`);
+  await expect.poll(() => waiting(ga)).toBe(1);
+
+  await page.goto(b.url);
+  await send(`[gate:${gb}][reply:b-done-${n}] turn b ${n}`);
+  // Both turns are at the model together.
+  await expect.poll(() => waiting(gb)).toBe(1);
+  expect(await waiting(ga)).toBe(1);
+  await expect(input).toHaveValue('');
+
+  await page.goto(c.url);
+  await send(`[reply:c-done-${n}] turn c ${n}`);
+  await expect(reply(`c-done-${n}`)).toHaveCount(1);
+  expect(await waiting(ga)).toBe(1);
+  expect(await waiting(gb)).toBe(1);
+
+  await page.goto(b.url);
+  await runtime.openGate(gb);
+  await expect(reply(`b-done-${n}`)).toHaveCount(1);
+  expect(await waiting(ga)).toBe(1);
+
+  await page.goto(a.url);
+  await runtime.openGate(ga);
+  await expect(reply(`a-done-${n}`)).toHaveCount(1);
+  await expect(reply(`b-done-${n}`)).toHaveCount(0);
+  await expect(reply(`c-done-${n}`)).toHaveCount(0);
+});
