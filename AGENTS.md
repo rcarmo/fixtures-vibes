@@ -50,7 +50,7 @@ that is a runtime defect, fixed in the runtime or recorded as a skip with an iss
 ## Ownership
 
 Per Rui (2026-10-04), the fixtures-vibes agent owns this repository and the front-end code of every implementation:
-Vibes Python `src/vibes/static/`, Vibes Go `static/` (+ its front-end build files), tau-prime `src/tau_web/vibes/`
+Vibes Python `src/vibes/static/`, tau-prime `src/tau_web/vibes/`
 and Gi `web/`, including their front-end builds and tests, plus the selector maps and front-end capability claims in
 runtime profiles. Runtime agents own backends, APIs, runtime lifecycle and publication of their repositories; UI
 changes they need are requested from the front-end owner with the backend API contract.

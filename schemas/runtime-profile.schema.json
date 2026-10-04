@@ -16,7 +16,7 @@
     "runtime": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*$",
-      "description": "Stable runtime name, e.g. piclaw, gi, vibes-python, vibes-go, tau-prime."
+      "description": "Stable runtime name, e.g. piclaw, gi, vibes-python, tau-prime."
     },
     "version": {
       "type": "string",
