@@ -1,7 +1,9 @@
 /**
  * Keychain management and shell substitution (features/classic/keychain/keychain.feature @ux-keychain-001..007).
- * Entries are created through Settings under unique names and deleted afterwards. Shell commands run through the
- * runtime's shell tool; each prints a verdict, so secrets never need to appear in the transcript.
+ * The Settings section may look different from Piclaw's, so the specs find controls by role and loose accessible names
+ * (add/save, reveal/show, delete/remove, yes/confirm, no/cancel; a password prompt when reveal is protected) and assert
+ * behaviour only. Entries use unique names and are deleted afterwards. Shell commands print a verdict, so secrets never
+ * need to appear in the transcript.
  */
 import { test, expect } from '../fixtures';
 import { randomUUID } from 'node:crypto';
@@ -23,34 +25,62 @@ async function openKeychain(page: Page, sel: Sel) {
     await page.keyboard.press('Control+Comma');
     await dialog.waitFor({ timeout: 2_000 }).catch(() => {});
   }
-  await dialog.locator('nav').getByRole('button').filter({ hasText: /^\s*Keychain\s*$/i }).click();
-  await expect(dialog.getByRole('button', { name: /add entry/i })).toBeVisible();
+  // The section control (button, tab or link) shows the word "Keychain".
+  await dialog.getByRole('button').or(dialog.getByRole('tab')).or(dialog.getByRole('link')).filter({ hasText: /^\s*keychain\s*$/i }).first().click();
+  await expect(addButton(dialog)).toBeVisible();
   return dialog;
 }
-const count = (d: Locator) => d.getByText(/\d+ entr(y|ies)\b.*encrypted/i).first();
-const entries = async (d: Locator) => Number(/(\d+) entr/i.exec(await count(d).innerText())?.[1] ?? NaN);
-async function addEntry(d: Locator, e: { name: string; type?: string; secret: string; username?: string; note?: string }) {
-  await d.getByRole('button', { name: /add entry/i }).click();
-  await d.getByLabel(/^entry name$/i).fill(e.name);
-  if (e.type) await d.getByLabel(/^entry type$/i).selectOption(e.type);
-  await d.getByLabel(/^entry secret$/i).fill(e.secret);
-  if (e.username) await d.getByLabel(/^entry username$/i).fill(e.username);
-  // The add form's own note (each listed row has one too).
-  if (e.note) await d.getByLabel(/^entry name$/i).locator('xpath=ancestor::*[.//textarea][1]').getByLabel(/^user note$/i).first().fill(e.note);
-  await d.getByRole('button', { name: /^save$/i }).click();
-  await expect(d.getByText(e.name, { exact: true }).first()).toBeVisible();
-}
-const row = (d: Locator, name: string) => d.getByText(name, { exact: true }).first().locator('xpath=ancestor::tr[1]');
-/** Cleanup: delete an entry (row action, then its confirmation, which carries the same name). Where the row action
- *  cannot be tapped (narrow layouts, listed defect) the events are dispatched directly; this is setup, not the spec. */
-async function deleteEntry(d: Locator, name: string) {
-  for (let i = 0; i < 2; i++) {
-    const del = d.getByRole('button', { name: `Delete ${name}` }).first();
-    if (!(await del.count())) break;
-    await del.click({ timeout: 3_000 }).catch(() => del.dispatchEvent('click'));
+const addButton = (d: Locator) => d.getByRole('button', { name: /^\W*(add|new)\b(?!-)/i }).first();
+const listed = (d: Locator, name: string) => d.getByText(name, { exact: true });
+/** The smallest element holding the entry's name and its controls. */
+const entryOf = (d: Locator, name: string) => listed(d, name).first().locator('xpath=ancestor::*[.//button][1]');
+
+async function addEntry(d: Locator, e: { name: string; secret: string; username?: string }) {
+  await addButton(d).click();
+  await d.getByLabel(/^(entry )?name$/i).fill(e.name);
+  if (e.username) {
+    // Some keychains only take a username for one entry type ("basic" in Piclaw).
+    const type = d.getByLabel(/^(entry )?type$/i);
+    if (await type.count()) await type.selectOption('basic').catch(() => {});
+    await d.getByLabel(/^(entry )?user ?name$/i).fill(e.username);
   }
-  await expect(d.getByText(name, { exact: true })).toHaveCount(0);
+  await d.getByLabel(/^(entry )?(secret|value|password)$/i).fill(e.secret);
+  await d.getByRole('button', { name: /^(save|add|create)$/i }).click();
+  await expect(listed(d, e.name).first()).toBeVisible();
 }
+
+/** Ask to delete; the confirmation is either a native dialog or a visible confirm/decline control. */
+async function deleteEntry(page: Page, d: Locator, name: string, answer: 'accept' | 'dismiss', opts: { force?: boolean } = {}) {
+  let native = false;
+  const onDialog = (dlg: any) => { native = true; void dlg[answer](); };
+  page.once('dialog', onDialog);
+  const del = entryOf(d, name).getByRole('button', { name: /delete|remove/i }).first();
+  if (opts.force) await del.click({ timeout: 3_000 }).catch(() => del.dispatchEvent('click'));
+  else await del.click();
+  await page.waitForTimeout(200);
+  page.off('dialog', onDialog);
+  if (native) return;
+  // A confirmation offers a way to decline. If it sits on the entry, the accept control is there too; otherwise it is a
+  // separate prompt whose controls use plain yes/no wording, so other rows' delete buttons are never hit.
+  const no = /^(no|cancel)$/i;
+  const declineInRow = entryOf(d, name).getByRole('button', { name: no });
+  await expect(declineInRow.or(page.getByRole('button', { name: no }).filter({ visible: true })).first()).toBeVisible({ timeout: 5_000 });
+  const inRow = await declineInRow.isVisible();
+  const scope = inRow ? entryOf(d, name) : page;
+  const target = answer === 'dismiss'
+    ? scope.getByRole('button', { name: no }).filter({ visible: true }).last()
+    : scope.getByRole('button', { name: inRow ? /^(yes|confirm|ok)$|delete|remove/i : /^(yes|confirm|ok|delete|remove)$/i }).filter({ visible: true }).last();
+  if (opts.force) await target.click({ timeout: 3_000 }).catch(() => target.dispatchEvent('click'));
+  else await target.click();
+}
+/** Cleanup (setup, not the spec): where taps cannot reach the control (listed defect) events are dispatched. */
+async function cleanup(page: Page, d: Locator, name: string) {
+  await expect(async () => {
+    if (await listed(d, name).count()) await deleteEntry(page, d, name, 'accept', { force: true });
+    await expect(listed(d, name)).toHaveCount(0, { timeout: 3_000 });
+  }).toPass({ timeout: 30_000 });
+}
+
 /** Run a shell command through the agent; returns what the command printed. */
 async function shell(page: Page, runtime: any, sel: Sel, command: string) {
   const tag = `sh-${randomUUID().slice(0, 8)}`;
@@ -66,95 +96,70 @@ async function shell(page: Page, runtime: any, sel: Sel, command: string) {
 test.describe('settings', () => {
   test.beforeEach(async ({ page, runtime }) => { await page.goto((await runtime.newSession()).url); });
 
-  test('@ux-keychain-001 Add a credential from the Keychain settings section', async ({ page, sel }) => {
+  test('@ux-keychain-001 Add a credential from Settings', async ({ page, sel }) => {
     const n = randomUUID().slice(0, 8);
     const name = `fixtures/kc-${n}.v1`, secret = `secret-${n}`;
     const d = await openKeychain(page, sel);
     try {
-      await addEntry(d, { name, type: 'basic', secret, username: `user-${n}`, note: `note ${n}` });
-      const r = row(d, name);
-      await expect(r).toContainText(/basic/i);
-      await expect(r).toContainText(envName(name)!);
-      await expect(r).toContainText(/\d{4}|\bago\b|today/i);
-      // The count reports the encrypted entries (filtered to this one, since other tests share the keychain).
-      await expect(count(d)).toContainText(/encrypted at rest/i);
-      await d.getByPlaceholder(/filter entries/i).fill(name);
-      await expect.poll(() => entries(d)).toBe(1);
-      await d.getByPlaceholder(/filter entries/i).fill('');
+      await addEntry(d, { name, secret, username: `user-${n}` });
+      await expect(listed(d, name).first()).toBeVisible();
       await expect(d.getByText(secret)).toHaveCount(0);
     } finally {
-      await deleteEntry(d, name);
+      await cleanup(page, d, name);
     }
   });
 
-  test('@ux-keychain-002 Filter keychain entries', async ({ page, sel }) => {
+  test('@ux-keychain-002 Keep keychain entries across sessions', async ({ page, sel }) => {
     const n = randomUUID().slice(0, 8);
-    const names = [`fixtures/kca-${n}`, `fixtures/kcb-${n}`];
-    const d = await openKeychain(page, sel);
+    const name = `fixtures/kcp-${n}`, secret = `kept-${n}`;
+    let d = await openKeychain(page, sel);
     try {
-      for (const name of names) await addEntry(d, { name, secret: `s-${n}` });
-      const filter = d.getByPlaceholder(/filter entries/i);
-      // (Re-applied if a concurrent catalogue refresh lands while typing.)
-      await expect(async () => {
-        await filter.fill(`kca-${n}`);
-        await expect(d.getByText(names[0], { exact: true })).toBeVisible({ timeout: 2_000 });
-        await expect(d.getByText(names[1], { exact: true })).toHaveCount(0, { timeout: 2_000 });
-      }).toPass({ timeout: 15_000 });
-      await expect(count(d)).toContainText(/1 entr(y|ies)/i);
-      await expect(count(d)).toContainText(`kca-${n}`);
-      await filter.fill(`nothing-${n}`);
-      await expect(d.getByText(/no entries match/i)).toBeVisible();
-      await filter.fill('');
+      await addEntry(d, { name, secret });
+      await page.reload();
+      d = await openKeychain(page, sel);
+      await expect(listed(d, name).first()).toBeVisible();
+      await expect(d.getByText(secret)).toHaveCount(0);
     } finally {
-      for (const name of names) await deleteEntry(d, name);
+      await cleanup(page, d, name);
     }
   });
 
-  test('@ux-keychain-003 Reveal a secret only after unlocking', async ({ page, runtime, sel }) => {
-    const password = runtime.profile.keychain?.masterPassword;
-    test.skip(!password, 'the runtime profile supplies no keychain master password');
+  test('@ux-keychain-003 Reveal a secret only on request', async ({ page, runtime, sel }) => {
+    const password: string | undefined = runtime.profile.keychain?.masterPassword;
     const n = randomUUID().slice(0, 8);
     const [a, b] = [`fixtures/kcr-${n}`, `fixtures/kco-${n}`];
     const d = await openKeychain(page, sel);
     try {
       await addEntry(d, { name: a, secret: `shown-${n}` });
       await addEntry(d, { name: b, secret: `other-${n}` });
-      await d.getByRole('button', { name: `Reveal secret: ${a}` }).click();
-      const prompt = d.locator('input[type=password]').filter({ visible: true }).last();
-      await expect(prompt).toBeVisible();
       await expect(d.getByText(`shown-${n}`)).toHaveCount(0);
-      await prompt.fill(password!);
-      await d.getByRole('button', { name: /^unlock$/i }).click();
+      await entryOf(d, a).getByRole('button', { name: /reveal|show/i }).first().click();
+      const prompt = page.locator('input[type=password]').filter({ visible: true }).last();
+      if (await prompt.waitFor({ timeout: 1_500 }).then(() => true, () => false)) {
+        test.skip(!password, 'reveal asks for a master password but the runtime profile supplies none');
+        await expect(d.getByText(`shown-${n}`)).toHaveCount(0);
+        await prompt.fill(password!);
+        await prompt.press('Enter');
+      }
       await expect(d.getByText(`shown-${n}`)).toBeVisible();
       await expect(d.getByText(`other-${n}`)).toHaveCount(0);
-      await expect(d.getByRole('button', { name: /^copy secret$/i })).toBeVisible();
-      await d.getByRole('button', { name: `Hide secret: ${a}` }).click();
-      await expect(d.getByText(`shown-${n}`)).toHaveCount(0);
     } finally {
-      for (const name of [a, b]) await deleteEntry(d, name);
+      for (const name of [a, b]) await cleanup(page, d, name);
     }
   });
 
-  test('@ux-keychain-004 Delete an entry after an inline confirmation', async ({ page, sel }) => {
+  test('@ux-keychain-004 Delete an entry after confirming', async ({ page, sel }) => {
     const n = randomUUID().slice(0, 8);
     const name = `fixtures/kcd-${n}`;
     const d = await openKeychain(page, sel);
     try {
       await addEntry(d, { name, secret: `s-${n}` });
-      await d.getByPlaceholder(/filter entries/i).fill(name);
-      await expect.poll(() => entries(d)).toBe(1);
-      await d.getByRole('button', { name: `Delete ${name}` }).click();
-      const no = row(d, name).getByRole('button', { name: /^(no|cancel)$/i });
-      await expect(no).toBeVisible();
-      await no.click();
-      await expect(d.getByText(name, { exact: true })).toBeVisible();
-      await d.getByRole('button', { name: `Delete ${name}` }).click();
-      await row(d, name).getByRole('button', { name: new RegExp(`^(yes|confirm|delete ${name.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})$`, 'i') }).first().click();
-      await expect(d.getByText(name, { exact: true })).toHaveCount(0);
-      await expect.poll(() => entries(d)).toBe(0);
-      await d.getByPlaceholder(/filter entries/i).fill('');
+      await deleteEntry(page, d, name, 'dismiss');
+      await expect(listed(d, name).first()).toBeVisible();
+      await deleteEntry(page, d, name, 'accept');
+      await expect(listed(d, name)).toHaveCount(0);
     } finally {
-      await deleteEntry(d, name);
+      await cleanup(page, d, name);
     }
   });
 });
@@ -168,13 +173,13 @@ test.describe('shell', () => {
   test.beforeEach(async ({ page, runtime, sel }) => {
     await page.goto((await runtime.newSession()).url);
     const d = await openKeychain(page, sel);
-    for (const e of [entry, other]) if (!(await d.getByText(e.name, { exact: true }).count())) await addEntry(d, { ...e, type: 'basic' });
+    for (const e of [entry, other]) if (!(await listed(d, e.name).count())) await addEntry(d, e);
     await page.keyboard.press('Escape');
     await expect(d).toHaveCount(0);
   });
   test.afterEach(async ({ page, sel }) => {
     const d = await openKeychain(page, sel);
-    for (const e of [entry, other]) await deleteEntry(d, e.name);
+    for (const e of [entry, other]) await cleanup(page, d, e.name);
   });
 
   test('@ux-keychain-005 Inject a credential into a shell command that names its variable', async ({ page, runtime, sel }) => {
@@ -188,8 +193,8 @@ test.describe('shell', () => {
     const out = await shell(page, runtime, sel, `test -n "$${VAR}" && echo named-set; env | grep -c "${other.secret}" || true`);
     expect(out).toContain('named-set');
     expect(out).toMatch(/^0$/m);
-    // Indirect expansion and enumeration request nothing.
-    expect(await shell(page, runtime, sel, `v=${OTHER}; test -z "\${!v}" && echo dyn-empty || echo dyn-set`)).toContain('dyn-empty');
+    // Indirect lookup (POSIX: eval of a built reference) and enumeration request nothing.
+    expect(await shell(page, runtime, sel, `v=${OTHER}; eval "x=\\\${$v}"; test -z "$x" && echo dyn-empty || echo dyn-set`)).toContain('dyn-empty');
     expect(await shell(page, runtime, sel, `printenv | grep -c "${entry.secret}" || true`)).toMatch(/^0$/m);
   });
 

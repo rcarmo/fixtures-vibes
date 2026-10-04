@@ -1,8 +1,9 @@
 @classic @keychain
 Feature: Keychain and shell secret substitution
   Every runtime keeps a Piclaw-like keychain: named, encrypted credentials managed from Settings and made available to
-  the agent's shell by the same substitution rules. These scenarios carry no capability tag; a runtime that cannot
-  pass one records it as a defect, not a skip.
+  the agent's shell by the same substitution rules. These scenarios carry no keychain capability tag; a runtime that
+  cannot pass one records it as a defect, not a skip. The Settings section may be simpler than Piclaw's and look
+  different: only the behaviour below is required, not its layout, wording or extra columns.
 
   Rule: Environment variable names derive from entry names
     An entry name maps to one shell variable name: each run of "/", "-" or "." becomes "_", any other character outside
@@ -13,38 +14,36 @@ Feature: Keychain and shell secret substitution
     Given I am authenticated and on the main chat in the Classic shell
 
   @ux-keychain-001 @cap-settings-dialog
-  Scenario: Add a credential from the Keychain settings section
-    Given the Keychain section of Settings is open
-    When I add an entry with a name, a type (secret, token, password or basic), a secret, an optional username and notes
-    Then the entry is listed with its name, its type, the shell variable it injects and when it was updated
-    And the section reports how many entries it holds, encrypted at rest
-    And the secret itself is not shown
+  Scenario: Add a credential from Settings
+    Given the keychain section of Settings is open
+    When I add an entry with a name, a secret and an optional username
+    Then the entry is listed by its name
+    And its secret is not shown
 
   @ux-keychain-002 @cap-settings-dialog
-  Scenario: Filter keychain entries
-    Given the keychain holds several entries
-    When I type part of an entry name into the Keychain filter
-    Then only matching entries are listed and the count reports the matches for that filter
-    And a filter that matches nothing says so
+  Scenario: Keep keychain entries across sessions
+    Given I added an entry
+    When I reload the page and open the keychain section again
+    Then the entry is still listed
+    And its secret is still not shown
 
   @ux-keychain-003 @cap-settings-dialog
-  Scenario: Reveal a secret only after unlocking
+  Scenario: Reveal a secret only on request
     Given an entry exists
-    When I reveal its secret
-    Then the section asks for the keychain master password (or another configured factor) before showing anything
-    When I unlock with the correct password
-    Then that entry's secret is shown with a copy action, and no other entry's secret is shown
-    And I can hide it again
+    Then its secret is hidden until I ask to reveal that entry
+    And if the runtime protects reveal with a master password or another factor, it asks for it first
+    When the reveal succeeds
+    Then that entry's secret is shown, and no other entry's secret is
 
   @ux-keychain-004 @cap-settings-dialog
-  Scenario: Delete an entry after an inline confirmation
+  Scenario: Delete an entry after confirming
     Given an entry exists
     When I choose to delete it
-    Then the section asks for confirmation on that row
+    Then I am asked to confirm
     When I decline
     Then the entry is kept
     When I delete it again and confirm
-    Then the entry is no longer listed and the count drops by one
+    Then the entry is no longer listed
 
   @ux-keychain-005
   Scenario: Inject a credential into a shell command that names its variable

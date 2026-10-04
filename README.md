@@ -101,7 +101,8 @@ The fixture model advertises `fixture-1` and `fixture-2`. A profile that claims 
 
 `keychain.masterPassword` is the password that unlocks secret reveal in the Keychain settings section (test instances
 only). The keychain scenarios (`features/classic/keychain/`) carry no `@cap-*` tag apart from the settings dialog: every
-runtime must keep a Piclaw-like keychain, manage it in Settings and apply the same shell substitution rules (`$NAME` /
+runtime must keep a Piclaw-like keychain, manage it in Settings (the section may be simpler and look different; the specs
+find controls by role and loose names and check behaviour only) and apply the same shell substitution rules (`$NAME` /
 `${NAME}` injection from entry names, `keychain:<name>[:field]` placeholders). Failures there are defects, not skips.
 
 `session.create` is optional. Without it, tests share the runtime's default session; specs use unique markers so that is safe.
