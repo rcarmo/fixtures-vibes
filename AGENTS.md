@@ -46,3 +46,11 @@ do, relying on an unstated Piclaw implementation detail outside the scenario, or
 needs. Never loosen a spec to fit a port's limitation or quirk (a different label, a missing control, a global lock);
 that is a runtime defect, fixed in the runtime or recorded as a skip with an issue. Check the claim against the oracle
 (source and a run) before editing.
+
+## Ownership
+
+Per Rui (2026-10-04), the fixtures-vibes agent owns this repository and the front-end code of every implementation:
+Vibes Python `src/vibes/static/`, Vibes Go `static/` (+ its front-end build files), tau-prime `src/tau_web/vibes/`
+and Gi `web/`, including their front-end builds and tests, plus the selector maps and front-end capability claims in
+runtime profiles. Runtime agents own backends, APIs, runtime lifecycle and publication of their repositories; UI
+changes they need are requested from the front-end owner with the backend API contract.
