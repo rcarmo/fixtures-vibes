@@ -2,3 +2,9 @@ node_modules/
 test-results/
 playwright-report/
 .fixtures-run/
+
+# ui/gi build intermediates (web/src must hold sources only; maps are not shipped)
+ui/gi/web/src/**/*.js
+ui/gi/web/src/**/*.js.map
+!ui/gi/web/src/ui/status-dot.js
+ui/gi/internal/web/static/**/*.map
