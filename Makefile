@@ -14,7 +14,7 @@ deps:
 	$(PLAYWRIGHT) install chromium webkit
 
 test:
-	$(BUN) test tests
+	$(BUN) test ./tests/
 
 suite:
 	@test -n "$(PROFILE)" || { echo "PROFILE=/absolute/path/to/profile.json is required"; exit 2; }
