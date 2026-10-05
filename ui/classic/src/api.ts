@@ -605,8 +605,10 @@ export async function getWorkspaceTree(path = '', depth = 1, showHidden = false)
     return { root: await request(`/api/workspace/tree?${query}`) };
 }
 
-export async function getWorkspaceFile(path: string, maxBytes = 20000) {
-    return request(`/api/workspace/file?path=${encodeURIComponent(path)}&max_bytes=${maxBytes}`);
+// `mode: 'edit'` asks for the complete text for an editor (up to 256 KiB; 400 "File too large to edit" otherwise).
+export async function getWorkspaceFile(path: string, maxBytes = 20000, mode: string | null = null) {
+    const edit = mode === 'edit' ? '&mode=edit' : '';
+    return request(`/api/workspace/file?path=${encodeURIComponent(path)}&max_bytes=${maxBytes}${edit}`);
 }
 
 export async function getWorkspaceIndexStatus(scope = 'all') {

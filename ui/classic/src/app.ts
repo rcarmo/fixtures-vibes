@@ -33,9 +33,13 @@ import {
 import { isCompactionStatus } from './ui/status-duration.js';
 import { paneRegistry, tabStore, workspacePreviewPaneExtension, workspaceMarkdownPreviewPaneExtension } from './panes/index.js';
 
-// Register only read-only previews; editor/specialised tab lifecycle is separate.
+// Piclaw 3.2.5's pane set (app-shell-bootstrap), in its order, less the office and VNC viewers Classic does not host.
+paneRegistry.register(editorPaneExtension);
 paneRegistry.register(workspacePreviewPaneExtension);
 paneRegistry.register(workspaceMarkdownPreviewPaneExtension);
+paneRegistry.register(dataViewerPaneExtension);
+paneRegistry.register(webViewerPaneExtension);
+paneRegistry.register(highlightPreviewerPaneExtension);
 import {
     getTimeline,
     recoverPendingDraftSends,
@@ -74,8 +78,12 @@ import { Timeline } from './components/timeline.js';
 import { ComposeBox, QueuedFollowupStack, parseQueuedContent } from './components/compose-box.js';
 import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
-import { TabStrip } from './components/tab-strip.js';
-import { WorkspaceTab } from './gi-workspace-tab.js';
+import { GiPanePopout, renderEditorPane, useGiEditorPane } from './gi-editor-pane.js';
+import { readPanePopoutRequest } from './gi-pane-popout-request.js';
+import { editorPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/editor-loader.ts';
+import { dataViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/data-viewer-pane.ts';
+import { webViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/web-viewer-pane.ts';
+import { highlightPreviewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/highlight-previewer-pane.ts';
 import { FloatingWidgetPane } from './components/floating-widget-pane.js';
 import { AttachmentPreviewModal } from './components/attachment-preview-modal.js';
 import { SystemMetersHud } from './components/system-meters-hud.js';
@@ -300,24 +308,10 @@ function GiApp() {
 
     // Workspace / pane state
     const [workspaceOpen, setWorkspaceOpen] = useState(false);
-    const [tabSnapshot, setTabSnapshot] = useState(() => ({ tabs: tabStore.getTabs(), activeId: tabStore.getActiveId() }));
-    const { tabs, activeId: activeTabId } = tabSnapshot;
     const tabFocusEpoch = useRef(0);
-    const [previewVisible, setPreviewVisible] = useState(false);
-    const editorOpen = tabs.length > 0 && previewVisible;
-    const restoreWorkspaceFocus = (preview:boolean) => {
-        requestAnimationFrame(() => {
-            if (document.querySelector('.settings-dialog[aria-modal="true"]')) return;
-            const active = document.activeElement as HTMLElement;
-            if (active !== document.body && !active?.closest('.gi-workspace-view-controls')) return;
-            const selector = preview ? '.gi-readonly-tabs:not([hidden]) [role="tab"][aria-selected="true"]' : '.compose-box textarea';
-            document.querySelector<HTMLElement>(selector)?.focus({preventScroll:true});
-        });
-    };
-    useLayoutEffect(() => tabStore.onChange((nextTabs, activeId) => {
+    // Closing the last tab returns focus to the composer.
+    useLayoutEffect(() => tabStore.onChange((nextTabs) => {
         const epoch = ++tabFocusEpoch.current;
-        setTabSnapshot({ tabs: nextTabs, activeId });
-        if (!nextTabs.length) setPreviewVisible(false);
         if (!nextTabs.length) requestAnimationFrame(() => {
             if (tabFocusEpoch.current !== epoch || tabStore.size || document.activeElement !== document.body ||
                 document.querySelector('.settings-dialog[aria-modal="true"]')) return;
@@ -441,6 +435,9 @@ function GiApp() {
     } = useAgentState();
 
     const currentChatJid = useMemo(() => sessionId ? sessionToChatJid(sessionId) : '', [sessionId]);
+    const editorPane = useGiEditorPane({ chatJid: currentChatJid });
+    const { editorOpen, tabStripActiveId: activeTabId } = editorPane.editor;
+    const { zenMode } = editorPane.pane;
     useEffect(() => setPlanSidebarChat(currentChatJid), [currentChatJid]);
     const widgetSnapshot = useCallback(() => ({ rawPosts: posts, activeChatAgents, currentChatBranches, contextUsage,
         followupQueueItems, activeModel, activeThinkingLevel, supportsThinking }),
@@ -676,6 +673,11 @@ function GiApp() {
     // ── SSE connection (replaces polling) ─────────────────────────────────────
 
     const handleSseEvent = useCallback((eventType: string, data: any) => {
+        // Workspace changes are not chat-scoped: the explorer and a clean editor tab refresh from them.
+        if (eventType === 'workspace_update') {
+            window.dispatchEvent(new CustomEvent('workspace-update', { detail: data }));
+            return;
+        }
         if (!selection.current() || data?.chat_jid !== sessionToChatJid(selection.current()!)) return;
         void localNotifications.event(eventType, data);
         forwardPlanSidebarEvent(eventType, data);
@@ -1057,12 +1059,8 @@ function GiApp() {
 
     const openEditor = useCallback((path: string) => {
         ++tabFocusEpoch.current;
-        if (window.matchMedia('(max-width: 1023px), (orientation: portrait)').matches) setWorkspaceOpen(false);
-        tabStore.open(path);
-        setPreviewVisible(true);
-    }, []);
-
-    const handleTabClose = useCallback((id: string) => { tabStore.close(id); }, []);
+        editorPane.editor.openEditor(path);
+    }, [editorPane.editor.openEditor]);
 
     // ── Shell class ───────────────────────────────────────────────────────────
 
@@ -1070,6 +1068,7 @@ function GiApp() {
         'app-shell',
         workspaceOpen ? '' : 'workspace-collapsed',
         editorOpen ? 'editor-open' : '',
+        zenMode ? 'zen-mode' : '',
     ].filter(Boolean).join(' ');
 
     useLayoutEffect(()=>{
@@ -1165,28 +1164,8 @@ function GiApp() {
                 </svg>
             </button>
             <div class="workspace-splitter"></div>
-            ${tabs.length > 0 && html`
-                <div class="editor-pane-container gi-readonly-tabs" hidden=${!previewVisible}>
-                    <div class="gi-workspace-view-controls"><button onClick=${() => { setPreviewVisible(false); restoreWorkspaceFocus(false); }}>Return to conversation</button></div>
-                    <${TabStrip}
-                        tabs=${tabs}
-                        activeId=${activeTabId}
-                        readOnlyHost=${true}
-                        hostVisible=${previewVisible}
-                        onActivate=${(id: string) => tabStore.activate(id)}
-                        onClose=${handleTabClose}
-                        onCloseOthers=${(id: string) => { if (tabStore.get(id)) tabStore.closeOthers(id); }}
-                        onCloseAll=${() => tabStore.closeAll()}
-                        onTogglePin=${(id: string) => tabStore.togglePin(id)}
-                    />
-                    <div class="editor-pane-host">
-                        ${activeTabId && html`<${WorkspaceTab} key=${activeTabId} path=${activeTabId} onClose=${() => handleTabClose(activeTabId)} />`}
-                    </div>
-                </div>
-                <div class="editor-splitter" hidden=${!previewVisible}></div>
-            `}
+            ${renderEditorPane(editorPane)}
             <div class="container" ref=${containerRef} tabIndex="0" role="region" aria-label="Conversation">
-                ${tabs.length > 0 && !previewVisible && html`<div class="gi-workspace-view-controls gi-workspace-show-tabs"><button onClick=${() => { setPreviewVisible(true); restoreWorkspaceFocus(true); }}>Show read-only tabs</button></div>`}
                 <${Timeline}
                     posts=${posts}
                     hasMore=${false}
@@ -1422,4 +1401,8 @@ const appRoot = document.getElementById('app');
 // This is a client-only mount, not hydration. The auth gate's initial <main>
 // must not leave the server's unowned loading <div> beside the application.
 appRoot.replaceChildren();
-render(html`<${GiAuthGate}><${GiApp} /><//>`, appRoot);
+const panePopout = readPanePopoutRequest(window.location.search);
+const popoutChatJid = new URLSearchParams(window.location.search).get('chat_jid') || '';
+render(panePopout
+    ? html`<${GiAuthGate}><${GiPanePopout} popout=${panePopout} chatJid=${popoutChatJid} /><//>`
+    : html`<${GiAuthGate}><${GiApp} /><//>`, appRoot);
