@@ -5,7 +5,7 @@
 - Test targets capture profiles for post-run analysis (`mk/profiling.mk`, `tools/profile-summary.mjs`): V8 CPU and
   sampling-heap profiles for the Playwright runner and workers, Bun profiles for Bun scripts, and for `bun test` JSC CPU
   samples over the whole test process plus a heap snapshot at the end (`mk/bun-test-profile.ts`), CPU time and peak
-  RSS. `tests/contracts.test.ts` now compiles each schema once; recompiling them was most of its CPU time. They go to
+  RSS. `tests/contracts.test.ts` now compiles each schema once instead of recompiling it per test (repeated work seen in one capture; no performance change is claimed). They go to
   `test-results/profiles/<purpose>-<run-id>/` with the command, revision, toolchain and sampling settings, and a
   `summary.txt` that separates this repository's frames from runner overhead.
 - Caches and scratch live under one project root with `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`,

@@ -76,7 +76,12 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
   and a heap snapshot at the end; JSC's `startSamplingProfiler` crashes Bun 1.4.2). Report its limits: live heap at the
   end rather than allocation history, and no profiles for subprocesses the tests spawn.
   Browsers and the runtime under test are profiled by their owners.
-- Direct runs use the same flags (`NODE_OPTIONS="--cpu-prof --cpu-prof-dir=… --heap-prof --heap-prof-dir=…"`).
+- Direct runs use the same flags (`NODE_OPTIONS="--cpu-prof --cpu-prof-dir=… --heap-prof --heap-prof-dir=…"`) and the same
+  retained location, never the disposable run scratch: keep raw profiles, commands, source revision and logs for every
+  capture, including probes and failed runs, and never delete them to tidy up.
+- Claims need comparable evidence: a performance or memory change needs retained baseline and candidate captures of
+  the same workload (with repetitions); a single capture or a heap snapshot at the end shows neither growth nor
+  profiler overhead.
 
 ## Suite changes requested by runtime owners
 
