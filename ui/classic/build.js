@@ -182,6 +182,13 @@ copyFileSync('piclaw/status-3.2.5/css/agent.css', 'static/css/piclaw-status-3.2.
 verifyPiclawSvg(__dirname);
 copyFileSync('piclaw/svg-3.2.5/css/svg-fences.css','static/css/piclaw-svg-3.2.5.css');
 
+// Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its 3.2.5 server routes
+// (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.2.5/csp.json.
+for (const viewer of ['html-viewer', 'image-viewer', 'video-viewer', 'pdf-viewer', 'data-viewer']) {
+  mkdirSync(`static/${viewer}`, { recursive: true });
+  copyFileSync(`piclaw/viewers-3.2.5/${viewer}/index.html`, `static/${viewer}/index.html`);
+}
+
 // Theme catalogue for the server-side /theme and /tint commands. THEME_PRESETS
 // is module-private in the supplied theme.ts, so export it from a temporary copy.
 {

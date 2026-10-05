@@ -91,7 +91,12 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | POST | `/api/workspace/upload`, `/api/workspace/rename`, `/api/workspace/move` | `uploadWorkspaceFile`, `renameWorkspaceFile`, `moveWorkspaceEntry` | `handleWorkspaceUpload`, `…Rename`, `…Move` |
 | GET, POST | `/api/workspace/index` | `getWorkspaceIndexStatus`, `reindexWorkspace` | `handleWorkspaceIndex` |
 | GET | `/workspace/raw`, `/workspace/stat`, `/workspace/file` (Piclaw paths) | web viewer (`<img>`/`<video>`), highlight previewer, file conflict monitor | Gi 7b4dd24 aliases |
-| GET | `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/html-viewer/`, `/data-viewer/` `?path=` | tab-mode web/data viewers (iframe) | Piclaw v3.2.5 `src/channels/web/http/*-viewer-route.ts`; not yet in reference |
+| GET | `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/html-viewer/`, `/data-viewer/` `?path=` | tab-mode web/data viewers (iframe) | static: `static/<viewer>/index.html`, headers below |
+| GET | `/pdf-viewer/source?media=<id>` | PDF viewer for chat attachments | Piclaw v3.2.5 `pdf-viewer-route.ts` (the attachment's PDF bytes); not yet in reference |
+
+The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.2.5`): serve `static/<viewer>/index.html` at
+`/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.2.5/csp.json`,
+`X-Frame-Options: SAMEORIGIN` and `Cache-Control: no-cache`. Do not answer these paths with the app's `index.html`.
 
 The editor (vendored Piclaw 3.2.5 `StandaloneEditorInstance`) reads `GET /api/workspace/file?path&max_bytes&mode=edit`:
 the complete UTF-8 text up to 256 KiB with its `mtime`, or 400 for larger or binary files (never truncated). It saves

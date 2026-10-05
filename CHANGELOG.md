@@ -13,6 +13,10 @@
   tail of its `runtime.log`.
 - `@ux-workspace-001` waits for the new file's preview: Piclaw's explorer reloads the selected file's preview when the
   runtime's `workspace_update` for it arrives.
+- Piclaw's standalone viewer pages (`/html-viewer/`, `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/data-viewer/`),
+  which Piclaw generates in server routes, are extracted unmodified into `ui/classic/piclaw/viewers-3.2.5` (with each
+  route's CSP) and built to `ui/classic/static/<viewer>/index.html`. Runtimes serve them as static files instead of
+  reimplementing them. Each page and CSP matched the reference instance byte for byte.
 - `oracle/piclaw/3.2.5/install-reference.sh` installs, reinstalls or removes the dedicated reference instance
   (release, fixture model, systemd units, fresh state) on a host over SSH.
 
