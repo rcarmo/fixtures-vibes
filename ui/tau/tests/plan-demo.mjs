@@ -1,9 +1,10 @@
 import {chromium,webkit} from 'playwright';
 import {readFileSync,mkdirSync} from 'node:fs';
 import {join} from 'node:path';
-import {tmpdir} from 'node:os';
+import {initRunDir,newRunId,resolveProjectTmpRoot} from '../../../mk/project-tmp.mjs';
+const scratch=process.env.FIXTURES_RUN_ROOT||initRunDir(resolveProjectTmpRoot(),'ui-tau',newRunId());
 // Screenshots go to the run's scratch directory (mk/project-paths.mk) unless TAU_DEMO_OUT names a retained location.
-const out=process.env.TAU_DEMO_OUT||join(process.env.FIXTURES_RUN_ROOT||tmpdir(),'tau-demo-evidence');mkdirSync(out,{recursive:true});
+const out=process.env.TAU_DEMO_OUT||join(scratch,'tau-demo-evidence');mkdirSync(out,{recursive:true});
 const line=readFileSync('/home/agent/.tau/web-demo.env','utf8').split('\n').find(line=>line.startsWith('TAU_WEB_AUTH_TOKEN='));
 const token=line?.slice(line.indexOf('=')+1).replace(/^["']|["']$/g,'');
 if(!token)throw new Error('Demo token missing');

@@ -43,12 +43,12 @@ repository, and run the suite against it. Do not edit submodule files; change th
 
 ```sh
 make -C references/fixtures-vibes deps          # Bun deps + Chromium/WebKit (needs bun and node)
-make -C references/fixtures-vibes compliance PROFILE=$PWD/tests/fixtures-vibes/profile.json \
-  PROJECT_TMP_ROOT=/workspace/tmp/<runtime>
+make -C references/fixtures-vibes compliance PROFILE=$PWD/tests/fixtures-vibes/profile.json PROJECT_NAME=<runtime>
 ```
 
-`PROJECT_TMP_ROOT` is where the run's scratch goes (`runs/suite/<run-id>/`, with `TMPDIR` pointing inside it) and its
-tool caches (`cache/<tool>/`); it defaults to `/workspace/tmp/fixtures-vibes`. See `mk/project-paths.mk`.
+The run's scratch (`runs/suite/<run-id>/`, with `TMPDIR` inside it) and tool caches (`cache/<tool>/`) go under the
+runtime's temporary root: `PROJECT_TMP_ROOT` if given (it must end in `/<runtime>`), else `/workspace/tmp/<runtime>`,
+`$RUNNER_TEMP/<runtime>`, `$TMPDIR/<runtime>` or the platform temp directory. See `mk/project-tmp.mjs`.
 
 `compliance` runs the Playwright suite (Chromium and WebKit × phone, tablet, desktop; zero retries), then the report gate.
 Outputs go to `references/fixtures-vibes/test-results/` (git-ignored, so the submodule stays clean):

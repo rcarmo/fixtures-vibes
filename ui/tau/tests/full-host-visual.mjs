@@ -2,7 +2,8 @@ import {chromium,webkit} from 'playwright';
 import {createServer} from 'node:http';
 import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join} from 'node:path';
-import {tmpdir} from 'node:os';
+import {initRunDir,newRunId,resolveProjectTmpRoot} from '../../../mk/project-tmp.mjs';
+const scratch=process.env.FIXTURES_RUN_ROOT||initRunDir(resolveProjectTmpRoot(),'ui-tau',newRunId());
 import {PNG} from 'pngjs';
 import pixelmatch from 'pixelmatch';
 import AxeBuilder from '@axe-core/playwright';
@@ -10,7 +11,7 @@ const pic='/opt/piclaw/current/app/runtime/web/static',tau=process.env.TAU_VISUA
 const engine=process.env.TAU_VISUAL_ENGINE||'chromium';
 const theme=process.env.TAU_VISUAL_THEME||'light';
 const widths=process.env.TAU_VISUAL_WIDTHS?process.env.TAU_VISUAL_WIDTHS.split(',').map(Number):[820,1440];
-const out=process.env.TAU_VISUAL_OUT||join(process.env.FIXTURES_RUN_ROOT||tmpdir(),'tau-full-host-diffs');mkdirSync(out,{recursive:true});
+const out=process.env.TAU_VISUAL_OUT||join(scratch,'tau-full-host-diffs');mkdirSync(out,{recursive:true});
 const populated=process.env.TAU_VISUAL_POPULATED==='1';
 const queued=process.env.TAU_VISUAL_QUEUED==='1';
 const queueText=process.env.TAU_VISUAL_LONG_QUEUE==='1'?'Long queued fixture '.repeat(20)+'END-OF-QUEUE':'Queued fixture: inspect the toolbar next.';

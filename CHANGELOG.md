@@ -2,11 +2,13 @@
 
 ## Unreleased
 
-- Caches and scratch live under one project root, `PROJECT_TMP_ROOT` (default `/workspace/tmp/fixtures-vibes`):
-  `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`. `mk/project-paths.mk`, included by every Makefile here,
-  exports `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT` and the Bun, npm, XDG and Go caches, and refuses a symlinked or
-  foreign-owned root; `make env` prints the same settings for direct commands, and `make clean-scratch` removes only
-  this project's runs and build output. A runtime passes its own root (`PROJECT_TMP_ROOT=/workspace/tmp/<runtime>`).
+- Caches and scratch live under one project root with `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`,
+  resolved once by `mk/project-tmp.mjs`: an explicit `PROJECT_TMP_ROOT` (must end in the project name; an unusable one
+  fails), else `/workspace/tmp/<project>`, `$RUNNER_TEMP/<project>`, `$TMPDIR/<project>` or the platform temp
+  directory, so CI needs no host tooling. `mk/project-paths.mk`, included by every Makefile here, exports the resolved
+  root, `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT` and the Bun, npm, XDG and Go caches; `make env` prints the same
+  settings for direct commands, and `make clean-scratch` removes only this project's runs and build output. A runtime
+  names itself (`PROJECT_NAME=<runtime>`) so the scratch is its own. A directly started suite resolves the same way.
   The suite creates the model's and each runtime's root under `FIXTURES_RUN_ROOT` (checked: absolute, owned, not a
   symlink) with a private `tmp/` as the process's `TMPDIR`, and now also removes a root whose `prepare` fails. The Tau
   visual scripts write to the run directory instead of fixed `/workspace/tmp` paths, and `reference-layout.mjs` requires

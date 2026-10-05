@@ -4,29 +4,38 @@
  */
 import { spawn, execSync, type ChildProcess } from 'node:child_process';
 import { lstatSync, mkdirSync, mkdtempSync, openSync, readFileSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
 import { join, resolve, dirname, isAbsolute } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:net';
 import type { Profile } from './runtime';
+// @ts-ignore -- plain ESM helper shared with the Makefiles
+import { initRunDir, newRunId, resolveProjectTmpRoot } from '../mk/project-tmp.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
 /**
- * A fresh scratch root for the model or one runtime, with its own `tmp/`. Roots go under FIXTURES_RUN_ROOT, which the
- * Makefiles set to the project's run directory (mk/project-paths.mk), else under the OS temp directory (TMPDIR).
- * FIXTURES_RUN_ROOT must be an absolute, real directory owned by this user.
+ * The run's scratch directory: FIXTURES_RUN_ROOT, which the Makefiles set (mk/project-paths.mk); otherwise resolved
+ * once here like the Makefiles do (mk/project-tmp.mjs, `runs/suite/<id>` under the project root) and exported, with
+ * TMPDIR inside it, for Playwright's workers and browsers. It must be an absolute directory owned by this user.
  */
-export function newRoot(prefix: string) {
-  const base = process.env.FIXTURES_RUN_ROOT;
-  if (base) {
-    if (!isAbsolute(base)) throw new Error(`FIXTURES_RUN_ROOT must be absolute: ${base}`);
-    mkdirSync(base, { recursive: true });
-    const st = lstatSync(base);
-    if (st.isSymbolicLink() || !st.isDirectory() || (process.getuid && st.uid !== process.getuid()))
-      throw new Error(`FIXTURES_RUN_ROOT must be a directory owned by this user, not a symlink: ${base}`);
+export function runRoot() {
+  if (!process.env.FIXTURES_RUN_ROOT) {
+    const root = resolveProjectTmpRoot();
+    const run = initRunDir(root, 'suite', newRunId());
+    Object.assign(process.env, { PROJECT_TMP_ROOT: root, FIXTURES_RUN_ROOT: run, TMPDIR: join(run, 'tmp'), TMP: join(run, 'tmp'), TEMP: join(run, 'tmp') });
   }
-  const root = mkdtempSync(join(base || tmpdir(), prefix));
+  const base = process.env.FIXTURES_RUN_ROOT!;
+  if (!isAbsolute(base)) throw new Error(`FIXTURES_RUN_ROOT must be absolute: ${base}`);
+  mkdirSync(base, { recursive: true });
+  const st = lstatSync(base);
+  if (st.isSymbolicLink() || !st.isDirectory() || (process.getuid && st.uid !== process.getuid()))
+    throw new Error(`FIXTURES_RUN_ROOT must be a directory owned by this user, not a symlink: ${base}`);
+  return base;
+}
+
+/** A fresh scratch root for the model or one runtime under the run directory, with its own `tmp/`. */
+export function newRoot(prefix: string) {
+  const root = mkdtempSync(join(runRoot(), prefix));
   mkdirSync(join(root, 'tmp'));
   return root;
 }
