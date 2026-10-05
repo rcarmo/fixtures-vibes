@@ -1,5 +1,5 @@
 /** Session picker (shared-ux.feature @ux-shared-014/015; canonical-ux.feature @ux-original-014/015, same bodies). */
-import { entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField } from '../pickers';
+import { entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField, typeInModelPicker } from '../pickers';
 import { test, expect } from '../fixtures';
 import { holdReads, holdWrites } from '../net';
 import { gateName } from '../runtime';
@@ -25,7 +25,7 @@ for (const [id, name] of [
   await input.press('Enter');
   await expect(reply(`research-${n}`)).toHaveCount(1);
   await modelButton.click();
-  await page.keyboard.type('fixture-2');
+  await typeInModelPicker(page, 'fixture-2');
   await entries(modelList(page), MODEL_TWO).first().click();
   await expect(modelButton).toContainText(MODEL_TWO);
   await page.goto(main.url);

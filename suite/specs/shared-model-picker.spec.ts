@@ -2,7 +2,7 @@
  * Shared model picker contract (features/canonical/shared-ux.feature @ux-shared-020).
  * Only fixture models are ever selected: reference instances may list real, billable providers too.
  */
-import { ENTRY, entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField } from '../pickers';
+import { ENTRY, entries, modelList, sessionList, nameRe, MODEL_ONE, MODEL_TWO, searchField, typeInModelPicker } from '../pickers';
 import { test, expect } from '../fixtures';
 import type { Page } from '@playwright/test';
 import { randomUUID } from 'node:crypto';
@@ -30,7 +30,7 @@ for (const [id, name] of [
       // A rejected request declares nothing: the previous model and the draft stay (3.2.5 shows no message).
       const rejected = await holdWrites(page, bodyHas('fixture-2'), { status: 500, error: `rejected-${n}` });
       await modelButton(page).click();
-      await page.keyboard.type('fixture-2');
+      await typeInModelPicker(page, 'fixture-2');
       await entries(modelList(page), MODEL_TWO).click();
       await expect.poll(() => rejected.count).toBe(1);
       rejected.release();
@@ -45,7 +45,7 @@ for (const [id, name] of [
     if (input === 'pointer') await modelButton(page).click();
     else { await modelButton(page).focus(); await page.keyboard.press('Enter'); }
     await expect(modelList(page)).toBeVisible();
-    await page.keyboard.type('fixture-2');
+    await typeInModelPicker(page, 'fixture-2');
     const second = entries(modelList(page), MODEL_TWO);
     await expect(second).toHaveCount(1);
     if (input === 'pointer') await second.click();
@@ -90,7 +90,7 @@ for (const [id, name] of [
   const pickFixtureTwo = async () => {
     await modelButton(page).click();
     await expect(modelList(page)).toBeVisible();
-    await page.keyboard.type('fixture-2');
+    await typeInModelPicker(page, 'fixture-2');
     await entries(modelList(page), MODEL_TWO).click();
   };
   // A turn in each session, so both show an authoritative model label.

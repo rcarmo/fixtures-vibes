@@ -264,13 +264,13 @@ export async function purgeUntitled(page: Page) {
 }
 
 /**
- * Click (or right-click) a point of `target` that is actually exposed. On narrow layouts floating shell controls can
- * cover part of a tab or toolbar button; a user taps the uncovered part.
+ * A point of `target` that is actually exposed, with the pointer moved there. On narrow layouts floating shell controls
+ * can cover part of a tab or toolbar button; a user presses the uncovered part.
  */
-export async function clickVisible(page: Page, target: Locator, button: 'left' | 'right' = 'left') {
+export async function exposedPoint(page: Page, target: Locator) {
   await expect(target).toBeVisible();
   const box = (await target.boundingBox())!;
-  // Hover each candidate first: hover can reveal controls (a tab's close button) that then take the click.
+  // Hover each candidate first: hover can reveal controls (a tab's close button) that then take the press.
   for (const fy of [0.5, 0.3, 0.7]) for (const fx of [0.5, 0.35, 0.2, 0.1, 0.65, 0.8, 0.9]) {
     const x = box.x + box.width * fx, y = box.y + box.height * fy;
     await page.mouse.move(x, y);
@@ -280,33 +280,37 @@ export async function clickVisible(page: Page, target: Locator, button: 'left' |
       const control = hit?.closest('button, [role=button], a');
       return !!hit && el.contains(hit) && (!control || control === el || !el.contains(control));
     }, [x, y]);
-    if (exposed) { await page.mouse.click(x, y, { button }); return; }
+    if (exposed) return { x, y };
   }
-  throw new Error('clickVisible: target is fully covered');
+  throw new Error('exposedPoint: target is fully covered');
+}
+
+/** Click (or right-click) an exposed point of `target` (see exposedPoint). */
+export async function clickVisible(page: Page, target: Locator, button: 'left' | 'right' = 'left') {
+  const { x, y } = await exposedPoint(page, target);
+  await page.mouse.click(x, y, { button });
 }
 
 /** Open an existing file in an editor tab (reusing an open tab) and make the editor reachable. */
 export async function openInEditor(page: Page, sel: (k: string) => string, name: string) {
   if (!(await tab(page, name).count())) {
     await openWorkspace(page);
-    let row = await treeRow(page, name);
-    if (!row) {
+    // A root entry can stay unlisted until the tree is refreshed (rcarmo/piclaw#1520). Never reload here: a reload
+    // discards the other open editor tabs.
+    await expect.poll(async () => {
+      if (await treeRow(page, name)) return true;
       await pane(page).getByRole('button', { name: /^refresh tree$/i }).click();
-      await page.waitForTimeout(500);
-      row = await treeRow(page, name);
-    }
-    if (!row) {
-      // A refresh can leave root entries stale (rcarmo/piclaw#1520); a reload lists them.
-      await page.reload();
-      await openWorkspace(page);
-      await expect.poll(async () => (await treeRow(page, name)) !== null, { message: `tree row ${name}` }).toBe(true);
-      row = await treeRow(page, name);
-    }
-    await row!.click();
-    await expect.poll(() => previewPath(page)).toBe(name);
+      return false;
+    }, { message: `tree row ${name}` }).toBe(true);
+    // A click that lands while a refresh re-renders the tree is lost: click the row again.
+    await expect(async () => {
+      await (await treeRow(page, name))!.click();
+      await expect.poll(() => previewPath(page), { timeout: 3_000 }).toBe(name);
+    }).toPass({ timeout: 15_000 });
     await pane(page).getByRole('button', { name: /^open in editor$/i }).click();
   }
   await uncoverEditor(page, sel);
+  await uncover(page, tab(page, name));
   await clickVisible(page, tab(page, name));
   await expect(tab(page, name)).toHaveAttribute('aria-selected', 'true');
 }

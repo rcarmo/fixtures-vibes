@@ -2,7 +2,7 @@
  * Portable picker semantics. Runtimes may expose pickers as a listbox of options or a menu of menu items, and label
  * fixture models by display name ("fixture model two") or by ID ("fixture-vibes/fixture-2 • 32K ctx").
  */
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export const ENTRY = '[role="option"], [role="menuitem"], [role="menuitemradio"]';
 const list = (page: Page, name: RegExp) => page.getByRole('listbox', { name }).or(page.getByRole('menu', { name }));
@@ -22,3 +22,14 @@ export const nameRe = (name: string) => new RegExp(`(?:^|[^\\w-])${name.replace(
 /** A search field by name: runtimes expose it as a searchbox, a textbox or an ARIA combobox (autocomplete list). */
 export const searchField = (scope: Pick<Page, 'getByRole'> | Pick<Locator, 'getByRole'>, name: RegExp) =>
   scope.getByRole('searchbox', { name }).or(scope.getByRole('combobox', { name })).or(scope.getByRole('textbox', { name })).first();
+
+/** Wait until the open model picker holds keyboard focus (its list or the search field controlling it), then type. */
+export async function typeInModelPicker(page: Page, text: string) {
+  const picker = modelList(page);
+  await expect(picker).toBeVisible();
+  await expect.poll(() => picker.first().evaluate(el => {
+    const a = document.activeElement;
+    return !!a && a !== document.body && (el.contains(a) || (!!el.id && a.getAttribute('aria-controls') === el.id));
+  }), { message: 'model picker has focus' }).toBe(true);
+  await page.keyboard.type(text);
+}

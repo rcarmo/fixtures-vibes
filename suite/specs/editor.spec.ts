@@ -4,8 +4,9 @@
  */
 import { test, expect } from '../fixtures';
 import { bodyHas, holdWrites } from '../net';
+import { shell } from '../keychain';
 import type { Page } from '@playwright/test';
-import { clickVisible, closeControl, editorFile, editorText, openWorkspace, pane, purgeUntitled, openInEditor, removeFiles, previewPath, save, saveButton, tab, tabs, treeRow, typeInEditor, uncoverEditor } from '../workspace';
+import { clickVisible, exposedPoint, closeControl, editorFile, editorText, openWorkspace, pane, purgeUntitled, openInEditor, removeFiles, previewPath, save, saveButton, tab, tabs, treeRow, typeInEditor, uncoverEditor } from '../workspace';
 
 type Sel = (k: string) => string;
 // Files are created and removed through the UI on every test: allow for that setup.
@@ -96,8 +97,7 @@ test('@ux-editor-003 Clicking a tab activates it immediately', async ({ page, ru
   await start(page, runtime);
   const a = await file(page, sel, 'first file');
   await file(page, sel, 'second file');
-  const box = (await tab(page, a).boundingBox())!;
-  await page.mouse.move(box.x + 8, box.y + box.height / 2);
+  await exposedPoint(page, tab(page, a));
   await page.mouse.down();
   // Active on press, before release.
   await expect(tab(page, a)).toHaveAttribute('aria-selected', 'true');
@@ -354,7 +354,10 @@ test('@ux-workspace-013 Gate dock, popout, reattach, and standalone viewer route
 test("@ux-workspace-020 Show a file's external changes in a clean editor tab", async ({ page, runtime, sel }) => {
   await start(page, runtime);
   const name = await file(page, sel, 'v1');
-  await remoteEdit(page, sel, name, ' remote');
+  // Some time later the agent appends to the file. (The wait lets the client settle: a runtime may subscribe to file
+  // changes after a debounce. Another browser page would report its own workspace visibility to the runtime.)
+  await page.waitForTimeout(3_000);
+  await shell(page, runtime, sel, `printf ' remote' >> ${name}`);
   await expect(editorText(page, sel)).toHaveText('v1 remote', { timeout: 15_000 });
   await expect(closeControl(page, name)).toHaveAccessibleName(/^close\b/i);
   await expect(page.getByRole('button', { name: 'Reload', exact: true }).first()).toBeHidden();

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- `ui/classic/scripts/probe-api.ts` reports which `ui/API.md` GET routes and boot calls a running runtime serves,
+  as a progress check before a runtime switches to `ui/classic`.
+- Suite setup no longer reloads the page to find a stale tree row, because a reload discarded the other open editor
+  tabs (`@ux-workspace-011`, `@ux-editor-001`). It refreshes the tree and clicks the row again until the preview
+  follows. It also uncovers a tab hidden behind the workspace pane, and `@ux-editor-003` presses an exposed point of
+  the tab.
+- Model-picker specs type only after the picker holds focus (`@ux-compaction-006/007`, shared model and session
+  pickers).
+- `@ux-workspace-020`: the agent's shell tool makes the external change, after a settle wait. A second browser page
+  reported its own workspace visibility to Piclaw, which turned off its file watcher for every client
+  (rcarmo/piclaw#1527). The scenario passes on the reference at all widths and is no longer listed there.
+- Reference runs start from a fresh store (`oracle/piclaw/3.2.5/README.md`). Thousands of leftover test sessions
+  slowed the picker and editor enough to fail unrelated scenarios.
 - Canonical front-end layout (Rui): `ui/gi` is now `ui/classic` (`src/`, `piclaw/<name>-<version>/`, `static/`,
   `theme-catalogue.json`, `tests/unit/`, `tests/fixtures/`); `ui/vibes` serves `static/` with `tests/unit/`; `ui/tau` serves
   `static/` with the SDK scripts in `sdk/`. Consumers link or import the new paths.

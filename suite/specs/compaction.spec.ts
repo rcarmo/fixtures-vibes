@@ -6,7 +6,7 @@
  */
 import { test, expect } from '../fixtures';
 import { gateName } from '../runtime';
-import { entries, modelList, MODEL_ONE, MODEL_TWO } from '../pickers';
+import { entries, modelList, MODEL_ONE, MODEL_TWO, typeInModelPicker } from '../pickers';
 import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
@@ -108,7 +108,7 @@ test('@ux-compaction-006 Check model context compatibility before switching', as
   // Reported usage beyond every fixture model's 128K window: the other model cannot take this context.
   await turn(page, sel, '[usage:130000][reply:huge-ok] huge', 'huge-ok');
   await modelButton(page).click();
-  await page.keyboard.type('fixture-2');
+  await typeInModelPicker(page, 'fixture-2');
   const blocked = entries(modelList(page), MODEL_TWO).first();
   await expect(blocked).toHaveAttribute('aria-disabled', 'true');
   await blocked.click({ force: true });
@@ -122,7 +122,7 @@ test('@ux-compaction-007 Refresh model information after an accepted switch', as
   await page.goto((await runtime.newSession()).url);
   await turn(page, sel, '[reply:warm-ok] warm', 'warm-ok');
   await modelButton(page).click();
-  await page.keyboard.type('fixture-2');
+  await typeInModelPicker(page, 'fixture-2');
   await entries(modelList(page), MODEL_TWO).first().click();
   // The accepted switch relabels the model; context information is shown against the new model's window.
   await expect(modelButton(page)).toContainText(MODEL_TWO);
