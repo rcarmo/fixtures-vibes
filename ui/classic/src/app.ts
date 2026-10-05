@@ -35,6 +35,7 @@ import { paneRegistry, tabStore, workspacePreviewPaneExtension, workspaceMarkdow
 
 // Register only read-only previews; editor/specialised tab lifecycle is separate.
 paneRegistry.register(workspacePreviewPaneExtension);
+paneRegistry.register(editorPaneExtension);
 paneRegistry.register(workspaceMarkdownPreviewPaneExtension);
 import {
     getTimeline,
@@ -75,7 +76,9 @@ import { ComposeBox, QueuedFollowupStack, parseQueuedContent } from './component
 import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
 import { TabStrip } from './components/tab-strip.js';
-import { WorkspaceTab } from './gi-workspace-tab.js';
+import { confirmCloseTabs } from './gi-editor-host.js';
+import { EditorTab } from './gi-editor-tab.js';
+import { editorPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/editor-loader.ts';
 import { FloatingWidgetPane } from './components/floating-widget-pane.js';
 import { AttachmentPreviewModal } from './components/attachment-preview-modal.js';
 import { SystemMetersHud } from './components/system-meters-hud.js';
@@ -676,6 +679,11 @@ function GiApp() {
     // ── SSE connection (replaces polling) ─────────────────────────────────────
 
     const handleSseEvent = useCallback((eventType: string, data: any) => {
+        // Workspace changes are not chat-scoped: the explorer and a clean editor tab refresh from them.
+        if (eventType === 'workspace_update') {
+            window.dispatchEvent(new CustomEvent('workspace-update', { detail: data }));
+            return;
+        }
         if (!selection.current() || data?.chat_jid !== sessionToChatJid(selection.current()!)) return;
         void localNotifications.event(eventType, data);
         forwardPlanSidebarEvent(eventType, data);
@@ -1062,7 +1070,7 @@ function GiApp() {
         setPreviewVisible(true);
     }, []);
 
-    const handleTabClose = useCallback((id: string) => { tabStore.close(id); }, []);
+    const handleTabClose = useCallback((id: string) => { if (confirmCloseTabs([id])) tabStore.close(id); }, []);
 
     // ── Shell class ───────────────────────────────────────────────────────────
 
@@ -1171,16 +1179,16 @@ function GiApp() {
                     <${TabStrip}
                         tabs=${tabs}
                         activeId=${activeTabId}
-                        readOnlyHost=${true}
+                        readOnlyHost=${false}
                         hostVisible=${previewVisible}
                         onActivate=${(id: string) => tabStore.activate(id)}
                         onClose=${handleTabClose}
-                        onCloseOthers=${(id: string) => { if (tabStore.get(id)) tabStore.closeOthers(id); }}
-                        onCloseAll=${() => tabStore.closeAll()}
+                        onCloseOthers=${(id: string) => { if (tabStore.get(id) && confirmCloseTabs(tabStore.getTabs().filter((t: any) => t.id !== id && !t.pinned).map((t: any) => t.id))) tabStore.closeOthers(id); }}
+                        onCloseAll=${() => { if (confirmCloseTabs(tabStore.getTabs().filter((t: any) => !t.pinned).map((t: any) => t.id))) tabStore.closeAll(); }}
                         onTogglePin=${(id: string) => tabStore.togglePin(id)}
                     />
                     <div class="editor-pane-host">
-                        ${activeTabId && html`<${WorkspaceTab} key=${activeTabId} path=${activeTabId} onClose=${() => handleTabClose(activeTabId)} />`}
+                        ${activeTabId && html`<${EditorTab} key=${activeTabId} path=${activeTabId} onClose=${() => handleTabClose(activeTabId)} />`}
                     </div>
                 </div>
                 <div class="editor-splitter" hidden=${!previewVisible}></div>

@@ -7,7 +7,6 @@ import {patchWidgetSandbox, patchWidgetMessageSource} from './scripts/patch-widg
 import {piclawSvgAdapter, patchMarkdownSvg, patchPostSvg, verifyPiclawSvg} from './scripts/piclaw-svg-adapter.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
-import { patchWorkspaceReadonly } from './scripts/patch-workspace-readonly.mjs';
 import { patchWorkspaceFolderHint } from './scripts/patch-workspace-folder-hint.mjs';
 import { patchTabReadonly } from './scripts/patch-tab-readonly.mjs';
 import { patchQuickActionKeys, patchComposePopupKeys } from './scripts/patch-popup-keys.mjs';
@@ -30,6 +29,7 @@ import { patchComposePrefillFocus } from './scripts/patch-compose-prefill-focus.
 import { patchPostSpeech } from './scripts/patch-post-speech.mjs';
 import { patchPostOutcomes } from './scripts/patch-post-outcomes.mjs';
 import { patchPostRecoveryControl } from './scripts/patch-post-recovery-control.mjs';
+import { EDITOR_DIR, piclawEditorAdapter, verifyPiclawEditor } from './scripts/piclaw-editor-adapter.mjs';
 
 import { readdirSync, statSync } from 'fs';
 import { gzipSync, brotliCompressSync, constants as zlibConstants } from 'zlib';
@@ -99,7 +99,20 @@ const katexCSS = readFileSync('node_modules/katex/dist/katex.min.css', 'utf8')
   .replace(/,url\(fonts\/[^)]+\.ttf\) format\("truetype"\)/g, '');
 writeFileSync('static/css/katex.min.css', katexCSS.replaceAll('url(fonts/', 'url(/fonts/katex/'));
 buildVendor('mermaid-entry.ts',    vendorDir,  'beautiful-mermaid.js');
-buildVendor('codemirror-entry.ts', editorVendorDir, 'codemirror.js');
+// CodeMirror for the Piclaw editor and the other editor surfaces: the vendored 3.2.5 entry (a superset of the
+// exports src/vendor/codemirror-entry.ts provided).
+verifyPiclawEditor(__dirname);
+run(['bun', 'build', `${EDITOR_DIR}/extensions/viewers/editor/vendor/codemirror-entry.ts`, '--target=browser', '--format=esm', '--minify',
+  `--outfile=${editorVendorDir}/codemirror.js`, ...(SOURCEMAPS ? ['--sourcemap=linked'] : [])]);
+
+// ── Editor bundle (Piclaw 3.2.5 StandaloneEditorInstance, loaded on first editor mount) ─────────────────────
+const editorBuild = await Bun.build({
+  entrypoints: [`${EDITOR_DIR}/extensions/viewers/editor/editor-extension.ts`], outdir: distDir,
+  target: 'browser', format: 'esm', minify: true, sourcemap: SOURCEMAPS ? 'linked' : 'none',
+  naming: { entry: 'editor.bundle.[ext]' },
+  plugins: [piclawEditorAdapter(__dirname)],
+});
+if (!editorBuild.success) { console.error(editorBuild.logs); process.exit(1); }
 
 // ── App bundle ────────────────────────────────────────────────────────────
 const appBuild = await Bun.build({
@@ -107,7 +120,7 @@ const appBuild = await Bun.build({
   target: 'browser', format: 'esm', sourcemap: SOURCEMAPS ? 'linked' : 'none', splitting: true, modulePreload: false,
   naming: { entry: 'app.bundle.[ext]', chunk: 'chunks/[name]-[hash].[ext]', asset: 'assets/[name]-[hash].[ext]' },
   external: ['/editor-vendor/codemirror.js'],
-  plugins: [piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-widget-isolation', setup(build) {
+  plugins: [piclawEditorAdapter(__dirname), piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-widget-isolation', setup(build) {
     build.onLoad({ filter: /[\\/]ui[\\/]generated-widget\.ts$/ }, async args => ({ contents: patchWidgetSandbox(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]components[\\/]floating-widget-pane\.ts$/ }, async args => ({ contents: patchWidgetMessageSource(await Bun.file(args.path).text()), loader: 'ts' }));
   } }, { name: 'gi-post-speech', setup(build) {
@@ -127,7 +140,7 @@ const appBuild = await Bun.build({
       contents: patchTabReadonly(await Bun.file(args.path).text()), loader: 'ts',
     }));
     build.onLoad({ filter: /[\\/]components[\\/]workspace-explorer\.ts$/ }, async args => ({
-      contents: patchWorkspaceFolderHint(patchWorkspaceReadonly(await Bun.file(args.path).text())), loader: 'ts',
+      contents: patchWorkspaceFolderHint(await Bun.file(args.path).text()), loader: 'ts',
     }));
   } }, { name: 'gi-timeline-menu-dismissal', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]timeline-menu\.ts$/ }, async args => ({

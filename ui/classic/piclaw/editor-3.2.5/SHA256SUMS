@@ -33,6 +33,7 @@ e5a2a4f64730e7dc621c0ca94e5c7cef73c4a8f783cceecb8030a75ff7386c5b  ./extensions/v
 8f82dabdb863f7f59bb971efa962f8a5a25c5414318ea5bc8764b2411a0185d0  ./web/src/panes/editor-loader.ts
 232dc83f0bc4850f5e2f3ecb267bffa6d8fab105aee07ab88d9020da2b3f1674  ./web/src/panes/file-conflict-monitor.ts
 28e879e3b792ea4daff5a21764d0e1907238945dc629e2acb69f9841f7a3c766  ./web/src/panes/pane-types.ts
+fcb2b842c6dbf88db4bb8a2c61332fc4ce0ee027ac153835f61dfa85b35d6227  ./web/src/ui/addon-workspace-actions.ts
 1a77a85bb2babb45d777f2f72f9f8d73e13f116295029a61f46d597009de7f0c  ./web/src/ui/editor-file-reference.ts
 94869a27258ca585113517a1aad9bceb50efa72a931895f62e687264510de3fe  ./web/src/ui/use-editor-state.ts
 c1912af490597c900105f06f49fc0bf9b0a2e58b3406c01ca736a6c87ff79757  ./web/src/ui/workspace-markdown-image.ts
