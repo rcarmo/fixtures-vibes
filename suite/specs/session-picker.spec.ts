@@ -86,6 +86,7 @@ test('@ux-session-004 Use archive and restore actions supplied for session entri
   const home = await runtime.newSession(`ah${n}`);
   const name = `ar${n}`;
   const victim = await runtime.newSession(name);
+  await runtime.sessionHeadroom();
   page.on('dialog', d => void d.accept().catch(() => {}));
   await page.goto(victim.url);
   await openPicker(page);

@@ -77,6 +77,9 @@ const fill = (value: unknown, vars: Record<string, string>): unknown =>
 
 const pick = (obj: any, path: string) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), obj);
 
+/** Times of this worker's session-create requests (see sessionHeadroom). */
+const sessionRequests: number[] = [];
+
 export class Runtime {
   constructor(readonly profile: Profile, readonly baseUrl: string, readonly modelUrl: string) {}
 
@@ -120,6 +123,7 @@ export class Runtime {
       // Runtimes may rate-limit session creation; honour Retry-After, otherwise back off exponentially (~60s total).
       let res: Response;
       for (let attempt = 0; ; attempt++) {
+        sessionRequests.push(Date.now());
         res = await fetch(this.baseUrl + fill(c.path, vars), {
           method: c.method,
           headers: { 'content-type': 'application/json', ...(this.profile.auth?.headers ?? {}), ...(c.headers ?? {}) },
@@ -133,6 +137,20 @@ export class Runtime {
       id = String(pick(await res.json(), c.idField ?? 'id'));
     }
     return { id, url: this.baseUrl + fill(this.profile.session.open, { ...vars, id: encodeURIComponent(id) }) };
+  }
+
+  /**
+   * Wait until this worker has made fewer than `max` session-create requests in the last minute. Runtimes may
+   * rate-limit session actions together (Piclaw 3.2.5: 20 per minute for create, archive and restore), so a spec
+   * that then archives or restores a session through the UI leaves room for it first.
+   */
+  async sessionHeadroom(max = 10) {
+    for (;;) {
+      const now = Date.now();
+      while (sessionRequests.length && sessionRequests[0] < now - 60_000) sessionRequests.shift();
+      if (sessionRequests.length < max) return;
+      await new Promise(r => setTimeout(r, sessionRequests[0] + 60_000 - now + 100));
+    }
   }
 
   /** Script the next model requests (any kind, e.g. a compaction summary) with directive strings, in order. Replaces
