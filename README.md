@@ -47,8 +47,9 @@ make -C references/fixtures-vibes compliance PROFILE=$PWD/tests/fixtures-vibes/p
 ```
 
 The run's scratch (`runs/suite/<run-id>/`, with `TMPDIR` inside it) and tool caches (`cache/<tool>/`) go under the
-runtime's temporary root: `PROJECT_TMP_ROOT` if given (it must end in `/<runtime>`), else `/workspace/tmp/<runtime>`,
-`$RUNNER_TEMP/<runtime>`, `$TMPDIR/<runtime>` or the platform temp directory. See `mk/project-tmp.mjs`.
+runtime's temporary root: `<PROJECT_TMP_BASE>/<runtime>` if a base is given; in CI `$RUNNER_TEMP`, the original
+`TMPDIR` or the system temp directory; locally `/workspace/tmp` or the system temp directory, each + `/<runtime>`.
+See `mk/project-tmp.mjs`.
 
 `compliance` runs the Playwright suite (Chromium and WebKit × phone, tablet, desktop; zero retries), then the report gate.
 Outputs go to `references/fixtures-vibes/test-results/` (git-ignored, so the submodule stays clean):

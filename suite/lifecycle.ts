@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:net';
 import type { Profile } from './runtime';
 // @ts-ignore -- plain ESM helper shared with the Makefiles
-import { initRunDir, newRunId, resolveProjectTmpRoot } from '../mk/project-tmp.mjs';
+import { initRunDir, newRunId, resolveProjectTmpRoot, snapshotOriginalTmpdir } from '../mk/project-tmp.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -20,6 +20,7 @@ const here = dirname(fileURLToPath(import.meta.url));
  */
 export function runRoot() {
   if (!process.env.FIXTURES_RUN_ROOT) {
+    snapshotOriginalTmpdir();
     const root = resolveProjectTmpRoot();
     const run = initRunDir(root, 'suite', newRunId());
     Object.assign(process.env, { PROJECT_TMP_ROOT: root, FIXTURES_RUN_ROOT: run, TMPDIR: join(run, 'tmp'), TMP: join(run, 'tmp'), TEMP: join(run, 'tmp') });

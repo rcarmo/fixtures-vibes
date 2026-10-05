@@ -8,9 +8,10 @@
   `test-results/profiles/<purpose>-<run-id>/` with the command, revision, toolchain and sampling settings, and a
   `summary.txt` that separates this repository's frames from runner overhead.
 - Caches and scratch live under one project root with `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`,
-  resolved once by `mk/project-tmp.mjs`: an explicit `PROJECT_TMP_ROOT` (must end in the project name; an unusable one
-  fails), else `/workspace/tmp/<project>`, `$RUNNER_TEMP/<project>`, `$TMPDIR/<project>` or the platform temp
-  directory, so CI needs no host tooling. `mk/project-paths.mk`, included by every Makefile here, exports the resolved
+  resolved once by `mk/project-tmp.mjs`, so CI needs no host tooling: an explicit `PROJECT_TMP_BASE` (→
+  `<base>/<project>`) or `PROJECT_TMP_ROOT` (must agree; an unusable value fails); else in CI `$RUNNER_TEMP`, the
+  original inherited `TMPDIR` or the system temp directory, and locally `/workspace/tmp` or the system temp
+  directory, each + `/<project>`. The layout also documents `tests/` and `logs/` scratch. `mk/project-paths.mk`, included by every Makefile here, exports the resolved
   root, `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT` and the Bun, npm, XDG and Go caches; `make env` prints the same
   settings for direct commands, and `make clean-scratch` removes only this project's runs and build output. A runtime
   names itself (`PROJECT_NAME=<runtime>`) so the scratch is its own. A directly started suite resolves the same way.

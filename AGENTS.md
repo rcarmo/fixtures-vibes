@@ -41,17 +41,22 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
 
 ## Caches and scratch
 
-- Root, resolved once by `mk/project-tmp.mjs` (vendored here, so CI needs no host tooling): an explicit
-  `PROJECT_TMP_ROOT` (absolute, named after the project, owned, not a symlink; anything else fails), else
-  `/workspace/tmp/<project>` when `/workspace/tmp` exists, else `$RUNNER_TEMP/<project>`, `$TMPDIR/<project>` or the
-  platform temp directory + `/<project>`. The project is `PROJECT_NAME` (default `fixtures-vibes`). Layout:
-  `cache/<tool>/` (bun, npm, xdg, go), `build/`, `runs/<purpose>/<run-id>/` (`suite`, `ui-classic`, `ui-vibes`,
-  `ui-tau`, or `RUN_PURPOSE=…`).
+- Root, resolved once by `mk/project-tmp.mjs` (vendored here, so CI needs no host tooling), always ending in
+  `/<project>` (`PROJECT_NAME`, default `fixtures-vibes`):
+  1. explicit `PROJECT_TMP_BASE` → `<base>/<project>`; `PROJECT_TMP_ROOT` (absolute, project-named, owned, not a
+     symlink) is kept for compatibility. Both set must agree; an unusable explicit value fails, never falls back;
+  2. CI (`CI`, `GITHUB_ACTIONS`, `GITLAB_CI`, `TF_BUILD`, `CIRCLECI`): `$RUNNER_TEMP`, then the original inherited
+     `TMPDIR`, then the system temp directory, even when `/workspace/tmp` exists;
+  3. local: a usable `/workspace/tmp`, then the system temp directory (`/tmp/<project>` on POSIX).
+  The inherited `TMPDIR` is snapshotted as `PROJECT_ORIGINAL_TMPDIR` before it is redirected.
+- Layout: `cache/<tool>/` (bun, npm, xdg, go) for rebuildable caches, `build/` for generated output, `tests/` and
+  `logs/` for disposable test/log scratch, `runs/<purpose>/<run-id>/` (`suite`, `ui-classic`, `ui-vibes`, `ui-tau`,
+  or `RUN_PURPOSE=…`) for isolated runs. Retained evidence is never under this root.
 - `mk/project-paths.mk`, included by every Makefile here, exports the resolved `PROJECT_TMP_ROOT` (children never
   resolve again, so a run directory used as `TMPDIR` is not nested into), `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT`,
   `XDG_CACHE_HOME`, `BUN_INSTALL_CACHE_DIR`, `npm_config_cache` and `GOCACHE`.
 - A runtime running the suite or a UI build from its submodule names itself (`PROJECT_NAME=<runtime>`, optionally
-  `PROJECT_TMP_ROOT=/workspace/tmp/<runtime>`), so the scratch is the runtime's. Direct commands (Playwright, `bun build.js`, fixture binaries) first run
+  `PROJECT_TMP_BASE=<abs base>`), so the scratch is the runtime's. Direct commands (Playwright, `bun build.js`, fixture binaries) first run
   `eval "$(make -s env RUN_PURPOSE=<purpose>)"`; never bare `/tmp` or home caches.
 - The suite resolves the same way when started directly (global setup creates `runs/suite/<id>` and exports it), then
   creates the model's and each runtime's root under `FIXTURES_RUN_ROOT` (owned directory, checked) with a private

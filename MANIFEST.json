@@ -57,7 +57,7 @@
     "suite/fixtures.ts": "630b94d00abf12b2d82597d59b6a7372396588049507e7049d3545a322b88fcd",
     "suite/global-setup.ts": "c068e2d562d973dd26374be76b9259c43f637b7e7ce1dfb2b636c7bd0c7f3d2c",
     "suite/keychain.ts": "82ed6bdd620ceed4c930d2a8a3013bfeeba790c3ad68d80835882e95bfbdd094",
-    "suite/lifecycle.ts": "fa5959b188bfe860b8fa1f54c2b97cb588da989cd07201c92ff36533ea204e75",
+    "suite/lifecycle.ts": "bb22b29a848cad541862aac60ba7ed7421b6c62f2cd0606d4e1db9eed70e2674",
     "suite/net.ts": "49916e6e95b0be82ff8dc138d4676226e21d8a5d988afe235a5f638187d7debe",
     "suite/pickers.ts": "7374b77ac90a6c36bac0d252b655d5acecbf4cb7bdc87a15abfd41e5b9bb91dd",
     "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",
