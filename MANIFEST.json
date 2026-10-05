@@ -55,9 +55,9 @@
     "suite/clipboard.ts": "c044c1b7a432bb4f1a50ab3082600eeb8caabc546b91a96e73139ff61fdacbd0",
     "suite/colour.ts": "6a6b7170da5bfb58d062387cfd83beff45969fbd165227d86485ff45b82dfce9",
     "suite/fixtures.ts": "630b94d00abf12b2d82597d59b6a7372396588049507e7049d3545a322b88fcd",
-    "suite/global-setup.ts": "9c1501ebdd83ec6b1db195c7c4b148627f5b64d6ae31ef151efbb6ba6b4f10f3",
+    "suite/global-setup.ts": "ca5b216b240da0627ff5fe67c4b177ca8de31ad1ac37197b3b63c4880cec1389",
     "suite/keychain.ts": "82ed6bdd620ceed4c930d2a8a3013bfeeba790c3ad68d80835882e95bfbdd094",
-    "suite/lifecycle.ts": "386f0083b99256fc75c35809160d186bfc68af38cfe4b253a474d0d8ab025381",
+    "suite/lifecycle.ts": "3a17e8fe256a970554ce40c4f2d3ead130ffcd07bb3b07bfb996214613b1ae45",
     "suite/net.ts": "49916e6e95b0be82ff8dc138d4676226e21d8a5d988afe235a5f638187d7debe",
     "suite/pickers.ts": "7374b77ac90a6c36bac0d252b655d5acecbf4cb7bdc87a15abfd41e5b9bb91dd",
     "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",
@@ -104,7 +104,7 @@
     "suite/specs/timeline-time.spec.ts": "70c2843507ee64c990bd81f560c80a9bf5e29c10648df8c62bf776b71ec46ebb",
     "suite/specs/vnc.spec.ts": "acb209969eafa7dfd0b725162f5b46ede7d84efc8450c2f23955dde49637eaf0",
     "suite/specs/widgets.spec.ts": "63b2d42daa8a25f1b6af7b8973e49d0eef4bb43af79a4ca3840a3a0e1368c385",
-    "suite/specs/workspace-flows.spec.ts": "386abab2fb68494e65cede083e88e497fd8d600f9fe6a2f9ee1a6b084e4c6e08",
+    "suite/specs/workspace-flows.spec.ts": "7bc2381352606594973afe9da0060067e07e8e7784428e90b8f1cc7cd981ad57",
     "suite/workspace.ts": "4e868ab246a189c14911ad56a26a7195b19c32c30395989c90951e0cfba78baf"
   }
 }
