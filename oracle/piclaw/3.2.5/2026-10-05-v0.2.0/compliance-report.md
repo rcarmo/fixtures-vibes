@@ -1,0 +1,252 @@
+# Compliance: piclaw 3.2.5
+
+| Scenarios | Passed | Failed | Skipped | Listed failing | No suite test yet |
+|---:|---:|---:|---:|---:|---:|
+| 317 | 206 | 0 | 3 | 30 | 78 |
+
+Results: `test-results/compliance.json` (run started 2026-10-05T11:08:48.991Z)
+Skips: `profiles/piclaw-3.2.5-skips.json` (32 listed)
+
+Gate: OK
+
+## Covered scenarios
+
+- `@ux-shared-001` failing-but-skipped:known-defect — Open and dismiss the workspace menu
+- `@ux-shared-002` passed — Show and hide the native workspace
+- `@ux-shared-003` passed — Type on the idle timeline to open Quick actions
+- `@ux-shared-004` passed — Do not steal typing from an interactive surface
+- `@ux-shared-005` failing-but-skipped:known-defect — Ignore consumed, modified and composing keys
+- `@ux-shared-006` passed — Dismiss Quick actions without side effects
+- `@ux-shared-008` passed — Discover loaded skills through canonical slash commands
+- `@ux-shared-009` passed — Open Plan and edit the stored Markdown
+- `@ux-shared-010` passed — Preserve dirty Plan text on a remote update
+- `@ux-shared-011` passed — Submit Plan to the captured session
+- `@ux-shared-012` passed — Expose canonical Plan Markdown and the Plan tool to the model
+- `@ux-shared-013` passed — Open, search and dismiss the session picker
+- `@ux-shared-014` passed — Select one coherent session view
+- `@ux-shared-015` failing-but-skipped:known-defect — Expose only supported session mutations
+- `@ux-shared-016` passed — Queue two follow-ups exactly once
+- `@ux-shared-017` passed — Return a queued item to the editor
+- `@ux-shared-018` passed — Reorder and remove by durable identity
+- `@ux-shared-019` passed — Steer a queued item into the matching active run
+- `@ux-shared-020` passed — Search and select a model authoritatively
+- `@ux-shared-021` passed — Find and activate picker entries without changing unsupported state
+- `@ux-shared-022` passed — Reject stale or unsupported model state
+- `@ux-shared-023` passed-this-run:known-defect(intermittent) — Cancel the captured active turn across reconnect
+- `@ux-shared-024` passed — Copy and delete timeline messages through native actions
+- `@ux-shared-025` passed — Let the model identify bounded ranges of persisted messages
+- `@ux-shared-028` passed — Model-generated SVG cannot run code or fetch resources
+- `@ux-shared-029` passed — Copy and read assistant content truthfully
+- `@ux-shared-032` failing-but-skipped:known-defect — A rejected queue action keeps the item recoverable
+- `@ux-shared-033` failing-but-skipped:known-defect — Text shown and copied matches what was written
+- `@ux-shared-031` failing-but-skipped:known-defect — Render safe model-generated SVG as an isolated image
+- `@ux-original-001` passed — Open and dismiss the workspace menu
+- `@ux-original-002` passed — Toggle workspace visibility without submitting the draft
+- `@ux-original-003` passed — Open Quick Actions by typing outside interactive controls
+- `@ux-original-004` passed — Do not open timeline typeahead from excluded targets
+- `@ux-original-005` failing-but-skipped:known-defect — Ignore consumed and modified typeahead events
+- `@ux-original-006` passed — Dismiss Quick Actions without executing a result
+- `@ux-original-007` passed — Insert a Quick Actions command into the composer
+- `@ux-original-008` passed — Discover loaded skills in the command catalogue
+- `@ux-original-009` passed — Save Markdown through the Plan sidebar
+- `@ux-original-010` passed — Keep dirty Plan text when a remote update arrives
+- `@ux-original-011` passed — Save a Plan before submitting it to the model
+- `@ux-original-012` passed — Represent checklist progress in the Plan sidebar
+- `@ux-original-013` passed — Open and dismiss the Classic session picker
+- `@ux-original-014` passed — Select another session through the picker
+- `@ux-original-015` passed-this-run:known-defect(intermittent) — Use the session actions actually supplied by the client
+- `@ux-original-016` passed — Display queued follow-ups during a busy turn
+- `@ux-original-017` passed — Return a queued follow-up to the Classic editor
+- `@ux-original-018` failing-but-skipped:known-defect — Reorder and remove queued follow-ups with reconciliation
+- `@ux-original-019` passed — Steer a queued item using the backend-authoritative action
+- `@ux-original-030` failing-but-skipped:known-defect — A failed Steer warns and keeps the item queued
+- `@ux-original-020` passed — Select a model for the selected chat
+- `@ux-original-021` passed — Navigate the Classic picker lists
+- `@ux-original-022` passed — Render model capabilities without inventing values
+- `@ux-original-023` failing-but-skipped:known-defect — Refresh active-turn state after reconnect and request stop
+- `@ux-original-024` passed — Copy and delete messages using their actual controls
+- `@ux-original-025` passed — Retrieve explicit message IDs and bounded row windows
+- `@ux-original-026` passed — Keep attachment upload state separate from message submission
+- `@ux-original-027` passed-this-run:known-defect(intermittent) — Route tool execution through the Classic status and Output panes
+- `@ux-original-028` passed — Copy code and transfer post speech ownership
+- `@ux-original-029` passed — Render a safe fenced SVG as an isolated image and retain source
+- `@ux-extra-001` passed — Display and act on a side-question result
+- `@ux-extra-004` passed — Interpret persisted and live widget artifacts separately
+- `@ux-extra-005` passed — Keep widget dismissal separate from queue mutation
+- `@ux-extra-014` passed — Route widget bridge actions through the host
+- `@ux-settings-001` passed — Open Settings once and dismiss it without activating the workspace underneath
+- `@ux-settings-002` passed — Cold-open Settings shows a shell immediately and then resolves General
+- `@ux-settings-003` passed — General is preloaded and other built-in sections lazy-load on first visit
+- `@ux-settings-004` passed — Searchable sections focus the header filter and responsive widths change layout classes only
+- `@ux-settings-016` passed — Keyboard settings filters and edits shortcut bindings through the shared shortcut model
+- `@ux-settings-018` passed — Appearance settings apply theme preset, custom tint and output padding from one section
+- `@ux-settings-019` passed — Save General changes after the debounce
+- `@ux-workspace-001` passed — Create a new untitled markdown file in the resolved folder
+- `@ux-workspace-002` passed — Rename a selected non-root workspace entry
+- `@ux-workspace-003` passed — Delete a selected file after confirmation
+- `@ux-workspace-004` passed — Toggle hidden files and reload the visible tree state
+- `@ux-workspace-005` passed — Expose reindex controls without a verified in-pane file-search field
+- `@ux-workspace-006` passed — Single-click previews files and double-click enters rename
+- `@ux-workspace-007` passed — Upload files to the resolved folder with progress and overwrite prompts
+- `@ux-workspace-008` passed — Render workspace previews by preview kind and content type
+- `@ux-workspace-009` passed — Gate open-in-tab and open-in-editor actions by file capabilities
+- `@ux-workspace-010` passed — Show dirty tab affordances and compare-to-saved gating
+- `@ux-workspace-011` passed — Close tabs with MRU fallback while preserving pinned tabs in bulk close flows
+- `@ux-workspace-012` passed — Rename tracked tab identities without dropping active or MRU state
+- `@ux-workspace-013` passed — Gate dock, popout, reattach, and standalone viewer routes from the tab context menu
+- `@ux-workspace-014` passed — Surface terminal load, availability, reconnect, and exit states
+- `@ux-workspace-015` passed — Surface VNC configuration, read-only, and runtime error gates
+- `@ux-workspace-016` passed — Save changed editor content
+- `@ux-workspace-017` passed — Avoid writing an unchanged editor document
+- `@ux-workspace-019` failing-but-skipped:known-defect — Keep edits made while a save is in progress
+- `@ux-workspace-020` passed — Show a file's external changes in a clean editor tab
+- `@ux-workspace-018` failing-but-skipped:known-defect — Resolve an editor file conflict with the supplied actions
+- `@ux-chat-lifecycle-001` passed — An idle chat does not manufacture an activity pane
+- `@ux-chat-lifecycle-002` passed-this-run:known-defect(intermittent) — Streaming thoughts and response drafts have separate panes
+- `@ux-chat-lifecycle-003` passed-this-run:known-defect(intermittent) — Tool output belongs to the Output status pane
+- `@ux-chat-lifecycle-004` passed — A persisted assistant reply retains its identity and Markdown
+- `@ux-chat-lifecycle-005` passed — A terminal provider error is not a user input or a tool success
+- `@ux-chat-lifecycle-006` passed-this-run:known-defect(intermittent) — A streaming draft keeps every chunk in order
+- `@ux-chat-lifecycle-007` failing-but-skipped:known-defect — A running turn in one session does not leak into another
+- `@ux-chat-lifecycle-008` passed-this-run:known-defect(intermittent) — A running tool shows what it is doing and for how long
+- `@ux-chat-lifecycle-009` passed — Sessions run turns at the same time
+- `@ux-compaction-001` failing-but-skipped:known-defect — Render compaction using supplied status state
+- `@ux-compaction-002` failing-but-skipped:known-defect — Reconcile compaction events with client status
+- `@ux-compaction-003` failing-but-skipped:known-defect — Request stop through the visible compaction control
+- `@ux-compaction-004` passed — Use refreshed usage rather than assume compaction always shrinks context
+- `@ux-compaction-006` passed — Check model context compatibility before switching
+- `@ux-compaction-007` passed — Refresh model information after an accepted switch
+- `@ux-compaction-008` failing-but-skipped:known-defect — Handle a model command using the configured provider catalogue
+- `@ux-compose-001` passed — Clear captured content while allowing a new draft
+- `@ux-compose-002` passed — Restore a failed submission alongside newer text
+- `@ux-compose-003` passed — Reject an entirely empty submission
+- `@ux-compose-004` passed — Return a queued message replaces the current editor draft
+- `@ux-compose-005` passed — Keep upload progress separate from sending state
+- `@ux-compose-006` passed — Submit captures the destination chat
+- `@ux-compose-012` passed — A failed send keeps its uploaded attachment for the retry
+- `@ux-context-001` passed — Show supplied usage in the context tooltip
+- `@ux-context-003` passed — Offer compaction only when a callback exists
+- `@ux-context-004` failing-but-skipped:known-defect — Show the supplied compaction title and elapsed label
+- `@ux-context-005` passed — Apply the coded usage warning colours
+- `@ux-shell-001` passed — Menu contains New file, Refresh tree, Reindex workspace
+- `@ux-shell-002` passed — Menu contains hidden files toggle
+- `@ux-shell-003` passed — Workspace items disabled in chat-only mode
+- `@ux-shell-004` passed — Terminal and VNC menu controls depend on callbacks
+- `@ux-shell-005` passed — Compose box spans full width
+- `@ux-shell-006` passed — Hamburger button visible and above safe area
+- `@ux-shell-007` passed — Tab close does not activate tab
+- `@ux-shell-008` skipped — Menu contains display scale control
+- `@ux-shell-009` passed — Inline code in editor preview is monospaced
+- `@ux-compose-007` passed — Display an accepted text submission
+- `@ux-compose-008` passed — Serialize text and references into one submission
+- `@ux-compose-009` passed — Preserve the association between uploaded files and media identifiers
+- `@ux-compose-010` passed — Do not erase newer typing after send completes
+- `@ux-compose-011` passed — Reconcile visible messages through timeline state
+- `@ux-reconnect-001` passed-this-run:known-defect(intermittent) — Clear transient agent displays while disconnected
+- `@ux-reconnect-002` passed — Refresh authoritative chat state after reconnect
+- `@ux-reconnect-003` passed — Avoid replacing an active search with main-timeline refresh
+- `@ux-theme-001` passed — /theme with no arguments shows available themes
+- `@ux-theme-002` passed — /theme ristretto applies dark theme visually
+- `@ux-theme-003` passed — /theme default restores from ristretto visually
+- `@ux-theme-004` passed — /theme dark returns error — not a valid theme name
+- `@ux-theme-005` passed — /theme survives page refresh
+- `@ux-theme-006` passed — /tint hex changes accent and background on default theme
+- `@ux-theme-007` passed — /tint named color works on default theme
+- `@ux-theme-008` failing-but-skipped:known-defect — Switching tints visibly changes accent color
+- `@ux-theme-009` passed — /tint off clears tint and restores vanilla default
+- `@ux-theme-010` passed — /tint with no args shows usage
+- `@ux-theme-011` passed — /tint invalid value returns error
+- `@ux-theme-012` passed — /tint survives page refresh
+- `@ux-theme-013` passed — Tint on default, switch to ristretto, switch back
+- `@ux-theme-014` passed — /tint on ristretto switches to default+tint
+- `@ux-theme-015` passed — Round-trip visual consistency
+- `@ux-thoughts-001` passed — Render collapsed thought content with disclosure state
+- `@ux-thoughts-002` passed — Continue updating content independently of disclosure
+- `@ux-thoughts-003` passed — Toggle thought panel expansion
+- `@ux-thoughts-004` passed — Collapse an expanded status panel with Escape
+- `@ux-thoughts-005` failing-but-skipped:known-defect — Preserve text when changing disclosure state
+- `@ux-editor-001` passed — Switching files does not cause visible flicker
+- `@ux-editor-002` passed — Closing an unsaved tab shows confirmation
+- `@ux-editor-003` passed — Clicking a tab activates it immediately
+- `@ux-editor-004` passed — Markdown preview is stable during splitter resize
+- `@ux-editor-005` passed — Zen mode keeps editor content visible while other shell panes are hidden
+- `@ux-editor-006` passed — The agent opens a workspace file in an editor tab
+- `@ux-editor-007` passed — The agent asks to open a file that cannot be opened
+- `@ux-editor-008` passed — Another chat's request does not open files here
+- `@ux-editor-009` passed — Edit with Vim keybindings
+- `@ux-keychain-001` passed — Add a credential from Settings
+- `@ux-keychain-002` passed — Keep keychain entries across sessions
+- `@ux-keychain-003` passed — Reveal a secret only on request
+- `@ux-keychain-004` failing-but-skipped:known-defect — Delete an entry after confirming
+- `@ux-keychain-005` passed — Inject a credential into a shell command that names its variable
+- `@ux-keychain-006` passed — Inject only what the command text names
+- `@ux-keychain-007` passed — Substitute keychain placeholders in command text
+- `@ux-pwa-001` passed — Serve a manifest with declared application icons
+- `@ux-pwa-002` passed — Use configured agent-avatar URLs for manifest icons
+- `@ux-pwa-003` passed — Fall back to static icons without an avatar
+- `@ux-pwa-004` passed — Request sized Apple touch icons
+- `@ux-pwa-005` passed — Prefer PNG avatars for favicon compatibility
+- `@ux-pwa-006` passed — Vary avatar icon cache URLs with the avatar version
+- `@ux-mobile-001` passed — Swipe on eligible timeline space
+- `@ux-mobile-002` passed — Ignore gestures originating in excluded controls
+- `@ux-mobile-004` passed — Keep swipe order stable as the selected chat changes
+- `@ux-mobile-005` passed — Do not treat primarily vertical movement as chat navigation
+- `@ux-mobile-006` passed — Limit horizontal wheel navigation to the supported Safari path
+- `@ux-terminal-001` passed — Open terminal standalone without garbled output
+- `@ux-terminal-002` passed — Execute ls -al in terminal
+- `@ux-terminal-003` passed — Terminal opens clean without IME active
+- `@ux-terminal-004` passed — Close terminal via tab close button (click)
+- `@ux-terminal-005` passed — Close terminal via tab close button (tap)
+- `@ux-terminal-006` failing-but-skipped:known-defect — Pop out terminal to new window (desktop)
+- `@ux-terminal-007` passed — Terminal theme matches UI theme
+- `@ux-terminal-008` passed — Toggle terminal dock via keyboard shortcut
+- `@ux-terminal-009` passed — Toggle terminal dock via tab strip button
+- `@ux-terminal-010` passed — Dock splitter resizes terminal height
+- `@ux-terminal-011` passed — Terminal dock is interactive alongside editor
+- `@ux-terminal-012` passed — Dock hidden in zen mode
+- `@ux-terminal-013` passed — Zen mode hides all chrome except the terminal/editor
+- `@ux-terminal-014` passed — Zen mode has a hover-discoverable exit control
+- `@ux-terminal-015` passed — Clicking zen exit indicator reverts to normal layout
+- `@ux-terminal-016` passed — Escape key exits zen mode
+- `@ux-terminal-017` passed — Hover-reveal tab strip in zen mode
+- `@ux-session-001` passed — Show the selected chat's timeline
+- `@ux-session-002` passed — Group picker entries using the current session metadata
+- `@ux-session-003` passed — Filter session entries using their search metadata
+- `@ux-session-004` passed — Use archive and restore actions supplied for session entries
+- `@ux-session-005` passed — Keep touch swipe eligibility independent of picker grouping
+- `@ux-session-006` passed — Dismiss the session picker without choosing an entry
+- `@ux-settings-dialog-001` passed — Rapid shortcut presses open exactly one settings dialog
+- `@ux-settings-dialog-002` passed — Second settings open is instant
+- `@ux-settings-dialog-003` passed — Settings shows loading shell then content
+- `@ux-settings-dialog-004` passed — User can type a number in stepper fields
+- `@ux-settings-dialog-005` passed — Non-General panes load only on click
+- `@ux-settings-layering-001` passed — Settings backdrop covers workspace pane
+- `@ux-settings-layering-002` passed — Settings dialog is above all other elements
+- `@ux-settings-layering-003` passed — Backdrop is partially opaque (not fully transparent or opaque)
+- `@ux-settings-layering-004` passed — Only settings dialog is interactive above the backdrop
+- `@ux-shell-env-001` passed — Run commands in the detected POSIX shell
+- `@ux-shell-env-002` skipped:capability-absent — Run commands in the detected Windows shell
+- `@ux-shell-env-003` passed — Detect variable references in every syntax
+- `@ux-shell-env-004` passed — Retrieve only the referenced keychain entries
+- `@ux-shell-env-005` passed — Name keychain variables exactly like Piclaw
+- `@ux-shell-env-006` passed — Fail a command whose keychain placeholder cannot be resolved
+- `@ux-shell-env-007` skipped:capability-absent — Expand keychain variables in PowerShell
+- `@ux-shell-env-008` passed — Override an environment variable from Settings
+- `@ux-shell-env-009` passed — Keep environment overrides across reloads
+- `@ux-shell-env-010` passed — Keep keychain variables out of the Environment section
+- `@ux-timeline-013` passed — Escape key dismisses the lightbox
+- `@ux-timeline-014` passed — Non-Escape keys do not dismiss the lightbox
+- `@ux-timeline-015` passed — Clicking anywhere inside the modal dismisses the lightbox
+- `@ux-timeline-016` passed — Tapping the modal surface on a touch device dismisses the lightbox
+- `@ux-timeline-017` passed — Delete a single message without visible replies
+- `@ux-timeline-019` passed — A synthetic Replies exist rejection exposes the otherwise dormant retry prompt
+- `@ux-timeline-020` passed — Deleting a message with visible replies asks for cascade confirmation
+- `@ux-timeline-021` passed — Confirming cascade deletes the parent and visible replies together
+- `@ux-timeline-022` passed — Cancelling cascade preserves the parent and visible replies
+- `@ux-timeline-023` passed — Markdown tables render as full-width tables with automatic layout
+- `@ux-timeline-024` passed — Code blocks expose a copy button in the top-right corner
+- `@ux-timeline-025` passed — Resource links and link previews open in a new tab
+- `@ux-timeline-026` passed — Outcome chips render after the timestamp in post metadata
+- `@ux-timeline-027` passed — Read aloud appears only when browser speech support and speakable text both exist
+- `@ux-timeline-028` passed — Starting read aloud on another post transfers playback ownership
+- `@ux-timeline-029` passed — Post times are shown in the viewer's time zone

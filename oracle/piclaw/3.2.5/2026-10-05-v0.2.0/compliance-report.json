@@ -1,0 +1,4999 @@
+{
+  "summary": {
+    "runtime": "piclaw",
+    "version": "3.2.5",
+    "scenarios": 317,
+    "passed": 206,
+    "failed": 0,
+    "skipped": 3,
+    "listedFailing": 30,
+    "noSuiteTest": 78,
+    "resultsFile": "test-results/compliance.json",
+    "resultsStartedAt": "2026-10-05T11:08:48.991Z",
+    "skipsFile": "profiles/piclaw-3.2.5-skips.json",
+    "skipsListed": [
+      "@ux-shared-031",
+      "@ux-original-030",
+      "@ux-chat-lifecycle-002",
+      "@ux-shared-032",
+      "@ux-shared-001",
+      "@ux-shared-033",
+      "@ux-shared-005",
+      "@ux-shared-023",
+      "@ux-chat-lifecycle-003",
+      "@ux-chat-lifecycle-007",
+      "@ux-chat-lifecycle-008",
+      "@ux-shared-015",
+      "@ux-original-015",
+      "@ux-original-005",
+      "@ux-original-023",
+      "@ux-original-027",
+      "@ux-compaction-001",
+      "@ux-compaction-002",
+      "@ux-compaction-003",
+      "@ux-context-004",
+      "@ux-compaction-008",
+      "@ux-workspace-018",
+      "@ux-workspace-019",
+      "@ux-terminal-006",
+      "@ux-keychain-004",
+      "@ux-shell-env-002",
+      "@ux-shell-env-007",
+      "@ux-reconnect-001",
+      "@ux-chat-lifecycle-006",
+      "@ux-original-018",
+      "@ux-theme-008",
+      "@ux-thoughts-005"
+    ],
+    "problems": []
+  },
+  "rows": [
+    {
+      "id": "@ux-shared-001",
+      "name": "Open and dismiss the workspace menu",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:failed",
+        "chromium-tablet:passed",
+        "chromium-tablet:failed",
+        "chromium-desktop:passed",
+        "chromium-desktop:failed",
+        "webkit-phone:passed",
+        "webkit-phone:failed",
+        "webkit-tablet:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:passed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-shared-002",
+      "name": "Show and hide the native workspace",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-003",
+      "name": "Type on the idle timeline to open Quick actions",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-004",
+      "name": "Do not steal typing from an interactive surface",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-005",
+      "name": "Ignore consumed, modified and composing keys",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-slash-commands"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-shared-006",
+      "name": "Dismiss Quick actions without side effects",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-007",
+      "name": "Activate only current supported Quick actions",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-shared-008",
+      "name": "Discover loaded skills through canonical slash commands",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-skills",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-009",
+      "name": "Open Plan and edit the stored Markdown",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-010",
+      "name": "Preserve dirty Plan text on a remote update",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-011",
+      "name": "Submit Plan to the captured session",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-012",
+      "name": "Expose canonical Plan Markdown and the Plan tool to the model",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-tool-output"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-013",
+      "name": "Open, search and dismiss the session picker",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-014",
+      "name": "Select one coherent session view",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-015",
+      "name": "Expose only supported session mutations",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-shared-016",
+      "name": "Queue two follow-ups exactly once",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-017",
+      "name": "Return a queued item to the editor",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-018",
+      "name": "Reorder and remove by durable identity",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-019",
+      "name": "Steer a queued item into the matching active run",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue",
+        "@cap-steer"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-020",
+      "name": "Search and select a model authoritatively",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-model-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-021",
+      "name": "Find and activate picker entries without changing unsupported state",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-model-picker",
+        "@cap-session-picker",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-022",
+      "name": "Reject stale or unsupported model state",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-model-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-023",
+      "name": "Cancel the captured active turn across reconnect",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-reconnect",
+        "@cap-stop"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-024",
+      "name": "Copy and delete timeline messages through native actions",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-025",
+      "name": "Let the model identify bounded ranges of persisted messages",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-messages-tool"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-026",
+      "name": "Retry attachment delivery without duplication",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-attachments",
+        "@cap-upload-cancel"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-shared-027",
+      "name": "Present tool execution lifecycle in the native tool pane",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-reconnect",
+        "@cap-tool-output",
+        "@cap-tool-pane"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-shared-028",
+      "name": "Model-generated SVG cannot run code or fetch resources",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-029",
+      "name": "Copy and read assistant content truthfully",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-read-aloud"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shared-030",
+      "name": "Steer a queued item while no run is active",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue",
+        "@cap-steer",
+        "@cap-steer-idle"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-shared-032",
+      "name": "A rejected queue action keeps the item recoverable",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-phone:failed",
+        "chromium-phone:passed",
+        "chromium-tablet:failed",
+        "chromium-tablet:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "chromium-desktop:passed",
+        "chromium-desktop:failed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-tablet:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed",
+        "webkit-desktop:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-shared-033",
+      "name": "Text shown and copied matches what was written",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-phone:failed",
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-tablet:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "chromium-desktop:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-phone:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-tablet:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed",
+        "webkit-desktop:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-shared-031",
+      "name": "Render safe model-generated SVG as an isolated image",
+      "uri": "features/canonical/shared-ux.feature",
+      "capabilities": [
+        "@cap-svg-render"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-original-001",
+      "name": "Open and dismiss the workspace menu",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-002",
+      "name": "Toggle workspace visibility without submitting the draft",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-003",
+      "name": "Open Quick Actions by typing outside interactive controls",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-004",
+      "name": "Do not open timeline typeahead from excluded targets",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-005",
+      "name": "Ignore consumed and modified typeahead events",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-original-006",
+      "name": "Dismiss Quick Actions without executing a result",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-007",
+      "name": "Insert a Quick Actions command into the composer",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-slash-commands"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-008",
+      "name": "Discover loaded skills in the command catalogue",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-skills"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-009",
+      "name": "Save Markdown through the Plan sidebar",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-010",
+      "name": "Keep dirty Plan text when a remote update arrives",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-011",
+      "name": "Save a Plan before submitting it to the model",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-012",
+      "name": "Represent checklist progress in the Plan sidebar",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-013",
+      "name": "Open and dismiss the Classic session picker",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-014",
+      "name": "Select another session through the picker",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-015",
+      "name": "Use the session actions actually supplied by the client",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-016",
+      "name": "Display queued follow-ups during a busy turn",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-017",
+      "name": "Return a queued follow-up to the Classic editor",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-018",
+      "name": "Reorder and remove queued follow-ups with reconciliation",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:failed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-019",
+      "name": "Steer a queued item using the backend-authoritative action",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-queue",
+        "@cap-steer"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-030",
+      "name": "A failed Steer warns and keeps the item queued",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-queue",
+        "@cap-steer"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-original-020",
+      "name": "Select a model for the selected chat",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-model-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-021",
+      "name": "Navigate the Classic picker lists",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-model-picker",
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-022",
+      "name": "Render model capabilities without inventing values",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-model-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-023",
+      "name": "Refresh active-turn state after reconnect and request stop",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-reconnect",
+        "@cap-stop"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:failed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-024",
+      "name": "Copy and delete messages using their actual controls",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-025",
+      "name": "Retrieve explicit message IDs and bounded row windows",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-messages-tool"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-026",
+      "name": "Keep attachment upload state separate from message submission",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-027",
+      "name": "Route tool execution through the Classic status and Output panes",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-tool-output"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-028",
+      "name": "Copy code and transfer post speech ownership",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-read-aloud"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-original-029",
+      "name": "Render a safe fenced SVG as an isolated image and retain source",
+      "uri": "features/classic/canonical/canonical-ux.feature",
+      "capabilities": [
+        "@cap-svg-render"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-auth-001",
+      "name": "Family-shared code sign-in requires and normalizes the account username",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-totp",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-002",
+      "name": "Single-user code sign-in omits the username field and submits only the code",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-totp"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-003",
+      "name": "Single-user passkey-only mode hides the TOTP form",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-passkey"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-004",
+      "name": "Failed sign-in policy loading never exposes stale credential controls",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-005",
+      "name": "Explicit passkey sign-in supersedes ambient passkey work and code submission aborts passkey work",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-passkey"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-006",
+      "name": "Classic OOBE shows provider-missing only for an unconfigured current instance",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-007",
+      "name": "Classic OOBE stays hidden when the instance is already configured or still unresolved",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-008",
+      "name": "TOTP invitation strips the link token from the URL, claims only on click, and erases setup secrets after confirmation",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-totp",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-009",
+      "name": "Recovery-only invitation completion hides the normal sign-in action",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-010",
+      "name": "Invalid or rejected invitations never reveal enrolment or auto-retry a consumed claim",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-011",
+      "name": "Passkey invitations are account-bound, proof-checked, and never sign the browser in automatically",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-passkey",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-012",
+      "name": "Leaving a passkey invitation flow discards the one-use ceremony",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-auth-passkey",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-013",
+      "name": "Mask the family client when its page loses visibility",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-auth-014",
+      "name": "Sign out of the family client",
+      "uri": "features/classic/canonical/core-auth.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-multi-user"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-extra-001",
+      "name": "Display and act on a side-question result",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-extra-004",
+      "name": "Interpret persisted and live widget artifacts separately",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-extra-005",
+      "name": "Keep widget dismissal separate from queue mutation",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-extra-014",
+      "name": "Route widget bridge actions through the host",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-extra-011",
+      "name": "Coordinate local notification ownership across clients",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [
+        "@cap-push-notifications"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-extra-012",
+      "name": "Hide validated recovery control posts",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-extra-013",
+      "name": "Suppress an empty informational recovery placeholder",
+      "uri": "features/classic/canonical/core-interactions.feature",
+      "capabilities": [],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-001",
+      "name": "Open Settings once and dismiss it without activating the workspace underneath",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog",
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-002",
+      "name": "Cold-open Settings shows a shell immediately and then resolves General",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-003",
+      "name": "General is preloaded and other built-in sections lazy-load on first visit",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-004",
+      "name": "Searchable sections focus the header filter and responsive widths change layout classes only",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-search",
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-005",
+      "name": "Compaction exposes dense aligned controls for automatic and manual policies",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-compaction",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-006",
+      "name": "Compaction surfaces watchdog state, active suppressions and per-chat reset actions",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-compaction",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-007",
+      "name": "Providers expose only the supported setup controls for each provider",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-008",
+      "name": "Models loads and mutates the authoritative catalogue for the current chat",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-model-picker",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-009",
+      "name": "Models keeps a bounded grouped master-detail catalogue with keyboard navigation",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-model-picker",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-010",
+      "name": "Models actions stay truthful about compatibility, confirmation and next steps",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-compaction",
+        "@cap-model-picker",
+        "@cap-settings-dialog",
+        "@cap-thinking-levels"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-011",
+      "name": "Budget stays owner-bound, single-user-first and explicit about task-budget ownership",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-012",
+      "name": "Scheduled Tasks lists supported tasks and owns per-run task budget edits",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-scheduled-tasks",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-013",
+      "name": "Environment supports refresh and overrides while protecting keychain-injected names",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-014",
+      "name": "Keychain keeps secrets encrypted, searchable and gated before reveal",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-auth-totp",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-015",
+      "name": "Add-ons support filtered catalogue actions and extension-pane registration without claiming skin parity",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-addons",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-016",
+      "name": "Keyboard settings filters and edits shortcut bindings through the shared shortcut model",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-017",
+      "name": "Workspace settings own terminal, direct-VNC and tree scan preferences",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog",
+        "@cap-workspace"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-018",
+      "name": "Appearance settings apply theme preset, custom tint and output padding from one section",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-019",
+      "name": "Save General changes after the debounce",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-020",
+      "name": "Preview avatars and toggle system meters",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog",
+        "@cap-system-meters"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-021",
+      "name": "Reveal and copy the widget token",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-022",
+      "name": "Confirm widget-token regeneration",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-023",
+      "name": "Change session lifecycle and agent behaviour settings",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-session-picker",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-024",
+      "name": "Load and inspect session recordings",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-recordings",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-025",
+      "name": "Start and stop a recording for the entered chat",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-recordings",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-026",
+      "name": "Delete a recording and preview redaction",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-recordings",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-027",
+      "name": "Filter and collapse the Tools catalogue",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog",
+        "@cap-tool-output"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-028",
+      "name": "Persist search mode and tool-result compaction choices",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-compaction",
+        "@cap-settings-dialog",
+        "@cap-tool-output"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-029",
+      "name": "Edit Quick Actions selections before explicitly saving",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-quick-actions",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-030",
+      "name": "Inspect notification capability and instance TOTP setup",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-auth-login",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-031",
+      "name": "Save local editor preferences from the registered pane",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-settings-032",
+      "name": "Gate developer preferences behind local developer mode",
+      "uri": "features/classic/canonical/core-settings.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-workspace-001",
+      "name": "Create a new untitled markdown file in the resolved folder",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-002",
+      "name": "Rename a selected non-root workspace entry",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-003",
+      "name": "Delete a selected file after confirmation",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-004",
+      "name": "Toggle hidden files and reload the visible tree state",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-005",
+      "name": "Expose reindex controls without a verified in-pane file-search field",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-search",
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-006",
+      "name": "Single-click previews files and double-click enters rename",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-session-manage",
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-007",
+      "name": "Upload files to the resolved folder with progress and overwrite prompts",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-attachments",
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-workspace-008",
+      "name": "Render workspace previews by preview kind and content type",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-workspace-009",
+      "name": "Gate open-in-tab and open-in-editor actions by file capabilities",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-workspace-010",
+      "name": "Show dirty tab affordances and compare-to-saved gating",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-011",
+      "name": "Close tabs with MRU fallback while preserving pinned tabs in bulk close flows",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-012",
+      "name": "Rename tracked tab identities without dropping active or MRU state",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-session-manage",
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-013",
+      "name": "Gate dock, popout, reattach, and standalone viewer routes from the tab context menu",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-014",
+      "name": "Surface terminal load, availability, reconnect, and exit states",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-015",
+      "name": "Surface VNC configuration, read-only, and runtime error gates",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-016",
+      "name": "Save changed editor content",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-017",
+      "name": "Avoid writing an unchanged editor document",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-019",
+      "name": "Keep edits made while a save is in progress",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-020",
+      "name": "Show a file's external changes in a clean editor tab",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-workspace-018",
+      "name": "Resolve an editor file conflict with the supplied actions",
+      "uri": "features/classic/canonical/workspace-flows.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-001",
+      "name": "An idle chat does not manufacture an activity pane",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-002",
+      "name": "Streaming thoughts and response drafts have separate panes",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-003",
+      "name": "Tool output belongs to the Output status pane",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [
+        "@cap-tool-output"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-004",
+      "name": "A persisted assistant reply retains its identity and Markdown",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-005",
+      "name": "A terminal provider error is not a user input or a tool success",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [
+        "@cap-tool-output"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-006",
+      "name": "A streaming draft keeps every chunk in order",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-007",
+      "name": "A running turn in one session does not leak into another",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-008",
+      "name": "A running tool shows what it is doing and for how long",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [
+        "@cap-tool-output"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-009",
+      "name": "Sessions run turns at the same time",
+      "uri": "features/classic/compose/chat-lifecycle.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-001",
+      "name": "Render compaction using supplied status state",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-002",
+      "name": "Reconcile compaction events with client status",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-003",
+      "name": "Request stop through the visible compaction control",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction",
+        "@cap-stop"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-004",
+      "name": "Use refreshed usage rather than assume compaction always shrinks context",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-005",
+      "name": "Display temporary compaction suppression",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-compaction-006",
+      "name": "Check model context compatibility before switching",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-007",
+      "name": "Refresh model information after an accepted switch",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compaction-008",
+      "name": "Handle a model command using the configured provider catalogue",
+      "uri": "features/classic/compose/compaction-model-switch.feature",
+      "capabilities": [
+        "@cap-compaction"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:failed",
+        "chromium-desktop:failed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-compose-001",
+      "name": "Clear captured content while allowing a new draft",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-002",
+      "name": "Restore a failed submission alongside newer text",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-003",
+      "name": "Reject an entirely empty submission",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-004",
+      "name": "Return a queued message replaces the current editor draft",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [
+        "@cap-queue"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-005",
+      "name": "Keep upload progress separate from sending state",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-006",
+      "name": "Submit captures the destination chat",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [
+        "@cap-attachments",
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-012",
+      "name": "A failed send keeps its uploaded attachment for the retry",
+      "uri": "features/classic/compose/compose-stability.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-context-001",
+      "name": "Show supplied usage in the context tooltip",
+      "uri": "features/classic/compose/context-meter-tooltip.feature",
+      "capabilities": [
+        "@cap-context-meter"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-context-002",
+      "name": "Display missing token counts without inventing them",
+      "uri": "features/classic/compose/context-meter-tooltip.feature",
+      "capabilities": [
+        "@cap-context-meter"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-context-003",
+      "name": "Offer compaction only when a callback exists",
+      "uri": "features/classic/compose/context-meter-tooltip.feature",
+      "capabilities": [
+        "@cap-context-meter"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-context-004",
+      "name": "Show the supplied compaction title and elapsed label",
+      "uri": "features/classic/compose/context-meter-tooltip.feature",
+      "capabilities": [
+        "@cap-context-meter"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:failed",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-context-005",
+      "name": "Apply the coded usage warning colours",
+      "uri": "features/classic/compose/context-meter-tooltip.feature",
+      "capabilities": [
+        "@cap-context-meter"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-001",
+      "name": "Menu contains New file, Refresh tree, Reindex workspace",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-002",
+      "name": "Menu contains hidden files toggle",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-003",
+      "name": "Workspace items disabled in chat-only mode",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-004",
+      "name": "Terminal and VNC menu controls depend on callbacks",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-005",
+      "name": "Compose box spans full width",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-006",
+      "name": "Hamburger button visible and above safe area",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-007",
+      "name": "Tab close does not activate tab",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-008",
+      "name": "Menu contains display scale control",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "skipped",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-shell-009",
+      "name": "Inline code in editor preview is monospaced",
+      "uri": "features/classic/compose/hamburger-layout-scale.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-007",
+      "name": "Display an accepted text submission",
+      "uri": "features/classic/compose/instant-visibility.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-008",
+      "name": "Serialize text and references into one submission",
+      "uri": "features/classic/compose/instant-visibility.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-009",
+      "name": "Preserve the association between uploaded files and media identifiers",
+      "uri": "features/classic/compose/instant-visibility.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-010",
+      "name": "Do not erase newer typing after send completes",
+      "uri": "features/classic/compose/instant-visibility.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-compose-011",
+      "name": "Reconcile visible messages through timeline state",
+      "uri": "features/classic/compose/instant-visibility.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-reconnect-001",
+      "name": "Clear transient agent displays while disconnected",
+      "uri": "features/classic/compose/sse-reconnection.feature",
+      "capabilities": [
+        "@cap-reconnect"
+      ],
+      "status": "passed-this-run:known-defect(intermittent)",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-reconnect-002",
+      "name": "Refresh authoritative chat state after reconnect",
+      "uri": "features/classic/compose/sse-reconnection.feature",
+      "capabilities": [
+        "@cap-reconnect"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-reconnect-003",
+      "name": "Avoid replacing an active search with main-timeline refresh",
+      "uri": "features/classic/compose/sse-reconnection.feature",
+      "capabilities": [
+        "@cap-reconnect"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-reconnect-004",
+      "name": "Show version drift without automatically reloading",
+      "uri": "features/classic/compose/sse-reconnection.feature",
+      "capabilities": [
+        "@cap-reconnect"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-reconnect-005",
+      "name": "Avoid duplicate initial refresh after recent chat activation",
+      "uri": "features/classic/compose/sse-reconnection.feature",
+      "capabilities": [
+        "@cap-reconnect"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-theme-001",
+      "name": "/theme with no arguments shows available themes",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-002",
+      "name": "/theme ristretto applies dark theme visually",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-003",
+      "name": "/theme default restores from ristretto visually",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-004",
+      "name": "/theme dark returns error — not a valid theme name",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-005",
+      "name": "/theme survives page refresh",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-006",
+      "name": "/tint hex changes accent and background on default theme",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-007",
+      "name": "/tint named color works on default theme",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-008",
+      "name": "Switching tints visibly changes accent color",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:timedOut",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-009",
+      "name": "/tint off clears tint and restores vanilla default",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-010",
+      "name": "/tint with no args shows usage",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-011",
+      "name": "/tint invalid value returns error",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-012",
+      "name": "/tint survives page refresh",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-013",
+      "name": "Tint on default, switch to ristretto, switch back",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-014",
+      "name": "/tint on ristretto switches to default+tint",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-theme-015",
+      "name": "Round-trip visual consistency",
+      "uri": "features/classic/compose/theme-tint.feature",
+      "capabilities": [
+        "@cap-theme-tint"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-thoughts-001",
+      "name": "Render collapsed thought content with disclosure state",
+      "uri": "features/classic/compose/thoughts-panel.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-thoughts-002",
+      "name": "Continue updating content independently of disclosure",
+      "uri": "features/classic/compose/thoughts-panel.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-thoughts-003",
+      "name": "Toggle thought panel expansion",
+      "uri": "features/classic/compose/thoughts-panel.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-thoughts-004",
+      "name": "Collapse an expanded status panel with Escape",
+      "uri": "features/classic/compose/thoughts-panel.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-thoughts-005",
+      "name": "Preserve text when changing disclosure state",
+      "uri": "features/classic/compose/thoughts-panel.feature",
+      "capabilities": [
+        "@cap-thoughts"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:timedOut"
+      ]
+    },
+    {
+      "id": "@ux-editor-001",
+      "name": "Switching files does not cause visible flicker",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-002",
+      "name": "Closing an unsaved tab shows confirmation",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-003",
+      "name": "Clicking a tab activates it immediately",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-004",
+      "name": "Markdown preview is stable during splitter resize",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-005",
+      "name": "Zen mode keeps editor content visible while other shell panes are hidden",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-006",
+      "name": "The agent opens a workspace file in an editor tab",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-007",
+      "name": "The agent asks to open a file that cannot be opened",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-008",
+      "name": "Another chat's request does not open files here",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-editor-009",
+      "name": "Edit with Vim keybindings",
+      "uri": "features/classic/editor/editor-stability.feature",
+      "capabilities": [
+        "@cap-workspace"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-001",
+      "name": "Add a credential from Settings",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-002",
+      "name": "Keep keychain entries across sessions",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-003",
+      "name": "Reveal a secret only on request",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-004",
+      "name": "Delete an entry after confirming",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:failed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:failed",
+        "webkit-tablet:failed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-005",
+      "name": "Inject a credential into a shell command that names its variable",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-006",
+      "name": "Inject only what the command text names",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-keychain-007",
+      "name": "Substitute keychain placeholders in command text",
+      "uri": "features/classic/keychain/keychain.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-001",
+      "name": "Serve a manifest with declared application icons",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-002",
+      "name": "Use configured agent-avatar URLs for manifest icons",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa",
+        "@cap-agent-avatar"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-003",
+      "name": "Fall back to static icons without an avatar",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-004",
+      "name": "Request sized Apple touch icons",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-005",
+      "name": "Prefer PNG avatars for favicon compatibility",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-pwa-006",
+      "name": "Vary avatar icon cache URLs with the avatar version",
+      "uri": "features/classic/mobile/pwa-manifest.feature",
+      "capabilities": [
+        "@cap-pwa",
+        "@cap-agent-avatar"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-mobile-001",
+      "name": "Swipe on eligible timeline space",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-mobile-002",
+      "name": "Ignore gestures originating in excluded controls",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-mobile-003",
+      "name": "Permit designated thinking and status panel targets",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-mobile-004",
+      "name": "Keep swipe order stable as the selected chat changes",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-mobile-005",
+      "name": "Do not treat primarily vertical movement as chat navigation",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-mobile-006",
+      "name": "Limit horizontal wheel navigation to the supported Safari path",
+      "uri": "features/classic/mobile/swipe-independence.feature",
+      "capabilities": [
+        "@cap-touch"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-terminal-001",
+      "name": "Open terminal standalone without garbled output",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-002",
+      "name": "Execute ls -al in terminal",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-003",
+      "name": "Terminal opens clean without IME active",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-004",
+      "name": "Close terminal via tab close button (click)",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-005",
+      "name": "Close terminal via tab close button (tap)",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:skipped",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-terminal-006",
+      "name": "Pop out terminal to new window (desktop)",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "failing-but-skipped:known-defect",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:failed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-007",
+      "name": "Terminal theme matches UI theme",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-008",
+      "name": "Toggle terminal dock via keyboard shortcut",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-009",
+      "name": "Toggle terminal dock via tab strip button",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-010",
+      "name": "Dock splitter resizes terminal height",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-011",
+      "name": "Terminal dock is interactive alongside editor",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-012",
+      "name": "Dock hidden in zen mode",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-013",
+      "name": "Zen mode hides all chrome except the terminal/editor",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-014",
+      "name": "Zen mode has a hover-discoverable exit control",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-015",
+      "name": "Clicking zen exit indicator reverts to normal layout",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-016",
+      "name": "Escape key exits zen mode",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-terminal-017",
+      "name": "Hover-reveal tab strip in zen mode",
+      "uri": "features/classic/panes/terminal.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-session-001",
+      "name": "Show the selected chat's timeline",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-session-002",
+      "name": "Group picker entries using the current session metadata",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-session-003",
+      "name": "Filter session entries using their search metadata",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-session-004",
+      "name": "Use archive and restore actions supplied for session entries",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-session-005",
+      "name": "Keep touch swipe eligibility independent of picker grouping",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-session-006",
+      "name": "Dismiss the session picker without choosing an entry",
+      "uri": "features/classic/sessions/session-switching.feature",
+      "capabilities": [
+        "@cap-session-picker"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-dialog-001",
+      "name": "Rapid shortcut presses open exactly one settings dialog",
+      "uri": "features/classic/settings/settings-dialog.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-dialog-002",
+      "name": "Second settings open is instant",
+      "uri": "features/classic/settings/settings-dialog.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-dialog-003",
+      "name": "Settings shows loading shell then content",
+      "uri": "features/classic/settings/settings-dialog.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-dialog-004",
+      "name": "User can type a number in stepper fields",
+      "uri": "features/classic/settings/settings-dialog.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-dialog-005",
+      "name": "Non-General panes load only on click",
+      "uri": "features/classic/settings/settings-dialog.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-layering-001",
+      "name": "Settings backdrop covers workspace pane",
+      "uri": "features/classic/settings/settings-layering.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-layering-002",
+      "name": "Settings dialog is above all other elements",
+      "uri": "features/classic/settings/settings-layering.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-layering-003",
+      "name": "Backdrop is partially opaque (not fully transparent or opaque)",
+      "uri": "features/classic/settings/settings-layering.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:skipped",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-settings-layering-004",
+      "name": "Only settings dialog is interactive above the backdrop",
+      "uri": "features/classic/settings/settings-layering.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-single-passkeys-001",
+      "name": "Open the same passkey controls in either Settings skin",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-002",
+      "name": "Add a first passkey from an authenticated TOTP session",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-003",
+      "name": "Add another passkey without a TOTP prerequisite",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-004",
+      "name": "Either passkey can independently sign in after a restart",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-005",
+      "name": "A synced credential is not displayed as several physical devices",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-physical-device",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-006",
+      "name": "Rename an existing or previously unnamed credential",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-007",
+      "name": "Validate names without changing authentication material",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-008",
+      "name": "Confirm removal of one key without touching the other",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-009",
+      "name": "Cancel a destructive confirmation",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-010",
+      "name": "Cancel native passkey creation and retry deliberately",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-011",
+      "name": "The native prompt may temporarily take focus away from the page",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-012",
+      "name": "A duplicate credential never replaces the existing passkey",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-013",
+      "name": "Show failed reads and writes truthfully",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-014",
+      "name": "Reconcile an uncertain registration result without blindly retrying",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-025",
+      "name": "Explain an unregistered credential left on the authenticator",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-015",
+      "name": "Explain unavailable passkey creation",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-016",
+      "name": "Settings remains operable at narrow widths and with a keyboard",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-017",
+      "name": "Reject requests outside the management authority",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-018",
+      "name": "Fail closed when registration proof or its binding is invalid",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-019",
+      "name": "Refresh authentication before changing a passkey",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-026",
+      "name": "Fresh proof in one browser does not authorise another browser",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-020",
+      "name": "Decide last-key removal from effective login methods",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-021",
+      "name": "Two concurrent removals cannot delete both remaining usable keys",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-022",
+      "name": "Recheck policy and recovery methods at commit time",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-023",
+      "name": "Slash commands cannot bypass the last-factor guard",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog",
+        "@cap-slash-commands"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-single-passkeys-024",
+      "name": "Explain the difference between removing a passkey and signing out a device",
+      "uri": "features/classic/settings/single-user-passkey-settings.feature",
+      "capabilities": [
+        "@cap-auth-passkey",
+        "@cap-settings-dialog"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-shell-env-001",
+      "name": "Run commands in the detected POSIX shell",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-002",
+      "name": "Run commands in the detected Windows shell",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [
+        "@cap-windows-shell"
+      ],
+      "status": "skipped:capability-absent",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-003",
+      "name": "Detect variable references in every syntax",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-004",
+      "name": "Retrieve only the referenced keychain entries",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-005",
+      "name": "Name keychain variables exactly like Piclaw",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-006",
+      "name": "Fail a command whose keychain placeholder cannot be resolved",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-007",
+      "name": "Expand keychain variables in PowerShell",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [
+        "@cap-windows-shell"
+      ],
+      "status": "skipped:capability-absent",
+      "projects": [
+        "chromium-phone:skipped",
+        "chromium-tablet:skipped",
+        "chromium-desktop:skipped",
+        "webkit-phone:skipped",
+        "webkit-tablet:skipped",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-008",
+      "name": "Override an environment variable from Settings",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-009",
+      "name": "Keep environment overrides across reloads",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-shell-env-010",
+      "name": "Keep keychain variables out of the Environment section",
+      "uri": "features/classic/shell-environment/shell-environment.feature",
+      "capabilities": [
+        "@cap-settings-dialog"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-013",
+      "name": "Escape key dismisses the lightbox",
+      "uri": "features/classic/timeline/lightbox-dismissal.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-014",
+      "name": "Non-Escape keys do not dismiss the lightbox",
+      "uri": "features/classic/timeline/lightbox-dismissal.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-015",
+      "name": "Clicking anywhere inside the modal dismisses the lightbox",
+      "uri": "features/classic/timeline/lightbox-dismissal.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-016",
+      "name": "Tapping the modal surface on a touch device dismisses the lightbox",
+      "uri": "features/classic/timeline/lightbox-dismissal.feature",
+      "capabilities": [
+        "@cap-attachments"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:skipped",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:skipped"
+      ]
+    },
+    {
+      "id": "@ux-timeline-017",
+      "name": "Delete a single message without visible replies",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-018",
+      "name": "Direct deletion with an unseen stored reply leaves that reply behind",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "no-suite-test",
+      "projects": []
+    },
+    {
+      "id": "@ux-timeline-019",
+      "name": "A synthetic Replies exist rejection exposes the otherwise dormant retry prompt",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-020",
+      "name": "Deleting a message with visible replies asks for cascade confirmation",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-021",
+      "name": "Confirming cascade deletes the parent and visible replies together",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-022",
+      "name": "Cancelling cascade preserves the parent and visible replies",
+      "uri": "features/classic/timeline/message-deletion.feature",
+      "capabilities": [
+        "@cap-message-delete"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-023",
+      "name": "Markdown tables render as full-width tables with automatic layout",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-024",
+      "name": "Code blocks expose a copy button in the top-right corner",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-025",
+      "name": "Resource links and link previews open in a new tab",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-026",
+      "name": "Outcome chips render after the timestamp in post metadata",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-027",
+      "name": "Read aloud appears only when browser speech support and speakable text both exist",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [
+        "@cap-read-aloud"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-028",
+      "name": "Starting read aloud on another post transfers playback ownership",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [
+        "@cap-read-aloud"
+      ],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    },
+    {
+      "id": "@ux-timeline-029",
+      "name": "Post times are shown in the viewer's time zone",
+      "uri": "features/classic/timeline/rendering.feature",
+      "capabilities": [],
+      "status": "passed",
+      "projects": [
+        "chromium-phone:passed",
+        "chromium-tablet:passed",
+        "chromium-desktop:passed",
+        "webkit-phone:passed",
+        "webkit-tablet:passed",
+        "webkit-desktop:passed"
+      ]
+    }
+  ]
+}
