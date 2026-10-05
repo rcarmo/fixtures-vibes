@@ -33,6 +33,12 @@ export const patchEditorLoader = source => patch(source, 'editor-loader.ts', [
   ['/static/classic/dist/editor.bundle.js', '/dist/editor.bundle.js'],
 ]);
 
+// Classic composes only popOutPane from app-window-actions; its compose-time root-session action has no Classic API.
+export const patchWindowActions = source => patch(source, 'app-window-actions.ts', [
+  ["import { createRootChatSession as defaultCreateRootChatSession } from '../api.js';",
+    "const defaultCreateRootChatSession = async () => { throw new Error('Classic does not create root sessions from the composer'); };"],
+]);
+
 export function piclawEditorAdapter(root) {
   const vendored = resolve(root, EDITOR_DIR);
   const webSrc = resolve(vendored, 'web/src');
@@ -45,12 +51,15 @@ export function piclawEditorAdapter(root) {
       const ts = target.replace(/\.js$/, '.ts');
       if (existsSync(ts) || existsSync(target)) return undefined;
       if (!target.startsWith(webSrc + sep)) throw new Error(`vendored Piclaw editor import not found: ${args.path} from ${args.importer}`);
-      const mapped = resolve(src, relative(webSrc, ts));
-      if (!existsSync(mapped)) throw new Error(`no Classic module for vendored Piclaw editor import ${args.path} (${mapped})`);
+      const mapped = [resolve(src, relative(webSrc, ts)), resolve(src, relative(webSrc, target))].find(existsSync);
+      if (!mapped) throw new Error(`no Classic module for vendored Piclaw editor import ${args.path} (${resolve(src, relative(webSrc, ts))})`);
       return { path: mapped };
     });
     build.onLoad({ filter: /[\\/]editor-3\.2\.5[\\/]web[\\/]src[\\/]panes[\\/]editor-loader\.ts$/ }, async args => ({
       contents: patchEditorLoader(await Bun.file(args.path).text()), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]editor-3\.2\.5[\\/]web[\\/]src[\\/]ui[\\/]app-window-actions\.ts$/ }, async args => ({
+      contents: patchWindowActions(await Bun.file(args.path).text()), loader: 'ts',
     }));
   } };
 }

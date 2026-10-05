@@ -90,7 +90,15 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | GET | `/api/workspace/stat` | `getWorkspaceFileStat` | `handleWorkspaceStat` |
 | POST | `/api/workspace/upload`, `/api/workspace/rename`, `/api/workspace/move` | `uploadWorkspaceFile`, `renameWorkspaceFile`, `moveWorkspaceEntry` | `handleWorkspaceUpload`, `…Rename`, `…Move` |
 | GET, POST | `/api/workspace/index` | `getWorkspaceIndexStatus`, `reindexWorkspace` | `handleWorkspaceIndex` |
-| GET, PUT | `/workspace/file`, GET `/workspace/raw` | kanban, mindmap, image, office panes; standalone tabs (Piclaw routes) | not yet in reference |
+| GET | `/workspace/raw`, `/workspace/stat`, `/workspace/file` (Piclaw paths) | web viewer (`<img>`/`<video>`), highlight previewer, file conflict monitor | Gi 7b4dd24 aliases |
+| GET | `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/html-viewer/`, `/data-viewer/` `?path=` | tab-mode web/data viewers (iframe) | Piclaw v3.2.5 `src/channels/web/http/*-viewer-route.ts`; not yet in reference |
+
+The editor (vendored Piclaw 3.2.5 `StandaloneEditorInstance`) reads `GET /api/workspace/file?path&max_bytes&mode=edit`:
+the complete UTF-8 text up to 256 KiB with its `mtime`, or 400 for larger or binary files (never truncated). It saves
+with `PUT /api/workspace/file` `{path, content}` (no compare-and-swap; 404 for a missing file) and watches
+`/api/workspace/stat` for external changes. `workspace_update` SSE events (`{updates: [{path, root, truncated,
+changed_paths}]}`) refresh the tree and a clean editor; they carry no file contents. Reference: Gi 7b4dd24
+(`docs/internal/workspace-editor-backend.md`). Save copy on a conflict is a known Piclaw 3.2.5 defect (rcarmo/piclaw#1524).
 
 ## Plan and widgets
 
