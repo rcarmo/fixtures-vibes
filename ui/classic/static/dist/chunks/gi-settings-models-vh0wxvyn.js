@@ -9,7 +9,7 @@ import {
   selectAgentThinking,
   selectAgentModel,
   modelContextBlocked
-} from "./app-6539reqj.js";
+} from "./app-11ycpnvn.js";
 
 // src/gi-settings-models.ts
 function defaultThinkingLabel(data) {

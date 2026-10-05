@@ -1059,7 +1059,6 @@ function GiApp() {
 
     const openEditor = useCallback((path: string) => {
         ++tabFocusEpoch.current;
-        if (window.matchMedia('(max-width: 1023px), (orientation: portrait)').matches) setWorkspaceOpen(false);
         editorPane.editor.openEditor(path);
     }, [editorPane.editor.openEditor]);
 

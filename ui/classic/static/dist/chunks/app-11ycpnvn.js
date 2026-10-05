@@ -3107,7 +3107,7 @@ function setPlanSidebarChat(chatJid) {
   window.dispatchEvent(new CustomEvent("piclaw:current-chat-changed", { detail: { chatJid } }));
   if (!installed && chatJid) {
     installed = true;
-    import("./index-142k1mtx.js");
+    import("./index-jb6g9gvv.js");
   }
 }
 function forwardPlanSidebarEvent(eventType, data) {
@@ -28005,14 +28005,14 @@ function NumberStepper({
 
 // src/gi-settings-lazy.ts
 var loaders = {
-  models: () => import("./gi-settings-models-qt5httqa.js").then((module) => module.Models),
-  appearance: () => import("./gi-settings-appearance-hx8kxn91.js").then((module) => module.Appearance),
-  keyboard: () => import("./keyboard-d1yzaj09.js").then((module) => module.KeyboardSection),
-  compaction: () => import("./gi-settings-compaction-9b6gb284.js").then((module) => module.GiSettingsCompaction),
-  providers: () => import("./gi-settings-providers-gj3dqsba.js").then((module) => module.GiSettingsProviders),
-  keychain: () => import("./gi-settings-keychain-j22mman1.js").then((module) => module.GiSettingsKeychain),
-  environment: () => import("./gi-settings-environment-ep3ted33.js").then((module) => module.GiSettingsEnvironment),
-  authentication: () => import("./gi-settings-authentication-zhrbgj7d.js").then((module) => module.GiSettingsAuthentication)
+  models: () => import("./gi-settings-models-vh0wxvyn.js").then((module) => module.Models),
+  appearance: () => import("./gi-settings-appearance-v7xe5b2g.js").then((module) => module.Appearance),
+  keyboard: () => import("./keyboard-xpab81a5.js").then((module) => module.KeyboardSection),
+  compaction: () => import("./gi-settings-compaction-9afwpqdr.js").then((module) => module.GiSettingsCompaction),
+  providers: () => import("./gi-settings-providers-y9h2tsgs.js").then((module) => module.GiSettingsProviders),
+  keychain: () => import("./gi-settings-keychain-nt8s65cj.js").then((module) => module.GiSettingsKeychain),
+  environment: () => import("./gi-settings-environment-4gv4bssf.js").then((module) => module.GiSettingsEnvironment),
+  authentication: () => import("./gi-settings-authentication-h93rjvxh.js").then((module) => module.GiSettingsAuthentication)
 };
 var labels = { models: "Models", appearance: "Appearance", keyboard: "Keyboard", compaction: "Compaction", providers: "Providers", keychain: "Keychain", environment: "Environment", authentication: "Authentication" };
 var components = new Map;
@@ -30496,8 +30496,6 @@ function GiApp() {
   };
   const openEditor = te((path) => {
     ++tabFocusEpoch.current;
-    if (window.matchMedia("(max-width: 1023px), (orientation: portrait)").matches)
-      setWorkspaceOpen(false);
     editorPane.editor.openEditor(path);
   }, [editorPane.editor.openEditor]);
   const appShellClass = [
