@@ -35,7 +35,7 @@ Add the repository as a submodule pinned to a tag:
 
 ```sh
 git submodule add https://github.com/rcarmo/fixtures-vibes.git references/fixtures-vibes
-git -C references/fixtures-vibes checkout v0.1.0
+git -C references/fixtures-vibes checkout v0.2.0
 ```
 
 Then provide a runtime profile (`schemas/runtime-profile.schema.json`) and a skips file (`schemas/skips.schema.json`) in your
@@ -131,7 +131,7 @@ automatically when the profile lacks a `@cap-*` tag of its scenario.
 ```json
 {
   "runtime": "vibes-python",
-  "fixturesVibes": "v0.1.0-rc.10",
+  "fixturesVibes": "v0.2.0",
   "skips": [
     { "id": "@ux-original-016", "reason": "capability-absent", "capability": "@cap-queue", "detail": "No follow-up queue yet." }
   ]

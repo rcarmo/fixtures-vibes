@@ -1,7 +1,16 @@
 # Changelog
 
-## Unreleased
+## v0.2.0 — 2026-10-05
 
+Reference record `oracle/piclaw/3.2.5/2026-10-05-v0.2.0`: one fresh-store run over six projects with zero retries
+(1,416 passed, 99 failed, 75 skipped; 3.3 h). By scenario: 206 pass, 30 fail as listed, none fail unlisted, 3 are
+skipped and 78 have no suite test yet. Gate OK.
+
+- Intermittent Piclaw defects seen during v0.2.0 validation runs are now listed, each with a filed or updated issue:
+  - `@ux-reconnect-001` (#1551: a status refresh restores previews after the stream drops)
+  - `@ux-chat-lifecycle-006` and `@ux-thoughts-005` on WebKit desktop (#1507: the live panel does not render)
+  - `@ux-original-018` on WebKit phone (#1506: a rejected removal hides the row)
+  - `@ux-theme-008` on Chromium tablet (#1559: a command sent during session eviction is dropped)
 - `ui/classic/scripts/probe-api.ts` reports which `ui/API.md` GET routes and boot calls a running runtime serves,
   as a progress check before a runtime switches to `ui/classic`.
 - Suite setup no longer reloads the page to find a stale tree row, because a reload discarded the other open editor
