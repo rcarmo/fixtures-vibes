@@ -218,6 +218,36 @@
       "projects": [
         "webkit-desktop"
       ]
+    },
+    {
+      "id": "@ux-original-018",
+      "reason": "known-defect",
+      "intermittent": true,
+      "projects": [
+        "webkit-phone"
+      ],
+      "detail": "After a rejected removal the warning shows but the row stays hidden (queue expected b,a,c; shown b,a) while /agent/queue-state still lists it. Same cause as @ux-shared-032; once in one full run.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1506"
+    },
+    {
+      "id": "@ux-theme-008",
+      "reason": "known-defect",
+      "intermittent": true,
+      "projects": [
+        "chromium-tablet"
+      ],
+      "detail": "A /theme command sent while the chat's session was being evicted from the pool was handled with hasCommand=false and never answered; once in one full run.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1559"
+    },
+    {
+      "id": "@ux-thoughts-005",
+      "reason": "known-defect",
+      "intermittent": true,
+      "projects": [
+        "webkit-desktop"
+      ],
+      "detail": "On WebKit desktop the live Thoughts panel never rendered while the turn was held, so its disclosure control could not be used. Same WebKit-desktop live-rendering defect as @ux-chat-lifecycle-002/006; once in one full run.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507"
     }
   ]
 }
