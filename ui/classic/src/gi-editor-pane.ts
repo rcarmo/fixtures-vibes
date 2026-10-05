@@ -3,11 +3,11 @@
 // workspace_update refresh of a clean editor), the tab strip, Markdown preview and pane-popout rendering are the
 // vendored Piclaw sources (piclaw/editor-3.2.5). This module composes them as Piclaw's app-main-* composition and
 // app-main-shell-render do, without the branch, dock and add-on surfaces Classic does not host.
-import { html, useCallback, useEffect } from './vendor/preact-htm.js';
+import { html, useCallback, useEffect, useRef } from './vendor/preact-htm.js';
 import { getWorkspaceFile } from './api.js';
 import { tabStore } from './panes/index.js';
-import { TERMINAL_TAB_PATH } from './panes/terminal-pane.js';
-import { VNC_TAB_PREFIX } from './panes/vnc-pane.js';
+import { TERMINAL_TAB_PATH } from './panes/index.js';
+import { VNC_TAB_PREFIX } from './panes/index.js';
 import { createEditorPopoutTransferPayload } from './panes/editor-popout-transfer.js';
 import { createPaneHostTransferPayload } from './panes/pane-host-transfer.js';
 import { registerPaneLiveTransfer } from './panes/pane-live-transfer.js';
@@ -16,7 +16,8 @@ import { usePaneRuntimeOrchestration } from '../piclaw/editor-3.2.5/web/src/ui/a
 import { renderPanePopoutMode } from '../piclaw/editor-3.2.5/web/src/ui/app-pane-mode-render.ts';
 import { popOutPane } from '../piclaw/editor-3.2.5/web/src/ui/app-window-actions.ts';
 import { resolvePanePopoutTransfer } from '../piclaw/editor-3.2.5/web/src/ui/app-branch-pane-orchestration.ts';
-import { watchPaneOpenEvents, watchZenModeShortcuts } from '../piclaw/editor-3.2.5/web/src/ui/app-browser-events.ts';
+import { useSplitters } from '../piclaw/editor-3.2.5/web/src/ui/use-splitters.ts';
+import { watchDockToggleShortcut, watchPaneOpenEvents, watchZenModeShortcuts } from '../piclaw/editor-3.2.5/web/src/ui/app-browser-events.ts';
 import { isStandaloneWebAppMode } from '../piclaw/editor-3.2.5/web/src/ui/chat-window.ts';
 import { TabStrip } from '../piclaw/editor-3.2.5/web/src/components/tab-strip.ts';
 import { MarkdownPreview } from '../piclaw/editor-3.2.5/web/src/components/markdown-preview.ts';
@@ -42,6 +43,11 @@ export function useGiEditorPane({ chatJid, popout = null }: { chatJid: string; p
         getWorkspaceFile,
     });
     const isWebAppMode = isStandaloneWebAppMode();
+    // Piclaw's dock splitter (use-splitters); the shell element is looked up when a drag starts.
+    const dockHeightRef = useRef<number | null>(null);
+    const unused = useRef<number | null>(null);
+    const appShellRef = useRef({ get current() { return document.querySelector('.app-shell'); } }).current;
+    const splitters = useSplitters({ appShellRef, sidebarWidthRef: unused, editorWidthRef: unused, dockHeightRef });
 
     // Piclaw's popOutPaneAction (app-branch-pane-lifecycle-actions): hand the pane's state to a standalone window.
     const handlePopOutPane = useCallback(async (path: string, label?: string | null) => {
@@ -95,7 +101,12 @@ export function useGiEditorPane({ chatJid, popout = null }: { chatJid: string; p
         popOutPane: (path, label) => { void handlePopOutPane(path, label); },
     }), [editor.openEditor, handlePopOutPane]);
 
-    // Piclaw's app-shell-shortcuts (zen mode; Classic has no dock).
+    // Piclaw's app-shell-shortcuts: Ctrl+` toggles the terminal dock, Ctrl+Shift+Z zen mode.
+    useEffect(() => {
+        if (popout || !pane.hasDockPanes) return undefined;
+        return watchDockToggleShortcut(pane.toggleDock);
+    }, [popout, pane.hasDockPanes, pane.toggleDock]);
+
     useEffect(() => {
         if (popout) return undefined;
         return watchZenModeShortcuts({
@@ -111,20 +122,22 @@ export function useGiEditorPane({ chatJid, popout = null }: { chatJid: string; p
         return () => window.removeEventListener('workspace-update', refresh);
     }, [pane.refreshActiveEditorFromWorkspace]);
 
-    return { editor, pane, handlePopOutPane, isWebAppMode };
+    return { editor, pane, handlePopOutPane, isWebAppMode, splitters };
 }
 
 type EditorPane = ReturnType<typeof useGiEditorPane>;
 
-/** The editor pane container and splitter of Piclaw's main shell (app-main-shell-render), without the dock. */
-export function renderEditorPane({ editor, pane, handlePopOutPane, isWebAppMode }: EditorPane) {
-    if (!editor.editorOpen) return null;
+/** The editor pane container, terminal dock and splitter of Piclaw's main shell (app-main-shell-render). */
+export function renderEditorPane({ editor, pane, handlePopOutPane, isWebAppMode, splitters }: EditorPane) {
+    if (!pane.showEditorPaneContainer) return null;
+    const { editorOpen } = editor;
     const activeId = editor.tabStripActiveId;
-    const detached = pane.activeDetachedTab;
+    const detached = editorOpen ? pane.activeDetachedTab : null;
+    const dockDetached = pane.detachedDockPane;
     return html`
         <div class="editor-pane-container">
             ${pane.zenMode && html`<div class="zen-hover-zone"></div>`}
-            <${TabStrip}
+            ${editorOpen && html`<${TabStrip}
                 tabs=${editor.tabStripTabs}
                 activeId=${activeId}
                 onActivate=${editor.handleTabActivate}
@@ -140,10 +153,12 @@ export function renderEditorPane({ editor, pane, handlePopOutPane, isWebAppMode 
                 paneOverrides=${editor.tabPaneOverrides}
                 detachedTabs=${pane.detachedTabs}
                 onReattachTab=${pane.reattachPane}
+                onToggleDock=${pane.hasDockPanes ? pane.toggleDock : undefined}
+                dockVisible=${pane.hasDockPanes && pane.dockVisible}
                 onToggleZen=${pane.toggleZenMode}
                 zenMode=${pane.zenMode}
                 onPopOutTab=${isWebAppMode ? undefined : handlePopOutPane}
-            />
+            />`}
             ${detached && html`
                 <div class="editor-pane-host editor-pane-detached-host">
                     <div class="editor-empty-state">
@@ -155,8 +170,8 @@ export function renderEditorPane({ editor, pane, handlePopOutPane, isWebAppMode 
                     </div>
                 </div>
             `}
-            ${!detached && html`<div class="editor-pane-host" ref=${pane.editorContainerRef}></div>`}
-            ${!detached && activeId && editor.previewTabs.has(activeId) && html`
+            ${editorOpen && !detached && html`<div class="editor-pane-host" ref=${pane.editorContainerRef}></div>`}
+            ${editorOpen && !detached && activeId && editor.previewTabs.has(activeId) && html`
                 <${MarkdownPreview}
                     getContent=${() => pane.editorInstanceRef.current?.getContent?.()}
                     subscribeContentChange=${(cb: (content: string) => void) => pane.editorInstanceRef.current?.onContentChange?.(cb)}
@@ -164,6 +179,51 @@ export function renderEditorPane({ editor, pane, handlePopOutPane, isWebAppMode 
                     onClose=${() => editor.handleTabTogglePreview(activeId)}
                 />
             `}
+            ${pane.hasDockPanes && pane.dockVisible && html`<div class="dock-splitter" onMouseDown=${splitters.handleDockSplitterMouseDown} onTouchStart=${splitters.handleDockSplitterTouchStart}></div>`}
+            ${pane.hasDockPanes && html`<div class=${`dock-panel${pane.dockVisible ? '' : ' hidden'}${editorOpen ? '' : ' standalone'}`}>
+                <div class="dock-panel-header">
+                    <span class="dock-panel-title">Terminal</span>
+                    <div class="dock-panel-actions">
+                        ${!isWebAppMode && !dockDetached && html`
+                            <button class="dock-panel-action" onClick=${() => handlePopOutPane(TERMINAL_TAB_PATH, 'Terminal')} title="Open terminal in window" aria-label="Open terminal in window">
+                                <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2.25" y="2.25" width="8.5" height="8.5" rx="1.5"/>
+                                    <path d="M8.5 2.25h5.25v5.25"/>
+                                    <path d="M13.75 2.25 7.75 8.25"/>
+                                </svg>
+                            </button>
+                        `}
+                        ${dockDetached && html`
+                            <button class="dock-panel-action" onClick=${() => pane.reattachPane(TERMINAL_TAB_PATH)} title="Reattach terminal" aria-label="Reattach terminal">
+                                <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2.25" y="2.25" width="11.5" height="11.5" rx="1.5"/>
+                                    <path d="M5.25 8h5.5"/>
+                                    <path d="M8 5.25v5.5"/>
+                                </svg>
+                            </button>
+                        `}
+                        <button class="dock-panel-close" onClick=${pane.toggleDock} title="Hide terminal (Ctrl+\`)" aria-label="Hide terminal">
+                            <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                <line x1="4" y1="4" x2="12" y2="12"/>
+                                <line x1="12" y1="4" x2="4" y2="12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                ${dockDetached
+                    ? html`
+                        <div class="dock-panel-body dock-panel-body-detached">
+                            <div class="editor-empty-state">
+                                <div class="editor-empty-state-title">Terminal detached</div>
+                                <div class="editor-empty-state-body">The terminal is open in another window.</div>
+                                <div class="editor-empty-state-actions">
+                                    <button class="editor-empty-state-button" onClick=${() => pane.reattachPane(TERMINAL_TAB_PATH)}>Reattach here</button>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    : html`<div class="dock-panel-body" ref=${pane.dockContainerRef}></div>`}
+            </div>`}
         </div>
         <div class="editor-splitter"></div>
     `;

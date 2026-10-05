@@ -2,7 +2,7 @@
 // The add-on talks to Piclaw's addon config API and default-agent message route; Gi serves the same
 // semantics at /api/sessions/{s}/plan (docs/internal/session-plan.md) and the session prompt API.
 import { sendAgentMessage } from './api.js';
-import { dispatchExtensionUiBrowserEvent, isExtensionUiEventType } from './ui/extension-ui-events.js';
+import { dispatchExtensionUiBrowserEvent, isExtensionUiEventType } from '../piclaw/editor-3.2.5/web/src/ui/extension-ui-events.ts';
 
 const PLAN_PATH = '/agent/addons/api/plan-sidebar/plan';
 const MESSAGE_PATH = '/agent/default/message';

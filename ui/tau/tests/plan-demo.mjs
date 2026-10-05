@@ -1,5 +1,9 @@
 import {chromium,webkit} from 'playwright';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+// Screenshots go to the run's scratch directory (mk/project-paths.mk) unless TAU_DEMO_OUT names a retained location.
+const out=process.env.TAU_DEMO_OUT||join(process.env.FIXTURES_RUN_ROOT||tmpdir(),'tau-demo-evidence');mkdirSync(out,{recursive:true});
 const line=readFileSync('/home/agent/.tau/web-demo.env','utf8').split('\n').find(line=>line.startsWith('TAU_WEB_AUTH_TOKEN='));
 const token=line?.slice(line.indexOf('=')+1).replace(/^["']|["']$/g,'');
 if(!token)throw new Error('Demo token missing');
@@ -13,7 +17,7 @@ for(const engine of [chromium,webkit]){
   await page.waitForFunction(()=>document.querySelector('.plan-sidebar-actions button:last-child')?.disabled===false);
   await page.waitForFunction(()=>document.querySelector('.system-meters-row.rss .system-meters-value')?.textContent.match(/^\d+(?:\.\d+)?[BK MGT]$/));
   await page.waitForTimeout(250);
-  await page.screenshot({path:`/workspace/tmp/tau-demo-evidence/${engine.name()}-desktop.png`});
+  await page.screenshot({path:join(out,`${engine.name()}-desktop.png`)});
   await page.getByRole('button',{name:'Close plan sidebar',exact:true}).click();
   for(const size of [{width:1440,height:900},{width:390,height:844}]){
    await page.setViewportSize(size);
@@ -23,7 +27,7 @@ for(const engine of [chromium,webkit]){
    if(size.width<=600)await page.locator('.system-meters-compact-summary').waitFor();
    await page.getByRole('button',{name:'Open plan sidebar',exact:true}).click();
    await page.waitForFunction(width=>document.querySelector('.plan-sidebar-panel').getBoundingClientRect().right<=width+1,size.width);
-   await page.screenshot({path:`/workspace/tmp/tau-demo-evidence/${engine.name()}-${size.width}-plan.png`});
+   await page.screenshot({path:join(out,`${engine.name()}-${size.width}-plan.png`)});
    await page.getByRole('button',{name:'Close plan sidebar',exact:true}).click();
   }
   console.log(`${engine.name()}: deployed authenticated sidebar/editor, live RSS and desktop/phone HUD toggle passed`);

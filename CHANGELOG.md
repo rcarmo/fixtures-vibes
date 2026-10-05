@@ -2,12 +2,31 @@
 
 ## Unreleased
 
+- Caches and scratch live under one project root, `PROJECT_TMP_ROOT` (default `/workspace/tmp/fixtures-vibes`):
+  `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`. `mk/project-paths.mk`, included by every Makefile here,
+  exports `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT` and the Bun, npm, XDG and Go caches, and refuses a symlinked or
+  foreign-owned root; `make env` prints the same settings for direct commands, and `make clean-scratch` removes only
+  this project's runs and build output. A runtime passes its own root (`PROJECT_TMP_ROOT=/workspace/tmp/<runtime>`).
+  The suite creates the model's and each runtime's root under `FIXTURES_RUN_ROOT` (checked: absolute, owned, not a
+  symlink) with a private `tmp/` as the process's `TMPDIR`, and now also removes a root whose `prepare` fails. The Tau
+  visual scripts write to the run directory instead of fixed `/workspace/tmp` paths, and `reference-layout.mjs` requires
+  `TAU_REFERENCE_STATIC`.
 - `ui/classic` ships the Piclaw 3.2.5 editor. Editor tabs run in Piclaw's own pane runtime, tab strip, Markdown
   preview, pane windows and web/data/highlight viewers, vendored unmodified and hash-pinned under
   `ui/classic/piclaw/editor-3.2.5/` and composed by `src/gi-editor-pane.ts`. This adds Preview, Compare to Saved,
   Edit Source, zen mode, Open in Window with reattach, tabs that activate on press, MRU close and the refresh of a clean
   editor on `workspace_update`. The read-only tab host is gone. `ui/API.md` documents the editor's read, save and stat
   contract and the viewer routes.
+- `ui/classic` ships Piclaw 3.2.5's terminal, VNC and `/btw` side conversation, vendored unmodified under
+  `ui/classic/piclaw/editor-3.2.5/` with the xterm.js bundle and remote-display decoder Piclaw serves from
+  `/static/common/js/vendor/`. The terminal opens in a tab or in the dock (Ctrl+`, resizable by its splitter), VNC opens
+  in a tab from the menus, and `/btw <question>` streams an answer into the side panel with Retry and Inject into
+  chat. Intent toasts now appear in the status area. Classic's earlier terminal and VNC copies (whose assets were never
+  shipped) and the BTW stub are gone, and so are 93 superseded Piclaw modules, tests and scripts that the build no longer
+  reached (the shipped bundle is unchanged by their removal).
+- `ui/classic` handles the agent's `open_workspace_file` requests as Piclaw 3.2.5 does: an `extension_ui_request` for the
+  chat in view opens the file in a tab (or a pane window) and is answered with `POST /agent/respond`, which
+  `respondToAgentRequest` now calls instead of a stub. `ui/API.md` documents the request and answer.
 - Lifecycle runs remove each runtime's and the fixture model's temp root when they stop (`FIXTURES_KEEP_ROOTS=1` keeps
   them). Earlier runs left one root per worker in the temp directory. A runtime that never becomes ready reports the
   tail of its `runtime.log`.

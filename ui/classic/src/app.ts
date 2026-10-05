@@ -17,7 +17,6 @@ import { getLocalStorageItem, setLocalStorageItem } from './utils/storage.js';
 import { dedupePosts } from './ui/timeline-utils.js';
 import { useAgentState } from './ui/use-agent-state.js';
 import { useSseConnection } from './ui/use-sse-connection.js';
-import { handleAppSseEvent } from './ui/app-sse-events.js';
 import { forwardPlanSidebarEvent, setPlanSidebarChat } from './gi-plan-sidebar.js';
 import { useGiFloatingWidget } from './gi-floating-widget.js';
 import { initTheme } from './ui/theme.js';
@@ -31,15 +30,18 @@ import {
     isIOSDevice,
 } from './ui/app-helpers.js';
 import { isCompactionStatus } from './ui/status-duration.js';
-import { paneRegistry, tabStore, workspacePreviewPaneExtension, workspaceMarkdownPreviewPaneExtension } from './panes/index.js';
+import { paneRegistry, tabStore, workspacePreviewPaneExtension, workspaceMarkdownPreviewPaneExtension, vncPaneExtension, terminalPaneExtension, terminalTabPaneExtension } from './panes/index.js';
 
-// Piclaw 3.2.5's pane set (app-shell-bootstrap), in its order, less the office and VNC viewers Classic does not host.
+// Piclaw 3.2.5's pane set (app-shell-bootstrap), in its order, less the office viewer Classic does not host.
 paneRegistry.register(editorPaneExtension);
 paneRegistry.register(workspacePreviewPaneExtension);
 paneRegistry.register(workspaceMarkdownPreviewPaneExtension);
 paneRegistry.register(dataViewerPaneExtension);
 paneRegistry.register(webViewerPaneExtension);
 paneRegistry.register(highlightPreviewerPaneExtension);
+paneRegistry.register(vncPaneExtension);
+paneRegistry.register(terminalPaneExtension);
+paneRegistry.register(terminalTabPaneExtension);
 import {
     getTimeline,
     recoverPendingDraftSends,
@@ -68,7 +70,6 @@ import {
     removeAgentQueueItem,
     reorderAgentQueueItem,
     steerAgentQueueItem,
-    streamSidePrompt,
     getWorkspaceFile,
     sendAgentMessage,
     forkChatBranch,
@@ -85,6 +86,8 @@ import { dataViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/da
 import { webViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/web-viewer-pane.ts';
 import { highlightPreviewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/highlight-previewer-pane.ts';
 import { FloatingWidgetPane } from './components/floating-widget-pane.js';
+import { useGiBtw, useGiIntentToast } from './gi-btw.js';
+import { handleOpenWorkspaceFileBrowserRequest } from '../piclaw/editor-3.2.5/web/src/ui/app-extension-ui-browser-actions.ts';
 import { AttachmentPreviewModal } from './components/attachment-preview-modal.js';
 import { SystemMetersHud } from './components/system-meters-hud.js';
 import { TimelineMenu } from './components/timeline-menu.js';
@@ -875,6 +878,8 @@ function GiApp() {
         refreshAfterConnection.current();
         void refreshSessionLists(sessionId);
     }, [refreshSessionLists, sessionId]);
+    const { intentToast, showIntentToast } = useGiIntentToast();
+    const btw = useGiBtw({ currentChatJid, isAgentActive: isAgentTurnActive, showIntentToast, onMessageResponse: handlePost });
 
     const handleSwitchChat = useCallback((chatJid: string | null) => {
         const nextSessionId = typeof chatJid === 'string' && chatJid.startsWith('gi:') ? chatJid.slice(3) : null;
@@ -1062,6 +1067,21 @@ function GiApp() {
         editorPane.editor.openEditor(path);
     }, [editorPane.editor.openEditor]);
 
+    // The agent's open_workspace_file requests (Piclaw 3.2.5 app.ts): extension_ui_request events for this chat,
+    // forwarded by gi-plan-sidebar, open the file in a tab or a pane window and answer via /agent/respond.
+    useEffect(() => {
+        const handleExtensionUiRequest = (event: Event) => {
+            void handleOpenWorkspaceFileBrowserRequest(event as CustomEvent, {
+                currentChatJid,
+                openEditor,
+                popOutPane: editorPane.handlePopOutPane,
+                showIntentToast,
+            });
+        };
+        window.addEventListener('piclaw-extension-ui:request', handleExtensionUiRequest as EventListener);
+        return () => window.removeEventListener('piclaw-extension-ui:request', handleExtensionUiRequest as EventListener);
+    }, [currentChatJid, editorPane.handlePopOutPane, openEditor, showIntentToast]);
+
     // ── Shell class ───────────────────────────────────────────────────────────
 
     const appShellClass = [
@@ -1129,6 +1149,8 @@ function GiApp() {
                 toggleWorkspace=${() => setWorkspaceOpen((v: boolean) => !v)}
                 chatOnlyMode=${false}
                 openEditor=${openEditor}
+                onOpenTerminalTab=${editorPane.pane.openTerminalTab}
+                onOpenVncTab=${editorPane.pane.openVncTab}
             />
             <${WorkspaceExplorer}
                 onFileSelect=${(path: string) => {
@@ -1143,8 +1165,8 @@ function GiApp() {
                 visible=${workspaceOpen}
                 active=${workspaceOpen || editorOpen}
                 onOpenEditor=${openEditor}
-                onOpenTerminalTab=${() => {}}
-                onOpenVncTab=${() => {}}
+                onOpenTerminalTab=${editorPane.pane.openTerminalTab}
+                onOpenVncTab=${editorPane.pane.openVncTab}
             />
             ${workspaceOpen && html`<button
                 class="workspace-drawer-backdrop"
@@ -1199,11 +1221,12 @@ function GiApp() {
                     plan=${agentPlan}
                     thought=${agentThought}
                     pendingRequest=${pendingRequest}
-                    intent=${null}
+                    intent=${intentToast}
                     turnId=${currentTurnId}
                     steerQueued=${Boolean(steerQueuedTurnId)}
                     showExtensionPanels=${false}
                 />
+                ${btw.btwPanel}
                 <${FloatingWidgetPane}
                     widget=${floatingWidget}
                     onClose=${closeWidget}
@@ -1276,6 +1299,7 @@ function GiApp() {
                     currentChatJid=${currentChatJid}
                     isAgentActive=${isAgentTurnActive}
                     onPost=${handlePost}
+                    onSubmitIntercept=${btw.handleBtwIntercept}
                     onFocus=${() => { if (!isIOSDevice()) scrollToBottom(); }}
                     onModelMutationStart=${() => {
                         const token = {}; ++modelRevision.current; modelMutation.current = token; return token;

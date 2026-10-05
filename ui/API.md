@@ -20,8 +20,8 @@ implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
 Serve `ui/classic/static` at `/` (Gi embeds it as `giui.Static`): `index.html` for `/` and unknown app
 routes, plus `/dist/`, `/css/`, `/fonts/`, `/js/`, `/editor-vendor/`, icons. Also `/manifest.json`,
-`/avatar/agent`, and `/static/icon-192.png`, `/static/icon-512.png`, `/static/js/vendor/*` (panes load vendor
-scripts under `/static/`). `ui/classic/theme-catalogue.json` backs the `/theme` command.
+`/avatar/agent`, and `/static/icon-192.png`, `/static/icon-512.png`, `/static/js/vendor/*`, `/static/common/js/vendor/*` (panes load
+vendor scripts under `/static/`). `ui/classic/theme-catalogue.json` backs the `/theme` command.
 
 ## Event stream
 
@@ -118,10 +118,30 @@ that iframe). Bridge `submit` posts to `/api/sessions/{s}/prompt` for the openin
 `requestRefresh` rebuilds the dashboard snapshot from the session routes above. Static files that widgets import as ES
 modules must be served with `Access-Control-Allow-Origin: *`.
 
-## Terminal and VNC (Piclaw v3.2.5 routes; Gi implementation pending, gi#45, gi#47)
+## Agent requests to the browser (Piclaw v3.2.5)
+
+A tool that needs the open browser (Piclaw's `open_workspace_file`, which `@ux-editor-006..008` drive through the
+profile's `tools.openFile`) sends an `extension_ui_request` event for its chat and waits for the answer:
+
+```json
+{"kind": "custom", "request_id": "…", "chat_jid": "…",
+ "options": {"action": "open_workspace_file", "path": "notes/a.md", "label": "…", "target": "tab", "timeout": 15000}}
+```
+
+`path` is workspace-relative and already checked to be a regular file (the tool answers missing, outside and
+non-file paths itself without asking the browser). The page showing that chat opens the file (`target: "tab"`, or a
+pane window for `"popout"` when the viewport allows) and answers with `POST /agent/respond`
+`{"request_id", "outcome": {"ok", "opened", "target", "path", "reason"?, "detail"?}, "chat_jid"}`; Piclaw times out after
+15 s. Pages showing other chats ignore the request.
+
+## Terminal, VNC and side prompts (Piclaw v3.2.5 routes)
 
 Session, handoff and WebSocket frame shapes are those of Piclaw v3.2.5 `terminal-session-service.ts` and
-`vnc-session-service.ts`, as consumed by the UI's `panes/terminal-pane.ts` and `panes/vnc-pane.ts`.
+`vnc-session-service.ts`, as consumed by the vendored `panes/terminal-pane.ts` and `panes/vnc-pane.ts`. The panes load
+`/static/common/js/vendor/xterm/*` and `/static/common/js/vendor/remote-display-decoder.wasm` (in `ui/classic/static`).
+Side prompts (`/btw`) follow Piclaw v3.2.5 `streamSidePrompt`: a JSON body `{prompt, chat_jid, system_prompt?}`
+answered with an event stream of `side_prompt_thinking_delta`, `side_prompt_text_delta`, `side_prompt_done` and
+`side_prompt_error`; nothing is written to the chat.
 
 | Method | Path | UI caller |
 |---|---|---|
@@ -131,6 +151,7 @@ Session, handoff and WebSocket frame shapes are those of Piclaw v3.2.5 `terminal
 | GET | `/vnc/session` | `fetchVncSession` |
 | WebSocket | `/vnc/ws` | VNC pane (remote-display decoder) |
 | POST | `/vnc/handoff` | VNC pop-out |
+| POST | `/agent/side-prompt/stream` | `streamSidePrompt` (BTW panel) |
 
 ## Authentication (when the runtime offers auth)
 

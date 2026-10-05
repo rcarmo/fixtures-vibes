@@ -12,7 +12,7 @@
     "shared": "Vibes Python tests/parity/features/canonical-ux.feature at 9a34046 (IDs minted @ux-shared-NNN)"
   },
   "files": {
-    "Makefile": "9e9a413b45ff23ac396bb6c4a3c90db6bda8620bcc13a465b2cd5eb5753796d2",
+    "Makefile": "152d0c456e3b0b14646445dfa92b1975286cd180751482334cf97d083e19a533",
     "bun.lock": "4ccd41dec45019c0aeae33122abe8a7e56b58d6d0c857ea9dc5b143617416341",
     "capabilities.json": "5004a6364688c47bb2bb222f4a00909eebb2857fb4aa3255f05bc31eedfc5472",
     "control/fixture-model-server.ts": "a11136ec69dbad78966f7b5ef5bd585f1ad70513619ef3937be0b7921de1ce08",
@@ -55,9 +55,9 @@
     "suite/clipboard.ts": "c044c1b7a432bb4f1a50ab3082600eeb8caabc546b91a96e73139ff61fdacbd0",
     "suite/colour.ts": "6a6b7170da5bfb58d062387cfd83beff45969fbd165227d86485ff45b82dfce9",
     "suite/fixtures.ts": "630b94d00abf12b2d82597d59b6a7372396588049507e7049d3545a322b88fcd",
-    "suite/global-setup.ts": "ca5b216b240da0627ff5fe67c4b177ca8de31ad1ac37197b3b63c4880cec1389",
+    "suite/global-setup.ts": "1e32c2eabc59bbf97b679f757b06e1610373661fc5f5f8153f31ed9736615ebc",
     "suite/keychain.ts": "82ed6bdd620ceed4c930d2a8a3013bfeeba790c3ad68d80835882e95bfbdd094",
-    "suite/lifecycle.ts": "3a17e8fe256a970554ce40c4f2d3ead130ffcd07bb3b07bfb996214613b1ae45",
+    "suite/lifecycle.ts": "4789bed56bdb1f64e28a83321ddc2da90de54f75afcf81baaa51339b638fb5ae",
     "suite/net.ts": "49916e6e95b0be82ff8dc138d4676226e21d8a5d988afe235a5f638187d7debe",
     "suite/pickers.ts": "7374b77ac90a6c36bac0d252b655d5acecbf4cb7bdc87a15abfd41e5b9bb91dd",
     "suite/playwright.config.ts": "fc0566097bebeb593cc5ba7427e04a40d43f0bdd7853d81c19680c784c04d5cf",

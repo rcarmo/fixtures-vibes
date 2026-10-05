@@ -518,8 +518,46 @@ export async function recoverPendingDraftSends(pending: PendingSend[]) {
     return recoverPendingSends(pending, path => request(path, { signal }));
 }
 
-export async function streamSidePrompt(content: string, chatJid: string | null = null, _options: any = {}) {
-    return null;
+/** Piclaw 3.2.5 `streamSidePrompt` (/btw): POST /agent/side-prompt/stream, SSE `side_prompt_*` events. */
+export async function streamSidePrompt(prompt: string, options: any = {}) {
+    const response = await fetch(API_BASE + '/agent/side-prompt/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            prompt,
+            system_prompt: options.systemPrompt || undefined,
+            chat_jid: options.chatJid || undefined,
+        }),
+        signal: options.signal,
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Side prompt failed' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+    }
+
+    let finalPayload: any = null;
+    let errorPayload: any = null;
+    await consumeEventStream(response, (eventType, data: any) => {
+        options.onEvent?.(eventType, data);
+        if (eventType === 'side_prompt_thinking_delta') {
+            options.onThinkingDelta?.(data?.delta || '');
+        } else if (eventType === 'side_prompt_text_delta') {
+            options.onTextDelta?.(data?.delta || '');
+        } else if (eventType === 'side_prompt_done') {
+            finalPayload = data;
+        } else if (eventType === 'side_prompt_error') {
+            errorPayload = data;
+        }
+    });
+
+    if (errorPayload) {
+        const error = new Error(errorPayload?.error || 'Side prompt failed') as any;
+        error.payload = errorPayload;
+        throw error;
+    }
+
+    return finalPayload;
 }
 
 // ── Media ─────────────────────────────────────────────────────────────────
@@ -704,7 +742,19 @@ export async function deleteWebPushSubscription(_sub: unknown, _opts: any = {}) 
 // ── Agent whitelist / ACP ─────────────────────────────────────────────────
 
 export async function addToWhitelist(_target: string, _chatJid: string | null = null) { return null; }
-export async function respondToAgentRequest(_requestId: string, _allow: boolean, _chatJid: string | null = null) { return null; }
+/** Piclaw 3.2.5 `respondToAgentRequest`: answer an `extension_ui_request` (POST /agent/respond). */
+export async function respondToAgentRequest(requestId: string, outcome: unknown, chatJid: string | null = null) {
+    const response = await fetch(API_BASE + '/agent/respond', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: requestId, outcome, chat_jid: chatJid || undefined }),
+    });
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Failed to respond' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+}
 
 // ── Performance tracing stub (consumed by this file itself) ───────────────
 // app-perf-tracing.ts in Piclaw is a real module; we provide a no-op here

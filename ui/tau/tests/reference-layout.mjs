@@ -1,17 +1,19 @@
 import {createServer} from 'node:http';
 import {createHash} from 'node:crypto';
 import {readFile,mkdir} from 'node:fs/promises';
-import {resolve,extname} from 'node:path';
+import {resolve,extname,join} from 'node:path';
+import {tmpdir} from 'node:os';
 import {chromium,webkit,expect} from '@playwright/test';
 const engine=process.env.TAU_REFERENCE_ENGINE||'chromium';
 const size=process.env.TAU_REFERENCE_SIZE||'desktop';
 const theme=process.env.TAU_REFERENCE_THEME||'light';
 const viewport={phone:{width:390,height:844},tablet:{width:820,height:1180},desktop:{width:1440,height:900}}[size];
-const reference=process.env.TAU_REFERENCE_STATIC||'/workspace/tmp/vibes-reference/source/src/vibes/static';
+const reference=process.env.TAU_REFERENCE_STATIC;
+if(!reference)throw new Error('Set TAU_REFERENCE_STATIC to the reference Vibes static directory');
 const pinned=JSON.parse(await readFile(new URL('./reference-hashes.json',import.meta.url),'utf8'));
 for(const [file,hash] of Object.entries(pinned.files))expect(createHash('sha256').update(await readFile(resolve(reference,file))).digest('hex'),`Pinned reference ${file}`).toBe(hash);
 const current=resolve('static');
-const out=`/workspace/tmp/vibes-reference/comparison/${engine}-${size}-${theme}`;await mkdir(out,{recursive:true});
+const out=join(process.env.FIXTURES_RUN_ROOT||tmpdir(),'vibes-reference-comparison',`${engine}-${size}-${theme}`);await mkdir(out,{recursive:true});
 const server=createServer(async(req,res)=>{
  const u=new URL(req.url,'http://localhost'),ref=u.pathname.startsWith('/reference/');
  const path=u.pathname.replace(/^\/(reference|current)/,'');

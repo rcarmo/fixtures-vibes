@@ -39,6 +39,21 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
   massive run (the whole suite, or every project at once) happens at most once every 4 hours per agent.
 * Git: never rebase; commit as Rui Carmo <rui.carmo@gmail.com>.
 
+## Caches and scratch
+
+- Root: `/workspace/tmp/fixtures-vibes/` with `cache/<tool>/` (bun, npm, xdg, go), `build/` and
+  `runs/<purpose>/<run-id>/` (`suite`, `ui-classic`, `ui-vibes`, `ui-tau`, or `RUN_PURPOSE=…`). `mk/project-paths.mk`
+  defines it for every Makefile here and exports `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT`, `XDG_CACHE_HOME`,
+  `BUN_INSTALL_CACHE_DIR`, `npm_config_cache` and `GOCACHE`. It refuses a symlinked or foreign-owned root.
+- A runtime running the suite or a UI build from its submodule passes its own root (`PROJECT_TMP_ROOT=/workspace/tmp/<runtime>`),
+  so the scratch is the runtime's. Direct commands (Playwright, `bun build.js`, fixture binaries) first run
+  `eval "$(make -s env RUN_PURPOSE=<purpose>)"`; never bare `/tmp` or home caches.
+- The suite creates the model's and each runtime's root under `FIXTURES_RUN_ROOT` (owned directory, checked) with a
+  private `tmp/` as the process's `TMPDIR`, and removes it when it stops (`FIXTURES_KEEP_ROOTS=1` keeps it).
+- Retained evidence stays out of scratch: `test-results/` (reports), `oracle/` (records). Playwright's browsers are an
+  installed toolchain (`PLAYWRIGHT_BROWSERS_PATH`, default `~/.cache/ms-playwright`), not scratch.
+- `make clean-scratch` removes only this project's `runs/` and `build/`; it refuses any other root.
+
 ## Suite changes requested by runtime owners
 
 Piclaw 3.2.5 is the oracle. Change a spec only when it is wrong against Piclaw: asserting something Piclaw does not

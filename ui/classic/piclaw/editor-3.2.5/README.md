@@ -1,4 +1,4 @@
-# Piclaw 3.2.5 editor (vendored)
+# Piclaw 3.2.5 editor, panes and side conversation (vendored)
 
 Unmodified Piclaw v3.2.5 sources (rcarmo/piclaw `de82f7a0b31b460311a2192570b5ef66b2c936af`, MIT), kept in their original
 layout so their relative imports resolve inside this tree:
@@ -15,9 +15,14 @@ layout so their relative imports resolve inside this tree:
   `ui/app-window-actions.ts`, `ui/app-branch-pane-orchestration.ts`, `ui/chat-window.ts`, `ui/use-splitters.ts`; the
   pane-open and zen shortcuts in `ui/app-browser-events.ts` (with `components/settings-dialog-events.ts`); and the
   tab viewers `panes/web-viewer-pane.ts`, `panes/data-viewer-pane.ts`, `panes/highlight-previewer-pane.ts`.
+- The terminal pane `panes/terminal-pane.ts` (xterm.js, dock and tab) and the VNC pane `panes/vnc-pane.ts` with its
+  `vnc-*` and `remote-display-*` modules. They load their browser assets from `/static/common/js/vendor/` (`xterm/`,
+  `remote-display-decoder.wasm`), which the build ships as Piclaw 3.2.5 vendored them, with their metadata files.
+- The `/btw` side conversation: `components/btw-panel.ts`, `ui/btw.ts`, `ui/app-btw-orchestration.ts`.
 
-`src/gi-editor-pane.ts` composes these as Piclaw's app-main composition does; Classic has no dock, branch or add-on
-surfaces. `src/ui/addon-web-extensions.ts` stands in for Piclaw's add-on registry, which Classic does not host.
+`src/gi-editor-pane.ts` composes the panes, tab strip and terminal dock as Piclaw's app-main composition does, and
+`src/gi-btw.ts` hosts the side conversation and intent toasts as its side-panel orchestration does; Classic has no
+branch or add-on surfaces. `src/ui/addon-web-extensions.ts` stands in for Piclaw's add-on registry, which Classic does not host.
 
 `SHA256SUMS` pins every file. `scripts/piclaw-editor-adapter.mjs` verifies the hashes, resolves imports of modules not
 vendored here (`api.js`, `pane-registry.js`, `tab-store.js`, …) to `src/`, maps `#editor-vendor/codemirror` to the
