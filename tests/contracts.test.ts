@@ -8,7 +8,10 @@ const root = join(import.meta.dir, '..');
 const read = (p: string) => JSON.parse(readFileSync(join(root, p), 'utf8'));
 const newAjv = () => { const a = new Ajv2020({ allErrors: true, strict: false }); addFormats(a); return a; };
 const ajv = newAjv();
-const compile = (p: string) => newAjv().compile(read(p));
+// One compiled validator per schema file: compiling dominates this file's CPU profile, and Ajv refuses a second
+// schema with the same $id in one instance.
+const compiled = new Map<string, ReturnType<typeof ajv.compile>>();
+const compile = (p: string) => compiled.get(p) ?? compiled.set(p, ajv.compile(read(p))).get(p)!;
 
 const capabilities = read('capabilities.json').capabilities as Record<string, unknown>;
 

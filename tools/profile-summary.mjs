@@ -39,11 +39,43 @@ function snapshot(file, p, top) {
   table('top live objects by type/name', self, total, 'b', top);
 }
 
+/** Bun test capture (mk/bun-test-profile.ts): JSC profile() stack samples and an Inspector heap snapshot. */
+function bunTest(name, dir, top) {
+  const cpu = JSON.parse(readFileSync(join(dir, 'cpu.json'), 'utf8'));
+  const ms = (cpu.stackTraces.interval || 0.001) * 1000;
+  const self = new Map(), incl = new Map(); let n = 0, mine = 0;
+  const frameLabel = f => `${f.name || '(anonymous)'} ${f.sourceURL ? (f.sourceURL.startsWith(repo) ? relative(repo, f.sourceURL) : f.sourceURL) : '(native)'}:${f.line > 1e9 ? '?' : f.line}`;
+  const ownFrame = f => !!f.sourceURL && f.sourceURL.startsWith(repo) && !f.sourceURL.includes('/node_modules/');
+  for (const t of cpu.stackTraces.traces) {
+    const frames = (t.frames || []).filter(f => f.name !== 'profile');
+    n++;
+    const leaf = frames[0];
+    const k = leaf ? frameLabel(leaf) : '(idle/native)';
+    const e = self.get(k) || { v: 0, mine: !!leaf && ownFrame(leaf) }; e.v += ms; self.set(k, e);
+    const first = frames.find(ownFrame);
+    if (first) { mine += ms; const ki = frameLabel(first); const ei = incl.get(ki) || { v: 0, mine: true }; ei.v += ms; incl.set(ki, ei); }
+  }
+  console.log(`\n== ${name}/cpu.json: ${n} samples at ${ms} ms = ${(n * ms).toFixed(0)} ms of JS, ${mine.toFixed(0)} ms under repository frames (* = repository frame)`);
+  table('top self time', self, n * ms, 'ms', top);
+  table('time attributed to the innermost repository frame', incl, n * ms, 'ms', top);
+  const heap = JSON.parse(readFileSync(join(dir, 'heap.json'), 'utf8'));
+  const w = heap.nodes.length % 4 === 0 ? 4 : 5;
+  const byClass = new Map(); let total = 0;
+  for (let i = 0; i < heap.nodes.length; i += w) {
+    const size = heap.nodes[i + 1]; total += size;
+    const k = heap.nodeClassNames[heap.nodes[i + 2]];
+    const e = byClass.get(k) || { v: 0, mine: false }; e.v += size; byClass.set(k, e);
+  }
+  console.log(`\n== ${name}/heap.json: heap snapshot at the end of the run, ${heap.nodes.length / w} objects, ${fmt(total, 'b')} (live objects only; JSC keeps no allocation sites)`);
+  table('top live objects by class', byClass, total, 'b', top);
+}
+
 const [dir, topArg] = process.argv.slice(2);
 if (!dir) { console.error('usage: profile-summary.mjs <dir> [top]'); process.exit(2); }
 const top = Number(topArg) || 15;
 for (const file of readdirSync(dir).sort()) {
   const path = join(dir, file);
+  if (/^bun-test-\d+$/.test(file)) { try { bunTest(file, path, top); } catch (e) { console.log(`\n== ${file}: capture incomplete (${e.message})`); } continue; }
   if (file.endsWith('.cpuprofile')) {
     const p = JSON.parse(readFileSync(path, 'utf8'));
     const byId = new Map(p.nodes.map(n => [n.id, n]));
@@ -60,7 +92,7 @@ for (const file of readdirSync(dir).sort()) {
     table('top self time', self, total, 'ms', top);
   } else if (/^time-.*\.txt$/.test(file)) {
     const keep = /^\s*(Command being timed|User time|System time|Percent of CPU|Elapsed|Maximum resident set size|Exit status)/;
-    console.log(`\n== ${file} (bun test: process CPU time and peak RSS; no CPU profile available)`);
+    console.log(`\n== ${file} (process CPU time and peak RSS, including profiler overhead)`);
     for (const line of readFileSync(path, 'utf8').split('\n')) if (keep.test(line)) console.log(`  ${line.trim()}`);
   } else if (/^bun-test-heap-.*\.json$/.test(file)) {
     const h = JSON.parse(readFileSync(path, 'utf8'));

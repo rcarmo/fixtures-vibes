@@ -5,16 +5,17 @@
 #
 # - Node processes (the Playwright runner and its workers): V8 --cpu-prof (1 ms) and --heap-prof (sampling, 512 KiB).
 # - Bun scripts: Bun's --cpu-prof and --heap-prof (the latter is a heap snapshot at exit, not allocation sites).
-# - bun test: Bun 1.4 has no test profiler (JSC's sampling profiler crashes it), so only CPU time and peak RSS
-#   (/usr/bin/time -v, when present) and live-heap statistics at exit (mk/bun-test-heap.ts) are recorded. The CPU
-#   and allocation profiling gate is incomplete for these runs; say so when reporting them.
+# - bun test (no --cpu-prof in Bun 1.4): mk/bun-test-profile.ts runs JSC's profile() over the whole test process
+#   (1 ms samples, FIXTURES_BUN_SAMPLE_US) and writes cpu.json plus a heap snapshot at the end, in bun-test-<pid>/;
+#   /usr/bin/time -v adds CPU time and peak RSS. JSC keeps no allocation history (the heap snapshot shows what is
+#   live at the end, not bytes or objects allocated), and subprocesses the tests spawn are not profiled.
 # - Browsers and the runtime under test are not profiled here; runtime owners profile their own processes.
 NODE ?= node
 PROFILE_DIR ?= $(abspath test-results/profiles/$(RUN_PURPOSE)-$(RUN_ID))
 NODE_PROFILE = NODE_OPTIONS="$$NODE_OPTIONS --cpu-prof --cpu-prof-dir=$(PROFILE_DIR) --heap-prof --heap-prof-dir=$(PROFILE_DIR)"
 BUN_PROFILE = --cpu-prof --cpu-prof-dir=$(PROFILE_DIR) --heap-prof --heap-prof-dir=$(PROFILE_DIR)
 TIME_V := $(if $(wildcard /usr/bin/time),/usr/bin/time -v -o $(PROFILE_DIR)/time-$$$$.txt,)
-BUN_TEST_PROFILED = FIXTURES_PROFILE_DIR="$(PROFILE_DIR)" $(TIME_V) $(BUN) test --preload $(abspath $(FIXTURES_VIBES_MK)bun-test-heap.ts)
+BUN_TEST_PROFILED = FIXTURES_PROFILE_DIR="$(PROFILE_DIR)" $(TIME_V) $(BUN) test --preload $(abspath $(FIXTURES_VIBES_MK)bun-test-profile.ts)
 
 define profile_begin
 	@mkdir -p "$(PROFILE_DIR)"
