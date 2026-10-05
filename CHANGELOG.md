@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Budget, Recordings, Tools and Add-ons settings are out of scope (Rui, 2026-10-05): `@ux-settings-011` (Budget),
+  `@ux-settings-015` (Add-ons), `@ux-settings-024..026` (Recordings) and `@ux-settings-027/028` (Tools) are retired,
+  with `@cap-addons` and `@cap-recordings`. `@ux-settings-012` keeps the Scheduled Tasks list and actions and drops its
+  per-run budget steps. Classic now has 277 scenarios (plus 33 shared).
 - Test targets capture profiles for post-run analysis (`mk/profiling.mk`, `tools/profile-summary.mjs`): V8 CPU and
   sampling-heap profiles for the Playwright runner and workers, Bun profiles for Bun scripts, and for `bun test` JSC CPU
   samples over the whole test process plus a heap snapshot at the end (`mk/bun-test-profile.ts`), CPU time and peak

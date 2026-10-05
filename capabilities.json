@@ -110,10 +110,6 @@
       "area": "settings",
       "description": "Family/multi-user invitations and roles."
     },
-    "@cap-addons": {
-      "area": "settings",
-      "description": "Add-on install/config surfaces."
-    },
     "@cap-skills": {
       "area": "compose",
       "description": "Skills listing/invocation in the UI."
@@ -121,10 +117,6 @@
     "@cap-scheduled-tasks": {
       "area": "settings",
       "description": "Scheduled task management UI."
-    },
-    "@cap-recordings": {
-      "area": "panes",
-      "description": "Session recordings viewer."
     },
     "@cap-search": {
       "area": "timeline",

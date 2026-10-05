@@ -26,7 +26,6 @@
     "mode": "none"
   },
   "capabilities": [
-    "@cap-addons",
     "@cap-agent-avatar",
     "@cap-attachments",
     "@cap-auth-login",
@@ -44,7 +43,6 @@
     "@cap-quick-actions",
     "@cap-read-aloud",
     "@cap-reconnect",
-    "@cap-recordings",
     "@cap-scheduled-tasks",
     "@cap-search",
     "@cap-session-manage",

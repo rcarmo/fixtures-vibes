@@ -91,22 +91,11 @@ Feature: Classic Settings dialog core UX
     And a blocked model exposes a Compact context action instead of silently switching anyway
     And Provider settings is an explicit navigation action rather than an implied inline mutation
 
-  @ux-settings-011 @budget @access-mode @cap-settings-dialog
-  Scenario: Budget stays owner-bound, single-user-first and explicit about task-budget ownership
-    Given the access mode is single-user and the Budget section is open
-    Then the owner can create, edit, enable and disable budget caps with explicit revision-confirmed writes
-    And current work may expose allowance, warnings-only, resume and cancel actions with clear continuation guidance
-    And per-run scheduled task budget remains edited from Scheduled Tasks as the single source of truth
-    But in family-shared or other multi-user modes the owner-bound budget routes are denied before payload parsing
-    And the audit must not claim those restricted modes support the same Budget controls
-
-  @ux-settings-012 @scheduled-tasks @budget @cap-scheduled-tasks @cap-settings-dialog
-  Scenario: Scheduled Tasks lists supported tasks and owns per-run task budget edits
+  @ux-settings-012 @scheduled-tasks @cap-scheduled-tasks @cap-settings-dialog
+  Scenario: Scheduled Tasks lists supported tasks
     Given the Scheduled Tasks section is open
     Then scheduled tasks are listed with chat filtering and authoritative counts
     And supported tasks expose pause, resume and delete actions from the detail view
-    And agent tasks can set, update or disable a per-run API-equivalent budget with revision confirmation
-    And shell tasks reject per-run budget controls rather than simulating support
 
   @ux-settings-013 @environment @safety @cap-settings-dialog
   Scenario: Environment supports refresh and overrides while protecting keychain-injected names
@@ -127,14 +116,6 @@ Feature: Classic Settings dialog core UX
     And submitting that prompt retries reveal with the entered authentication data
     And revealed username or secret values can be copied without exposing unrelated entries
     And delete remains an explicit confirmed action
-
-  @ux-settings-015 @addons @extensions @cap-addons @cap-settings-dialog
-  Scenario: Add-ons support filtered catalogue actions and extension-pane registration without claiming skin parity
-    Given the Add-ons section is open
-    Then installed and available add-ons can be filtered by slug, description or tags
-    And add-ons expose install, update or remove actions according to their current state
-    And a restart notice can surface a restart-now action after add-on changes
-    And add-on settings panes join the Settings navigation after the built-in sections instead of replacing them
 
   @ux-settings-016 @keyboard @shortcuts @cap-settings-dialog
   Scenario: Keyboard settings filters and edits shortcut bindings through the shared shortcut model
@@ -211,60 +192,6 @@ Feature: Classic Settings dialog core UX
     And a successful response merges returned settings and shows the applied notice
     And a failure reports a Settings error
     # Maximum lines and compactions remain in the snapshot but have no controls in this section.
-
-  @ux-settings-024 @recordings @cap-recordings @cap-settings-dialog
-  Scenario: Load and inspect session recordings
-    Given the Classic Recordings section is open
-    Then it loads recordings and active recordings with loading and error feedback
-    And selection uses the preferred recording when present or the first recording
-    When I select a recording
-    Then the section requests its details
-    And details expose metadata, event summaries, playback and JSON, JSONL and HTML exports
-    And filtering matches identifier, title, chat, status or mode without mutating recordings
-
-  @ux-settings-025 @recordings @cap-recordings @cap-settings-dialog
-  Scenario: Start and stop a recording for the entered chat
-    Given Recordings has no action in progress
-    Then the initial mode is redacted and timeline snapshot inclusion is enabled
-    When I start recording
-    Then the request includes the entered chat, selected mode and snapshot choice
-    And custom redaction keys and patterns are trimmed non-empty lines
-    And success refreshes the list preferring the returned recording
-    When the entered chat has an active recording and I stop it
-    Then the stop request targets that recording identifier
-    And start or stop failure reports a Settings error and releases the busy state
-
-  @ux-settings-026 @recordings @confirmation @cap-recordings @cap-settings-dialog
-  Scenario: Delete a recording and preview redaction
-    Given a recording is selected
-    When I cancel its deletion confirmation
-    Then no delete request is sent
-    When I confirm deletion
-    Then successful deletion refreshes the list and failure reports a Settings error
-    When I preview redaction with valid JSON
-    Then the preview request uses the selected mode and custom redaction options
-    When the JSON is invalid or preview fails
-    Then an error object is displayed in the preview result
-
-  @ux-settings-027 @tools @cap-settings-dialog @cap-tool-output
-  Scenario: Filter and collapse the Tools catalogue
-    Given the Tools section has supplied toolsets
-    When I filter by tool name, group name or summary
-    Then matching tools are displayed case-insensitively
-    When I uncheck a toolset header
-    Then the group's tool rows are hidden locally
-    And this collapse action does not deactivate runtime tools
-    And individual enabled indicators are checked and disabled
-
-  @ux-settings-028 @tools @compaction @cap-compaction @cap-settings-dialog @cap-tool-output
-  Scenario: Persist search mode and tool-result compaction choices
-    Given the Tools section is open
-    When I toggle search match mode
-    Then it posts the next OR or AND mode to general settings
-    When I toggle compaction for a tool
-    Then it posts the sorted normalised tool selection to compaction settings
-    And returned successful settings are merged into shared Settings data
-    # Request exceptions are logged; these handlers do not show a dedicated error notice.
 
   @ux-settings-029 @quick-actions @cap-quick-actions @cap-settings-dialog
   Scenario: Edit Quick Actions selections before explicitly saving
