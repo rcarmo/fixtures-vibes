@@ -2,6 +2,7 @@
 BUN ?= bun
 RUN_PURPOSE ?= ui-classic
 include ../../mk/project-paths.mk
+include ../../mk/profiling.mk
 .PHONY: deps build test check
 deps:
 	$(tmp_init)
@@ -9,6 +10,7 @@ deps:
 build: deps
 	$(BUN) run build.js
 test: deps
-	$(BUN) test ./tests/unit/
+	$(profile_begin)
+	$(BUN_TEST_PROFILED) ./tests/unit/; s=$$?; $(profile_summary); exit $$s
 check: deps
 	$(BUN) run scripts/check-hook-tdz.ts

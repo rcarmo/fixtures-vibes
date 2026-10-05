@@ -60,6 +60,18 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
   installed toolchain (`PLAYWRIGHT_BROWSERS_PATH`, default `~/.cache/ms-playwright`), not scratch.
 - `make clean-scratch` removes only this project's `runs/` and `build/`; it refuses any other root.
 
+## Test profiling
+
+- Every test target here is profiling-aware (`mk/profiling.mk`): profiles and `run-<target>.json` (command, revision,
+  Bun/Node versions, sampling settings) go to `test-results/profiles/<purpose>-<run-id>/`, which is retained evidence
+  and git-ignored, and `tools/profile-summary.mjs` writes `summary.txt`. Read and analyse it after every run: separate
+  repository frames (marked `*`) from runner/runtime overhead, and compare like workloads.
+- The Playwright runner and workers get V8 `--cpu-prof`/`--heap-prof`; Bun scripts get Bun's `--cpu-prof`/`--heap-prof`
+  (a heap snapshot, not allocation sites). `bun test` has no profiler in Bun 1.4 (JSC's sampling profiler crashes it):
+  only CPU time, peak RSS and live-heap statistics are recorded, so report its CPU/allocation gate as incomplete.
+  Browsers and the runtime under test are profiled by their owners.
+- Direct runs use the same flags (`NODE_OPTIONS="--cpu-prof --cpu-prof-dir=… --heap-prof --heap-prof-dir=…"`).
+
 ## Suite changes requested by runtime owners
 
 Piclaw 3.2.5 is the oracle. Change a spec only when it is wrong against Piclaw: asserting something Piclaw does not

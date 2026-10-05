@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Test targets capture profiles for post-run analysis (`mk/profiling.mk`, `tools/profile-summary.mjs`): V8 CPU and
+  sampling-heap profiles for the Playwright runner and workers, Bun profiles for Bun scripts, and for `bun test` (which
+  has no profiler in Bun 1.4) CPU time, peak RSS and live-heap statistics. They go to
+  `test-results/profiles/<purpose>-<run-id>/` with the command, revision, toolchain and sampling settings, and a
+  `summary.txt` that separates this repository's frames from runner overhead.
 - Caches and scratch live under one project root with `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`,
   resolved once by `mk/project-tmp.mjs`: an explicit `PROJECT_TMP_ROOT` (must end in the project name; an unusable one
   fails), else `/workspace/tmp/<project>`, `$RUNNER_TEMP/<project>`, `$TMPDIR/<project>` or the platform temp
