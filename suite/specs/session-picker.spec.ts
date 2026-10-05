@@ -31,6 +31,9 @@ test('@ux-session-002 Group picker entries using the current session metadata', 
   try {
     await page.reload();
     await openPicker(page);
+    // The list fills in as the page loads: wait until all three entries are listed, then read their order once.
+    const listed = async () => { const ns = await order(page); return [`ga${n}`, `gb${n}`, pinned].every(x => ns.some(e => nameRe(x).test(e))); };
+    await expect.poll(listed, { message: 'picker lists the three sessions' }).toBe(true);
     const names = await order(page);
     const at = (name: string) => names.findIndex(x => nameRe(name).test(x));
     expect(at(`ga${n}`)).toBeGreaterThanOrEqual(0);

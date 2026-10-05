@@ -37,14 +37,23 @@ export const entryOf = (d: Locator, name: string) => listed(d, name).first().loc
 
 export async function addEntry(d: Locator, e: { name: string; secret: string; username?: string }) {
   await addButton(d).click();
-  await d.getByLabel(/^(entry )?name$/i).fill(e.name);
+  const name = d.getByLabel(/^(entry )?name$/i), secret = d.getByLabel(/^(entry )?(secret|value|password)$/i);
+  // A form that is still settling after the previous save can lose or merge a fill: check each field before saving
+  // and fill again once if needed.
+  const fill = async (field: Locator, value: string) => {
+    await field.fill(value);
+    if (!(await expect(field).toHaveValue(value, { timeout: 2_000 }).then(() => true, () => false))) await field.fill(value);
+  };
+  await fill(name, e.name);
   if (e.username) {
     // Some keychains only take a username for one entry type ("basic" in Piclaw).
     const type = d.getByLabel(/^(entry )?type$/i);
     if (await type.count()) await type.selectOption('basic').catch(() => {});
-    await d.getByLabel(/^(entry )?user ?name$/i).fill(e.username);
+    await fill(d.getByLabel(/^(entry )?user ?name$/i), e.username);
   }
-  await d.getByLabel(/^(entry )?(secret|value|password)$/i).fill(e.secret);
+  await fill(secret, e.secret);
+  if ((await name.inputValue()) !== e.name) await fill(name, e.name);
+  await expect(name).toHaveValue(e.name);
   await d.getByRole('button', { name: /^(save|add|create)$/i }).click();
   await expect(listed(d, e.name).first()).toBeVisible();
 }
