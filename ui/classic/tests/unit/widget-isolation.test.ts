@@ -1,12 +1,13 @@
 import { expect, test } from 'bun:test';
 import { patchWidgetMessageSource, patchWidgetSandbox } from '../../scripts/patch-widget-isolation.mjs';
+import { piclawModule } from './piclaw-module';
 
-const read = (p: string) => Bun.file(new URL(`../../src/${p}`, import.meta.url)).text();
+const read = (p: string) => Bun.file(piclawModule(p)).text();
 
 test('interactive widgets lose same-origin access; static widgets keep downloads only', async () => {
   const patched = patchWidgetSandbox(await read('ui/generated-widget.ts'));
-  expect(patched).toContain("? 'allow-downloads allow-scripts'");
-  expect(patched).not.toContain('allow-same-origin');
+  expect(patched).toContain("? 'allow-downloads allow-scripts allow-forms'");
+  expect(patched).not.toMatch(/'[^'\n]*allow-same-origin[^'\n]*'/); // the supplied comment still names it
   expect(patched).toContain(": 'allow-downloads';");
 });
 

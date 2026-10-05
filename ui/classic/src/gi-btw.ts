@@ -8,14 +8,14 @@
  */
 import { html, useCallback, useEffect, useRef, useState } from './vendor/preact-htm.js';
 import { streamSidePrompt, sendAgentMessage } from './api.js';
-import { BtwPanel } from '../piclaw/editor-3.2.5/web/src/components/btw-panel.ts';
-import { buildBtwInjectionText, parseBtwCommand, resolveBtwChatJid } from '../piclaw/editor-3.2.5/web/src/ui/btw.ts';
+import { BtwPanel } from './components/btw-panel.js';
+import { buildBtwInjectionText, parseBtwCommand, resolveBtwChatJid } from './ui/btw.js';
 import {
     closeBtwPanelSession,
     handleBtwInterceptCommand,
     injectBtwSession,
     runBtwPromptSession,
-} from '../piclaw/editor-3.2.5/web/src/ui/app-btw-orchestration.ts';
+} from './ui/app-btw-orchestration.js';
 
 /** Piclaw's intent toast: one transient title/detail shown in the status area (AgentStatus `intent`). */
 export function useGiIntentToast() {

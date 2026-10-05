@@ -1,7 +1,7 @@
 # Classic web UI backend contract
 
-The shared Classic web UI is the `ui/classic` tree: Piclaw 3.2.5's own web components, its Plan sidebar add-on, and an
-adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
+The shared Classic web UI is the `ui/classic` tree: Piclaw's own Classic web sources (vendored at the ref in
+`ui/classic/piclaw/web-*/SOURCE`), its Plan sidebar add-on, and an adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
 implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
 - **Reference implementation:** rcarmo/gi `internal/web` at **5a68f40** (handler names below), with the Gi docs cited at
@@ -170,6 +170,14 @@ without auth must still serve it. `parseAuthPolicy` (`gi-auth-policy.ts`) requir
 
 ## Other calls
 
-`/agent/push/presence` (POST, web push presence), `/agent/session-tree` (session tree widget) and
-`/agent/commands` (compose box) are Piclaw routes still referenced by vendored components; a runtime may answer
-404 and the UI degrades.
+These Piclaw routes are still called by vendored components; a runtime may answer 404 and the UI degrades:
+
+- `GET /agent/commands` (compose box command list).
+- `GET /agent/status?chat_jid=<jid>&ui=1` (system meters HUD snapshot; without it the HUD shows no host meters).
+- `PATCH /post/{id}/annotations?chat_jid=<jid>` with `{annotations: [...]}` (text highlights on a post; without it
+  highlights cannot be saved).
+- `POST /agent/ui-state` with `{ui_meters: {...}}` (meters visibility shared across clients; without it the choice
+  stays in the browser's local storage).
+
+Workspace uploads from the explorer use `POST /api/workspace/upload` above, not Piclaw's chunked
+`/workspace/upload-chunk`.

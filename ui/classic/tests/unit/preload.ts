@@ -1,5 +1,5 @@
-// Resolve vendored Piclaw imports to Classic modules in tests as the build does (scripts/piclaw-editor-adapter.mjs).
+// Resolve vendored Piclaw imports to Classic modules in tests as the build does (scripts/piclaw-web.mjs).
 import { plugin } from 'bun';
-import { piclawEditorAdapter } from '../../scripts/piclaw-editor-adapter.mjs';
+import { piclawWebAdapter } from '../../scripts/piclaw-web.mjs';
 
-plugin(piclawEditorAdapter(new URL('../..', import.meta.url).pathname.replace(/\/$/, '')));
+plugin(piclawWebAdapter(new URL('../..', import.meta.url).pathname.replace(/\/$/, '')));

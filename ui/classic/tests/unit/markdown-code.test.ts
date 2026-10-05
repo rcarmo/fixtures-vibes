@@ -2,6 +2,7 @@ import { test, expect } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { mapMarkdownOutsideCode } from '../../src/gi-markdown-code';
 import { patchMarkdownCode } from '../../scripts/gi-markdown-code-adapter.mjs';
+import { piclawModule } from './piclaw-module';
 
 const code = 'if (a < b && c > d) return x <i> y;';
 const change = (prose: string) => prose.replaceAll('<', '!');
@@ -22,7 +23,7 @@ test('inline code keeps angle brackets and entity spellings while prose is trans
 });
 
 test('build adapter preserves the supplied file and fails closed on source drift or double application', () => {
-    const source = readFileSync('src/markdown.ts', 'utf8');
+    const source = readFileSync(piclawModule('markdown.ts'), 'utf8');
     const patched = patchMarkdownCode(source);
     expect(patched).toContain('mapMarkdownOutsideCode(stripped, prose =>');
     expect(source).not.toContain('mapMarkdownOutsideCode');

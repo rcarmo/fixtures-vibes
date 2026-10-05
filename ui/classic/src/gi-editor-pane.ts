@@ -1,7 +1,7 @@
-// The Piclaw 3.2.5 editor pane in the Classic shell. Tab orchestration (use-editor-state), the pane runtime
+// The Piclaw editor pane in the Classic shell. Tab orchestration (use-editor-state), the pane runtime
 // (app-pane-runtime-orchestration: mounting, retained panes, Compare to Saved, zen mode, popout/reattach and the
 // workspace_update refresh of a clean editor), the tab strip, Markdown preview and pane-popout rendering are the
-// vendored Piclaw sources (piclaw/editor-3.2.5). This module composes them as Piclaw's app-main-* composition and
+// vendored Piclaw sources (piclaw/web-<version>). This module composes them as Piclaw's app-main-* composition and
 // app-main-shell-render do, without the branch, dock and add-on surfaces Classic does not host.
 import { html, useCallback, useEffect, useRef } from './vendor/preact-htm.js';
 import { getWorkspaceFile } from './api.js';
@@ -11,16 +11,16 @@ import { VNC_TAB_PREFIX } from './panes/index.js';
 import { createEditorPopoutTransferPayload } from './panes/editor-popout-transfer.js';
 import { createPaneHostTransferPayload } from './panes/pane-host-transfer.js';
 import { registerPaneLiveTransfer } from './panes/pane-live-transfer.js';
-import { useEditorState } from '../piclaw/editor-3.2.5/web/src/ui/use-editor-state.ts';
-import { usePaneRuntimeOrchestration } from '../piclaw/editor-3.2.5/web/src/ui/app-pane-runtime-orchestration.ts';
-import { renderPanePopoutMode } from '../piclaw/editor-3.2.5/web/src/ui/app-pane-mode-render.ts';
-import { popOutPane } from '../piclaw/editor-3.2.5/web/src/ui/app-window-actions.ts';
-import { resolvePanePopoutTransfer } from '../piclaw/editor-3.2.5/web/src/ui/app-branch-pane-orchestration.ts';
-import { useSplitters } from '../piclaw/editor-3.2.5/web/src/ui/use-splitters.ts';
-import { watchDockToggleShortcut, watchPaneOpenEvents, watchZenModeShortcuts } from '../piclaw/editor-3.2.5/web/src/ui/app-browser-events.ts';
-import { isStandaloneWebAppMode } from '../piclaw/editor-3.2.5/web/src/ui/chat-window.ts';
-import { TabStrip } from '../piclaw/editor-3.2.5/web/src/components/tab-strip.ts';
-import { MarkdownPreview } from '../piclaw/editor-3.2.5/web/src/components/markdown-preview.ts';
+import { useEditorState } from './ui/use-editor-state.js';
+import { usePaneRuntimeOrchestration } from './ui/app-pane-runtime-orchestration.js';
+import { renderPanePopoutMode } from './ui/app-pane-mode-render.js';
+import { popOutPane } from './ui/app-window-actions.js';
+import { resolvePanePopoutTransfer } from './ui/app-branch-pane-orchestration.js';
+import { useSplitters } from './ui/use-splitters.js';
+import { watchDockToggleShortcut, watchPaneOpenEvents, watchZenModeShortcuts } from './ui/app-browser-events.js';
+import { isStandaloneWebAppMode } from './ui/chat-window.js';
+import { TabStrip } from './components/tab-strip.js';
+import { MarkdownPreview } from './components/markdown-preview.js';
 import type { PanePopoutRequest } from './gi-pane-popout-request.js';
 
 export function useGiEditorPane({ chatJid, popout = null }: { chatJid: string; popout?: PanePopoutRequest | null }) {

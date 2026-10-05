@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { randomClientId } from "./gi-random-id.js";
 import { staleTerminalEvent } from './gi-turn-event.js';
-import { speechPlayback } from './gi-post-speech.js';
+import { stopSpeechPlayback } from './components/post-speech.js';
 import { useGiNotifications } from './gi-notifications.js';
 import { projectConversationEvent, projectActivityStatus, projectResponsePhase, SYSTEM_AGENT_ID, SYSTEM_AGENT } from './gi-conversation.js';
 /**
@@ -81,13 +81,13 @@ import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
 import { GiPanePopout, renderEditorPane, useGiEditorPane } from './gi-editor-pane.js';
 import { readPanePopoutRequest } from './gi-pane-popout-request.js';
-import { editorPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/editor-loader.ts';
-import { dataViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/data-viewer-pane.ts';
-import { webViewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/web-viewer-pane.ts';
-import { highlightPreviewerPaneExtension } from '../piclaw/editor-3.2.5/web/src/panes/highlight-previewer-pane.ts';
+import { editorPaneExtension } from './panes/editor-loader.js';
+import { dataViewerPaneExtension } from './panes/data-viewer-pane.js';
+import { webViewerPaneExtension } from './panes/web-viewer-pane.js';
+import { highlightPreviewerPaneExtension } from './panes/highlight-previewer-pane.js';
 import { FloatingWidgetPane } from './components/floating-widget-pane.js';
 import { useGiBtw, useGiIntentToast } from './gi-btw.js';
-import { handleOpenWorkspaceFileBrowserRequest } from '../piclaw/editor-3.2.5/web/src/ui/app-extension-ui-browser-actions.ts';
+import { handleOpenWorkspaceFileBrowserRequest } from './ui/app-extension-ui-browser-actions.js';
 import { AttachmentPreviewModal } from './components/attachment-preview-modal.js';
 import { SystemMetersHud } from './components/system-meters-hud.js';
 import { TimelineMenu } from './components/timeline-menu.js';
@@ -451,12 +451,10 @@ function GiApp() {
     const localNotifications = useGiNotifications(currentChatJid, chat => {
         if (chat.startsWith('gi:')) void handleSwitchChat(chat);
     });
-    useLayoutEffect(() => {
-        speechPlayback.setScope(currentChatJid);
-        return () => speechPlayback.setScope(null);
-    }, [currentChatJid]);
+    // Read aloud belongs to the visible chat: stop it on a chat switch, page hide or background tab.
+    useLayoutEffect(() => () => stopSpeechPlayback(), [currentChatJid]);
     useEffect(() => {
-        const stop = () => speechPlayback.stop();
+        const stop = () => stopSpeechPlayback();
         const hidden = () => { if (document.hidden) stop(); };
         window.addEventListener('pagehide', stop);
         document.addEventListener('visibilitychange', hidden);

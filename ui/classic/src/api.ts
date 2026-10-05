@@ -220,6 +220,17 @@ export async function getAgentThought(_agentId: string, _chatJid: string | null 
     return null;
 }
 
+/** Save a post's text highlights (Piclaw PATCH /post/{id}/annotations; optional, see ui/API.md "Other calls"). */
+export async function savePostAnnotations(postId: number, annotations: unknown[], chatJid?: string) {
+  const query = chatJid ? `?chat_jid=${encodeURIComponent(chatJid)}` : '';
+  return request(`/post/${postId}/annotations${query}`, { method: 'PATCH', body: JSON.stringify({ annotations }) });
+}
+
+/** Persist shared UI state (Piclaw POST /agent/ui-state, e.g. `{ ui_meters }`); callers treat failure as local-only. */
+export async function saveUiState(payload: Record<string, unknown>) {
+  return request('/agent/ui-state', { method: 'POST', body: JSON.stringify(payload || {}) });
+}
+
 export async function setAgentThoughtVisibility(_agentId: string, _visible: boolean, _chatJid: string | null = null) {
     return null;
 }
@@ -700,7 +711,7 @@ export async function uploadWorkspaceFile(file: File, targetPath = '', options: 
         xhr.open('POST', url);
         xhr.upload.onprogress = (e) => {
             if (e.lengthComputable && typeof options.onProgress === 'function') {
-                options.onProgress({ loaded: e.loaded, total: e.total, percent: Math.round((e.loaded / e.total) * 100) });
+                options.onProgress({ loaded: e.loaded, total: e.total, percent: Math.round((e.loaded / e.total) * 100), lengthComputable: true });
             }
         };
         xhr.onload = () => {

@@ -1,6 +1,7 @@
 import { expect, test } from 'bun:test';
 import { sessionPickerAgents } from '../../src/gi-session-state';
-import { filterSessionPickerChats, groupSessionPickerChats, moveSessionPickerIndex, resolveSessionPickerSearchInitialIndex } from '../../src/ui/compose-session-switcher';
+import { piclawModule } from './piclaw-module';
+const { filterSessionPickerChats, groupSessionPickerChats, moveSessionPickerIndex, resolveSessionPickerSearchInitialIndex } = await import(piclawModule('ui/compose-session-switcher.ts'));
 
 const sessions = [
   { id: 'root', title: '@root' },

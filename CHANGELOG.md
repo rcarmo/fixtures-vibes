@@ -2,16 +2,38 @@
 
 ## Unreleased
 
+- `ui/classic` follows Piclaw's current Classic web sources (Rui, 2026-10-05: tip `a446de1e0` now, the v3.3.0 tag when
+  it is published). `scripts/vendor-piclaw.mjs <checkout> <ref>` copies the build's import closure of Piclaw's
+  `runtime/` (web sources, Classic/common CSS and fonts, shared settings CSS, the editor extension, `src/core`)
+  unmodified into `piclaw/web-<ref>/` with `SOURCE` and `SHA256SUMS`; `scripts/piclaw-web.mjs` resolves every
+  `web/src` module to Classic's `src/` file when one exists and to Piclaw's otherwise. It replaces the per-feature
+  `editor-3.2.5`, `status-3.2.5` and `svg-3.2.5` trees and their adapters.
+  - Classic's `src/` keeps only Gi's own files and the Piclaw module Gi still changes (the compose box). Removed: 84
+    April-2026 copies of Piclaw modules, nine unreachable panes and widgets, the unused `src/styles`, five Gi modules
+    the patches below needed, and Classic's copy of Piclaw's CSS.
+    `/dist/app.bundle.css` is now Piclaw's Classic stylesheet bundle; Gi's `gi-*.css` load after it.
+  - Patches that back-ported behaviour the current sources have natively are removed: accent and text contrast,
+    folder hints, SVG fences, read aloud, post outcome order and recovery-control suppression. Gi's SSE lifecycle
+    (pagehide teardown, selection gating) is now an anchored patch (`patch-sse-connection.mjs`) instead of a copy.
+  - Widget isolation still removes `allow-same-origin`, now from Piclaw's `allow-downloads allow-scripts
+    allow-same-origin allow-forms` (forms stay allowed).
+  - Read aloud stops on a chat switch, page hide or background tab through Piclaw's own speech module.
+  - New optional backend routes the current sources call, listed in `ui/API.md` (404 degrades):
+    `GET /agent/status?ui=1` (meters HUD), `POST /agent/ui-state` (meters visibility) and
+    `PATCH /post/{id}/annotations` (text highlights). Explorer uploads stay on `POST /api/workspace/upload`.
+  - `make suite ARGS=…` passes extra Playwright arguments (spec files, `--grep`) for focused runs.
 - Budget, Recordings, Tools and Add-ons settings are out of scope (Rui, 2026-10-05): `@ux-settings-011` (Budget),
   `@ux-settings-015` (Add-ons), `@ux-settings-024..026` (Recordings) and `@ux-settings-027/028` (Tools) are retired,
   with `@cap-addons` and `@cap-recordings`. `@ux-settings-012` keeps the Scheduled Tasks list and actions and drops its
   per-run budget steps. Classic now has 277 scenarios (plus 33 shared).
-- Test targets capture profiles for post-run analysis (`mk/profiling.mk`, `tools/profile-summary.mjs`): V8 CPU and
+- Pre-release profiling (`make test|suite PROFILING=1`, `mk/profiling.mk`, `tools/profile-summary.mjs`): V8 CPU and
   sampling-heap profiles for the Playwright runner and workers, Bun profiles for Bun scripts, and for `bun test` JSC CPU
   samples over the whole test process plus a heap snapshot at the end (`mk/bun-test-profile.ts`), CPU time and peak
-  RSS. `tests/contracts.test.ts` now compiles each schema once instead of recompiling it per test (repeated work seen in one capture; no performance change is claimed). They go to
-  `test-results/profiles/<purpose>-<run-id>/` with the command, revision, toolchain and sampling settings, and a
-  `summary.txt` that separates this repository's frames from runner overhead.
+  RSS. Captures go to the disposable `runs/profiles/<purpose>-<run-id>/` under the project scratch root with the
+  command, revision, toolchain and sampling settings; the printed `summary.txt` separates this repository's frames
+  from runner overhead, and the raw captures are deleted after it unless `PROFILE_KEEP=1`. Ordinary runs are not
+  profiled. `tests/contracts.test.ts` now compiles each schema once instead of recompiling it per test (repeated work
+  seen in one capture; no performance change is claimed).
 - Caches and scratch live under one project root with `cache/<tool>/`, `build/` and `runs/<purpose>/<run-id>/`,
   resolved once by `mk/project-tmp.mjs`, so CI needs no host tooling: an explicit `PROJECT_TMP_BASE` (→
   `<base>/<project>`) or `PROJECT_TMP_ROOT` (must agree; an unusable value fails); else in CI `$RUNNER_TEMP`, the

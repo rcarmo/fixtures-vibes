@@ -2,7 +2,8 @@ import {test,expect} from 'bun:test';
 import {readFileSync} from 'node:fs';
 import {patchTimelineMenu} from '../../scripts/patch-timeline-menu.mjs';
 import {bindMenuDismissal} from '../../src/gi-menu-dismissal';
-const path='src/components/timeline-menu.ts';
+import { piclawModule } from './piclaw-module';
+const path=piclawModule('components/timeline-menu.ts');
 test('menu build adapter changes dismissal only and leaves supplied source unchanged',()=>{
  const original=readFileSync(path,'utf8'),out=patchTimelineMenu(original);
  expect(out).toContain("import { bindMenuDismissal }");expect(out).not.toContain("document.addEventListener('mousedown', onClick, true)");

@@ -1,6 +1,7 @@
 import {test,expect} from 'bun:test';
 import {installGiDisplayScale} from '../../src/gi-display-scale';
-import {normalizePwaDisplayScalePercent} from '../../src/ui/pwa-display-scale';
+import { piclawModule } from './piclaw-module';
+const {normalizePwaDisplayScalePercent} = await import(piclawModule('ui/pwa-display-scale.ts'));
 
 function fixture(legacy=false){
  const events=new Map<string,Set<Function>>(),queries=new Map<string,any>(),classes=new Set<string>();let viewport='';

@@ -5,6 +5,8 @@ BUN ?= bun
 NODE ?= node
 PROFILE ?=
 PROJECT ?=
+# Extra Playwright arguments for focused runs, e.g. ARGS=editor.spec.ts or ARGS='--grep @ux-editor-001'.
+ARGS ?=
 PLAYWRIGHT = $(NODE) node_modules/@playwright/test/cli.js
 RUN_PURPOSE ?= suite
 include mk/project-paths.mk
@@ -27,7 +29,7 @@ suite:
 	$(tmp_init)
 	rm -f test-results/compliance.json test-results/compliance-report-*.json test-results/compliance-report-*.md test-results/evidence-*.json
 	$(profile_begin)
-	FIXTURES_PROFILE="$(PROFILE)" $(NODE_PROFILE) $(PLAYWRIGHT) test -c suite/playwright.config.ts $(if $(PROJECT),--project $(PROJECT),); $(profile_summary)
+	FIXTURES_PROFILE="$(PROFILE)" $(NODE_PROFILE) $(PLAYWRIGHT) test -c suite/playwright.config.ts $(ARGS) $(if $(PROJECT),--project $(PROJECT),); $(profile_summary)
 
 report:
 	@test -n "$(PROFILE)" || { echo "PROFILE=/absolute/path/to/profile.json is required"; exit 2; }

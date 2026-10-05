@@ -1,13 +1,12 @@
 import { resolve, dirname } from 'path';
 import { mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, rmSync, copyFileSync, cpSync } from 'fs';
 import { fileURLToPath } from 'url';
-import { piclawStatusAdapter } from './scripts/piclaw-status-adapter.mjs';
+import { patchPinnedStatusResize } from './scripts/patch-pinned-status-resize.mjs';
+import { patchSseConnection } from './scripts/patch-sse-connection.mjs';
 import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
 import {patchWidgetSandbox, patchWidgetMessageSource} from './scripts/patch-widget-isolation.mjs';
-import {piclawSvgAdapter, patchMarkdownSvg, patchPostSvg, verifyPiclawSvg} from './scripts/piclaw-svg-adapter.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
-import { patchWorkspaceFolderHint } from './scripts/patch-workspace-folder-hint.mjs';
 import { patchQuickActionKeys, patchComposePopupKeys } from './scripts/patch-popup-keys.mjs';
 import { patchModelPicker } from './scripts/patch-model-picker.mjs';
 import { patchPickerGeometry } from './scripts/patch-picker-geometry.mjs';
@@ -19,21 +18,17 @@ import { patchComposeSurface } from './scripts/patch-compose-surface.mjs';
 import { patchModelPanel } from './scripts/patch-model-panel.mjs';
 import { patchModelThinking } from './scripts/patch-model-thinking.mjs';
 import { patchSessionPanel } from './scripts/patch-session-panel.mjs';
-import { patchAccentContrast } from './scripts/patch-accent-contrast.mjs';
-import { patchThemeTextContrast } from './scripts/patch-theme-text-contrast.mjs';
 import { patchVoiceInput } from './scripts/patch-voice-input.mjs';
 import { patchModelAccessibility } from './scripts/patch-model-accessibility.mjs';
 import { patchUploadCancel } from './scripts/patch-upload-cancel.mjs';
 import { patchComposePrefillFocus } from './scripts/patch-compose-prefill-focus.mjs';
-import { patchPostSpeech } from './scripts/patch-post-speech.mjs';
-import { patchPostOutcomes } from './scripts/patch-post-outcomes.mjs';
-import { patchPostRecoveryControl } from './scripts/patch-post-recovery-control.mjs';
-import { EDITOR_DIR, piclawEditorAdapter, verifyPiclawEditor } from './scripts/piclaw-editor-adapter.mjs';
+import { patch, piclawWebDir, piclawWebAdapter, verifyPiclawWeb } from './scripts/piclaw-web.mjs';
 
 import { readdirSync, statSync } from 'fs';
 import { gzipSync, brotliCompressSync, constants as zlibConstants } from 'zlib';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const PICLAW_WEB = piclawWebDir(__dirname);
 // Source maps are opt-in (GI_SOURCEMAPS=1): they are ~10 MB and would be
 // embedded in the binary. See issue #10.
 const SOURCEMAPS = process.env.GI_SOURCEMAPS === '1';
@@ -100,16 +95,16 @@ writeFileSync('static/css/katex.min.css', katexCSS.replaceAll('url(fonts/', 'url
 buildVendor('mermaid-entry.ts',    vendorDir,  'beautiful-mermaid.js');
 // CodeMirror for the Piclaw editor and the other editor surfaces: the vendored 3.2.5 entry (a superset of the
 // exports src/vendor/codemirror-entry.ts provided).
-verifyPiclawEditor(__dirname);
-run(['bun', 'build', `${EDITOR_DIR}/extensions/viewers/editor/vendor/codemirror-entry.ts`, '--target=browser', '--format=esm', '--minify',
+verifyPiclawWeb(__dirname);
+run(['bun', 'build', `${PICLAW_WEB}/extensions/viewers/editor/vendor/codemirror-entry.ts`, '--target=browser', '--format=esm', '--minify',
   `--outfile=${editorVendorDir}/codemirror.js`, ...(SOURCEMAPS ? ['--sourcemap=linked'] : [])]);
 
 // ── Editor bundle (Piclaw 3.2.5 StandaloneEditorInstance, loaded on first editor mount) ─────────────────────
 const editorBuild = await Bun.build({
-  entrypoints: [`${EDITOR_DIR}/extensions/viewers/editor/editor-extension.ts`], outdir: distDir,
+  entrypoints: [`${PICLAW_WEB}/extensions/viewers/editor/editor-extension.ts`], outdir: distDir,
   target: 'browser', format: 'esm', minify: true, sourcemap: SOURCEMAPS ? 'linked' : 'none',
   naming: { entry: 'editor.bundle.[ext]' },
-  plugins: [piclawEditorAdapter(__dirname)],
+  plugins: [piclawWebAdapter(__dirname)],
 });
 if (!editorBuild.success) { console.error(editorBuild.logs); process.exit(1); }
 
@@ -119,14 +114,13 @@ const appBuild = await Bun.build({
   target: 'browser', format: 'esm', sourcemap: SOURCEMAPS ? 'linked' : 'none', splitting: true, modulePreload: false,
   naming: { entry: 'app.bundle.[ext]', chunk: 'chunks/[name]-[hash].[ext]', asset: 'assets/[name]-[hash].[ext]' },
   external: ['/editor-vendor/codemirror.js'],
-  plugins: [piclawEditorAdapter(__dirname), piclawStatusAdapter(__dirname), piclawSvgAdapter(__dirname), piclawPlanSidebarAdapter(), { name: 'gi-widget-isolation', setup(build) {
+  plugins: [piclawPlanSidebarAdapter(), piclawWebAdapter(__dirname), { name: 'gi-widget-isolation', setup(build) {
+    build.onLoad({ filter: /[\\/]ui[\\/]use-sse-connection\.ts$/ }, async args => ({ contents: patchSseConnection(await Bun.file(args.path).text()), loader: 'ts' }));
+    build.onLoad({ filter: /[\\/]components[\\/]status\.ts$/ }, async args => ({ contents: patchPinnedStatusResize(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]ui[\\/]generated-widget\.ts$/ }, async args => ({ contents: patchWidgetSandbox(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]components[\\/]floating-widget-pane\.ts$/ }, async args => ({ contents: patchWidgetMessageSource(await Bun.file(args.path).text()), loader: 'ts' }));
-  } }, { name: 'gi-post-speech', setup(build) {
-    build.onLoad({ filter: /[\\/]components[\\/]post\.ts$/ }, async args => ({
-      contents: patchPostSvg(patchPostRecoveryControl(patchPostOutcomes(patchPostSpeech(await Bun.file(args.path).text())))), loader: 'ts',
-    }));
-    build.onLoad({filter:/[\\/]src[\\/]markdown\.ts$/},async args=>({contents:patchMarkdownCode(patchMarkdownSvg(await Bun.file(args.path).text())),loader:'ts'}));
+  } }, { name: 'gi-markdown', setup(build) {
+    build.onLoad({filter:/[\\/]src[\\/]markdown\.ts$/},async args=>({contents:patchMarkdownCode(await Bun.file(args.path).text()),loader:'ts'}));
   } }, { name: 'gi-popup-key-ownership', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]timeline-quick-actions\.ts$/ }, async args => ({
       contents: patchQuickActionKeys(await Bun.file(args.path).text()), loader: 'ts',
@@ -134,18 +128,14 @@ const appBuild = await Bun.build({
     build.onLoad({ filter: /[\\/]components[\\/]compose-box\.ts$/ }, async args => ({
       contents: (patchComposeCaptureToken(patchComposeRandomId(patchModelAccessibility(patchModelThinking(patchVoiceInput(patchSessionPanel(patchModelPanel(patchComposeSurface(patchComposeCommands(patchPickerGeometry(patchComposePrefillFocus(patchUploadCancel(patchModelPicker(patchComposePopupKeys(patchComposeEscape(await Bun.file(args.path).text())))))))))))))))), loader: 'ts',
     }));
-  } }, { name: 'gi-workspace-folder-hint', setup(build) {
-    build.onLoad({ filter: /[\\/]components[\\/]workspace-explorer\.ts$/ }, async args => ({
-      contents: patchWorkspaceFolderHint(await Bun.file(args.path).text()), loader: 'ts',
-    }));
   } }, { name: 'gi-timeline-menu-dismissal', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]timeline-menu\.ts$/ }, async args => ({
       contents: patchTimelineMenu(await Bun.file(args.path).text()), loader: 'ts',
     }));
   } }, { name: 'gi-appearance-renderer', setup(build) {
-    // Adapt accent contrast at build time; keep the supplied source bytes unchanged.
+    // Gi's appearance pane (src/gi-appearance.ts) needs the preset table and the non-persisting apply.
     build.onLoad({ filter: /[\\/]ui[\\/]theme\.ts$/ }, async args => ({
-      contents: patchThemeTextContrast(patchAccentContrast(await Bun.file(args.path).text())) + '\nexport { THEME_PRESETS as giThemePresets, applyThemeState as giApplyThemeState };\n',
+      contents: (await Bun.file(args.path).text()) + '\nexport { THEME_PRESETS as giThemePresets, applyThemeState as giApplyThemeState };\n',
       loader: 'ts',
     }));
   } }, { name: 'gi-clipboard-safety', setup(build) {
@@ -177,10 +167,6 @@ if (existsSync(phtmAlias)) rmSync(phtmAlias);
   if (existsSync(p)) rmSync(p);
 });
 
-// Pinned renderer stylesheet; original supplied stylesheet is left untouched.
-copyFileSync('piclaw/status-3.2.5/css/agent.css', 'static/css/piclaw-status-3.2.5.css');
-verifyPiclawSvg(__dirname);
-copyFileSync('piclaw/svg-3.2.5/css/svg-fences.css','static/css/piclaw-svg-3.2.5.css');
 
 // Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its 3.2.5 server routes
 // (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.2.5/csp.json.
@@ -189,24 +175,29 @@ for (const viewer of ['html-viewer', 'image-viewer', 'video-viewer', 'pdf-viewer
   copyFileSync(`piclaw/viewers-3.2.5/${viewer}/index.html`, `static/${viewer}/index.html`);
 }
 
-// Theme catalogue for the server-side /theme and /tint commands. THEME_PRESETS
-// is module-private in the supplied theme.ts, so export it from a temporary copy.
+// Theme catalogue for the server-side /theme and /tint commands, from Piclaw's shared preset catalogue.
 {
-  const tmp = resolve(__dirname, 'src/ui/.gi-theme-catalogue.ts');
-  writeFileSync(tmp, readFileSync(resolve(__dirname, 'src/ui/theme.ts'), 'utf8') + '\nexport { THEME_PRESETS };\n');
-  try {
-    const { THEME_PRESETS } = await import(tmp);
-    const keys = ['bgPrimary', 'bgSecondary', 'textPrimary', 'textSecondary', 'borderColor', 'accent', 'danger', 'success'];
-    const pick = palette => palette && Object.fromEntries(keys.filter(k => typeof palette[k] === 'string').map(k => [k, palette[k]]));
-    const catalogue = Object.entries(THEME_PRESETS).map(([name, p]) => ({ name, label: p.label, mode: p.mode, light: pick(p.light), dark: pick(p.dark) }));
-    writeFileSync(resolve(__dirname, 'theme-catalogue.json'), JSON.stringify(catalogue, null, 1) + '\n');
-  } finally { rmSync(tmp, { force: true }); }
+  const { WEB_THEME_PRESETS } = await import(resolve(__dirname, PICLAW_WEB, 'src/core/ui-theme-catalogue.ts'));
+  const keys = ['bgPrimary', 'bgSecondary', 'textPrimary', 'textSecondary', 'borderColor', 'accent', 'danger', 'success'];
+  const pick = palette => palette && Object.fromEntries(keys.filter(k => typeof palette[k] === 'string').map(k => [k, palette[k]]));
+  const catalogue = WEB_THEME_PRESETS.map(p => ({ name: p.id, label: p.label, mode: p.mode, light: pick(p.light), dark: pick(p.dark) }));
+  writeFileSync(resolve(__dirname, 'theme-catalogue.json'), JSON.stringify(catalogue, null, 1) + '\n');
 }
 
 // ── CSS bundle ────────────────────────────────────────────────────────────
-// CSS bundle — all Piclaw CSS is served from /css/styles.css (with @import partials).
-// app.bundle.css is kept minimal — only Gi-specific overrides go here.
-writeFileSync(`${distDir}/app.bundle.css`, '/* Gi app overrides */\n', 'utf-8');
+// Piclaw's Classic stylesheet (web/src/styles/app.css and its imports) → /dist/app.bundle.css, as Piclaw serves it.
+// Classic serves KaTeX's own stylesheet (/css/katex.min.css, matching the npm KaTeX it bundles), so the vendored
+// KaTeX copy, whose fonts live under Piclaw's /static/common/fonts, is left out. Gi's stylesheets load after it.
+const cssBuild = await Bun.build({
+  entrypoints: [`${PICLAW_WEB}/web/src/styles/app.css`], outdir: distDir, minify: true,
+  naming: { entry: 'app.bundle.[ext]', asset: 'assets/[name]-[hash].[ext]' },
+  plugins: [{ name: 'piclaw-css', setup(build) {
+    build.onLoad({ filter: /[\\/]web[\\/]src[\\/]styles[\\/]app\.css$/ }, async args => ({
+      contents: patch(await Bun.file(args.path).text(), 'app.css', [['@import "./katex.bundle.css";\n', '']]), loader: 'css',
+    }));
+  } }],
+});
+if (!cssBuild.success) { for (const log of cssBuild.logs) console.error(log); process.exit(1); }
 
 // ── Static asset post-processing (issue #10) ──────────────────────────────
 function walk(dir, out = []) {

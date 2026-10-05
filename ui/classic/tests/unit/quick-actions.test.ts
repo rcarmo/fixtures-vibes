@@ -1,5 +1,6 @@
 import {test,expect} from 'bun:test';
-import {buildTimelineQuickActionItems,normalizeTimelineQuickActionsSettingsData} from '../../src/ui/timeline-quick-actions';
+import { piclawModule } from './piclaw-module';
+const {buildTimelineQuickActionItems,normalizeTimelineQuickActionsSettingsData} = await import(piclawModule('ui/timeline-quick-actions.ts'));
 
 test('pinned Quick Actions groups/dedupe/filter obey native capability selections',()=>{
  const items=buildTimelineQuickActionItems({agents:[{chat_jid:'gi:a',agent_name:'Zulu'},{chat_jid:'gi:a',agent_name:'duplicate'},{chat_jid:'gi:b',agent_name:'archived',archived_at:'date'}],workspaceCommands:[{id:'toggle-workspace',label:'Show workspace',description:'Show workspace'},{id:'open-settings',label:'Settings',description:'not native'}],slashCommands:[{name:'/model',description:'model'},{name:'/model',description:'duplicate'},{name:'/skill:test',description:'unavailable'}],settings:{workspaceCommands:['toggle-workspace'],slashCommands:['/model']}});

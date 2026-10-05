@@ -1,6 +1,7 @@
 import { test, expect } from 'bun:test';
 import { forwardPlanSidebarEvent, setPlanSidebarChat } from '../../src/gi-plan-sidebar';
-import { handleOpenWorkspaceFileBrowserRequest } from '../../piclaw/editor-3.2.5/web/src/ui/app-extension-ui-browser-actions';
+import { piclawModule } from './piclaw-module';
+const { handleOpenWorkspaceFileBrowserRequest } = await import(piclawModule('ui/app-extension-ui-browser-actions.ts'));
 
 // The shape a runtime's open_workspace_file tool sends (Piclaw 3.2.5 open-workspace-file.ts via ctx.ui.custom).
 const request = (chatJid: string, target = 'tab') => ({
