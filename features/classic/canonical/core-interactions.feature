@@ -57,6 +57,8 @@ Feature: Classic additional core interaction surfaces
       And otherwise only the lexicographically first client identifier may deliver locally
       And withdrawing a client's presence removes its published storage entry
       # Browser permission, delivery and sound support are separate capability gates.
+      # No suite spec: several same-device clients with controlled visibility are not constructible against a runtime
+      # here. ui/classic verifies the shared coordinator in tests/unit/notifications.test.ts.
 
   Rule: Classic recovery presentation
     @ux-extra-012 @classic @recovery
@@ -65,6 +67,8 @@ Feature: Classic additional core interaction surfaces
       When the Classic post component renders it
       Then the control post is omitted from the visible timeline
       And invalid typed recovery fields do not qualify it for this control-intent hiding path
+      # No suite spec: Piclaw 3.2.5 emits the control post only after a compact-then-retry protected recovery, which the
+      # fixture model cannot drive. ui/classic verifies the rule in tests/unit/recovery-control.test.ts.
 
     @ux-extra-013 @classic @recovery
     Scenario: Suppress an empty informational recovery placeholder
@@ -73,3 +77,5 @@ Feature: Classic additional core interaction surfaces
       When the Classic post component renders it
       Then the placeholder is omitted from the visible timeline
       # Recovery, timeout and turn-outcome metadata are separate from user controls.
+      # No suite spec: the placeholder comes from the runtime's automatic recovery phase, which the fixture model cannot
+      # drive. ui/classic verifies the rule in tests/unit/recovery-placeholder.test.ts.

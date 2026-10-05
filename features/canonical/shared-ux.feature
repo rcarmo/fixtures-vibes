@@ -95,6 +95,9 @@ Feature: Piclaw-compatible interaction model
     And failed activation keeps Quick actions open with recoverable input and an error
     And unsupported commands and workspace actions are absent rather than simulated
     And command insertion replaces the composer text with exactly the command and does not submit it (as @ux-original-007)
+    # No suite spec yet: holding an older catalogue response needs per-runtime network control the profile does not
+    # describe, and on Piclaw 3.2.5 no Quick action activation makes a request that could fail (commands insert text,
+    # agents navigate, workspace actions open tabs). Insertion is covered by @ux-original-007.
 
   @quick-actions @skills @commands @scope @ux-shared-008 @cap-quick-actions @cap-skills @cap-slash-commands
   Scenario: Discover loaded skills through canonical slash commands
