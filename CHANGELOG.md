@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- `ui/classic` ships the Piclaw 3.2.5 editor. Editor tabs run in Piclaw's own pane runtime, tab strip, Markdown
+  preview, pane windows and web/data/highlight viewers, vendored unmodified and hash-pinned under
+  `ui/classic/piclaw/editor-3.2.5/` and composed by `src/gi-editor-pane.ts`. This adds Preview, Compare to Saved,
+  Edit Source, zen mode, Open in Window with reattach, tabs that activate on press, MRU close and the refresh of a clean
+  editor on `workspace_update`. The read-only tab host is gone. `ui/API.md` documents the editor's read, save and stat
+  contract and the viewer routes.
+- Lifecycle runs remove each runtime's and the fixture model's temp root when they stop (`FIXTURES_KEEP_ROOTS=1` keeps
+  them). Earlier runs left one root per worker in the temp directory. A runtime that never becomes ready reports the
+  tail of its `runtime.log`.
+- `@ux-workspace-001` waits for the new file's preview: Piclaw's explorer reloads the selected file's preview when the
+  runtime's `workspace_update` for it arrives.
+- `oracle/piclaw/3.2.5/install-reference.sh` installs, reinstalls or removes the dedicated reference instance
+  (release, fixture model, systemd units, fresh state) on a host over SSH.
+
 ## v0.2.0 — 2026-10-05
 
 Reference record `oracle/piclaw/3.2.5/2026-10-05-v0.2.0`: one fresh-store run over six projects with zero retries

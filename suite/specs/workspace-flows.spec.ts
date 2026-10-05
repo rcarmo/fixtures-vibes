@@ -27,9 +27,10 @@ test('@ux-workspace-001 Create a new untitled markdown file in the resolved fold
     for (let i = 0; i < 2; i++) {
       const name = await newFile(page);
       created.push(name);
-      // The new file is selected and listed.
+      // The new file is selected and listed. (Its preview reloads when the runtime's workspace_update for the new file
+      // arrives, as Piclaw's explorer does; the selection is what must hold.)
       expect(name).toMatch(/^untitled(-\d+)?\.md$/);
-      expect(await previewPath(page)).toBe(name);
+      await expect.poll(() => previewPath(page)).toBe(name);
       await rowOf(page, name);
     }
     // The second try falls back to a numbered name.

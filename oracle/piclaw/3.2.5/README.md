@@ -15,6 +15,8 @@ Each dated directory is one compliance run of the shared suite against the refer
 | Skips | `profiles/piclaw-3.2.5-skips.json` |
 | Models | `control/fixture-model-server.ts` as provider `fixture`, models `fixture-1` (default) and `fixture-2` |
 
+`install-reference.sh user@host` installs the instance (release under `/opt/piclaw-fixtures`, state under
+`/srv/piclaw-fixtures`, units `fixture-model` and `piclaw-fixtures`); rerunning it reinstalls, `--uninstall` removes it.
 The instance runs with its own workspace, store and data directories, separate from any other Piclaw. Start each
 reference run from a fresh store: tests do not delete the sessions they create, and thousands of leftover sessions slow
 the session picker and editor enough to fail unrelated scenarios. On the VM, stop `piclaw-fixtures`, move

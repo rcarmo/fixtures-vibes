@@ -160,7 +160,8 @@ For lifecycle profiles, `make compliance PROFILE=…`:
 3. per Playwright worker, creates a fresh temp root, runs `prepare`, starts the runtime and waits for readiness. A failed
    test replaces the worker, so the next test gets a fresh runtime;
 4. after every test, releases held turns and ends any simulated outage;
-5. stops the runtime, then the fixture model.
+5. stops the runtime, then the fixture model, and removes their temp roots (`FIXTURES_KEEP_ROOTS=1` keeps them for
+   debugging; a runtime that never becomes ready reports the tail of its `runtime.log`).
 
 Never reset the fixture model under a live runtime: held requests fail and runtimes may retry them.
 

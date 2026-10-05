@@ -3,7 +3,7 @@
  * the runtime is started per Playwright worker, so a failed test (which replaces the worker) gets a fresh runtime.
  */
 import { spawn, execSync, type ChildProcess } from 'node:child_process';
-import { mkdtempSync, openSync } from 'node:fs';
+import { mkdtempSync, openSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -60,6 +60,24 @@ export async function startRuntime(profile: Profile & { dir: string }, modelUrl:
   const proc = spawn('/bin/sh', ['-c', lc.start], { cwd: profile.dir, env, stdio: ['ignore', log('runtime'), log('runtime')], detached: true });
   const baseUrl = `http://127.0.0.1:${port}`;
   const { path, status = 200, timeoutMs = 30_000 } = profile.readiness;
-  try { await waitFor(baseUrl + path, status, timeoutMs, profile.runtime); } catch (e) { await stopGroup(proc); throw e; }
-  return { baseUrl, root, stop: () => stopGroup(proc) };
+  try {
+    await waitFor(baseUrl + path, status, timeoutMs, profile.runtime);
+  } catch (e) {
+    await stopGroup(proc);
+    const tail = readTail(join(root, 'runtime.log'));
+    removeRoot(root);
+    throw new Error(`${(e as Error).message}${tail ? `\nruntime.log (tail):\n${tail}` : ''}`);
+  }
+  return { baseUrl, root, stop: async () => { await stopGroup(proc); removeRoot(root); } };
+}
+
+function readTail(file: string, bytes = 4096) {
+  try { return readFileSync(file, 'utf8').slice(-bytes); } catch { return ''; }
+}
+
+/** A run root is scratch (runtime DB, workspace, home, logs): remove it once its process has stopped.
+ * FIXTURES_KEEP_ROOTS=1 keeps roots for debugging. */
+export function removeRoot(root: string) {
+  if (process.env.FIXTURES_KEEP_ROOTS === '1') return;
+  rmSync(root, { recursive: true, force: true, maxRetries: 3 });
 }
