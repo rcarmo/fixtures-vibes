@@ -72,10 +72,11 @@ test.describe('iPhone', () => {
   });
 
   test('@ux-session-005 Keep touch swipe eligibility independent of picker grouping', async ({ browser, runtime, sel }) => {
+    test.setTimeout(120_000);
+    await runtime.sessionHeadroom(4);
     const { ctx, page, names, sessions } = await iphoneOnTrio(browser, runtime, sel);
     try {
       // Archive c (from its own page); swiping from b then skips it.
-      await runtime.sessionHeadroom();
       await page.goto(sessions.c.url);
       page.on('dialog', d => void d.accept().catch(() => {}));
       await trigger(page).click();

@@ -140,15 +140,16 @@ export class Runtime {
   }
 
   /**
-   * Wait until this worker has made fewer than `max` session-create requests in the last minute. Runtimes may
-   * rate-limit session actions together (Piclaw 3.2.5: 20 per minute for create, archive and restore), so a spec
-   * that then archives or restores a session through the UI leaves room for it first.
+   * Wait until `needed` more session actions fit in the last minute's budget. Runtimes may rate-limit session actions
+   * together (Piclaw 3.2.5: 20 per minute for create, archive and restore); this worker's creates are counted and a
+   * margin is kept for actions it does not see. Call at the start of a spec that archives or restores sessions through
+   * the UI, and extend its timeout: the wait can take up to a minute.
    */
-  async sessionHeadroom(max = 10) {
+  async sessionHeadroom(needed: number) {
     for (;;) {
       const now = Date.now();
       while (sessionRequests.length && sessionRequests[0] < now - 60_000) sessionRequests.shift();
-      if (sessionRequests.length < max) return;
+      if (sessionRequests.length + needed <= 15) return;
       await new Promise(r => setTimeout(r, sessionRequests[0] + 60_000 - now + 100));
     }
   }
