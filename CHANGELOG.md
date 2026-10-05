@@ -13,6 +13,9 @@
 - `@ux-workspace-020`: the agent's shell tool makes the external change, after a settle wait. A second browser page
   reported its own workspace visibility to Piclaw, which turned off its file watcher for every client
   (rcarmo/piclaw#1527). The scenario passes on the reference at all widths and is no longer listed there.
+- Runtime profiles can declare `session.actionsPerMinute`, the runtime's rate limit on session create, archive and
+  restore (Piclaw 3.2.5: 20). The suite then spaces session creation below the limit and reserves room before UI
+  archive and restore (`@ux-session-004/005`), so a run of short tests no longer stalls on a 429.
 - Reference runs start from a fresh store (`oracle/piclaw/3.2.5/README.md`). Thousands of leftover test sessions
   slowed the picker and editor enough to fail unrelated scenarios.
 - Canonical front-end layout (Rui): `ui/gi` is now `ui/classic` (`src/`, `piclaw/<name>-<version>/`, `static/`,

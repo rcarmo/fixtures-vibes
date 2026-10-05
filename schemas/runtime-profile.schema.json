@@ -112,6 +112,11 @@
         "open": {
           "type": "string",
           "description": "URL path template to open a session, e.g. '/' or '/?session={id}'."
+        },
+        "actionsPerMinute": {
+          "type": "integer",
+          "minimum": 4,
+          "description": "The runtime's rate limit on session actions (create, archive, restore) per sliding minute, if any. The suite paces session creation below it and keeps room for archive and restore through the UI."
         }
       }
     },

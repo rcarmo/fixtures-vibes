@@ -15,6 +15,7 @@ export type Profile = {
   session: {
     create?: { method: 'POST' | 'PUT'; path: string; headers?: Record<string, string>; body?: unknown; idField?: string };
     open: string;
+    actionsPerMinute?: number;
   };
   auth?: { mode?: 'none' | 'bearer' | 'cookie'; headers?: Record<string, string> };
   capabilities: string[];
@@ -123,6 +124,7 @@ export class Runtime {
       // Runtimes may rate-limit session creation; honour Retry-After, otherwise back off exponentially (~60s total).
       let res: Response;
       for (let attempt = 0; ; attempt++) {
+        await this.pace();
         sessionRequests.push(Date.now());
         res = await fetch(this.baseUrl + fill(c.path, vars), {
           method: c.method,
@@ -139,17 +141,31 @@ export class Runtime {
     return { id, url: this.baseUrl + fill(this.profile.session.open, { ...vars, id: encodeURIComponent(id) }) };
   }
 
+  /** The runtime's session-action budget per sliding minute, less a margin for actions this worker does not count. */
+  private sessionBudget() {
+    const limit = this.profile.session.actionsPerMinute;
+    return limit ? limit - 3 : Infinity;
+  }
+
+  /** Space session creates evenly within the budget, so a burst of short tests never meets the runtime's limit. */
+  private async pace() {
+    const budget = this.sessionBudget();
+    if (budget === Infinity) return;
+    const wait = (sessionRequests.at(-1) ?? 0) + 60_000 / budget - Date.now();
+    if (wait > 0) await new Promise(r => setTimeout(r, wait));
+  }
+
   /**
-   * Wait until `needed` more session actions fit in the last minute's budget. Runtimes may rate-limit session actions
-   * together (Piclaw 3.2.5: 20 per minute for create, archive and restore); this worker's creates are counted and a
-   * margin is kept for actions it does not see. Call at the start of a spec that archives or restores sessions through
-   * the UI, and extend its timeout: the wait can take up to a minute.
+   * Wait until `needed` more session actions fit in the last minute's budget (see the profile's
+   * `session.actionsPerMinute`). Call at the start of a spec that archives or restores sessions through the UI, and
+   * extend its timeout: the wait can take up to a minute.
    */
   async sessionHeadroom(needed: number) {
+    const budget = this.sessionBudget();
     for (;;) {
       const now = Date.now();
       while (sessionRequests.length && sessionRequests[0] < now - 60_000) sessionRequests.shift();
-      if (sessionRequests.length + needed <= 15) return;
+      if (sessionRequests.length + needed <= budget) return;
       await new Promise(r => setTimeout(r, sessionRequests[0] + 60_000 - now + 100));
     }
   }

@@ -19,7 +19,8 @@
       },
       "idField": "branch.chat_jid"
     },
-    "open": "/?chat_jid={id}"
+    "open": "/?chat_jid={id}",
+    "actionsPerMinute": 20
   },
   "auth": {
     "mode": "none"
