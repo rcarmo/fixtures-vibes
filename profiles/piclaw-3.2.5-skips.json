@@ -208,6 +208,16 @@
       "intermittent": true,
       "detail": "When the SSE stream drops within about 0.5 s of a send, the post-send /agent/status refresh lands after the disconnect and restores the Draft, Thoughts and status while disconnected (Chromium tablet, once in one full run).",
       "issue": "https://github.com/rcarmo/piclaw/issues/1551"
+    },
+    {
+      "id": "@ux-chat-lifecycle-006",
+      "reason": "known-defect",
+      "intermittent": true,
+      "detail": "On WebKit desktop the live panel sometimes never renders: no Draft, Thoughts or status for 10 s while the stream is open and the turn is held (2 of about 4 runs inside longer sequences, 0 of 8 alone). Same WebKit-desktop live-rendering defect as @ux-chat-lifecycle-002.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "projects": [
+        "webkit-desktop"
+      ]
     }
   ]
 }
