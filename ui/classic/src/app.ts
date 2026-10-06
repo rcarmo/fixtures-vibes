@@ -45,6 +45,8 @@ paneRegistry.register(terminalTabPaneExtension);
 import {
     getTimeline,
     recoverPendingDraftSends,
+    uploadMedia,
+    getAgentCommands,
     searchPosts,
     deletePost,
     getAgents,
@@ -76,7 +78,7 @@ import {
     getThread,
 } from './api.js';
 import { Timeline } from './components/timeline.js';
-import { ComposeBox, QueuedFollowupStack, parseQueuedContent } from './components/compose-box.js';
+import { ComposeBox } from './components/compose-box.js';
 import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
 import { GiPanePopout, renderEditorPane, useGiEditorPane } from './gi-editor-pane.js';
@@ -98,21 +100,19 @@ import { createMessageDeletionState } from './gi-message-deletion.js';
 import { createSelectionScope } from './gi-session-state.js';
 import { attachChatSwipeNavigation } from './ui/chat-swipe-navigation.js';
 import { isLikelySafariBrowser } from './ui/app-pane-runtime-orchestration.js';
-import { createDraftRepository, indexedDraftStorage, sessionDraftTextJournal, emptyDraft } from './gi-drafts.js';
-import { recoverQueueDraft } from './gi-queue-return.js';
+import { createDraftRepository, indexedDraftStorage, sessionDraftTextJournal } from './gi-drafts.js';
 
 // ── Gi session bridge ──────────────────────────────────────────────────────
 // Piclaw components expect chat_jid strings. We map Gi sessions onto that
 // model: the default session becomes 'gi:default'.
 
-import { createActivityRevision, compactionNotice, compactionElapsed, compactionEstimateLabel, compactionUnavailableReason } from './gi-compaction-state.js';
-import { contextPresentation } from './gi-context-usage.js';
+import { createActivityRevision, compactionNotice, compactionUnavailableReason } from './gi-compaction-state.js';
 import {createActivationRefreshGate,createTimelineRevision,createAssetVersionGuard,loadedAssetVersion} from './gi-refresh-guards.js';
 import {createSearchView} from './gi-search-state.js';
 import {newMessageWindow,mergeMessagePages,captureTimelineAnchor,restoreTimelineAnchor} from './gi-message-pages.js';
 
 import {bindWorkspaceVisibility} from './gi-workspace-visibility.js';
-import { composeTransfers, bindComposeSending } from './gi-compose-transfer.js';
+import { composeTransfers } from './gi-compose-transfer.js';
 import { ownsHorizontalGesture } from './gi-scroll-gesture.js';
 import { messageReference, scrollToReferencedPost } from './gi-message-reference.js';
 
@@ -123,105 +123,6 @@ const DEFAULT_AGENT_ID = 'web';
 
 // The pinned stack has no disabled-Steer prop. Apply native button state at
 // the host boundary, without changing the supplied component or appearance.
-function RunBoundQueueStack({ steerEnabled, ...props }: any) {
-    const root = useRef(null);
-    useLayoutEffect(() => {
-        const pending = new Set(props.items.filter(item => item.pending).map(item => String(item.id)));
-        root.current?.querySelectorAll('.compose-queue-stack-steer-btn').forEach(button => {
-            button.disabled = !steerEnabled || props.busy || pending.has(button.closest('[data-queue-id]')?.dataset.queueId);
-        });
-    });
-    return html`<div ref=${root} style="display:contents"><${QueuedFollowupStack} ...${props} /></div>`;
-}
-
-// Folder clicks remain navigation. This host-owned action uses the existing
-// workspace header without editing the supplied explorer or composer.
-function useWorkspaceFolderReference(visible:boolean, sessionId:string, fileRefs:string[], attach:(path:string)=>void) {
-    const latest=useRef({fileRefs,attach});latest.current={fileRefs,attach};
-    const syncRef=useRef<(()=>void)|null>(null);
-    useLayoutEffect(()=>{
-        if(!visible)return;
-        const sidebar=document.querySelector('.workspace-sidebar');
-        const actions=sidebar?.querySelector('.workspace-header-actions');
-        if(!sidebar||!actions)return;
-        const button=document.createElement('button');
-        button.type='button';button.className='menu-action-btn';button.textContent='+ folder';
-        button.setAttribute('aria-label','Reference selected folder');
-        const selected=()=>sidebar.querySelector<HTMLElement>('.workspace-row.selected[data-type="dir"]')?.dataset.path||'';
-        const sync=()=>{
-            const path=selected();
-            button.hidden=!path;
-            button.disabled=!path||latest.current.fileRefs.includes(path);
-            button.title=path?`Reference folder: ${path}`:'Reference selected folder';
-        };
-        const click=()=>{const path=selected();if(path&&!latest.current.fileRefs.includes(path))latest.current.attach(path);};
-        button.addEventListener('click',click);actions.prepend(button);sync();syncRef.current=sync;
-        // Ignore the button's own attributes to avoid observer feedback.
-        const observer=new MutationObserver(records=>{if(records.some(record=>!button.contains(record.target as Node)))sync();});
-        observer.observe(sidebar,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-path','data-type']});
-        return()=>{observer.disconnect();button.removeEventListener('click',click);button.remove();syncRef.current=null;};
-    },[visible,sessionId]);
-    useLayoutEffect(()=>{syncRef.current?.();},[fileRefs]);
-}
-
-// Keep the supplied component untouched. Its native title also supplies the
-// tooltip-data contract; observe child-owned updates (e.g. model selection).
-function useContextTooltip(root: any, usage: any, notice: any, now: number, canStop: boolean, stop: any, compact: any, unavailable: string) {
-    useLayoutEffect(() => {
-        const compose = root.current?.querySelector('.compose-box');
-        if (!compose) return;
-        const sync = () => {
-            compose.querySelectorAll('.send-btn.abort-mode').forEach(button => { if (button.disabled === canStop) button.disabled = !canStop; });
-            compose.querySelectorAll('.compose-context-pie').forEach(button => {
-                const active = notice?.intent_key === 'compaction';
-                // Piclaw keeps the meter actionable whenever a compaction callback exists;
-                // an unavailable request reports its reason instead of being disabled.
-                const actionable = typeof compact === 'function';
-                if (button.disabled === actionable) button.disabled = !actionable;
-                const canCompact = actionable && !active && !unavailable;
-                const normal = contextPresentation(usage, canCompact);
-                const reason = !canCompact && unavailable ? ` — ${unavailable}` : '';
-                const estimate = active ? compactionEstimateLabel(notice) : '';
-                const detail = estimate ? ` — ${estimate}` : '';
-                const title = active ? `${notice.title} — ${compactionElapsed(notice, now)}${detail} — ${contextPresentation(usage).title}` : normal.title + reason;
-                // Piclaw 3.2.5 names the meter by usage plus its action, or by the
-                // running compaction and its elapsed label (title = aria-label there).
-                const label = active
-                    ? `${normal.label}\n${notice.title || 'Smart compaction'}${detail} · ${compactionElapsed(notice, now)}`
-                    : `${normal.label}\n${typeof compact === 'function' ? 'Compact context' : 'Context usage'}`;
-                if (button.getAttribute('title') !== title) button.setAttribute('title', title);
-                if (button.getAttribute('aria-label') !== label) button.setAttribute('aria-label', label);
-                if (button.getAttribute('data-tooltip') !== title) button.setAttribute('data-tooltip', title);
-                const description = !active && !canCompact ? unavailable : '';
-                if (description && button.getAttribute('aria-description') !== description) button.setAttribute('aria-description', description);
-                if (!description && button.hasAttribute('aria-description')) button.removeAttribute('aria-description');
-                if (button.classList.contains('is-compacting') !== active) button.classList.toggle('is-compacting', active);
-                // The elapsed label sits inside the meter, as Piclaw's compose-context-pie-timer.
-                let elapsed = button.querySelector('.gi-compaction-elapsed');
-                if (active) {
-                    if (!elapsed) { elapsed = document.createElement('span'); elapsed.className = 'gi-compaction-elapsed compose-context-pie-timer'; button.append(elapsed); }
-                    const text = compactionElapsed(notice, now);
-                    if (elapsed.textContent !== text) elapsed.textContent = text;
-                } else elapsed?.remove();
-            });
-        };
-        sync();
-        const observer = new MutationObserver(sync);
-        observer.observe(compose, {subtree: true, childList: true, attributes: true, attributeFilter: ['title', 'disabled', 'class']});
-        // Capture before the component's /abort handler clears its draft.
-        const onClick = (event: any) => {
-            if (event.target.closest?.('.compose-context-pie')) {
-                event.preventDefault(); event.stopImmediatePropagation(); compact?.(); return;
-            }
-            if (event.target.closest?.('.send-btn.abort-mode')) {
-                event.preventDefault(); event.stopImmediatePropagation(); stop();
-            }
-        };
-        compose.addEventListener('click', onClick, true);
-        return () => { observer.disconnect(); compose.removeEventListener('click', onClick, true); };
-    });
-}
-
 function sessionToChatJid(id: string) {
     return `gi:${id}`;
 }
@@ -299,12 +200,13 @@ function GiApp() {
     const selection = useRef(createSelectionScope()).current;
     const [sessionError, setSessionError] = useState<string | null>(null);
     const [draftStorageError, setDraftStorageError] = useState('');
-    const [draftRestore, setDraftRestore] = useState<any>(null);
+    const [renameSession, setRenameSession] = useState<any>(null);
     const [composePrefill,setComposePrefill]=useState<any>(null);
     const draftsRef = useRef<any>(null);
     if (!draftsRef.current) draftsRef.current = createDraftRepository(indexedDraftStorage(), error => setDraftStorageError(`Draft not saved: ${error.message}`), recoverPendingDraftSends, sessionDraftTextJournal());
     const drafts = draftsRef.current;
     const getDraft = (sid: string) => drafts.get(sid);
+    const initialComposeDraft = useMemo(() => ready && sessionId ? getDraft(sessionId).text : '', [ready, sessionId]);
     const [runtimeConfig, setRuntimeConfig] = useState<any>({});
     const [agents, setAgents] = useState<any>({});
     const [userProfile, setUserProfile] = useState<any>(null);
@@ -345,6 +247,7 @@ function GiApp() {
 
     // Compose
     const [fileRefs, setFileRefs] = useState<string[]>([]);
+    const [folderRefs, setFolderRefs] = useState<string[]>([]);
     const [messageRefs, setMessageRefs] = useState<any[]>([]);
     const [followupQueueItems, setFollowupQueueItems] = useState<any[]>([]);
     const [queueError, setQueueError] = useState('');
@@ -359,7 +262,6 @@ function GiApp() {
     const activationRefresh=useRef(createActivationRefreshGate()).current;
     const refreshAfterConnection = useRef<() => void>(() => {});
     const refreshTimer = useRef<any>(null);
-    const [optimisticQueue, setOptimisticQueue] = useState<any[]>([]);
     const [attachmentPreview, setAttachmentPreview] = useState<any>(null);
     const [contextUsage, setContextUsage] = useState<any>(null);
     const [activity, setActivity] = useState<any>(null);
@@ -395,7 +297,7 @@ function GiApp() {
         const timer = setInterval(() => setActivityNow(Date.now()), 1000);
         return () => clearInterval(timer);
     }, [activity]);
-    useContextTooltip(containerRef, contextUsage, notice, activityNow, activityFresh && !stopPending && !!activity?.turn_id && ['running','cancelling'].includes(activity?.status), async () => {
+    const stopFromComposer = async () => {
         if (stopToken.current || !activityFresh || !activity?.turn_id || streamDisconnected.current) return;
         const scope = selection.capture(); const run = activity.turn_id; const token = {};
         stopToken.current = token; setStopPending(true); setStopError('');
@@ -405,7 +307,7 @@ function GiApp() {
             if (stopToken.current === token) { stopToken.current = null; setStopPending(false); }
             if (selection.isCurrent(scope)) { activityRevision.invalidate(); setActivityFresh(false); refreshAfterConnection.current(); }
         }
-    }, streamDisconnected.current ? null : compactFromMeter, compactionUnavailableReason({fresh:activityFresh,disconnected:streamDisconnected.current,pending:compactPending,status:activity?.status,capability:compactState}));
+    };
     const [activeChatAgents, setActiveChatAgents] = useState<any[]>([]);
     const sessionListRevision = useRef(0);
     const [currentChatBranches, setCurrentChatBranches] = useState<any[]>([]);
@@ -823,8 +725,7 @@ function GiApp() {
             if (revision === queueRevision.current && !queueMutation.current) {
                 setQueueActiveTurnId(queue.activeTurnId || null);
                 setFollowupQueueItems(queue.items || []);
-                const admitted = new Set((queue.items || []).map(item => item.metadata?.client_request_id).filter(Boolean));
-                setOptimisticQueue(items => items.filter(item => !admitted.has(item.id)));
+
             }
             setAgentStatus(projectActivityStatus(status));
             const running = status?.status === 'running' || status?.status === 'cancelling';
@@ -887,7 +788,7 @@ function GiApp() {
         selection.select(nextSessionId);
         resetQuickActionsReadiness();
         deletingAnimation.current.clear();setRemovingPostIds(new Set());setDeleteError('');
-        setComposePrefill(null);
+        setComposePrefill(null); setFolderRefs([]);
         const linkedURL=new URL(location.href);
         if(linkedURL.searchParams.has('chat_jid')){linkedURL.searchParams.set('chat_jid',sessionToChatJid(nextSessionId));history.replaceState(null,'',linkedURL);}
         activationRefresh.select(selection.capture().generation);streamDisconnected.current=true;setConnectionStatus('disconnected');
@@ -901,7 +802,6 @@ function GiApp() {
         setSessionId(nextSessionId);
         setPosts([]); setHasMore(false); setFollowupQueueItems([]); setQueueActiveTurnId(null); setCurrentChatBranches([]);
         queueMutation.current = null; ++queueRevision.current; setQueueBusy(false); setQueueError('');
-        setOptimisticQueue([]);
         ++modelRevision.current; modelMutation.current = null;
         setFileRefs(getDraft(nextSessionId).fileRefs);
         setMessageRefs(getDraft(nextSessionId).messageRefs);
@@ -978,22 +878,23 @@ function GiApp() {
 
     // Piclaw's "Delete current…": archive this session (after confirmation),
     // then open its parent, or the most recent remaining main session.
-    const handleArchiveCurrentSession = async (chatJid: string) => {
-        if (!window.confirm('Archive this session? It can be restored from the session picker.')) return;
+    const handleArchiveCurrentSession = async (chatJid: string, options: any = {}) => {
+        if (!options.confirmed && !window.confirm('Archive this session? It can be restored from the session picker.')) return false;
         const agents = activeChatAgents || [];
         const current = agents.find((a: any) => a.chat_jid === chatJid);
         try {
             await handleSessionMutation(chatJid, 'archive');
         } catch (error) {
             setSessionError(error?.message || 'Failed to archive session');
-            return;
+            return false;
         }
         const next = current?.parent_chat_jid
             || agents.find((a: any) => a.chat_jid !== chatJid && !a.parent_chat_jid && !a.archived_at)?.chat_jid;
         if (next && selection.current() === chatJid.slice(3)) handleSwitchChat(next);
+        return true;
     };
 
-    const mutateQueue = async (action: 'remove' | 'move' | 'return' | 'steer', itemOrIndex: any, toIndex?: number) => {
+    const mutateQueue = async (action: 'remove' | 'move' | 'steer', itemOrIndex: any, toIndex?: number) => {
         if (queueMutation.current) return;
         if (action === 'steer' && (streamDisconnected.current || !activityFresh || itemOrIndex.pending || (isAgentTurnActive && !queueActiveTurnId))) return;
         const expectedActiveTurnId = isAgentTurnActive ? queueActiveTurnId : '';
@@ -1008,23 +909,6 @@ function GiApp() {
                 if (itemOrIndex.chat_jid !== chat) throw new Error('Queued item belongs to another session');
                 await steerAgentQueueItem(itemOrIndex.id, chat, expectedActiveTurnId);
                 if (selection.isCurrent(scope)) setFollowupQueueItems(items => items.filter(item => item.id !== itemOrIndex.id));
-            } else if (action === 'return') {
-                const item = itemOrIndex;
-                if (item.chat_jid !== chat || item.pending) throw new Error('Queued item belongs to another session or has no durable ID');
-                const expectedDraft = drafts.captureQueueReturn(scope.sessionId);
-                const recovered = drafts.hasQueueReturn(scope.sessionId, item.id)
-                    ? emptyDraft() : await recoverQueueDraft(item, parseQueuedContent(item.content));
-                const prepared = drafts.prepareQueueReturn(scope.sessionId, item.id, recovered, expectedDraft);
-                // Publish the replacement immediately; later typing survives
-                // persistence/deletion and cannot be replaced by their replies.
-                if (selection.current() === scope.sessionId) {
-                    setFileRefs(prepared.draft.fileRefs); setMessageRefs(prepared.draft.messageRefs);
-                    setDraftRestore({sessionId: scope.sessionId, ...prepared.draft, token: randomClientId()});
-                }
-                await prepared.ready;
-                await drafts.flushStable();
-                await removeAgentQueueItem(item.id, chat);
-                await drafts.completeQueueReturn(scope.sessionId, item.id);
             } else if (action === 'remove') {
                 if (itemOrIndex.chat_jid !== chat) throw new Error('Queued item belongs to another session');
                 setFollowupQueueItems(before.filter(item => item.id !== itemOrIndex.id));
@@ -1037,7 +921,6 @@ function GiApp() {
                 await reorderAgentQueueItem({chatJid: chat, expected: before.map(item => item.id), order: after.map(item => item.id)});
             }
         } catch (error) {
-            if (action === 'return') drafts.queueReturnFailed(scope.sessionId, itemOrIndex.id, error.message);
             if (selection.isCurrent(scope)) { setFollowupQueueItems(before); setQueueError(action === 'steer'
                 ? `Queued item could not be sent as steering: ${error.message} (Queue action failed)`
                 : `Queue action failed: ${error.message}`); }
@@ -1095,12 +978,6 @@ function GiApp() {
         if(sidebar)return bindWorkspaceVisibility(sidebar);
     },[ready,workspaceOpen]);
 
-    useWorkspaceFolderReference(ready && workspaceOpen, sessionId, fileRefs, (path:string)=>{
-        if (!selection.isCurrent(renderedSelection)) return;
-        const refs=[...new Set([...getDraft(sessionId).fileRefs,path])];
-        drafts.update(sessionId,{fileRefs:refs});setFileRefs(refs);
-    });
-
     // ── Render ────────────────────────────────────────────────────────────────
 
     if (!ready) {
@@ -1113,6 +990,22 @@ function GiApp() {
         <div class=${appShellClass}>
             <style>${`.app-shell .post-content:has(table) { overflow-x: auto; } .app-shell .post-content table { display: table; width: 100%; table-layout: auto; }`}</style>
             <${SystemMetersHud} mode="overlay" />
+            ${renameSession && html`<div class="rename-branch-overlay" onPointerDown=${event => { if (event.target === event.currentTarget && !renameSession.busy) setRenameSession(null); }}>
+                <form class="rename-branch-panel" onSubmit=${async event => {
+                    event.preventDefault(); const target = renameSession; const title = target.title.trim();
+                    if (!title || target.busy) return;
+                    setRenameSession({ ...target, busy: true });
+                    try { await handleSessionMutation(target.chatJid, 'rename', title); setRenameSession(null); }
+                    catch (error) { setRenameSession({ ...target, busy: false, error: error.message }); }
+                }}>
+                    <div class="rename-branch-title">Rename session</div>
+                    <input aria-label="Session title" value=${renameSession.title} onInput=${event => setRenameSession({ ...renameSession, title: event.currentTarget.value })}
+                        onKeyDown=${event => { if (event.key === 'Escape' && !renameSession.busy) { event.preventDefault(); setRenameSession(null); } }} />
+                    ${renameSession.error && html`<div role="alert">${renameSession.error}</div>`}
+                    <div class="rename-branch-actions"><button type="submit" class="compose-model-popup-btn primary" disabled=${renameSession.busy || !renameSession.title.trim()}>${renameSession.busy ? 'Renaming…' : 'Save'}</button>
+                    <button type="button" class="compose-model-popup-btn" disabled=${renameSession.busy} onClick=${() => setRenameSession(null)}>Cancel</button></div>
+                </form></div>`}
+
             <${GiSettings}
                 chatJid=${currentChatJid}
                 onMutationStart=${() => {
@@ -1156,9 +1049,7 @@ function GiApp() {
                     drafts.update(sessionId, { fileRefs: refs }); setFileRefs(refs);
                 }}
                 onFolderSelect=${(path: string) => {
-                    if (!path || path === '.') return;
-                    const refs = [...new Set([...getDraft(sessionId).fileRefs, path])];
-                    drafts.update(sessionId, { fileRefs: refs }); setFileRefs(refs);
+                    if (path && path !== '.') setFolderRefs(refs => [...new Set([...refs, path])]);
                 }}
                 visible=${workspaceOpen}
                 active=${workspaceOpen || editorOpen}
@@ -1237,16 +1128,6 @@ function GiApp() {
                         onClose=${() => setAttachmentPreview(null)}
                     />
                 `}
-                <${RunBoundQueueStack}
-                    steerEnabled=${connectionStatus === 'connected' && activityFresh && (!isAgentTurnActive || !!queueActiveTurnId)}
-                    onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
-                    items=${[...followupQueueItems, ...optimisticQueue.filter(item => item.chat_jid === currentChatJid && !followupQueueItems.some(stored => stored.id === item.id || stored.metadata?.client_request_id === item.id))]}
-                    busy=${queueBusy}
-                    onReturnQueuedFollowup=${(item: any) => mutateQueue('return', item)}
-                    onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
-                    onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
-                    onOpenFilePill=${openEditor}
-                />
                 ${followupQueueItems.some(item => item.phase === 'steer_returned') && html`<div role="alert">Steer was not consumed by its target run. The item remains queued and will not auto-send; return it to the editor, remove it, or use Steer to send it now or direct the active run.</div>`}
                 ${queueError && html`<div role="alert">${queueError}</div>`}
                 ${newUIVersion && html`<div role="status" class="gi-version-warning">New UI available. Reload manually when ready; unsaved editor work may be lost.</div>`}
@@ -1261,49 +1142,39 @@ function GiApp() {
                 ${localNotifications.notice && html`<div class="gi-notification-status" role="status"><span>${localNotifications.notice}</span><button type="button" aria-label="Dismiss notification status" onClick=${localNotifications.dismiss}>×</button></div>`}
                 <${ComposeTransfer} sessionId=${sessionId} hidden=${searchState.active} />
                 <${ComposeBox}
+                    key=${sessionId}
+                    draftValue=${initialComposeDraft}
+                    onContentChange=${(text: string) => drafts.update(sessionId, { text })}
+                    services=${{
+                        // This closure belongs to the submitting chat even if the picker switches during upload.
+                        uploadMedia: (file: File, options: any) => uploadMedia(file, currentChatJid, options),
+                        beginUploadBatch: (chat: string) => composeTransfers.beginUploadBatch(chat.slice(3)),
+                        fetchCommands: getAgentCommands,
+                        pinSession: (chat: string, pinned: boolean) => handleSessionMutation(chat, 'pin', pinned),
+                        sendAgentMessage: (agent, text, thread, media, mode, chat) => {
+                            if (/^\/abort\s*$/i.test(text)) return stopFromComposer();
+                            if (/^\/compact\s*$/i.test(text)) return compactFromMeter();
+                            return sendAgentMessage(agent, text, thread, media, mode, chat);
+                        },
+                    }}
                     statusNotice=${notice}
-                    prefillRequest=${composePrefill?.sessionId===sessionId?composePrefill:null}
-                    showQueueStack=${false}
-                    key=${`${sessionId}:${draftRestore?.sessionId === sessionId ? draftRestore.token : ''}`}
-                    draftValue=${getDraft(sessionId).text}
-                    draftMediaFiles=${getDraft(sessionId).media}
-                    onContentChange=${(text: string) => { drafts.update(sessionId, { text }); setComposePrefill(null); }}
-                    onDraftMediaChange=${(media: File[]) => drafts.update(sessionId, { media })}
-                    focusRestoredDraft=${draftRestore?.sessionId === sessionId}
-                    onCaptureDraft=${(draft: any) => drafts.begin(sessionId, draft)}
-                    onQueuedSubmissionStart=${(token: string, text: string) => {
-                        if (!selection.isCurrent(renderedSelection)) return;
-                        setOptimisticQueue(items => [...items, {id: token, content: text, chat_jid: currentChatJid, pending: true}]);
-                    }}
-                    onQueuedSubmissionEnd=${(token: string) => {
-                        if (!selection.isCurrent(renderedSelection)) return;
-                        // Keep the optimistic row until the authoritative queue refresh
-                        // can replace it. Removing it first leaves a visible gap while
-                        // the GET is in flight, even after the server admitted the item.
-                        void refreshSelectedState().finally(() => {
-                            if (selection.isCurrent(renderedSelection))
-                                setOptimisticQueue(items => items.filter(item => item.id !== token));
-                        });
-                    }}
-                    onDraftAccepted=${(token: string) => drafts.accepted(sessionId, token)}
-                    onDraftFailed=${(token: string, error: string) => {
-                        const draft = drafts.failed(sessionId, token, error);
-                        if (selection.current() === sessionId) {
-                            setFileRefs(draft.fileRefs); setMessageRefs(draft.messageRefs);
-                            setDraftRestore({ sessionId, ...draft, token: randomClientId() });
-                        }
-                    }}
-                    onDraftStorageError=${(error: any) => setDraftStorageError(`Send acknowledged, but draft cleanup failed: ${error.message}. Reload recovery may contain already-delivered text.`)}
+                    prefillRequest=${composePrefill?.sessionId === sessionId ? composePrefill : null}
                     currentChatJid=${currentChatJid}
                     isAgentActive=${isAgentTurnActive}
                     onPost=${handlePost}
                     onSubmitIntercept=${btw.handleBtwIntercept}
                     onFocus=${() => { if (!isIOSDevice()) scrollToBottom(); }}
-                    onModelMutationStart=${() => {
-                        const token = {}; ++modelRevision.current; modelMutation.current = token; return token;
-                    }}
-                    onModelMutationEnd=${(token: any) => {
-                        if (modelMutation.current === token) { ++modelRevision.current; modelMutation.current = null; }
+                    onOpenFilePill=${openEditor}
+                    followupQueueItems=${followupQueueItems}
+                    onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
+                    onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
+                    onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
+                    contextUsage=${contextUsage}
+                    activeEditorPath=${activeTabId}
+                    onAttachEditorFile=${() => {
+                        if (!activeTabId) return;
+                        const refs = [...new Set([...fileRefs, activeTabId])];
+                        drafts.update(sessionId, { fileRefs: refs }); setFileRefs(refs);
                     }}
                     onModelChange=${(value: string | null) => {
                         if (!selection.isCurrent(renderedSelection)) return;
@@ -1323,17 +1194,6 @@ function GiApp() {
                             if (state.provider_usage !== undefined) setModelUsage(state.provider_usage ?? null);
                             if (state.context_usage !== undefined) setContextUsage(state.context_usage);
                         }
-                    }}
-                    agents=${{...agents,[SYSTEM_AGENT_ID]:SYSTEM_AGENT}}
-                    currentSessionAgent=${activeChatAgents.find((entry: any) => entry?.chat_jid === currentChatJid) || null}
-                    agentStatus=${agentStatus}
-                    agentDraft=${agentDraft}
-                    contextUsage=${contextUsage}
-                    activeEditorPath=${activeTabId}
-                    onAttachEditorFile=${() => {
-                        if (!activeTabId) return;
-                        const refs = [...new Set([...getDraft(sessionId).fileRefs, activeTabId])];
-                        drafts.update(sessionId, { fileRefs: refs }); setFileRefs(refs);
                     }}
                     fileRefs=${fileRefs}
                     messageRefs=${messageRefs}
@@ -1361,18 +1221,20 @@ function GiApp() {
                         drafts.update(sessionId, { messageRefs: refs });
                         if (selection.current() === sessionId) setMessageRefs(refs);
                     }}
+                    folderRefs=${folderRefs}
+                    onRemoveFolderRef=${(path: string) => setFolderRefs(refs => refs.filter(p => p !== path))}
+                    onClearFolderRefs=${() => { if (selection.isCurrent(renderedSelection)) setFolderRefs([]); }}
+                    onSetFolderRefs=${(refs: string[]) => { if (selection.isCurrent(renderedSelection)) setFolderRefs(refs); }}
                     connectionStatus=${connectionStatus}
                     activeChatAgents=${activeChatAgents}
-                    currentChatBranches=${currentChatBranches}
                     onSwitchChat=${handleSwitchChat}
                     onCreateSession=${handleCreateSession}
-                    onRenameSession=${(chatJid, title) => handleSessionMutation(chatJid, 'rename', title)}
-                    onPinSession=${(chatJid, pinned) => handleSessionMutation(chatJid, 'pin', pinned)}
-                    onArchiveSession=${chatJid => handleSessionMutation(chatJid, 'archive')}
+                    onRenameSession=${() => setRenameSession({ chatJid: currentChatJid, title: activeChatAgents.find(a => a.chat_jid === currentChatJid)?.title || '', busy: false })}
                     onDeleteSession=${handleArchiveCurrentSession}
-                    onRestoreSession=${chatJid => handleSessionMutation(chatJid, 'restore')}
-                    formatBranchPickerLabel=${(b: any) => b?.label || b?.chat_jid || ''}
-                    handleBranchPickerChange=${() => {}}
+                    onRestoreSession=${async chatJid => {
+                        try { await handleSessionMutation(chatJid, 'restore'); if (selection.isCurrent(renderedSelection)) { setSessionError(null); handleSwitchChat(chatJid); } }
+                        catch (error) { if (selection.isCurrent(renderedSelection)) setSessionError(`Failed to restore session: ${error.message}`); throw error; }
+                    }}
                     searchMode=${searchState.active}
                     onEnterSearch=${enterSearch}
                     onExitSearch=${exitSearch}
@@ -1388,35 +1250,18 @@ function GiApp() {
                     notificationsEnabled=${localNotifications.enabled}
                     notificationPermission=${localNotifications.permission}
                     onToggleNotifications=${localNotifications.supported ? localNotifications.toggle : undefined}
-                    onComposeSubmitError=${() => {}}
-                    pendingRequestRef=${pendingRequestRef}
-                    setPendingRequest=${setPendingRequest}
                 />
             </div>
         </div>
     `;
 }
 
-// Host-owned transport status, independent of provider activity and drafts.
+// Cancellation is a transport adapter action; Piclaw owns the progress/status and send button.
 function ComposeTransfer({ sessionId, hidden }) {
     const [, repaint] = useState(0);
-    const ref = useRef(null);
     useEffect(() => composeTransfers.subscribe(() => repaint(n => n + 1)), []);
     const state = composeTransfers.snapshot(sessionId);
-    useLayoutEffect(() => {
-        const root = ref.current?.parentElement;
-        if (!root) return;
-        return bindComposeSending(root, !hidden && state.uploads > 0, !hidden && state.sending > 0);
-    }, [sessionId, hidden, state.uploads, state.sending]);
-    const percent = state.computable && state.total > 0 ? Math.floor(state.loaded * 100 / state.total) : null;
-    return html`<div ref=${ref} class="gi-compose-transfer" hidden=${hidden || (!state.uploads && !state.sending)}>
-        ${state.uploads > 0 && html`<div class="gi-compose-upload" role="status" aria-live="polite">
-            <span>Uploading ${state.uploads === 1 ? 'attachment' : `${state.uploads} attachments`}${state.names.length ? `: ${state.names.join(', ')}` : ''}${percent === null ? '…' : ` · ${percent}%${percent === 100 ? ' · awaiting server' : ''}`}</span>
-            <progress aria-label="Attachment upload progress" max="100" value=${percent === null ? undefined : percent}></progress>
-            <button type="button" class="gi-upload-cancel" onClick=${() => composeTransfers.cancelUploads(sessionId)}>Cancel uploads</button>
-        </div>`}
-        ${state.sending > 0 && html`<div class="gi-compose-sending" role="status" aria-live="polite">Sending${state.sending > 1 ? ` ${state.sending} messages` : ' message'}…</div>`}
-    </div>`;
+    return !hidden && state.uploads > 0 && html`<div class="gi-compose-transfer"><button type="button" class="gi-upload-cancel" onClick=${() => composeTransfers.cancelUploads(sessionId)}>Cancel uploads</button></div>`;
 }
 
 const appRoot = document.getElementById('app');

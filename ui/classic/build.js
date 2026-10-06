@@ -2,26 +2,13 @@ import { resolve, dirname } from 'path';
 import { mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, rmSync, copyFileSync, cpSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { patchPinnedStatusResize } from './scripts/patch-pinned-status-resize.mjs';
+import { patchComposeHost } from './scripts/patch-compose-host.mjs';
 import { patchSseConnection } from './scripts/patch-sse-connection.mjs';
 import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
 import {patchWidgetSandbox, patchWidgetMessageSource} from './scripts/patch-widget-isolation.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
-import { patchQuickActionKeys, patchComposePopupKeys } from './scripts/patch-popup-keys.mjs';
-import { patchModelPicker } from './scripts/patch-model-picker.mjs';
-import { patchPickerGeometry } from './scripts/patch-picker-geometry.mjs';
-import { patchComposeCommands } from './scripts/patch-compose-commands.mjs';
-import { patchComposeEscape } from './scripts/patch-compose-escape.mjs';
-import { patchComposeRandomId } from './scripts/patch-compose-random-id.mjs';
-import { patchComposeCaptureToken } from './scripts/patch-compose-capture-token.mjs';
-import { patchComposeSurface } from './scripts/patch-compose-surface.mjs';
-import { patchModelPanel } from './scripts/patch-model-panel.mjs';
-import { patchModelThinking } from './scripts/patch-model-thinking.mjs';
-import { patchSessionPanel } from './scripts/patch-session-panel.mjs';
-import { patchVoiceInput } from './scripts/patch-voice-input.mjs';
-import { patchModelAccessibility } from './scripts/patch-model-accessibility.mjs';
-import { patchUploadCancel } from './scripts/patch-upload-cancel.mjs';
-import { patchComposePrefillFocus } from './scripts/patch-compose-prefill-focus.mjs';
+import { patchQuickActionKeys } from './scripts/patch-popup-keys.mjs';
 import { patch, piclawWebDir, piclawWebAdapter, verifyPiclawWeb } from './scripts/piclaw-web.mjs';
 
 import { readdirSync, statSync } from 'fs';
@@ -122,11 +109,9 @@ const appBuild = await Bun.build({
   } }, { name: 'gi-markdown', setup(build) {
     build.onLoad({filter:/[\\/]src[\\/]markdown\.ts$/},async args=>({contents:patchMarkdownCode(await Bun.file(args.path).text()),loader:'ts'}));
   } }, { name: 'gi-popup-key-ownership', setup(build) {
+    build.onLoad({ filter: /[\\/]components[\\/]compose-box\.ts$/ }, async args => ({ contents: patchComposeHost(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]components[\\/]timeline-quick-actions\.ts$/ }, async args => ({
       contents: patchQuickActionKeys(await Bun.file(args.path).text()), loader: 'ts',
-    }));
-    build.onLoad({ filter: /[\\/]components[\\/]compose-box\.ts$/ }, async args => ({
-      contents: (patchComposeCaptureToken(patchComposeRandomId(patchModelAccessibility(patchModelThinking(patchVoiceInput(patchSessionPanel(patchModelPanel(patchComposeSurface(patchComposeCommands(patchPickerGeometry(patchComposePrefillFocus(patchUploadCancel(patchModelPicker(patchComposePopupKeys(patchComposeEscape(await Bun.file(args.path).text())))))))))))))))), loader: 'ts',
     }));
   } }, { name: 'gi-timeline-menu-dismissal', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]timeline-menu\.ts$/ }, async args => ({

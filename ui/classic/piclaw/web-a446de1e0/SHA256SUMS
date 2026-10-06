@@ -38,6 +38,7 @@ c9bd7cb40f8e8f7dde88b695b3d259f46a77ebccd304a22fc81dd49a835a13ea  ./web/shared/p
 b0965af55c34a0fefc27410c52219f181279a723e2c2c29a32a0e4c4ebd40357  ./web/src/components/attachment-preview-modal.ts
 cada5ba02d051668accb96adde62bdd97a00118700609e6d74c481ee1b0a27f7  ./web/src/components/body-portal.ts
 371a7bac825370a341676f994bd352cc1c6e712e40ee26fe28871403240b875b  ./web/src/components/btw-panel.ts
+225b2115648e3ee7341340d3c70cae728a51f9b2d20b9cbdabcfccf7320f9812  ./web/src/components/compose-box.ts
 c0f70b4d40737c27c45f50b1d2813b413701afa06992cf60e97f42d608a11f2c  ./web/src/components/compose-model-refresh.ts
 1391f194168c637e5ab7652ba130f3f84228034b334daddcd9d3662a4c4d181c  ./web/src/components/file-pill.ts
 142c982833b911e26566d32cda43704057e48a617b46dd5b24f6114ca8c31afd  ./web/src/components/floating-widget-pane.ts
@@ -49,6 +50,7 @@ daf1bab6ecab809b2c16d82e55df35cb1d8e67ca384d575ef43fc74b147908db  ./web/src/comp
 07aa10a3cb583f7739e126c24d491411c36e11059e2b3c27b746eeaf13639f6e  ./web/src/components/language-switcher.ts
 2ce6bd7c7e7c45bc37cbc482139140df3f28bc33ac6c5e6e34ec4839b7a2db73  ./web/src/components/markdown-preview-storage.ts
 1d8d6b29fefc837bfc7f77e027fa0c1768afcb674d820357bfb7ad2678c485e9  ./web/src/components/markdown-preview.ts
+c74464a48dc8d3290dff6547a736d6b2f83ed0cf200849297bd458feb4a9fe07  ./web/src/components/model-picker.ts
 8480b4e3da668c30cd41c922ead8b4bb0db85a589008f3ef2049231e442d3341  ./web/src/components/post-highlights.ts
 c292500d4e89238269cf1946232b00eb2774edd0ce3907a6810ee11dfc0016d4  ./web/src/components/post-runtime-safety.ts
 0e5b12bfe85ae50c6532e1ab6f3fdd10b90f46d707c6876d05659c697592d61b  ./web/src/components/post-speech.ts
@@ -128,6 +130,7 @@ da5f3768a48685774e15217e5c6eb1744449bf4a82b76e77360a27ce90c5b6ac  ./web/src/ui/c
 838c027deb49c4ff34e0cbdfbdeba82a82f3a586a852ae731c160d9e11011019  ./web/src/ui/chat-swipe-navigation.ts
 68f24e5842127e64c70e16ab52cd5fd0ded70b6895a87c5c74a04375ba40e63c  ./web/src/ui/chat-window.ts
 2bccb9a846617ba02e7902227bc77165cbb00d1e5712276279e2cc6f7055fe95  ./web/src/ui/compose-session-switcher.ts
+541bb66ff4b8f5b8ec6b6de21d8ad5faeef936a0a65d3d8412085f8aa8eb258b  ./web/src/ui/compose-speech.ts
 00f8f1972dda7e7a3d97dbe1edd2c19087ee17966b7f7accbbd243de3d376db9  ./web/src/ui/connection-status.ts
 fd0a9d6a42e29661ffc2ae297d5f3aa8ca7093f7251f175fd81ec79262926096  ./web/src/ui/delimited-preview.ts
 1ac546bd05447324dde266e2c6e1a3795a002db8cb063bda50b91b023ae255ca  ./web/src/ui/disclosure-triangle.ts
@@ -137,6 +140,8 @@ fd0a9d6a42e29661ffc2ae297d5f3aa8ca7093f7251f175fd81ec79262926096  ./web/src/ui/d
 444d5008da024a9bd38edebe38f8ccdd74c4f2c01712662a522f04e34e48f24d  ./web/src/ui/keyboard-shortcut-settings.ts
 54dd9a91e6e90e7f25b7e6f524a2acc67fabb6cc27c29ad2c87f3acfd7504ccb  ./web/src/ui/keyboard-shortcuts.ts
 8c5ed6a711506ec9087dc5290e039a1e90896dcf5a7fbfdf3b31473f0c9b4dfa  ./web/src/ui/meters.ts
+a69754ea1052e3f9ae83c49de26345d88122ff345fbc957d4ce8a3baf275077a  ./web/src/ui/model-catalogue-preferences.ts
+6a1bba4f685e8423d8b23c32a625f7161d9c2f79ba243d85d63b0a3e9edc2697  ./web/src/ui/model-catalogue.ts
 2177ae6f670b23c21011c9059e672a14e1b26de1d2ba2948dad299780312dfa2  ./web/src/ui/notification-delivery-coordinator.ts
 b266ff5ee6fabd15db96b93e4a4c0514d0c5e87731da3fce4427906570e3cde2  ./web/src/ui/notification-focus.ts
 c30d25a3c35565b13534b26471d85b745ec3c2b4cff10c1dad0a206798cafebd  ./web/src/ui/popup-typeahead.ts
@@ -145,6 +150,7 @@ c30d25a3c35565b13534b26471d85b745ec3c2b4cff10c1dad0a206798cafebd  ./web/src/ui/p
 3d11f3f09cd47451195621264458758c3bc34fa4c6a189126a0d838143ee56d1  ./web/src/ui/queue-state.ts
 8470f85e7a5cfeca0120d3d6472653672fe05d831d2084fb034fab8ca2ec913f  ./web/src/ui/recent-files.ts
 c4b4510ab4aadb8d45cad142892943f7bbe180069010c690bb563589a59f380e  ./web/src/ui/scroll-anchor.ts
+1d59ad1a5087930373b2107c538da0500996017341f51f22d39c05c56d5cf169  ./web/src/ui/session-picker-preferences.ts
 ef940775325c0ba9e084dd0e43fa63683b1b7af505162c5858c908e10f1f6b20  ./web/src/ui/status-dot.js
 e7b172f51c937f75c4aea5d9dfff94840cfa9da52186e9d4ee8cbe02df0849a5  ./web/src/ui/status-duration.ts
 ec0cf66d39b0cffdf61eed8959eb7ea4ec4feb717f965608e316ba5d3ec80cfb  ./web/src/ui/svg-theme.ts

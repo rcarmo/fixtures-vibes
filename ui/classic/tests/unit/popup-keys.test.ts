@@ -1,7 +1,7 @@
 import {test,expect} from 'bun:test';
 import {readFileSync} from 'node:fs';
 import {blocksQuickActions,settingsOwnsKeyboard} from '../../src/gi-quick-actions';
-import {patchQuickActionKeys,patchComposePopupKeys,quickActionsCloseMarkup} from '../../scripts/patch-popup-keys.mjs';
+import {patchQuickActionKeys,quickActionsCloseMarkup} from '../../scripts/patch-popup-keys.mjs';
 import { piclawModule } from './piclaw-module';
 
 test('palette declines disallowed keys without consuming target events',()=>{
@@ -15,7 +15,6 @@ test('palette declines disallowed keys without consuming target events',()=>{
 test('guarded popup adaptations preserve rendering except one explicit Close button and reject source drift',()=>{
  for(const [path,patch,anchor] of [
   [piclawModule('components/timeline-quick-actions.ts'),patchQuickActionKeys,'const onKeyDown ='],
-  [piclawModule('components/compose-box.ts'),patchComposePopupKeys,'const handlePopupKeyboardEvent ='],
  ] as const){
   const source=readFileSync(path,'utf8'),out=patch(source);expect(out).toContain('settingsOwnsKeyboard()');
   const render=source.lastIndexOf('    return html`');expect(render).toBeGreaterThan(0);expect(out.slice(out.lastIndexOf('    return html`')).replace(quickActionsCloseMarkup,'')).toBe(source.slice(render));expect(readFileSync(path,'utf8')).toBe(source);

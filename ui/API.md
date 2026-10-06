@@ -181,3 +181,15 @@ These Piclaw routes are still called by vendored components; a runtime may answe
 
 Workspace uploads from the explorer use `POST /api/workspace/upload` above, not Piclaw's chunked
 `/workspace/upload-chunk`.
+
+## Composer transport integration
+
+The current Piclaw composer uses `services` for session-bound uploads and the native command catalogue.
+`uploadMedia(file, chatJid, {signal, onProgress})` sends to `/api/sessions/{s}/media` and reports actual XHR byte
+progress. The captured chat stays fixed across picker switches. Upload cancellation aborts the whole submission
+batch before prompt dispatch; the composer restores the captured draft and attachments for retry.
+
+The composer’s `/abort` and `/compact` actions map to the run-bound activity and compaction endpoints above,
+not to free-text prompts. Queue return uses Piclaw’s native replacement/focus behavior, followed by native queue
+removal. Session pins stay server-authoritative where the backend supports them; local-only pins remain the
+Piclaw fallback. Restore opens the restored session and reports a failed mutation visibly.

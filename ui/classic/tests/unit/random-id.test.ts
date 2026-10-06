@@ -1,7 +1,6 @@
 import { test, expect } from 'bun:test';
 import { randomClientId } from '../../src/gi-random-id';
 import { createDraftRepository } from '../../src/gi-drafts';
-import { patchComposeRandomId } from '../../scripts/patch-compose-random-id.mjs';
 
 test('UUID v4 uses getRandomValues without secure-context randomUUID', () => {
  let calls=0;
@@ -23,18 +22,4 @@ test('draft capture uses random values when randomUUID is unavailable', async ()
   repo.failed('A',capture.token,'rejected');
   expect(repo.get('A').text).toBe('typed');
  } finally {Object.defineProperty(globalThis,'crypto',{configurable:true,value:original});}
-});
-test('immutable composer UUID adapter fails closed on changed anchors',async()=>{
- const source=await Bun.file('src/components/compose-box.ts').text();
- const patched=patchComposeRandomId(source);
- expect(patched).toContain('randomClientId()');expect(patched).not.toContain('crypto.randomUUID()');
- expect(()=>patchComposeRandomId('')).toThrow('anchor changed');
- expect(()=>patchComposeRandomId('crypto.randomUUID(); crypto.randomUUID()')).toThrow('anchor changed');
-});
-
-test('immutable composer uses persisted capture token for idle and queued sends',async()=>{
- const {patchComposeCaptureToken}=await import('../../scripts/patch-compose-capture-token.mjs');
- const source=await Bun.file('src/components/compose-box.ts').text();
- expect(patchComposeCaptureToken(source)).toContain('{ client_request_id: capture?.token || queueToken }');
- expect(()=>patchComposeCaptureToken('')).toThrow('anchor changed');expect(()=>patchComposeCaptureToken('{ client_request_id: queueToken } { client_request_id: queueToken }')).toThrow('anchor changed');
 });

@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Updated the last April-2026 Classic component, the compose box, to Piclaw tip `a446de1e0` (Rui, 2026-10-06).
+  `src/app.ts` now uses the vendored composer's supported props and services. Piclaw owns the pickers, voice input,
+  draft clearing/restoration, queued-message return, upload progress and sending state. Session uploads capture
+  their destination; Stop and Compact use the backend's run-bound endpoints. Server pins, restore and archive
+  retain their native backend semantics.
+  - Removed the copied composer, 14 compose patch scripts, their helper modules/tests and five CSS copies that
+    recreated the modern composer on the old markup. `patch-compose-host.mjs` keeps only batch cancellation,
+    server-authoritative pins, IME/repeated-key guards and a stale popup-listener guard for WebKit.
+  - Initial WebKit session testing exposed a lost Enter after popup dismissal. The capture listener now ignores
+    editor-targeted events; the final WebKit desktop slice passed 59 checks. Chromium desktop passed 81 selected
+    checks; tablet passed 31 across an interrupted run and its unfinished-check continuation; WebKit phone passed 32.
+    Unit tests: 130; contracts: 24; hook dependency TDZ check clean. Shared specs and skips are unchanged.
+  - Pre-release CPU/allocation analysis: browser bootstrap plus three sends/picker toggles sampled 943.8 ms and
+    35.4 MB allocations, dominated by bootstrap/CodeMirror/DOM/instrumentation. The host adapter's unique-anchor
+    check now uses index searches, avoiding temporary split arrays. Three equivalent 100-adaptation measurements:
+    split 91.13/91.10/90.03 ms; index 83.71/86.75/82.84 ms. Bun's end-of-run live heap was about 4.7 MB;
+    it does not provide allocation history. Raw profiles and diagnostic artifacts were deleted after analysis.
+
 - `ui/classic` follows Piclaw's current Classic web sources (Rui, 2026-10-05: tip `a446de1e0` now, the v3.3.0 tag when
   it is published). `scripts/vendor-piclaw.mjs <checkout> <ref>` copies the build's import closure of Piclaw's
   `runtime/` (web sources, Classic/common CSS and fonts, shared settings CSS, the editor extension, `src/core`)

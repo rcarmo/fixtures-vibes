@@ -8,7 +8,7 @@ onto the backend contract in [../API.md](../API.md). The Gi-owned files came fro
 |---|---|
 | `piclaw/web-<version>/` | Piclaw's `runtime/` sources the build uses (`web/src`, `web/static/{classic,common}/css`, `web/shared`, `extensions/viewers/editor`, `src/core`), unmodified, with `SOURCE` (repository, ref, commit) and `SHA256SUMS` |
 | `piclaw/<name>-<version>/` | Other unmodified Piclaw sources: the Plan sidebar add-on and the standalone viewer pages |
-| `src/` | Classic's overlay on `web/src`: the backend adapter (`api.ts`), the Gi shell (`app.ts`, `gi-*.ts`), the add-on stand-in, vendor-library entries and the one Piclaw module Gi still replaces, `components/compose-box.ts` (an April-2026 Piclaw composer with Gi's draft, queue and session-picker wiring) |
+| `src/` | Classic's overlay on `web/src`: the backend adapter (`api.ts`), the Gi shell (`app.ts`, `gi-*.ts`), the add-on stand-in and vendor-library entries; no copied Piclaw components |
 | `scripts/` | `vendor-piclaw.mjs` (re-vendor from a Piclaw checkout), `piclaw-web.mjs` (overlay resolver and its anchored patches), other build-time adapters and anchored patches (`patch-*.mjs`), each failing the build if its anchor moves |
 | `static/` | The served tree, including the committed build output (`dist/`, `js/vendor/`, `editor-vendor/`, fonts, Gi CSS) |
 | `theme-catalogue.json` | Theme catalogue for the `/theme` command, generated from Piclaw's `src/core/ui-theme-catalogue.ts` |
@@ -27,3 +27,9 @@ import closure at that ref, replaces the old `piclaw/web-*`, and lists Classic m
 `make build`, fix any anchored patch whose anchor moved, and run the unit tests and the compliance suite.
 
 `make build` rewrites `static/` and `theme-catalogue.json` (commit both); `make test` and `make check` verify the sources.
+
+The composer is Piclaw’s current `components/compose-box.ts`, wired through its supported props and `services` in
+`src/app.ts`. Piclaw owns rendering, draft clearing/restoration, queue return, model/session pickers and voice input.
+The host supplies session media uploads (capturing the submitting chat), commands, run-bound Stop/Compact and session
+mutations. `scripts/patch-compose-host.mjs` adds batch cancellation, server-authoritative pins when provided, and
+IME/repeated-key safety without changing the vendored bytes or native markup.

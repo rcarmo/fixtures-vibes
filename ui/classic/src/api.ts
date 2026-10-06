@@ -573,7 +573,7 @@ export async function streamSidePrompt(prompt: string, options: any = {}) {
 
 // ── Media ─────────────────────────────────────────────────────────────────
 
-export async function uploadMedia(file: File, chatJid: string | null = null, options: { signal?: AbortSignal } = {}) {
+export async function uploadMedia(file: File, chatJid: string | null = null, options: { signal?: AbortSignal, onProgress?: (progress: { loaded: number, total: number, percent: number, lengthComputable: boolean }) => void } = {}) {
     const signal = options.signal;
     signal?.throwIfAborted();
     const sessionId = chatJid?.startsWith('gi:') ? chatJid.slice(3) : null;
@@ -607,7 +607,12 @@ export async function uploadMedia(file: File, chatJid: string | null = null, opt
                 xhr.open('POST', `/api/sessions/${encodeURIComponent(sessionId)}/media`);
                 xhr.setRequestHeader('Content-Type', contentType);
             } catch (error) { finish(error); return; }
-            xhr.upload.onprogress = event => activity.progress(event.loaded, event.total, event.lengthComputable);
+            xhr.upload.onprogress = event => {
+                activity.progress(event.loaded, event.total, event.lengthComputable);
+                options.onProgress?.({ loaded: event.loaded, total: event.total,
+                    percent: event.lengthComputable && event.total > 0 ? Math.round(event.loaded / event.total * 100) : 0,
+                    lengthComputable: event.lengthComputable });
+            };
             xhr.onerror = () => finish(new TypeError('Upload network request failed'));
             xhr.onabort = () => finish(new DOMException('Upload aborted', 'AbortError'));
             xhr.onload = () => {
