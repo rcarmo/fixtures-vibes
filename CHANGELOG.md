@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Realigned `ui/classic` to the Piclaw **v3.3.0** tag, commit `e4c2b9a3536eb64361da86237a4dfc970d772682`
+  (Rui, 2026-10-07). Re-vendored all 226 build-closure files into `piclaw/web-3.3.0`; every source matches the tag.
+  Relative to the previous `a446de1e0` pin, changes are limited to GPU/system-meter handling and picker section
+  headings using normal positioning. Existing composer/editor adapters still apply without changes.
+  - Re-extracted the five standalone viewer pages and CSPs from v3.3.0 into `piclaw/viewers-3.3.0`; all pages/CSPs
+    are unchanged from the prior extraction. The extraction helper now accepts an explicit release version.
+  - Local scratch-Gi verification: 45 Chromium desktop and 39 WebKit phone checks passed; unit tests 133,
+    contracts 24, TDZ clean. A browser probe checked generic GPU details and missing CPU/RAM telemetry.
+    No shared spec/skip changes, consumer pins or reference-instance replacement; these are local results, not CI.
+  - Pre-release profiling: meter/bootstrap probe sampled 532.1 ms and 13.7 MB allocations, dominated by
+    idle/browser/library work; unit CPU samples 51 ms and live heap 4.1 MB. No actionable repeated work identified,
+    allocation-growth or performance-improvement claim. Raw profiles, traces and disposable scratch removed after use.
+
 - Updated the last April-2026 Classic component, the compose box, to Piclaw tip `a446de1e0` (Rui, 2026-10-06).
   `src/app.ts` now uses the vendored composer's supported props and services. Piclaw owns the pickers, voice input,
   draft clearing/restoration, queued-message return, upload progress and sending state. Session uploads capture

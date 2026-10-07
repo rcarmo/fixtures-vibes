@@ -153,11 +153,11 @@ if (existsSync(phtmAlias)) rmSync(phtmAlias);
 });
 
 
-// Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its 3.2.5 server routes
-// (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.2.5/csp.json.
+// Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its v3.3.0 server routes
+// (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.3.0/csp.json.
 for (const viewer of ['html-viewer', 'image-viewer', 'video-viewer', 'pdf-viewer', 'data-viewer']) {
   mkdirSync(`static/${viewer}`, { recursive: true });
-  copyFileSync(`piclaw/viewers-3.2.5/${viewer}/index.html`, `static/${viewer}/index.html`);
+  copyFileSync(`piclaw/viewers-3.3.0/${viewer}/index.html`, `static/${viewer}/index.html`);
 }
 
 // Theme catalogue for the server-side /theme and /tint commands, from Piclaw's shared preset catalogue.

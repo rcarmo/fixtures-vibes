@@ -7,7 +7,7 @@ import { patchEditorLoader, patchWindowActions, piclawWebDir, verifyPiclawWeb } 
 const vendored = (file: string) => readFileSync(`${piclawWebDir(process.cwd())}/web/src/${file}`, 'utf8');
 const pinned = (file: string) => readFileSync(`${piclawWebDir(process.cwd())}/SHA256SUMS`, 'utf8').split('\n').find(l => l.endsWith(`web/src/${file}`))!.split(/\s+/)[0];
 
-test('vendored Piclaw 3.2.5 editor and pane runtime sources stay pinned', () => {
+test('vendored Piclaw v3.3.0 editor and pane runtime sources stay pinned', () => {
     expect(() => verifyPiclawWeb(process.cwd())).not.toThrow();
     for (const file of ['panes/editor-loader.ts', 'ui/use-editor-state.ts', 'ui/app-pane-runtime-orchestration.ts', 'components/tab-strip.ts']) {
         expect(createHash('sha256').update(vendored(file)).digest('hex')).toBe(pinned(file));

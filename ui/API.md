@@ -1,7 +1,8 @@
 # Classic web UI backend contract
 
-The shared Classic web UI is the `ui/classic` tree: Piclaw's own Classic web sources (vendored at the ref in
-`ui/classic/piclaw/web-*/SOURCE`), its Plan sidebar add-on, and an adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
+The shared Classic web UI is the `ui/classic` tree: Piclaw v3.3.0 Classic sources (tagged commit
+`e4c2b9a3536eb64361da86237a4dfc970d772682`, recorded in `ui/classic/piclaw/web-3.3.0/SOURCE`),
+its separately pinned Plan sidebar add-on, and an adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
 implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
 - **Reference implementation:** rcarmo/gi `internal/web` at **5a68f40** (handler names below), with the Gi docs cited at
@@ -94,11 +95,11 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | GET | `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/html-viewer/`, `/data-viewer/` `?path=` | tab-mode web/data viewers (iframe) | static: `static/<viewer>/index.html`, headers below |
 | GET | `/pdf-viewer/source?media=<id>` | PDF viewer for chat attachments | Piclaw v3.2.5 `pdf-viewer-route.ts` (the attachment's PDF bytes); not yet in reference |
 
-The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.2.5`): serve `static/<viewer>/index.html` at
-`/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.2.5/csp.json`,
+The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.3.0`): serve `static/<viewer>/index.html` at
+`/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.3.0/csp.json`,
 `X-Frame-Options: SAMEORIGIN` and `Cache-Control: no-cache`. Do not answer these paths with the app's `index.html`.
 
-The editor (vendored Piclaw 3.2.5 `StandaloneEditorInstance`) reads `GET /api/workspace/file?path&max_bytes&mode=edit`:
+The editor (vendored Piclaw v3.3.0 `StandaloneEditorInstance`) reads `GET /api/workspace/file?path&max_bytes&mode=edit`:
 the complete UTF-8 text up to 256 KiB with its `mtime`, or 400 for larger or binary files (never truncated). It saves
 with `PUT /api/workspace/file` `{path, content}` (no compare-and-swap; 404 for a missing file) and watches
 `/api/workspace/stat` for external changes. `workspace_update` SSE events (`{updates: [{path, root, truncated,

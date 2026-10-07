@@ -11,9 +11,9 @@ test('a viewer page is the generator literal, as the generator returns it, with 
 });
 
 test('the build serves every extracted viewer page unchanged, each with a CSP', () => {
-    const csp = JSON.parse(readFileSync('piclaw/viewers-3.2.5/csp.json', 'utf8'));
+    const csp = JSON.parse(readFileSync('piclaw/viewers-3.3.0/csp.json', 'utf8'));
     for (const viewer of VIEWERS) {
-        expect(readFileSync(`static/${viewer}/index.html`, 'utf8')).toBe(readFileSync(`piclaw/viewers-3.2.5/${viewer}/index.html`, 'utf8'));
+        expect(readFileSync(`static/${viewer}/index.html`, 'utf8')).toBe(readFileSync(`piclaw/viewers-3.3.0/${viewer}/index.html`, 'utf8'));
         expect(csp[`/${viewer}/`]).toContain("frame-ancestors 'self'");
     }
 });

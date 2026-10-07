@@ -1,7 +1,7 @@
 # Classic web UI
 
-The shared web front-end: Piclaw's own Classic web sources, vendored unmodified, with the adapter layer that maps them
-onto the backend contract in [../API.md](../API.md). The Gi-owned files came from rcarmo/gi at the revision in
+The shared web front-end uses Piclaw **v3.3.0** Classic sources, vendored unmodified from tagged commit
+`e4c2b9a3536eb64361da86237a4dfc970d772682`, with the adapter layer that maps them onto [../API.md](../API.md). The Gi-owned files came from rcarmo/gi at the revision in
 `SOURCE-REVISION`.
 
 | Path | Contents |
@@ -28,7 +28,7 @@ import closure at that ref, replaces the old `piclaw/web-*`, and lists Classic m
 
 `make build` rewrites `static/` and `theme-catalogue.json` (commit both); `make test` and `make check` verify the sources.
 
-The composer is Piclaw’s current `components/compose-box.ts`, wired through its supported props and `services` in
+The composer is Piclaw v3.3.0's `components/compose-box.ts`, wired through its supported props and `services` in
 `src/app.ts`. Piclaw owns rendering, draft clearing/restoration, queue return, model/session pickers and voice input.
 The host supplies session media uploads (capturing the submitting chat), commands, run-bound Stop/Compact and session
 mutations. `scripts/patch-compose-host.mjs` adds batch cancellation, server-authoritative pins when provided, and
