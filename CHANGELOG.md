@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Implement fixtures-vibes#1 in the shared Classic frontend: complete loaded revision baselines, conditional
+  editor/Plan saves and Reset, draft retention across pending writes and host/chat transfers, create-only Save copy,
+  reviewed conditional Overwrite, immediate 409 conflict actions and visible missing-revision lockout. Submit stops
+  when typing continued during its save. Bind `extension_ui_request` and `extension_ui_status` on live SSE sources.
+  Pristine Piclaw v3.3.0/add-on bytes, shared specs, oracle records and skips are unchanged.
+- Local verification: 159 Classic unit checks, 26 contracts, hook-TDZ and build; four zero-retry adapter workloads
+  (editor/Plan × Chromium desktop/WebKit phone) against an isolated HTTP fixture. Backend writer atomicity,
+  deployed acceptance and CI are separate. Gi backend `78f8f53` is published; Vibes Python publication stays held.
+- Pre-release profiles were analysed and disposed. The 157-check unit capture sampled 58 ms of JS; the browser
+  fixture runner sampled 3.60 s (82 ms repository self time, build/runner work dominant), with a 31 MiB exit heap.
+  Chromium sampled 189 ms CPU and 6.8 MiB allocations, dominated by minified editor/CodeMirror and DOM work.
+  No avoidable repeated revision processing was identified. Bun heap is a live snapshot, minified browser frames
+  lack source attribution, and WebKit has functional checks only; no allocation-growth or improvement claim.
+
 - Revalidated linked defects against the installed Piclaw **3.3.0 baseline reference** (Rui, 2026-10-08).
   Added versioned profile/skips, verified app/CSS/editor identity and an immutable focused record:
   `oracle/piclaw/3.3.0/2026-10-08-b17ef01-330-focused`. The 3.2.5 records/profiles are unchanged.
@@ -14,8 +28,8 @@
   - New installer isolates 3.3.0 state, uses private configuration permissions and project-scoped remote temp.
     `record-oracle.ts` accepts `FIXTURES_RESULTS` and preserves multi-run revalidation provenance; `MANIFEST.json`
     now reads current oracle identity from the checked 3.3.0 identity file.
-  - Revision-safe editor/Plan persistence requested in fixtures-vibes #1 remains an unimplemented safety extension;
-    ordinary Piclaw 3.3.0 conflict handling does not establish loaded-revision preconditions.
+  - Ordinary Piclaw 3.3.0 conflict handling does not establish loaded-revision preconditions. The fixtures-vibes#1
+    safety extension is now implemented in the shared frontend above; release evidence remains unchanged.
 
 - Realigned `ui/classic` to the Piclaw **v3.3.0** tag, commit `e4c2b9a3536eb64361da86237a4dfc970d772682`
   (Rui, 2026-10-07). Re-vendored all 226 build-closure files into `piclaw/web-3.3.0`; every source matches the tag.

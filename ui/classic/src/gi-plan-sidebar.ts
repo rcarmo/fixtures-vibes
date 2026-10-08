@@ -2,6 +2,7 @@
 // The add-on talks to Piclaw's addon config API and default-agent message route; Gi serves the same
 // semantics at /api/sessions/{s}/plan (docs/internal/session-plan.md) and the session prompt API.
 import { sendAgentMessage } from './api.js';
+import { requireRevision } from './gi-revision-state.js';
 import { dispatchExtensionUiBrowserEvent, isExtensionUiEventType } from './ui/extension-ui-events.js';
 
 const PLAN_PATH = '/agent/addons/api/plan-sidebar/plan';
@@ -19,7 +20,7 @@ async function json(url: string, init: RequestInit = {}) {
         headers: { 'Content-Type': 'application/json', ...((init.headers as any) || {}) },
     });
     const payload = await response.json().catch(() => ({}));
-    if (!response.ok || payload?.ok === false) throw new Error(payload?.error || `${response.status} ${response.statusText}`);
+    if (!response.ok || payload?.ok === false) throw Object.assign(new Error(payload?.error || `${response.status} ${response.statusText}`), { status: response.status, code: payload?.code });
     return payload;
 }
 
@@ -31,7 +32,8 @@ export async function giPlanSidebarRequest(url: string, options: RequestInit = {
         const planUrl = `/api/sessions/${encodeURIComponent(sessionOf(chatJid))}/plan`;
         if ((options.method || 'GET').toUpperCase() === 'GET') return (await json(planUrl)).plan;
         const body = JSON.parse(String(options.body || '{}'));
-        const payload = body.action === 'reset' ? { action: 'reset' } : { markdown: String(body.markdown ?? '') };
+        const expected_revision = requireRevision(body.expected_revision);
+        const payload = body.action === 'reset' ? { action: 'reset', expected_revision } : { markdown: String(body.markdown ?? ''), expected_revision };
         return json(planUrl, { method: 'POST', body: JSON.stringify(payload) });
     }
     if (target.pathname === MESSAGE_PATH) {

@@ -27,6 +27,18 @@ import closure at that ref, replaces the old `piclaw/web-*`, and lists Classic m
 `make build`, fix any anchored patch whose anchor moved, and run the unit tests and the compliance suite.
 
 `make build` rewrites `static/` and `theme-catalogue.json` (commit both); `make test` and `make check` verify the sources.
+`make check-revisions` exercises conditional editor and Plan persistence in Chromium desktop and WebKit phone
+against an isolated HTTP fixture, with zero retries. It covers typing during writes, transferred baselines,
+same-mtime conflicts, create-only copies, reviewed overwrite, conditional Reset, Submit-after-save and missing
+revisions. Runtime compliance and backend writer concurrency need separate acceptance.
+
+Tests are unprofiled by default. Use `PROFILING=1` for pre-release verification; analyse captures and dispose of them.
+The revision browser helper's Bun profile covers its HTTP fixture/build runner, not browser allocations.
+
+Revision-safe persistence uses `scripts/patch-editor-revision.mjs` and `scripts/patch-plan-revision.mjs`, wired by the
+web/add-on adapters. `src/gi-revision-state.ts` validates opaque revisions and presents the reviewed overwrite snapshot.
+The [backend contract](../API.md#workspace) requires loaded preconditions and create-only copies. Missing revisions
+fail closed; no unconditional retry or error-revision adoption is permitted.
 
 The composer is Piclaw v3.3.0's `components/compose-box.ts`, wired through its supported props and `services` in
 `src/app.ts`. Piclaw owns rendering, draft clearing/restoration, queue return, model/session pickers and voice input.

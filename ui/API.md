@@ -15,7 +15,7 @@ implementing the HTTP and SSE surface below. The UI is not edited per runtime.
   needs one file. Against Gi 5a68f40 it reports only `/workspace/{file,raw}`, `/terminal/session` and `/vnc/session`.
 - **Sessions:** the UI addresses a session as `chat_jid = gi:<session-id>` for every runtime (`gi:` is the UI's
   literal prefix, not a runtime name); HTTP routes take the bare `<session-id>`. The SSE stream takes `chat_jid`.
-- **Errors:** non-2xx responses carry JSON `{error, code?}`; the UI shows `error`.
+- **Errors:** non-2xx responses carry JSON `{error, code?}`. Persistence errors retain HTTP `status` and `code` in the client; any returned `revision` is informational and never authorises a retry.
 
 ## Static assets
 
@@ -99,19 +99,52 @@ The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.3.0`): serve `st
 `/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.3.0/csp.json`,
 `X-Frame-Options: SAMEORIGIN` and `Cache-Control: no-cache`. Do not answer these paths with the app's `index.html`.
 
-The editor (vendored Piclaw v3.3.0 `StandaloneEditorInstance`) reads `GET /api/workspace/file?path&max_bytes&mode=edit`:
-the complete UTF-8 text up to 256 KiB with its `mtime`, or 400 for larger or binary files (never truncated). It saves
-with `PUT /api/workspace/file` `{path, content}` (no compare-and-swap; 404 for a missing file) and watches
-`/api/workspace/stat` for external changes. `workspace_update` SSE events (`{updates: [{path, root, truncated,
-changed_paths}]}`) refresh the tree and a clean editor; they carry no file contents. Reference: Gi 7b4dd24
-(`docs/internal/workspace-editor-backend.md`). Save copy on a conflict is a known Piclaw 3.2.5 defect (rcarmo/piclaw#1524).
+The editor reads `GET /api/workspace/file?path&max_bytes&mode=edit`: complete UTF-8 text up to 256 KiB,
+with `{text, mtime, revision, truncated:false}`, or 400 for larger or binary files. A revision belongs to exactly
+that complete text. Partial reads omit revision. The file revision is an opaque nonempty string; the client also
+preserves nonnegative safe integer revisions without coercion. Missing revisions or incomplete snapshots visibly
+disable saves; a dirty transferred draft cannot acquire a fresh baseline implicitly.
+
+Existing-file writes use `PUT /api/workspace/file` `{path, content, expected_revision}`. The server checks the
+loaded revision before any mutation, returns 428 `revision_required` for a missing precondition, 409
+`revision_conflict` for stale content, and a success acknowledgement with `{revision, mtime}`. Missing files
+return 404. A successful acknowledgement establishes the new revision and the captured saved text as the baseline;
+newer typing stays dirty. A missing acknowledgement revision disables subsequent writes without replacing the draft.
+
+Conflict Save copy uses create-only `POST /api/workspace/file` `{path: parent_directory, name, content}`:
+a collision returns 409 `file_exists`; no overwrite option or PUT fallback. Overwrite displays the complete saved
+snapshot for confirmation, then writes against exactly its reviewed revision. A change during review causes another
+409. Reload/Plan Refresh ask before discarding dirty text, and edits made during a pending reload remain intact.
+A 409 displays file conflict actions immediately, even when mtime is unchanged. Tab and host/popout transfers carry
+both saved text and its revision; envelopes retain their existing five-minute TTL.
+
+The editor watches `/api/workspace/stat` for external changes. `workspace_update` SSE events
+(`{updates: [{path, root, truncated, changed_paths}]}`) refresh the tree and a clean editor; they carry no text.
+The revision adaptation is an anchored build patch over unmodified Piclaw v3.3.0 sources. It implements
+fixtures-vibes#1; release-specific oracle evidence and skips remain unchanged.
+
+Backend revision enforcement covers the runtime's conditional-write transaction. Gi backend `78f8f53` checks
+external file changes at admission; Vibes Python's reported implementation uses a process-local read/check/write
+lock. These checks do not establish atomic filesystem CAS against arbitrary external writers between check and
+commit. Each backend must document that boundary and test its own writer concurrency. UI adapter tests use an
+isolated fixture; they do not prove backend atomicity.
 
 ## Plan and widgets
 
 | Method | Path | UI caller | Reference |
 |---|---|---|---|
-| GET, POST | `/api/sessions/{s}/plan` (`{markdown}` or `{action: reset}`) | `gi-plan-sidebar.ts` (vendored Piclaw add-on) | `handleSessionSubroutes` (`session-plan.md`) |
+| GET, POST | `/api/sessions/{s}/plan` (`{markdown, expected_revision}` or `{action: reset, expected_revision}`) | `gi-plan-sidebar.ts` (vendored Piclaw add-on) | `handleSessionSubroutes` (`session-plan.md`) |
 | GET | `/api/sessions/{s}/widgets/{id}` | artifact lookup | " (`dashboard-widgets.md`) |
+
+Plan GET and successful POST return `{plan:{markdown, revision, updated_at?, ...}}`. Plan revision may be an
+opaque string or nonnegative safe integer (Vibes Python uses an integer). Save and Reset capture the loaded
+revision and never adopt a revision from a conflict response. Missing preconditions return 428 `revision_required`;
+stale writes return 409 `revision_conflict` or `plan_revision_conflict`. Acknowledgements retain newer typing,
+including during Reset. Dirty Plan drafts retain their baseline across chat switches in the current page;
+stale responses cannot replace another chat's draft. Submit saves first and stops if the save conflicts, its
+acknowledgement is incomplete, or typing continued during the save. Missing revisions visibly disable Save,
+Reset and Submit. Refresh asks before discarding dirty text. SSE `extension_ui_status` delivers remote Plan changes
+without replacing dirty drafts; `extension_ui_request` delivers agent browser requests through the same live transport.
 
 Widgets render in an iframe sandboxed with `allow-scripts` but not `allow-same-origin`, so widget code has an opaque
 origin and reaches the host only through the `piclawWidget` bridge (`postMessage`; the host accepts messages only from

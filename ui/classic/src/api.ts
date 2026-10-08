@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { requireRevision } from './gi-revision-state.js';
 import { notifyModelSettlement } from './gi-model-invalidation.js';
 /**
  * api.ts — Gi API adapter.
@@ -57,7 +58,7 @@ async function request(url: string, options: RequestInit = {}) {
     });
     if (!response.ok) {
         const err = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw Object.assign(new Error(err.error || `HTTP ${response.status}`), {status:response.status, code:err.code});
+        throw Object.assign(new Error(err.error || `HTTP ${response.status}`), {status:response.status, code:err.code, revision:err.revision});
     }
     return response.json();
 }
@@ -679,8 +680,9 @@ export async function createWorkspaceFile(path: string, name: string, content = 
     return request('/api/workspace/file', { method: 'POST', body: JSON.stringify({ path, name, content }) });
 }
 
-export async function updateWorkspaceFile(path: string, content: string) {
-    return request('/api/workspace/file', { method: 'PUT', body: JSON.stringify({ path, content }) });
+export async function updateWorkspaceFile(path: string, content: string, expectedRevision: unknown) {
+    const expected_revision = requireRevision(expectedRevision);
+    return request('/api/workspace/file', { method: 'PUT', body: JSON.stringify({ path, content, expected_revision }) });
 }
 
 export async function renameWorkspaceFile(path: string, name: string) {

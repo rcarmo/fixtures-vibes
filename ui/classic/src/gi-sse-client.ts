@@ -74,6 +74,8 @@ export class SSEClient {
         bindJsonEvent('tool_activity_changed');
         for (const event of ['compaction_started', 'compaction_completed', 'compaction_cancelled', 'compaction_suppressed', 'compaction_failed']) bindJsonEvent(event);
         bindJsonEvent('workspace_update');
+        bindJsonEvent('extension_ui_request');
+        bindJsonEvent('extension_ui_status');
         bindJsonEvent('agent_draft');
         bindJsonEvent('agent_draft_delta');
         bindJsonEvent('agent_thought');

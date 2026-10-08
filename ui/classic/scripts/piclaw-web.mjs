@@ -9,6 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 
+import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision } from './patch-editor-revision.mjs';
 const CODEMIRROR = '/editor-vendor/codemirror.js';
 
 /** The single vendored tree, e.g. piclaw/web-3.3.0 (relative to ui/classic). */
@@ -91,6 +92,15 @@ export function piclawWebAdapter(root) {
       const path = overlay.resolve(args.importer, args.path);
       return path ? { path } : undefined;
     });
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]extensions[\\/]viewers[\\/]editor[\\/]editor-extension\.ts$/ }, async args => ({
+      contents: patchEditorRevision(await Bun.file(args.path).text()), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]file-conflict-monitor\.ts$/ }, async args => ({
+      contents: patchConflictRevision(await Bun.file(args.path).text()), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]ui[\\/]app-pane-runtime-orchestration\.ts$/ }, async args => ({
+      contents: patchEditorRefreshRevision(await Bun.file(args.path).text()), loader: 'ts',
+    }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]editor-loader\.ts$/ }, async args => ({
       contents: patchEditorLoader(await Bun.file(args.path).text()), loader: 'ts',
     }));
