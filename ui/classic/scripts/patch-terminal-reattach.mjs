@@ -10,5 +10,7 @@ export function patchTerminalReattach(source) {
     if (count !== 2) throw Error(`Terminal reattach guards drifted: expected two, got ${count}`);
     source = source.replaceAll(from, to);
   }
-  return source;
+  const anchor = "      const panePath = request.panePath;\n      if (!panePath) return;";
+  if (source.split(anchor).length !== 2) throw Error('Terminal reattach source-window anchor drifted');
+  return source.replace(anchor, anchor + "\n      const expectedHandle = detachedWindowHandlesRef.current.get(panePath);\n      if (expectedHandle && event.source !== expectedHandle) return;");
 }
