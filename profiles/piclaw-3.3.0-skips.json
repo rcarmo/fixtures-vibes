@@ -1,0 +1,160 @@
+{
+  "runtime": "piclaw",
+  "fixturesVibes": "b17ef01",
+  "skips": [
+    {
+      "id": "@ux-shared-031",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. SVG fence output is HTML-escaped. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1505"
+    },
+    {
+      "id": "@ux-original-030",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Rejected queue actions hide queued items until reload. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1506"
+    },
+    {
+      "id": "@ux-shared-032",
+      "reason": "known-defect",
+      "intermittent": true,
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 14/18 test outcomes failed. Rejected queue actions hide queued items until reload. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1506",
+      "projects": [
+        "chromium-phone",
+        "chromium-tablet",
+        "chromium-desktop",
+        "webkit-tablet",
+        "webkit-desktop"
+      ]
+    },
+    {
+      "id": "@ux-shared-001",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/12 test outcomes failed. Menu Escape does not restore focus to the trigger. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1509",
+      "intermittent": true
+    },
+    {
+      "id": "@ux-shared-033",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 18/18 test outcomes failed. Copy/rendered fenced code does not preserve Markdown/angle brackets. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1511"
+    },
+    {
+      "id": "@ux-shared-005",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Consumed/modified/composing typeahead keys still affect the palette. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop. Upstream closure on 2026-10-07 postdates the 2026-10-06 v3.3.0 tag; retain for this release.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1513"
+    },
+    {
+      "id": "@ux-shared-023",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 1/6 test outcomes failed. Reconnect/Stop does not consistently restore the active turn controls. Projects: webkit-phone.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1519",
+      "intermittent": true,
+      "projects": [
+        "webkit-phone"
+      ]
+    },
+    {
+      "id": "@ux-original-015",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 1/6 test outcomes failed. Reloaded active session lost the visible Stop control. Projects: webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1507",
+      "intermittent": true,
+      "projects": [
+        "webkit-desktop"
+      ]
+    },
+    {
+      "id": "@ux-original-005",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Consumed/modified/composing typeahead keys still affect the palette. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop. Upstream closure on 2026-10-07 postdates the 2026-10-06 v3.3.0 tag; retain for this release.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1513"
+    },
+    {
+      "id": "@ux-original-023",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 1/6 test outcomes failed. Reconnect/Stop does not consistently restore the active turn controls. Projects: webkit-phone.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1519",
+      "intermittent": true,
+      "projects": [
+        "webkit-phone"
+      ]
+    },
+    {
+      "id": "@ux-compaction-008",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Unknown model command does not show an error. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1521"
+    },
+    {
+      "id": "@ux-workspace-018",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Conflict Save copy does not create the requested copy. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop. Upstream closure on 2026-10-07 postdates the 2026-10-06 v3.3.0 tag; retain for this release.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1524"
+    },
+    {
+      "id": "@ux-workspace-019",
+      "reason": "known-defect",
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 6/6 test outcomes failed. Save acknowledgement drops newer edits or marks them saved. Projects: chromium-phone, chromium-tablet, chromium-desktop, webkit-phone, webkit-tablet, webkit-desktop. Upstream closure on 2026-10-07 postdates the 2026-10-06 v3.3.0 tag; retain for this release.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1526"
+    },
+    {
+      "id": "@ux-terminal-006",
+      "reason": "known-defect",
+      "projects": [
+        "webkit-desktop"
+      ],
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 1/2 test outcomes failed. WebKit desktop terminal popout does not reattach to its original window. Projects: webkit-desktop.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1531",
+      "intermittent": true
+    },
+    {
+      "id": "@ux-keychain-004",
+      "reason": "known-defect",
+      "projects": [
+        "chromium-phone",
+        "webkit-phone",
+        "webkit-tablet"
+      ],
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 3/6 test outcomes failed. Keychain deletion/confirmation is not reliably tappable in the listed layouts. Projects: chromium-phone, webkit-phone, webkit-tablet.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1538",
+      "intermittent": true
+    },
+    {
+      "id": "@ux-shell-env-002",
+      "reason": "capability-absent",
+      "capability": "@cap-windows-shell",
+      "detail": "The reference instance runs on Linux; Windows shell detection is specified from Piclaw 3.2.5 source (tracked-bash.ts)."
+    },
+    {
+      "id": "@ux-shell-env-007",
+      "reason": "capability-absent",
+      "capability": "@cap-windows-shell",
+      "detail": "The reference instance runs on Linux; Windows shell detection is specified from Piclaw 3.2.5 source (tracked-bash.ts)."
+    },
+    {
+      "id": "@ux-reconnect-001",
+      "reason": "known-defect",
+      "intermittent": true,
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 2/6 test outcomes failed. Disconnected preview clearing/recovery fails. Projects: chromium-tablet, webkit-tablet.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1551",
+      "projects": [
+        "chromium-tablet",
+        "webkit-tablet"
+      ]
+    },
+    {
+      "id": "@ux-original-018",
+      "reason": "known-defect",
+      "intermittent": true,
+      "projects": [
+        "chromium-tablet"
+      ],
+      "detail": "Piclaw 3.3.0 tagged-release focused revalidation 2026-10-08: 1/6 test outcomes failed. Rejected queue actions hide queued items until reload. Projects: chromium-tablet.",
+      "issue": "https://github.com/rcarmo/piclaw/issues/1506"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "runtime": "piclaw",
+  "version": "3.3.0",
+  "interface": "classic",
+  "release": "piclaw-3.3.0-linux-x64-baseline",
+  "sourceCommit": "e4c2b9a3536eb64361da86237a4dfc970d772682",
+  "baseUrl": "http://192.168.1.236:8090",
+  "modelUrl": "http://192.168.1.236:9920",
+  "stateRoot": "/srv/piclaw-fixtures/3.3.0",
+  "verifiedAt": "2026-10-08T06:49:35.021Z",
+  "assets": {
+    "/static/classic/dist/app.bundle.js": "d9913b776aee894ad81290801b0e8d935acd726f262d59fdfa1b609c68a4be61",
+    "/static/classic/dist/app.bundle.css": "a091e4576287ed2025382d94a89d4c0346d93cdc0ff235412a4e27a05a17a302",
+    "/static/classic/dist/editor.bundle.js": "b72e2e8cda967413f27d01613b5a464ea03e22f78c27d7f375057851df8f8225"
+  }
+}

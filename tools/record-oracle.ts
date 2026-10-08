@@ -11,7 +11,7 @@ import { loadProfile } from '../suite/runtime';
 const root = resolve(import.meta.dir, '..');
 const profile = loadProfile();
 const results = join(root, 'test-results');
-const raw = JSON.parse(readFileSync(join(results, 'compliance.json'), 'utf8'));
+const raw = JSON.parse(readFileSync(process.env.FIXTURES_RESULTS ?? join(results, 'compliance.json'), 'utf8'));
 const report = JSON.parse(readFileSync(join(results, `compliance-report-${profile.runtime}.json`), 'utf8'));
 if (report.summary.problems.length) throw new Error(`Gate is not OK; not recording: ${report.summary.problems.join('; ')}`);
 
@@ -35,7 +35,8 @@ walk(raw.suites);
 
 writeFileSync(join(dir, 'results.json'), JSON.stringify({
   runtime: profile.runtime, version: profile.version, fixturesVibes: ref, startedAt: started,
-  durationMs: raw.stats?.duration ?? null, playwright: raw.config?.version ?? null, tests,
+  durationMs: raw.stats?.duration ?? null, playwright: raw.config?.version ?? null,
+  ...(raw.revalidation ? { revalidation: raw.revalidation } : {}), tests,
 }, null, 2) + '\n');
 // Reports name local files; store them relative to the repository so the record does not leak machine paths.
 const relative = (text: string) => text.split(root + '/').join('').split(root.replace(/^\/srv\/piclaw-dev/, '') + '/').join('');

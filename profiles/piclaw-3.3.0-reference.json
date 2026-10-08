@@ -1,0 +1,93 @@
+{
+  "runtime": "piclaw",
+  "version": "3.3.0",
+  "external": {
+    "baseUrl": "http://192.168.1.236:8090",
+    "modelControlUrl": "http://192.168.1.236:9920"
+  },
+  "readiness": {
+    "path": "/agent/status",
+    "status": 200,
+    "timeoutMs": 30000
+  },
+  "session": {
+    "create": {
+      "method": "POST",
+      "path": "/agent/root-session",
+      "body": {
+        "agent_name": "{name}"
+      },
+      "idField": "branch.chat_jid"
+    },
+    "open": "/?chat_jid={id}",
+    "actionsPerMinute": 20
+  },
+  "auth": {
+    "mode": "none"
+  },
+  "capabilities": [
+    "@cap-agent-avatar",
+    "@cap-attachments",
+    "@cap-auth-login",
+    "@cap-auth-passkey",
+    "@cap-auth-totp",
+    "@cap-compaction",
+    "@cap-context-meter",
+    "@cap-message-delete",
+    "@cap-messages-tool",
+    "@cap-model-picker",
+    "@cap-multi-user",
+    "@cap-push-notifications",
+    "@cap-pwa",
+    "@cap-queue",
+    "@cap-quick-actions",
+    "@cap-read-aloud",
+    "@cap-reconnect",
+    "@cap-scheduled-tasks",
+    "@cap-search",
+    "@cap-session-manage",
+    "@cap-session-picker",
+    "@cap-settings-dialog",
+    "@cap-skills",
+    "@cap-slash-commands",
+    "@cap-steer",
+    "@cap-steer-idle",
+    "@cap-stop",
+    "@cap-svg-render",
+    "@cap-system-meters",
+    "@cap-theme-tint",
+    "@cap-thinking-levels",
+    "@cap-thoughts",
+    "@cap-tool-output",
+    "@cap-touch",
+    "@cap-workspace",
+    "@cap-workspace-write"
+  ],
+  "skips": "piclaw-3.3.0-skips.json",
+  "tools": {
+    "activate": "activate_tools"
+  },
+  "commands": {
+    "setAgentAvatar": "/agent-avatar {source}",
+    "clearAgentAvatar": "/agent-avatar clear",
+    "selectModel": "/model fixture/{model}"
+  },
+  "selectors": {
+    "quickActionHighlight": ".timeline-quick-actions-item.active",
+    "quickActionItem": ".timeline-quick-actions-item"
+  },
+  "rateLimit": {
+    "path": "^/agent/[^/]+/message$",
+    "perMinute": 28
+  },
+  "compaction": {
+    "when": "summar",
+    "summaries": [
+      "## Chunk Range\\n- fixture chunk range.\\n\\n## Goals / User Intent\\n- fixture goals / user intent.\\n\\n## Constraints & Preferences\\n- fixture constraints & preferences.\\n\\n## Decisions\\n- fixture decisions.\\n\\n## Files / Commands / Tool Outcomes\\n- fixture files / commands / tool outcomes.\\n\\n## Progress\\n- Done: fixture turns.\\n- In progress: none.\\n- Blocked: none.\\n\\n## Open Questions / Next Steps\\n- fixture open questions / next steps.\\n\\n## Key Continuity Facts\\n- fixture key continuity facts.",
+      "## Goal\\n- fixture goal.\\n\\n## Current Active Topic\\n- fixture current active topic.\\n\\n## Historical / Background Context\\n- fixture historical / background context.\\n\\n## Constraints & Preferences\\n- fixture constraints & preferences.\\n\\n## Progress\\n### Done\\n- fixture turns.\\n### In Progress\\n- none.\\n### Blocked\\n- none.\\n\\n## Key Decisions\\n- fixture key decisions.\\n\\n## Next Steps\\n- fixture next steps.\\n\\n## Critical Context\\n- fixture critical context."
+    ]
+  },
+  "keychain": {
+    "masterPassword": "fixtures-vibes"
+  }
+}

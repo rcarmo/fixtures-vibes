@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Revalidated linked defects against the installed Piclaw **3.3.0 baseline reference** (Rui, 2026-10-08).
+  Added versioned profile/skips, verified app/CSS/editor identity and an immutable focused record:
+  `oracle/piclaw/3.3.0/2026-10-08-b17ef01-330-focused`. The 3.2.5 records/profiles are unchanged.
+  - Focused six-layout evidence: 122 pass, 90 fail, 4 skip across 216 outcomes and 31 IDs. Ten initial
+    Chromium-phone failures were invalidated by an installer configuration-mode error and replaced only by
+    the separately recorded 10/10 zero-retry setup check. This is not full compliance or CI acceptance.
+  - Removed 13 stale listings from the new 3.3.0 skip file; retained 17 known defects with observed project scopes
+    and rates, plus two Linux capability exclusions. #1524/#1526/#1513 still fail in this tag: upstream closures
+    on 2026-10-07 postdate the 2026-10-06 release. No issue was closed from a passing scenario alone.
+  - New installer isolates 3.3.0 state, uses private configuration permissions and project-scoped remote temp.
+    `record-oracle.ts` accepts `FIXTURES_RESULTS` and preserves multi-run revalidation provenance; `MANIFEST.json`
+    now reads current oracle identity from the checked 3.3.0 identity file.
+  - Revision-safe editor/Plan persistence requested in fixtures-vibes #1 remains an unimplemented safety extension;
+    ordinary Piclaw 3.3.0 conflict handling does not establish loaded-revision preconditions.
+
 - Realigned `ui/classic` to the Piclaw **v3.3.0** tag, commit `e4c2b9a3536eb64361da86237a4dfc970d772682`
   (Rui, 2026-10-07). Re-vendored all 226 build-closure files into `piclaw/web-3.3.0`; every source matches the tag.
   Relative to the previous `a446de1e0` pin, changes are limited to GPU/system-meter handling and picker section

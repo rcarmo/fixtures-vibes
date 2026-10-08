@@ -1,10 +1,12 @@
 {
   "oracle": {
     "runtime": "piclaw",
-    "version": "3.2.5",
+    "version": "3.3.0",
     "interface": "classic",
     "assets": {
-      "/static/classic/dist/app.bundle.js": "65205f9b4339289f896120f3a7510a75baf14e7e085f39ed47e593ec9eb052d5"
+      "/static/classic/dist/app.bundle.js": "d9913b776aee894ad81290801b0e8d935acd726f262d59fdfa1b609c68a4be61",
+      "/static/classic/dist/app.bundle.css": "a091e4576287ed2025382d94a89d4c0346d93cdc0ff235412a4e27a05a17a302",
+      "/static/classic/dist/editor.bundle.js": "b72e2e8cda967413f27d01613b5a464ea03e22f78c27d7f375057851df8f8225"
     }
   },
   "sources": {
@@ -48,6 +50,8 @@
     "package.json": "a4341c62bee004156513d62a47e1709dd3d9628b013b29ced08c5b564581a978",
     "profiles/piclaw-3.2.5-reference.json": "3b9d6ce935d6474316a273a405f26d038ff9d524e506ac850de26c6583c8fc75",
     "profiles/piclaw-3.2.5-skips.json": "a3af9a9e80ca7286237eaa54b0de4db2f21dc5b13ee2f94039230a59babde23f",
+    "profiles/piclaw-3.3.0-reference.json": "cbf69af553422ef1af33050db810fc719060a23ed78fde5c4b3cd9b10a65cedc",
+    "profiles/piclaw-3.3.0-skips.json": "05bbb6b0f7576c21ddb76949172bc16d195742cef8bcc19ac24bab956c9c0748",
     "schemas/evidence-manifest.schema.json": "28ecb5661e5611571301f900419676e5ca9623f130276715372db5215971800d",
     "schemas/runtime-profile.schema.json": "c292b251f4134ca251aae81ebc154eda57960ce0c512af8fa3ef1a989ae42fca",
     "schemas/skips.schema.json": "2d659d0963074b8b84a28443d5e7d95f53efa1b9b414e61ad31ff5760a1d1500",

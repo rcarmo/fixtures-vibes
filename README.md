@@ -13,9 +13,10 @@ Any local deviations are either specific to the runtime or tool (`gi` and `tau-p
 
 # Agent Guidance
 
-The installed Piclaw release is the behavioural oracle; the current reference is **Piclaw 3.2.5**.
-The shared `ui/classic` sources are pinned to **Piclaw v3.3.0** (`e4c2b9a3536e…`); updating the dedicated reference
-and its recorded evidence is a separate step. Existing `oracle/piclaw/3.2.5/` records stay unchanged.
+The installed Piclaw release is the behavioural oracle; the current reference and shared `ui/classic` sources are
+**Piclaw v3.3.0** (`e4c2b9a3536e…`). The reference uses the 3.3.0 baseline release, with verified asset identity in
+`oracle/piclaw/3.3.0/identity.json`. The initial 3.3.0 record is a focused linked-defect revalidation, not a full
+compliance run. Existing `oracle/piclaw/3.2.5/` records stay unchanged.
 
 This repository holds behaviour, not product code:
 

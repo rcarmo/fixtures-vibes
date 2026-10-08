@@ -101,7 +101,7 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
 
 ## Suite changes requested by runtime owners
 
-Piclaw 3.2.5 is the oracle. Change a spec only when it is wrong against Piclaw: asserting something Piclaw does not
+Piclaw 3.3.0 is the current oracle; 3.2.5 records are immutable history. Change a spec only when it is wrong against Piclaw: asserting something Piclaw does not
 do, relying on an unstated Piclaw implementation detail outside the scenario, or missing a capability tag the scenario
 needs. Never loosen a spec to fit a port's limitation or quirk (a different label, a missing control, a global lock);
 that is a runtime defect, fixed in the runtime or recorded as a skip with an issue. Check the claim against the oracle

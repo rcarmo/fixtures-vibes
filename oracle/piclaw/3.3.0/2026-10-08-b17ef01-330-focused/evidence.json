@@ -1,0 +1,731 @@
+{
+  "runtime": "piclaw",
+  "fixturesVibes": "v0.2.0-19-gb17ef01",
+  "entries": [
+    {
+      "id": "@ux-chat-lifecycle-002",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-002 Streaming thoughts and response drafts have separate panes",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-003",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-003 Tool output belongs to the Output status pane",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-027",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-original-027 Route tool execution through the Classic status and Output panes",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-006",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-006 A streaming draft keeps every chunk in order",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-007",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-007 A running turn in one session does not leak into another",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-chat-lifecycle-008",
+      "tests": [
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "chat-lifecycle.spec.ts",
+          "title": "@ux-chat-lifecycle-008 A running tool shows what it is doing and for how long",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compaction-001",
+      "tests": [
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-001 Render compaction using supplied status state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compaction-002",
+      "tests": [
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-002 Reconcile compaction events with client status",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-compaction-003",
+      "tests": [
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-compaction-003 Request stop through the visible compaction control",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-context-004",
+      "tests": [
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "compaction.spec.ts",
+          "title": "@ux-context-004 Show the supplied compaction title and elapsed label",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-keychain-004",
+      "tests": [
+        {
+          "file": "keychain.spec.ts",
+          "title": "@ux-keychain-004 Delete an entry after confirming",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "keychain.spec.ts",
+          "title": "@ux-keychain-004 Delete an entry after confirming",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "keychain.spec.ts",
+          "title": "@ux-keychain-004 Delete an entry after confirming",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-reconnect-001",
+      "tests": [
+        {
+          "file": "reconnect.spec.ts",
+          "title": "@ux-reconnect-001 Clear transient agent displays while disconnected",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "reconnect.spec.ts",
+          "title": "@ux-reconnect-001 Clear transient agent displays while disconnected",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "reconnect.spec.ts",
+          "title": "@ux-reconnect-001 Clear transient agent displays while disconnected",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "reconnect.spec.ts",
+          "title": "@ux-reconnect-001 Clear transient agent displays while disconnected",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-018",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-original-018 Reorder and remove queued follow-ups with reconciliation",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-original-018 Reorder and remove queued follow-ups with reconciliation",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-original-018 Reorder and remove queued follow-ups with reconciliation",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-original-018 Reorder and remove queued follow-ups with reconciliation",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-original-018 Reorder and remove queued follow-ups with reconciliation",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-032",
+      "tests": [
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: returning to editor",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: cancelling",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-queue.spec.ts",
+          "title": "@ux-shared-032 A rejected queue action keeps the item recoverable: steering",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-023",
+      "tests": [
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-shared-023 Cancel the captured active turn across reconnect",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-023",
+      "tests": [
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-original-023 Refresh active-turn state after reconnect and request stop",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-original-023 Refresh active-turn state after reconnect and request stop",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-original-023 Refresh active-turn state after reconnect and request stop",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-original-023 Refresh active-turn state after reconnect and request stop",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-reconnect.spec.ts",
+          "title": "@ux-original-023 Refresh active-turn state after reconnect and request stop",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-015",
+      "tests": [
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-shared-015 Expose only supported session mutations",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-original-015",
+      "tests": [
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-original-015 Use the session actions actually supplied by the client",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-original-015 Use the session actions actually supplied by the client",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-original-015 Use the session actions actually supplied by the client",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-original-015 Use the session actions actually supplied by the client",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-session-picker.spec.ts",
+          "title": "@ux-original-015 Use the session actions actually supplied by the client",
+          "project": "webkit-tablet"
+        }
+      ]
+    },
+    {
+      "id": "@ux-shared-001",
+      "tests": [
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "shared-shell.spec.ts",
+          "title": "@ux-shared-001 Open and dismiss the workspace menu: pointer / outside pointer",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-terminal-006",
+      "tests": [
+        {
+          "file": "terminal.spec.ts",
+          "title": "@ux-terminal-006 Pop out terminal to new window (desktop)",
+          "project": "chromium-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-theme-008",
+      "tests": [
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "theme-tint.spec.ts",
+          "title": "@ux-theme-008 Switching tints visibly changes accent color",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-thoughts-005",
+      "tests": [
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "thoughts-panel.spec.ts",
+          "title": "@ux-thoughts-005 Preserve text when changing disclosure state",
+          "project": "webkit-desktop"
+        }
+      ]
+    },
+    {
+      "id": "@ux-extra-014",
+      "tests": [
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "chromium-phone"
+        },
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "chromium-tablet"
+        },
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "chromium-desktop"
+        },
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "webkit-phone"
+        },
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "webkit-tablet"
+        },
+        {
+          "file": "widgets.spec.ts",
+          "title": "@ux-extra-014 Route widget bridge actions through the host",
+          "project": "webkit-desktop"
+        }
+      ]
+    }
+  ]
+}
