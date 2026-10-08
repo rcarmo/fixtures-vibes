@@ -4,6 +4,7 @@ import { chromium, webkit, expect } from '@playwright/test';
 import { join, resolve } from 'node:path';
 import { rm } from 'node:fs/promises';
 import { piclawWebAdapter } from './piclaw-web.mjs';
+import { patchEditorLoaderRevision } from './patch-editor-revision.mjs';
 import { piclawPlanSidebarAdapter } from './piclaw-plan-sidebar-adapter.mjs';
 const root = resolve(import.meta.dir, '..');
 const run = process.env.FIXTURES_RUN_ROOT;
@@ -12,6 +13,10 @@ const planBundle = join(run, 'plan-browser.js');
 const built = await Bun.build({ entrypoints: [join(root, 'piclaw/plan-sidebar-0.1.25/index.ts')], target: 'browser', format: 'esm', external: ['/editor-vendor/codemirror.js'], plugins: [piclawPlanSidebarAdapter(), piclawWebAdapter(root)] });
 if (!built.success) throw new AggregateError(built.logs);
 await Bun.write(planBundle, built.outputs[0]);
+const loaderSource = patchEditorLoaderRevision(await Bun.file(join(root, 'piclaw/web-3.3.0/web/src/panes/editor-loader.ts')).text());
+const loaderJS = new Bun.Transpiler({loader:'ts',target:'browser'}).transformSync(loaderSource);
+const loaderBundle = join(run,'loader-browser.js');
+await Bun.write(loaderBundle,loaderJS.replaceAll('/static/classic/dist/editor.bundle.js','/dist/editor.bundle.js'));
 let file: any, plan: any, writes: any[], hold = false, release: (() => void) | null = null, complete = true;
 function reset() { file = {text:'original',revision:'file-0',mtime:'unchanged',truncated:false}; plan = {markdown:'- [ ] original',revision:0}; writes=[]; hold=false; complete=true; release?.(); release=null; }
 reset();
@@ -57,11 +62,12 @@ const server = Bun.serve({hostname:'127.0.0.1',port:0, async fetch(req) {
       window.__piclaw_web={getCurrentChatJid:()=> 'gi:A'};
       await import('/plan-browser.js');
     } else {
-      const {editorPaneExtension}=await import('/dist/editor.bundle.js');
+      const {editorPaneExtension}=await import('/loader-browser.js');
       window.editor=await editorPaneExtension.mount(document.querySelector('#editor'),{path:'notes/a.md',mode:'edit',transferState:params.has('transfer')?JSON.parse(localStorage.getItem('transfer')):undefined});
       window.addEventListener('pagehide',()=>window.editor.dispose());
     }
   </script></body></html>`,{headers:{'Content-Type':'text/html'}});
+  if (url.pathname === '/loader-browser.js') return new Response(Bun.file(loaderBundle),{headers:{'Content-Type':'text/javascript'}});
   const path = resolve(root, 'static', '.'+url.pathname);
   if (!path.startsWith(join(root,'static')+'/')) return new Response('',{status:403});
   const data=Bun.file(path);
@@ -108,6 +114,9 @@ try {
       await expect(page.locator('.editor-conflict-bar')).toBeVisible();expect(file.text).toBe('changed during review');
       await page.getByRole('button',{name:'Overwrite',exact:true}).click();await page.getByRole('button',{name:'Overwrite reviewed revision'}).click();
       await expect(page.locator('.editor-status-text')).toContainText('All changes saved');expect(file.text).toBe('newer');
+      await page.evaluate(() => window.editor.setContent('external snapshot', 'mtime', 'refresh-rev'));
+      await expect(page.locator('.cm-content')).toHaveText('external snapshot');
+      await edit('after refresh'); await expect(save).toBeEnabled();
       await fixture({complete:false});await page.goto(origin+'/harness');await expect(page.locator('.cm-content')).toHaveText('newer');await edit('unsaved');await expect(save).toBeDisabled();
       console.log(`PASS ${name}: editor conditional saves, pending typing, transferred baseline, immediate 409, create-only copy, reviewed overwrite, missing revision`);passed++;
       await fixture({reset:true});await page.goto(origin+'/harness?mode=plan');
@@ -135,4 +144,4 @@ try {
     }
   }
   console.log(`${passed}/4 adapter browser workloads passed (zero retries; isolated fixture, no runtime/oracle claims)`);
-} finally { release?.();server.stop(true);await rm(planBundle,{force:true}); }
+} finally { release?.();server.stop(true);await rm(planBundle,{force:true});await rm(loaderBundle,{force:true}); }

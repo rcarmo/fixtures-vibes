@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 
-import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision } from './patch-editor-revision.mjs';
+import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision, patchEditorLoaderRevision } from './patch-editor-revision.mjs';
 const CODEMIRROR = '/editor-vendor/codemirror.js';
 
 /** The single vendored tree, e.g. piclaw/web-3.3.0 (relative to ui/classic). */
@@ -40,7 +40,7 @@ export function patch(source, file, pairs) {
 }
 
 // The Classic tree is served at / (ui/API.md), not at Piclaw's /static/classic/.
-export const patchEditorLoader = source => patch(source, 'editor-loader.ts', [
+export const patchEditorLoader = source => patch(patchEditorLoaderRevision(source), 'editor-loader.ts', [
   ['/static/classic/dist/editor.bundle.js', '/dist/editor.bundle.js'],
 ]);
 

@@ -130,3 +130,10 @@ export function patchConflictRevision(source) {
 export function patchEditorRefreshRevision(source) {
   return once(source, '      instance.setContent(nextText, nextMtime);', "      instance.setContent(nextText, nextMtime, typeof payload?.text === 'string' && payload?.truncated === false ? payload?.revision : null);");
 }
+
+/** Forward the revision snapshot through Piclaw's actual lazy editor proxy. */
+export function patchEditorLoaderRevision(source) {
+  return once(source,
+    '    setContent(content: string, mtime: string): void {\n        if (this.real?.setContent) {\n            this.real.setContent(content, mtime);\n        }\n    }',
+    '    setContent(content: string, mtime: string, revision?: unknown): void {\n        if (this.real?.setContent) {\n            this.real.setContent(content, mtime, revision);\n        }\n    }');
+}
