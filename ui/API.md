@@ -120,6 +120,8 @@ both saved text and its revision; envelopes retain their existing five-minute TT
 
 The editor watches `/api/workspace/stat` for external changes. `workspace_update` SSE events
 (`{updates: [{path, root, truncated, changed_paths}]}`) refresh the tree and a clean editor; they carry no text.
+The lazy proxy forwards the complete `setContent(text, mtime, revision)` snapshot
+without coercion; missing revision still disables writes.
 The revision adaptation is an anchored build patch over unmodified Piclaw v3.3.0 sources. It implements
 fixtures-vibes#1; release-specific oracle evidence and skips remain unchanged.
 
