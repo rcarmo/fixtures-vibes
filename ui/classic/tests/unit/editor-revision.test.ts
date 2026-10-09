@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { Transpiler } from 'bun';
 import { resolve } from 'node:path';
 import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision } from '../../scripts/patch-editor-revision.mjs';
-import { validRevision, snapshotRevision, requireRevision, isRevisionConflict } from '../../src/gi-revision-state';
+import { validRevision, snapshotRevision, requireRevision, isRevisionConflict, reviewOverwrite } from '../../src/gi-revision-state';
 import { piclawModule } from './piclaw-module';
 
 const original = readFileSync(resolve(import.meta.dir, '../../piclaw/web-3.3.0/extensions/viewers/editor/editor-extension.ts'), 'utf8');
@@ -38,6 +38,31 @@ test('missing, coerced, unsafe and partial revisions fail closed', () => {
     expect(validRevision(value)).toBe(false); expect(() => requireRevision(value)).toThrow(/read-only/);
   }
   for (const data of [{ text: '', revision: 'a' }, { text: '', revision: 'a', truncated: true }, { text: '', truncated: false }, {revision:'a',truncated:false}]) expect(snapshotRevision(data)).toBeNull();
+});
+test('overwrite confirmation reviews the complete snapshot in the owning window and requires explicit approval', async () => {
+  const messages: string[] = [];
+  let approved = false;
+  const doc = { defaultView: { confirm: (message: string) => { messages.push(message); return approved; } } } as unknown as Document;
+  const snapshot = { text: 'remote\ncomplete content', revision: 0, truncated: false };
+  expect(await reviewOverwrite(doc, 'notes/a.md', snapshot)).toBe(false);
+  approved = true;
+  expect(await reviewOverwrite(doc, 'notes/a.md', snapshot)).toBe(true);
+  expect(messages).toHaveLength(2);
+  for (const message of messages) {
+    expect(message).toContain('notes/a.md');
+    expect(message).toContain(snapshot.text);
+    expect(message).toContain('Another change will cause a new conflict.');
+  }
+  expect(snapshot.revision).toBe(0);
+});
+test('overwrite confirmation fails closed for incomplete snapshots and detached documents', async () => {
+  let confirmations = 0;
+  const doc = { defaultView: { confirm: () => { confirmations++; return true; } } } as unknown as Document;
+  for (const snapshot of [{ text: 'partial', revision: 'r', truncated: true }, { text: 'missing revision', truncated: false }, { revision: 'r', truncated: false }]) {
+    await expect(reviewOverwrite(doc, 'a.md', snapshot)).rejects.toThrow(/read-only/);
+  }
+  expect(confirmations).toBe(0);
+  expect(await reviewOverwrite({ defaultView: null } as Document, 'a.md', { text: '', revision: 'r', truncated: false })).toBe(false);
 });
 test('acknowledges captured text without replacing typing during save (including same length)', async () => {
   let done: Function; const calls: any[] = [];
