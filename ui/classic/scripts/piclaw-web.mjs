@@ -9,6 +9,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { patchTerminalReattach } from './patch-terminal-reattach.mjs';
+import { patchCodemodeCards } from './patch-codemode-cards.mjs';
 
 import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision, patchEditorLoaderRevision } from './patch-editor-revision.mjs';
 const CODEMIRROR = '/editor-vendor/codemirror.js';
@@ -110,6 +111,9 @@ export function piclawWebAdapter(root) {
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]ui[\\/]app-window-actions\.ts$/ }, async args => ({
       contents: patchWindowActions(await Bun.file(args.path).text()), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]components[\\/]post\.ts$/ }, async args => ({
+      contents: patchCodemodeCards(await Bun.file(args.path).text()), loader: 'ts',
     }));
   } };
 }

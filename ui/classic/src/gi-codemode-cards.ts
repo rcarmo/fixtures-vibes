@@ -5,23 +5,33 @@
 // topic subscription is the only live source; it must not duplicate the settled snapshot.
 // Text is kept literal: nothing here builds HTML from model output.
 
+export type CodemodeCallStatus = 'ok' | 'error' | 'cancelled' | 'running' | null;
+
 export type CodemodeCall = {
-    id: string; name: string; args: string; status: 'ok' | 'error' | 'cancelled' | 'running';
-    durationMs?: number; error?: string; cost?: number;
+    id: string; name: string; args: string; status: CodemodeCallStatus;
+    durationMs: number | null; error?: string; cost?: number;
+    parent_tool_call_id: string | null;
 };
 
 export type CodemodeCard = {
     id: string; chat_jid: string; session_id: string; turn_id: string | null;
     tool_call_id: string; occurrence_id: string | null;
-    script: string; status: 'ok' | 'error' | 'running';
+    script: string; status: CodemodeCallStatus;
     wall_seconds: number | null; output: string;
-    duration_ms: number | null; calls: CodemodeCardCall[];
+    duration_ms: number | null; calls: CodemodeCall[];
     full_output_path: string | null; live: boolean;
 };
 
-export type CodemodeCardCall = CodemodeCall & { parent_tool_call_id: string | null };
+// Lifecycle comes from the envelope type, never from a payload phase guess.
+const STATUS_BY_EVENT = { tool_started: 'running', tool_finished: 'ok', tool_failed: 'error', tool_cancelled: 'cancelled' } as const;
 
 const HEADER = /^(Script completed|Script failed)\n(?:Wall time ([0-9.]+) seconds\n)?Output:\n?/;
+
+/** Measured durations are recorded values; absent or invalid means unknown, zero is valid. */
+function measuredDuration(value: unknown): number | null {
+    if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
+    return value;
+}
 
 /** Pi's wrapper header is separated from the literal output; the body is never re-parsed. */
 export function parseCodemodeResult(content: unknown) {
@@ -36,12 +46,12 @@ export function parseCodemodeResult(content: unknown) {
 }
 
 /** Settled snapshot from the saved result; missing details degrade to no rows. */
-export function settledCalls(payload: any): CodemodeCardCall[] {
+export function settledCalls(payload: any): CodemodeCall[] {
     const raw = Array.isArray(payload?.details?.calls) ? payload.details.calls : [];
     return raw.map(c => ({
         id: String(c?.id ?? ''), name: String(c?.name ?? ''), args: typeof c?.args === 'string' ? c.args : '',
-        status: ['ok', 'error', 'cancelled'].includes(c?.status) ? c.status : 'ok',
-        durationMs: typeof c?.durationMs === 'number' ? c.durationMs : undefined,
+        status: ['ok', 'error', 'cancelled', 'running'].includes(c?.status) ? c.status : null,
+        durationMs: measuredDuration(c?.durationMs),
         error: typeof c?.error === 'string' ? c.error : undefined,
         cost: typeof c?.cost === 'number' ? c.cost : undefined,
         parent_tool_call_id: null,
@@ -66,38 +76,40 @@ export function projectCodemodeCard(message: any, opts: { fallbackSession?: stri
     if (message?.role !== 'tool_result' || message?.payload?.kind !== 'tool_result') return null;
     if (message.payload?.tool_name !== 'codemode') return null;
     const parsed = parseCodemodeResult(message.content);
-    const duration = Number.isInteger(message.payload?.duration_ms) && message.payload.duration_ms >= 0 ? message.payload.duration_ms : null;
-    const path = typeof message.payload?.fullOutputPath === 'string' ? message.payload.fullOutputPath : null;
+    // The saved result carries the output reference inside details, not at payload level.
+    const path = typeof message.payload?.details?.fullOutputPath === 'string' ? message.payload.details.fullOutputPath : null;
     return {
         id: message.id, chat_jid: `gi:${message.session_id || opts.fallbackSession || ''}`,
         session_id: message.session_id || opts.fallbackSession || '',
         turn_id: message.payload?.turn_id || null,
         tool_call_id: String(message.payload?.tool_call_id || ''),
         occurrence_id: message.payload?.occurrence_id || null,
-        script: opts.script ?? '', status: parsed.status ?? (duration !== null ? 'ok' : 'running'),
+        script: opts.script ?? '',
+        // A settled failure or unknown duration is never upgraded to ok or running.
+        status: parsed.status ?? (message.payload?.is_error === true ? 'error' : null),
         wall_seconds: parsed.wall_seconds, output: parsed.output,
-        duration_ms: duration, calls: settledCalls(message.payload),
+        duration_ms: measuredDuration(message.payload?.duration_ms), calls: settledCalls(message.payload),
         full_output_path: path, live: false,
     };
 }
 
 /** A topic envelope belongs to this card only when session, turn and parent match. */
 export function staleCodemodeEvent(envelope: any, ctx: { session_id: string; tool_call_id: string; turn_id?: string | null }) {
-    const p = envelope?.payload ?? envelope;
-    if (!p || String(p.session_id || '') !== ctx.session_id) return true;
+    const p = envelope?.payload ?? {};
+    if (!envelope || String(envelope.session_id || '') !== ctx.session_id) return true;
     if (String(p.parent_tool_call_id || '') !== ctx.tool_call_id) return true;
     if (ctx.turn_id && p.turn_id && String(p.turn_id) !== String(ctx.turn_id)) return true;
     return false;
 }
 
 /** Live rows are keyed by nested call id; the settled snapshot replaces them once the parent terminalises. */
-export function mergeCodemodeLive(rows: CodemodeCardCall[], envelope: any): CodemodeCardCall[] {
-    const p = envelope?.payload ?? envelope;
+export function mergeCodemodeLive(rows: CodemodeCall[], envelope: any): CodemodeCall[] {
+    const p = envelope?.payload ?? {};
     if (!p?.tool_call_id) return rows;
-    const row: CodemodeCardCall = {
-        id: String(p.tool_call_id), name: String(p.tool ?? p.name ?? ''), args: p.arguments ? JSON.stringify(p.arguments) : '',
-        status: p.error ? 'error' : (p.phase === 'tool' ? 'running' : 'ok'),
-        durationMs: Number.isInteger(p.duration_ms) && p.duration_ms >= 0 ? p.duration_ms : undefined,
+    const status = (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.type ?? '')] ?? null;
+    const row: CodemodeCall = {
+        id: String(p.tool_call_id), name: String(p.tool ?? ''), args: p.arguments ? JSON.stringify(p.arguments) : '',
+        status, durationMs: measuredDuration(p.duration_ms),
         error: typeof p.error === 'string' ? p.error : undefined,
         cost: typeof p.cost === 'number' ? p.cost : undefined,
         parent_tool_call_id: p.parent_tool_call_id ? String(p.parent_tool_call_id) : null,
@@ -105,13 +117,31 @@ export function mergeCodemodeLive(rows: CodemodeCardCall[], envelope: any): Code
     const existing = rows.find(r => r.id === row.id);
     if (existing) {
         // A terminal occurrence is immutable: never overwrite a finished row with a later start.
-        if (existing.status !== 'running' && row.status === 'running') return rows;
+        if (existing.status !== null && existing.status !== 'running' && status === 'running') return rows;
         return rows.map(r => r.id === row.id ? { ...r, ...row } : r);
     }
     return [...rows, row];
 }
 
-export function formatDuration(ms?: number | null): string {
-    if (ms === undefined || ms === null) return '';
+export function formatDuration(ms: number | null | undefined): string {
+    if (ms === null || ms === undefined) return '';
     return ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${ms}ms`;
+}
+
+/** Every interpolated value is a text node; model output is never treated as markup. */
+export function renderCodemodeCard(post: any, html: any) {
+    const card = post?.data?.card;
+    if (!card || typeof card !== 'object') return null;
+    const rows = Array.isArray(card.calls) ? card.calls : [];
+    return html`
+        <div class="codemode-card" data-card-id=${String(card.id || '')}>
+            <div class="codemode-card-head">
+                <span class="codemode-card-status">${String(card.status ?? 'unknown')}</span>
+                ${card.duration_ms !== null ? html`<span class="codemode-card-duration">${formatDuration(card.duration_ms)}</span>` : null}
+            </div>
+            ${card.script ? html`<pre class="codemode-card-script">${card.script}</pre>` : null}
+            ${rows.length ? html`<ul class="codemode-card-calls">${rows.map(row => html`
+                <li>${`${row.name}${row.args ? ` ${row.args}` : ''}`}${row.status ? ` — ${row.status}` : ''}${row.durationMs !== null && row.durationMs !== undefined ? ` (${formatDuration(row.durationMs)})` : ''}</li>`)}</ul>` : null}
+            ${card.output ? html`<pre class="codemode-card-output">${card.output}</pre>` : null}
+        </div>`;
 }
