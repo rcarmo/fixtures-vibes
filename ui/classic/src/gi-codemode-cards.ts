@@ -28,7 +28,7 @@ const STATUS_BY_EVENT = { tool_started: 'running', tool_finished: 'ok', tool_fai
 const HEADER = /^(Script completed|Script failed)\n(?:Wall time ([0-9.]+) seconds\n)?Output:\n?/;
 
 /** Measured durations are recorded values; absent or invalid means unknown, zero is valid. */
-function measuredDuration(value: unknown): number | null {
+export function measuredDuration(value: unknown): number | null {
     if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return null;
     return value;
 }
@@ -93,6 +93,24 @@ export function projectCodemodeCard(message: any, opts: { fallbackSession?: stri
     };
 }
 
+export function statusFromEvent(envelope: any): CodemodeCallStatus {
+    return (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.type ?? '')] ?? null;
+}
+
+/** The parent envelope is the only live source for a card before its result is saved. */
+export function liveCardFromEnvelope(envelope: any, session: string): CodemodeCard | null {
+    const p = envelope?.payload ?? {};
+    const id = String(p.tool_call_id || '');
+    if (!id) return null;
+    return {
+        id, chat_jid: `gi:${session}`, session_id: session, turn_id: p.turn_id || null,
+        tool_call_id: id, occurrence_id: p.occurrence_id || null,
+        script: typeof p.arguments?.code === 'string' ? p.arguments.code : '',
+        status: statusFromEvent(envelope), wall_seconds: null, output: '',
+        duration_ms: measuredDuration(p.duration_ms), calls: [], live: true,
+    };
+}
+
 /** A topic envelope belongs to this card only when session, turn and parent match. */
 export function staleCodemodeEvent(envelope: any, ctx: { session_id: string; tool_call_id: string; turn_id?: string | null }) {
     const p = envelope?.payload ?? {};
@@ -100,6 +118,47 @@ export function staleCodemodeEvent(envelope: any, ctx: { session_id: string; too
     if (String(p.parent_tool_call_id || '') !== ctx.tool_call_id) return true;
     if (ctx.turn_id && p.turn_id && String(p.turn_id) !== String(ctx.turn_id)) return true;
     return false;
+}
+
+/** A live card post is display-only until the saved result replaces it. */
+export function liveCardPost(card: CodemodeCard) {
+    return {
+        id: `codemode:${card.id}`, display_row_id: `codemode:${card.id}`, chat_jid: card.chat_jid,
+        timestamp: new Date().toISOString(), content: '', sender: 'agent', is_from_me: false, is_bot_message: true,
+        data: { type: 'agent_response', content: '', thread_id: null, agent_id: null, content_meta: null, kind: 'tool_result', source: 'runtime', clipped: false, card },
+    };
+}
+
+/** Apply one fenced topic envelope to the posts for `sessionId`; returns the same array when nothing changes. */
+export function applyCodemodeEnvelope(posts: any[], envelope: any, sessionId: string, merge: (prev: any[], incoming: any[]) => any[]) {
+    const p = envelope?.payload ?? {};
+    const parent = String(p.parent_tool_call_id || '');
+    const cardId = parent || String(p.tool_call_id || '');
+    if (!cardId) return posts;
+    const hit = posts.find(post => post?.data?.card?.tool_call_id === cardId && post.data.card.session_id === sessionId);
+    if (hit) {
+        const card = hit.data.card;
+        if (parent && staleCodemodeEvent(envelope, { session_id: sessionId, tool_call_id: parent, turn_id: card.turn_id })) return posts;
+        const calls = parent ? mergeCodemodeLive(card.calls, envelope) : card.calls;
+        const status = statusFromEvent(envelope);
+        const duration = measuredDuration(p.duration_ms);
+        if (calls === card.calls && status === null && duration === null) return posts;
+        const next = { ...card, calls, status: parent ? card.status : (status ?? card.status), duration_ms: duration ?? card.duration_ms };
+        return posts.map(post => post === hit ? { ...post, data: { ...post.data, card: next } } : post);
+    }
+    if (parent) return posts;
+    const card = liveCardFromEnvelope(envelope, sessionId);
+    if (!card) return posts;
+    return merge(posts, [liveCardPost(card)]);
+}
+
+/** The saved result is the settled snapshot; it replaces the live card for the same parent call. */
+export function replaceSettledCard(posts: any[], post: any) {
+    const card = post?.data?.card;
+    if (!card) return posts;
+    const live = posts.find(p => p?.data?.card?.tool_call_id === card.tool_call_id && p.data.card.live);
+    if (!live) return posts;
+    return posts.map(p => p === live ? { ...p, id: post.id, display_row_id: post.display_row_id, data: { ...p.data, card } } : p);
 }
 
 /** Live rows are keyed by nested call id; the settled snapshot replaces them once the parent terminalises. */

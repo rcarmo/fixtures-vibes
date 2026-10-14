@@ -1,6 +1,6 @@
 import {test,expect} from 'bun:test';
 import {readFileSync} from 'node:fs';
-import {parseCodemodeResult,settledCalls,codemodeScript,projectCodemodeCard,staleCodemodeEvent,mergeCodemodeLive,formatDuration,renderCodemodeCard} from '../../src/gi-codemode-cards.ts';
+import {parseCodemodeResult,settledCalls,codemodeScript,projectCodemodeCard,staleCodemodeEvent,mergeCodemodeLive,formatDuration,renderCodemodeCard,statusFromEvent,liveCardFromEnvelope,liveCardPost,applyCodemodeEnvelope,replaceSettledCard} from '../../src/gi-codemode-cards.ts';
 import {projectConversationMessage} from '../../src/gi-conversation.ts';
 import {openCodemodeTopic,topicUrl} from '../../src/gi-codemode-topic.ts';
 import {patchCodemodeCards} from '../../scripts/patch-codemode-cards.mjs';
@@ -103,4 +103,34 @@ test('topic subscription is session-scoped and drops superseded sources',()=>{
   active=false;
   captured.message({data:JSON.stringify({topic:'runtime.tool',session_id:'s',type:'tool_finished',payload:{tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
   expect(got.length).toBe(1);
+});
+
+test('live card is created from the parent envelope and replaced by the settled snapshot',()=>{
+  const parent=envelope('tool_started',{tool:'codemode',tool_call_id:'p1',turn_id:'t1',arguments:{code:'return 1'}});
+  const merge=(prev:any[],incoming:any[])=>[...prev,...incoming];
+  let posts=applyCodemodeEnvelope([],parent,'s',merge);
+  expect(posts.length).toBe(1);
+  expect(posts[0].data.card.live).toBe(true);
+  expect(posts[0].data.card.status).toBe('running');
+  expect(posts[0].data.card.script).toBe('return 1');
+  // A nested row merges into the live card.
+  posts=applyCodemodeEnvelope(posts,envelope('tool_finished',{tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1',turn_id:'t1',duration_ms:1200}),'s',merge);
+  expect(posts[0].data.card.calls[0].status).toBe('ok');
+  expect(posts[0].data.card.calls[0].durationMs).toBe(1200);
+  // A nested row for a different parent does not create a second card.
+  posts=applyCodemodeEnvelope(posts,envelope('tool_started',{tool:'shell',tool_call_id:'p2/1',parent_tool_call_id:'p2',turn_id:'t1'}),'s',merge);
+  expect(posts.length).toBe(1);
+  // A stale envelope from another session cannot touch the card.
+  posts=applyCodemodeEnvelope(posts,{...envelope('tool_finished',{tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1',turn_id:'t1'}),session_id:'other'},'s',merge);
+  expect(posts[0].data.card.calls.length).toBe(1);
+  // The saved result replaces the live post in place.
+  const settled=projectConversationMessage({id:'m9',role:'tool_result',session_id:'s',content:'Script completed\nWall time 2 seconds\nOutput:\nplain',payload:{kind:'tool_result',tool_name:'codemode',tool_call_id:'p1',turn_id:'t1',duration_ms:2000,details:{calls:[{id:'p1/1',name:'shell',status:'ok',durationMs:1200}]}}}, 's');
+  const replaced=replaceSettledCard(posts,settled);
+  expect(replaced[0].id).toBe('m9');
+  expect(replaced[0].data.card.live).toBe(false);
+  expect(replaced[0].data.card.status).toBe('ok');
+  expect(replaced[0].data.card.output).toBe('plain');
+  expect(replaced[0].data.card.calls[0].durationMs).toBe(1200);
+  // A card post with no live counterpart is appended normally.
+  expect(replaceSettledCard([],settled)).toEqual([]);
 });

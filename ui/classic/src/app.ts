@@ -4,6 +4,8 @@ import { staleTerminalEvent } from './gi-turn-event.js';
 import { stopSpeechPlayback } from './components/post-speech.js';
 import { useGiNotifications } from './gi-notifications.js';
 import { projectConversationEvent, projectActivityStatus, projectResponsePhase, SYSTEM_AGENT_ID, SYSTEM_AGENT } from './gi-conversation.js';
+import { liveCardPost, applyCodemodeEnvelope, replaceSettledCard } from './gi-codemode-cards.js';
+import { openCodemodeTopic } from './gi-codemode-topic.js';
 /**
  * app.ts — Gi entry point.
  *
@@ -607,7 +609,10 @@ function GiApp() {
                 scrollRestore.current={scope:selection.capture(),view:searchView.capture(),connection:connectionRevision.current,anchor:captureTimelineAnchor(root,readingAnchor.current),bottom:!root||pinnedBottom.current};
                 const post = projectConversationEvent(data);
                 if (post) {
-                    setPosts((prev: any[]) => mergeMessagePages(prev,[post]));
+                    setPosts((prev: any[]) => {
+                        const replaced = replaceSettledCard(prev, post);
+                        return replaced === prev ? mergeMessagePages(prev, [post]) : replaced;
+                    });
                     scrollToBottom();
                 }
             }
@@ -699,6 +704,20 @@ function GiApp() {
         chatJid: currentChatJid,
         selectionKey: renderedSelection.generation,
     });
+
+    // Live codemode rows reach the timeline only through the runtime.tool topic stream
+    // (the legacy stream carries no nested envelopes, live-verified 2026-10-14). One source
+    // per session, fenced to the rendered selection; the saved result replaces the live card
+    // when the parent terminalises.
+    useEffect(() => {
+        if (!sessionId) return;
+        const scope = selection.capture();
+        const source = openCodemodeTopic(sessionId, (envelope: any) => {
+            if (!selection.isCurrent(scope)) return;
+            setPosts((prev: any[]) => applyCodemodeEnvelope(prev, envelope, sessionId, mergeMessagePages));
+        });
+        return () => source?.close?.();
+    }, [sessionId, renderedSelection.generation]);
 
     const refreshSelectedState = useCallback(async () => {
         const scope = selection.capture();
