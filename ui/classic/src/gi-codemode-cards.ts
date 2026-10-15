@@ -86,7 +86,8 @@ export function projectCodemodeCard(message: any, opts: { fallbackSession?: stri
         occurrence_id: message.payload?.occurrence_id || null,
         script: opts.script ?? '',
         // A settled failure or unknown duration is never upgraded to ok or running.
-        status: parsed.status ?? (message.payload?.is_error === true ? 'error' : null),
+        status: message.payload?.source === 'terminal_projection' && message.payload?.status === 'cancelled'
+            ? 'cancelled' : (parsed.status ?? (message.payload?.is_error === true ? 'error' : null)),
         wall_seconds: parsed.wall_seconds, output: parsed.output,
         duration_ms: measuredDuration(message.payload?.duration_ms), calls: settledCalls(message.payload),
         full_output_path: path, live: false,
@@ -94,14 +95,14 @@ export function projectCodemodeCard(message: any, opts: { fallbackSession?: stri
 }
 
 export function statusFromEvent(envelope: any): CodemodeCallStatus {
-    return (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.type ?? '')] ?? null;
+    return (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.payload?.type ?? '')] ?? null;
 }
 
 /** The parent envelope is the only live source for a card before its result is saved. */
 export function liveCardFromEnvelope(envelope: any, session: string): CodemodeCard | null {
     const p = envelope?.payload ?? {};
     const id = String(p.tool_call_id || '');
-    if (!id) return null;
+    if (!id || p.tool !== 'codemode' || p.parent_tool_call_id || !statusFromEvent(envelope)) return null;
     return {
         id, chat_jid: `gi:${session}`, session_id: session, turn_id: p.turn_id || null,
         tool_call_id: id, occurrence_id: p.occurrence_id || null,
@@ -143,7 +144,7 @@ export function applyCodemodeEnvelope(posts: any[], envelope: any, sessionId: st
         const status = statusFromEvent(envelope);
         const duration = measuredDuration(p.duration_ms);
         if (calls === card.calls && status === null && duration === null) return posts;
-        const next = { ...card, calls, status: parent ? card.status : (status ?? card.status), duration_ms: duration ?? card.duration_ms };
+        const next = { ...card, calls, status: parent ? card.status : (status ?? card.status), duration_ms: parent ? card.duration_ms : (duration ?? card.duration_ms), output: !parent && typeof p.output === 'string' ? parseCodemodeResult(p.output).output : card.output };
         return posts.map(post => post === hit ? { ...post, data: { ...post.data, card: next } } : post);
     }
     if (parent) return posts;
@@ -165,7 +166,7 @@ export function replaceSettledCard(posts: any[], post: any) {
 export function mergeCodemodeLive(rows: CodemodeCall[], envelope: any): CodemodeCall[] {
     const p = envelope?.payload ?? {};
     if (!p?.tool_call_id) return rows;
-    const status = (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.type ?? '')] ?? null;
+    const status = (STATUS_BY_EVENT as Record<string, CodemodeCallStatus>)[String(envelope?.payload?.type ?? '')] ?? null;
     const row: CodemodeCall = {
         id: String(p.tool_call_id), name: String(p.tool ?? ''), args: p.arguments ? JSON.stringify(p.arguments) : '',
         status, durationMs: measuredDuration(p.duration_ms),

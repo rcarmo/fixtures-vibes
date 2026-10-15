@@ -443,7 +443,7 @@ function GiApp() {
                     const root=timelineRef.current;
                     scrollRestore.current={scope,view,connection,anchor:captureTimelineAnchor(root,readingAnchor.current),bottom:!older&&(initial||!root||pinnedBottom.current)};
                     const incoming=data.posts||[];
-                    setPosts(prev=>deletions.filter(mergeMessagePages(prev,incoming),deletingAnimation.current));
+                    setPosts(prev=>deletions.filter(mergeMessagePages(incoming.reduce((rows, post) => replaceSettledCard(rows, post), prev),incoming),deletingAnimation.current));
                     if(initial){messageWindow.current={loaded:true,before:data.before,after:data.after,hasMore:data.hasMore};}
                     else if(older){messageWindow.current.before=data.before||cursor;messageWindow.current.hasMore=data.hasMore;}
                     else {messageWindow.current.after=data.after||cursor;}

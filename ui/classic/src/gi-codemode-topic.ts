@@ -23,7 +23,7 @@ export function openCodemodeTopic(sessionId: string, onEnvelope: (envelope: any)
     const source = open(topicUrl(sessionId, opts.base ?? ''));
     if (!source) return null;
 
-    source.addEventListener?.('message', (event: any) => {
+    source.addEventListener?.(CODEMODE_TOPIC, (event: any) => {
         // A frame from a superseded source is dropped, as the stream client does.
         if (!isActive()) return;
         try {

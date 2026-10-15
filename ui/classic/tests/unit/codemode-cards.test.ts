@@ -7,7 +7,7 @@ import {patchCodemodeCards} from '../../scripts/patch-codemode-cards.mjs';
 
 // The topic SSE writes the whole envelope, so session identity is on the envelope
 // and lifecycle state is its type; a payload phase is not evidence of state.
-const envelope=(type:string,payload:any)=>({topic:'runtime.tool',session_id:'s',type,sequence:1,payload});
+const envelope=(type:string,payload:any)=>({topic:'runtime.tool',session_id:'s',type:'notice',sequence:1,payload:{...payload,type}});
 
 test('envelope fence uses envelope session and the matching parent call',()=>{
   const ctx={session_id:'s',tool_call_id:'p1',turn_id:'t1'};
@@ -97,11 +97,11 @@ test('topic subscription is session-scoped and drops superseded sources',()=>{
   let active=true;
   const source=openCodemodeTopic('s',(e)=>{got.push(e);},{open:stubOpen,isActive:()=>active});
   expect(source.url).toBe('/sse/topics?topic=runtime.tool&session_id=s');
-  captured.message({data:JSON.stringify({topic:'runtime.tool',session_id:'s',type:'tool_started',payload:{tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
-  captured.message({data:JSON.stringify({topic:'runtime.tool',session_id:'other',type:'tool_started',payload:{tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
+  captured['runtime.tool']({data:JSON.stringify({topic:'runtime.tool',session_id:'s',type:'notice',payload:{type:'tool_started',tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
+  captured['runtime.tool']({data:JSON.stringify({topic:'runtime.tool',session_id:'other',type:'notice',payload:{type:'tool_started',tool:'shell',tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
   expect(got.length).toBe(1);
   active=false;
-  captured.message({data:JSON.stringify({topic:'runtime.tool',session_id:'s',type:'tool_finished',payload:{tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
+  captured['runtime.tool']({data:JSON.stringify({topic:'runtime.tool',session_id:'s',type:'notice',payload:{type:'tool_finished',tool_call_id:'p1/1',parent_tool_call_id:'p1'}})});
   expect(got.length).toBe(1);
 });
 
