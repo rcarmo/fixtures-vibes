@@ -152,3 +152,15 @@ test('reused parent call ids are fenced by turn and occurrence; saved cards are 
  expect(applyCodemodeEnvelope(replaced,late,'s',merge)).toBe(replaced);
  expect(applyCodemodeEnvelope(replaced,{...start('t3','o4'),session_id:'foreign'},'s',merge)).toBe(replaced);
 });
+
+test('nested events require matching parent execution occurrence within a turn',()=>{
+ const merge=(a:any[],b:any[])=>[...a,...b];
+ let posts:any[]=[];
+ for(const occurrence_id of ['o1','o2']) posts=applyCodemodeEnvelope(posts,envelope('tool_started',{tool:'codemode',tool_call_id:'same',turn_id:'t',occurrence_id}),'s',merge);
+ const nested=(occurrence?:string)=>envelope('tool_finished',{tool:'shell',tool_call_id:'same/1',parent_tool_call_id:'same',parent_occurrence_id:occurrence,turn_id:'t',duration_ms:0});
+ expect(applyCodemodeEnvelope(posts,nested(),'s',merge)).toBe(posts);
+ posts=applyCodemodeEnvelope(posts,nested('o2'),'s',merge);
+ expect(posts[0].data.card.calls.length).toBe(0);
+ expect(posts[1].data.card.calls.length).toBe(1);
+ expect(posts[1].data.card.calls[0].durationMs).toBe(0);
+});

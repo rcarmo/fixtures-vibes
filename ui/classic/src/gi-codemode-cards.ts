@@ -140,7 +140,9 @@ export function applyCodemodeEnvelope(posts: any[], envelope: any, sessionId: st
         const card = post?.data?.card;
         return card?.tool_call_id === cardId && card.session_id === sessionId
             && String(card.turn_id || '') === String(p.turn_id || '')
-            && (parent || !p.occurrence_id || card.occurrence_id === p.occurrence_id);
+            && (parent
+                ? String(card.occurrence_id || '') === String(p.parent_occurrence_id || '')
+                : (!p.occurrence_id || card.occurrence_id === p.occurrence_id));
     });
     if (hit) {
         const card = hit.data.card;
