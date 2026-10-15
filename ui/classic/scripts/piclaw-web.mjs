@@ -10,6 +10,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { patchTerminalReattach } from './patch-terminal-reattach.mjs';
 import { patchCodemodeCards } from './patch-codemode-cards.mjs';
+import { patchTerminalLifecycle } from './patch-terminal-lifecycle.mjs';
 
 import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision, patchEditorLoaderRevision } from './patch-editor-revision.mjs';
 const CODEMIRROR = '/editor-vendor/codemirror.js';
@@ -102,6 +103,9 @@ export function piclawWebAdapter(root) {
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]ui[\\/]app-pane-runtime-orchestration\.ts$/ }, async args => ({
       contents: patchEditorRefreshRevision(patchTerminalReattach(await Bun.file(args.path).text())), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]terminal-pane\.ts$/ }, async args => ({
+      contents: patchTerminalLifecycle(await Bun.file(args.path).text()), loader: 'ts',
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]editor-loader\.ts$/ }, async args => ({
       contents: patchEditorLoader(await Bun.file(args.path).text()), loader: 'ts',
