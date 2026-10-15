@@ -134,3 +134,21 @@ test('live card is created from the parent envelope and replaced by the settled 
   // A card post with no live counterpart is appended normally.
   expect(replaceSettledCard([],settled)).toEqual([]);
 });
+
+test('reused parent call ids are fenced by turn and occurrence; saved cards are immutable',()=>{
+ const merge=(a:any[],b:any[])=>[...a,...b];
+ const start=(turn:string,occurrence:string)=>envelope('tool_started',{tool:'codemode',tool_call_id:'reused',turn_id:turn,occurrence_id:occurrence});
+ let posts=applyCodemodeEnvelope([],start('t1','o1'),'s',merge);
+ posts=applyCodemodeEnvelope(posts,start('t2','o2'),'s',merge);
+ posts=applyCodemodeEnvelope(posts,start('t2','o3'),'s',merge);
+ expect(posts.length).toBe(3);
+ expect(new Set(posts.map(p=>p.id)).size).toBe(3);
+ const saved={id:'saved',data:{card:{...posts[1].data.card,live:false,status:'ok'}}};
+ const replaced=replaceSettledCard(posts,saved);
+ expect(replaced[0].data.card.live).toBe(true);
+ expect(replaced[1].id).toBe('saved');
+ expect(replaced[2].data.card.live).toBe(true);
+ const late=envelope('tool_failed',{tool:'codemode',tool_call_id:'reused',turn_id:'t2',occurrence_id:'o2'});
+ expect(applyCodemodeEnvelope(replaced,late,'s',merge)).toBe(replaced);
+ expect(applyCodemodeEnvelope(replaced,{...start('t3','o4'),session_id:'foreign'},'s',merge)).toBe(replaced);
+});

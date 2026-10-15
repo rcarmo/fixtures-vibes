@@ -104,7 +104,7 @@ export function liveCardFromEnvelope(envelope: any, session: string): CodemodeCa
     const id = String(p.tool_call_id || '');
     if (!id || p.tool !== 'codemode' || p.parent_tool_call_id || !statusFromEvent(envelope)) return null;
     return {
-        id, chat_jid: `gi:${session}`, session_id: session, turn_id: p.turn_id || null,
+        id: `${session}:${p.turn_id || ''}:${p.occurrence_id || id}`, chat_jid: `gi:${session}`, session_id: session, turn_id: p.turn_id || null,
         tool_call_id: id, occurrence_id: p.occurrence_id || null,
         script: typeof p.arguments?.code === 'string' ? p.arguments.code : '',
         status: statusFromEvent(envelope), wall_seconds: null, output: '',
@@ -135,10 +135,16 @@ export function applyCodemodeEnvelope(posts: any[], envelope: any, sessionId: st
     const p = envelope?.payload ?? {};
     const parent = String(p.parent_tool_call_id || '');
     const cardId = parent || String(p.tool_call_id || '');
-    if (!cardId) return posts;
-    const hit = posts.find(post => post?.data?.card?.tool_call_id === cardId && post.data.card.session_id === sessionId);
+    if (!cardId || String(envelope?.session_id || '') !== sessionId) return posts;
+    const hit = posts.find(post => {
+        const card = post?.data?.card;
+        return card?.tool_call_id === cardId && card.session_id === sessionId
+            && String(card.turn_id || '') === String(p.turn_id || '')
+            && (parent || !p.occurrence_id || card.occurrence_id === p.occurrence_id);
+    });
     if (hit) {
         const card = hit.data.card;
+        if (!card.live) return posts;
         if (parent && staleCodemodeEvent(envelope, { session_id: sessionId, tool_call_id: parent, turn_id: card.turn_id })) return posts;
         const calls = parent ? mergeCodemodeLive(card.calls, envelope) : card.calls;
         const status = statusFromEvent(envelope);
@@ -157,7 +163,12 @@ export function applyCodemodeEnvelope(posts: any[], envelope: any, sessionId: st
 export function replaceSettledCard(posts: any[], post: any) {
     const card = post?.data?.card;
     if (!card) return posts;
-    const live = posts.find(p => p?.data?.card?.tool_call_id === card.tool_call_id && p.data.card.live);
+    const live = posts.find(p => {
+        const existing = p?.data?.card;
+        return existing?.live && existing.tool_call_id === card.tool_call_id
+            && existing.session_id === card.session_id && existing.turn_id === card.turn_id
+            && (card.occurrence_id ? existing.occurrence_id === card.occurrence_id : !existing.occurrence_id);
+    });
     if (!live) return posts;
     return posts.map(p => p === live ? { ...p, id: post.id, display_row_id: post.display_row_id, data: { ...p.data, card } } : p);
 }
