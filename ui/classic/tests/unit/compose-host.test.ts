@@ -11,7 +11,8 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched.indexOf(render)).toBeGreaterThan(0);
   const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
   const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
-    .replace('                                aria-haspopup="listbox"\n', '')
+    .replace('                                aria-haspopup="listbox"\n                                aria-expanded=${showModelPopup ? "true" : "false"}\n                                aria-controls=${showModelPopup ? "compose-model-results-host" : undefined}\n', '')
+    .replace('                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n', '')
     .replace('role=${speechUiState.kind === "error" ? "alert" : "status"}', 'role="status"')
     .replace('                            aria-pressed=${speechButtonActive ? "true" : "false"}\n', '');
   expect(nativeRender).toBe(source.slice(source.indexOf(render)));

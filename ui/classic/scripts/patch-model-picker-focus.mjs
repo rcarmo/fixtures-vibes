@@ -6,6 +6,11 @@ export function patchModelPickerFocus(source) {
  const header='            <div class="compose-model-catalogue-header">';
  if(source.indexOf(header)<0||source.indexOf(header)!==source.lastIndexOf(header))throw Error('Model picker close anchor changed');
  const once=(text,from,to)=>{if(text.indexOf(from)<0||text.indexOf(from)!==text.lastIndexOf(from))throw Error('Model picker contract anchor changed');return text.replace(from,to);};
+ source=once(source,'    entries,\n', '    entries,\n    instanceKey,\n    supportsThinking = false,\n');
+ source=once(source,"${thinkingLevels.length > 0 && html`", "${(supportsThinking || thinkingLevels.length > 0) && html`");
+ source=once(source,'disabled=${switching || typeof onSelectThinking !== \'function\'}', 'disabled=${switching || typeof onSelectThinking !== \'function\' || !thinkingLevels.length}');
+ source=once(source,'if (instanceIdRef.current == null) instanceIdRef.current = ++modelPickerInstanceCounter;', 'if (instanceIdRef.current == null) instanceIdRef.current = instanceKey || ++modelPickerInstanceCounter;');
+ source=once(source,'                aria-disabled=${blocked', '                disabled=${switching}\n                aria-disabled=${blocked');
  source=once(source,"() => projection.renderedEntries.filter((entry) => entry.contextFit.state !== 'blocked'),\n        [projection],", "() => loading || switching ? [] : projection.renderedEntries.filter((entry) => entry.contextFit.state !== 'blocked'),\n        [projection, loading, switching],");
  source=once(source,'aria-activedescendant=${activeKey ? optionId(instanceIdRef.current, activeKey) : undefined}', 'aria-activedescendant=${!loading && !switching && selectableEntries.some(entry => entry.key === activeKey) ? optionId(instanceIdRef.current, activeKey) : undefined}');
  source=once(source,"        const blocked = entry.contextFit.state === 'blocked';", "        const blocked = switching || entry.contextFit.state === 'blocked';");

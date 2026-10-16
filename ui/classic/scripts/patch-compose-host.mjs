@@ -80,7 +80,8 @@ export function patchComposeHost(source) {
   // Capture, target and bubble handlers share this callback: consume each key once.
   s = once(s, '    const handlePopupKeyboardEvent = useCallback((e) => {',
     '    const handlePopupKeyboardEvent = useCallback((e) => {\n        if (e.defaultPrevented || e.target?.closest?.(".compose-session-popup-close")) return false;');
-  s = once(s, '                                ref=${modelHintRef}\n', '                                ref=${modelHintRef}\n                                aria-haspopup="listbox"\n');
+  s = once(s, '                                ref=${modelHintRef}\n', '                                ref=${modelHintRef}\n                                aria-haspopup="listbox"\n                                aria-expanded=${showModelPopup ? "true" : "false"}\n                                aria-controls=${showModelPopup ? "compose-model-results-host" : undefined}\n');
+  s = once(s, '                            entries=${modelOptions}\n', '                            entries=${modelOptions}\n                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n');
   s = once(s, '        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);',
     '        const pickerOwnedFocus = () => Boolean(modelPopupRef.current?.contains(document.activeElement));\n        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);\n        const restorePickerFocus = pickerOwnedFocus();');
   s = once(s, '            requestAnimationFrame(() => modelHintRef.current?.focus?.());\n        }\n    };\n\n    const runSessionPopupEntry',
