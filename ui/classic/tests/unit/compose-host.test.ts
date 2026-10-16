@@ -12,7 +12,7 @@ test('current composer keeps native rendering with batch cancellation, authorita
   const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
   const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
     .replace('role=${speechUiState.kind === "error" ? "alert" : "status"}', 'role="status"')
-    .replace('                            aria-pressed=${speechIsActive ? "true" : "false"}\n', '');
+    .replace('                            aria-pressed=${speechButtonActive ? "true" : "false"}\n', '');
   expect(nativeRender).toBe(source.slice(source.indexOf(render)));
   expect(patched).toContain('speechRecognitionRef.current=null;');
   expect(patched).toContain('if (speechPendingStopRef.current) recognition.stop();');
