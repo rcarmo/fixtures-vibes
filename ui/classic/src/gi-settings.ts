@@ -231,6 +231,16 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
             const target = original?.isConnected && original !== document.body && !original.closest('[inert]')
                 ? original : document.querySelector<HTMLElement>('.compose-box textarea');
             target?.focus({ preventScroll: true });
+            // Lazy pane/portal effect cleanup can commit after the first focus.
+            // Retry only while focus is unowned, never steal it from another control.
+            requestAnimationFrame(() => {
+                if (!isOpen.current && !document.querySelector('[aria-modal="true"]') &&
+                    (!document.activeElement || document.activeElement === document.body)) {
+                    const fallback = original?.isConnected && original !== document.body && !original.closest('[inert]')
+                        ? original : document.querySelector<HTMLElement>('.compose-box textarea');
+                    fallback?.focus({preventScroll:true});
+                }
+            });
         }));
     };
     // Install opening controls before first paint, including the auth gate's
