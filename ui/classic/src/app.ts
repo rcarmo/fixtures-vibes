@@ -283,7 +283,7 @@ function GiApp() {
         const scope = selection.capture(); const expected = compactState.token; const token = {};
         compactToken.current=token; setCompactPending(true); setCompactError('');
         try { await compactSession(sessionToChatJid(scope.sessionId),expected); }
-        catch (error) { if (selection.isCurrent(scope)) setCompactError(`Compact failed: ${error.message}`); }
+        catch (error) { if (selection.isCurrent(scope)) setCompactError(`Compact failed: ${error.message}`); throw error; }
         finally {
             if (compactToken.current===token) { compactToken.current=null; setCompactPending(false); }
             if (selection.isCurrent(scope)) {activityRevision.invalidate();setActivityFresh(false);refreshAfterConnection.current();}
@@ -293,7 +293,9 @@ function GiApp() {
     const compactFromMeter = async () => {
         if (manualCompact) return manualCompact();
         if (notice?.intent_key === 'compaction') return;
-        setCompactError(compactionUnavailableReason({fresh:activityFresh,disconnected:streamDisconnected.current,pending:compactPending,status:activity?.status,capability:compactState}) || 'Compaction is unavailable');
+        const reason = compactionUnavailableReason({fresh:activityFresh,disconnected:streamDisconnected.current,pending:compactPending,status:activity?.status,capability:compactState}) || 'Compaction is unavailable';
+        setCompactError(reason);
+        throw new Error(reason);
     };
     useEffect(() => {
         if (!activity?.compaction) return;
@@ -1182,9 +1184,9 @@ function GiApp() {
                         beginUploadBatch: (chat: string) => composeTransfers.beginUploadBatch(chat.slice(3)),
                         fetchCommands: getAgentCommands,
                         pinSession: (chat: string, pinned: boolean) => handleSessionMutation(chat, 'pin', pinned),
-                        sendAgentMessage: (agent, text, thread, media, mode, chat, options) => {
-                            if (/^\/abort\s*$/i.test(text)) return stopFromComposer();
-                            if (/^\/compact\s*$/i.test(text)) return compactFromMeter();
+                        sendAgentMessage: async (agent, text, thread, media, mode, chat, options) => {
+                            if (/^\/abort\s*$/i.test(text)) { await stopFromComposer(); return {source_committed:true}; }
+                            if (/^\/compact\s*$/i.test(text)) { await compactFromMeter(); return {source_committed:true}; }
                             return sendAgentMessage(agent, text, thread, media, mode, chat, options);
                         },
                     }}
