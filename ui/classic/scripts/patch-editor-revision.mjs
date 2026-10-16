@@ -131,6 +131,8 @@ export function patchEditorRevision(source) {
 `);
   s = once(s, '    setContent(content: string, mtime: string): void {', '    setContent(content: string, mtime: string, revision?: unknown): void {\n        this.loadedRevision = validRevision(revision) ? revision : null;');
   s = once(s, '        this.renderEditorSurface(content, this.diffMode, viewState);\n        this.setDirty(false);', '        this.renderEditorSurface(content, this.diffMode, viewState);\n        this.setDirty(false);\n        this.updateSaveButton();\n        if (this.loadedRevision === null) this.updateStatusText(\'Revision-safe persistence unavailable — read-only saves\');');
+  s = once(s, '        this.conflictMonitor?.onSaved(mtime);\n        const view = this.view;',
+    '        this.scheduleContentChangeCallback();\n        this.conflictMonitor?.onSaved(mtime);\n        const view = this.view;');
   s = once(s, '        this.path = newPath;\n', '        this.path = newPath;\n        this.loadedRevision = null;\n        this.updateSaveButton();\n');
   return s;
 }
