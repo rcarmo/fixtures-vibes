@@ -75,6 +75,8 @@ export function patchComposeHost(source) {
   // the editor, a stale capture listener must not consume its Enter as a session-row activation.
   s = once(s, '        const onKeyDown = (event) => {\n            handlePopupKeyboardEvent(event);',
     '        const onKeyDown = (event) => {\n            if (event.target === textareaRef.current) return;\n            handlePopupKeyboardEvent(event);');
+  s = once(s, 'resolvePopupTypeaheadMatch(currentSessionPopupEntries, nextBuffer.value, sessionPopupIndex, (item) => item.label)',
+    'resolvePopupTypeaheadMatch(currentSessionPopupEntries, nextBuffer.value, -1, (item) => item.label)');
   // Capture, target and bubble handlers share this callback: consume each key once.
   s = once(s, '    const handlePopupKeyboardEvent = useCallback((e) => {',
     '    const handlePopupKeyboardEvent = useCallback((e) => {\n        if (e.defaultPrevented) return false;');
