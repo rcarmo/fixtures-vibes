@@ -8,6 +8,7 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
+import { patchCodemodeCards } from './patch-codemode-cards.mjs';
 import { patchTerminalLifecycle } from './patch-terminal-lifecycle.mjs';
 
 import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision, patchEditorLoaderRevision } from './patch-editor-revision.mjs';
@@ -113,6 +114,9 @@ export function piclawWebAdapter(root) {
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]ui[\\/]app-window-actions\.ts$/ }, async args => ({
       contents: patchWindowActions(await Bun.file(args.path).text()), loader: 'ts',
+    }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]components[\\/]post\.ts$/ }, async args => ({
+      contents: patchCodemodeCards(await Bun.file(args.path).text()), loader: 'ts',
     }));
   } };
 }

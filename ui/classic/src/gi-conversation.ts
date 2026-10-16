@@ -1,5 +1,6 @@
 import {projectMessageMedia} from './gi-message-media.js';
 import {projectLinkPreviews} from './gi-message-links.js';
+import {projectCodemodeCard} from './gi-codemode-cards.js';
 
 export const SYSTEM_AGENT_ID = '__gi_system__';
 export const SYSTEM_AGENT = {id:SYSTEM_AGENT_ID,name:'System',avatar_url:null};
@@ -7,6 +8,17 @@ export const SYSTEM_AGENT = {id:SYSTEM_AGENT_ID,name:'System',avatar_url:null};
 // The wire/storage role is independent from the shared Post component's two
 // visual roles. Non-user notices use bot presentation with explicit identity.
 export function projectConversationMessage(m: any, fallbackSession?: string) {
+    // Codemode results are the one tool_result row the timeline shows, as a card.
+    if (m?.role === 'tool_result' && m.payload?.kind === 'tool_result' && m.payload?.tool_name === 'codemode') {
+        const card = projectCodemodeCard(m, {fallbackSession: m.session_id || fallbackSession});
+        if (!card) return null;
+        return {
+            id: m.id, display_row_id: m.display_row_id, chat_jid: card.chat_jid, timestamp: m.created_at, content: '',
+            sender: 'agent', is_from_me: false, is_bot_message: true,
+            data: {type: 'agent_response', content: '', thread_id: m.reply_to_id || null, agent_id: m.payload?.agent_id || null,
+                content_meta: null, kind: 'tool_result', source: m.payload?.source || null, clipped: m.payload?.clipped || false, card},
+        };
+    }
     if (!['user','assistant','system'].includes(m?.role) || (m.role !== 'user' && m.payload?.kind === 'tool_result')
         || (m.role === 'system' && m.payload?.kind === 'queue')) return null;
     let content = typeof m.content === 'string' ? m.content : '';

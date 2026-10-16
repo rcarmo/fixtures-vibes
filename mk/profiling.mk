@@ -24,6 +24,7 @@ PROFILE_DIR ?= $(PROJECT_TMP_ROOT)/runs/profiles/$(RUN_PURPOSE)-$(RUN_ID)
 NODE_PROFILE = NODE_OPTIONS="$$NODE_OPTIONS --cpu-prof --cpu-prof-dir=$(PROFILE_DIR) --heap-prof --heap-prof-dir=$(PROFILE_DIR)"
 BUN_PROFILE = --cpu-prof --cpu-prof-dir=$(PROFILE_DIR) --heap-prof --heap-prof-dir=$(PROFILE_DIR)
 TIME_V := $(if $(wildcard /usr/bin/time),/usr/bin/time -v -o $(PROFILE_DIR)/time-$$$$.txt,)
+BUN_RUN_TESTS = FIXTURES_PROFILE_DIR="$(PROFILE_DIR)" $(TIME_V) $(BUN) run
 BUN_TEST_PROFILED = FIXTURES_PROFILE_DIR="$(PROFILE_DIR)" $(TIME_V) $(BUN) test --preload $(abspath $(FIXTURES_VIBES_MK)bun-test-profile.ts)
 define profile_begin
 	@mkdir -p "$(PROFILE_DIR)"
@@ -39,6 +40,7 @@ profile_summary = $(NODE) $(abspath $(FIXTURES_VIBES_MK)../tools/profile-summary
 else
 NODE_PROFILE =
 BUN_PROFILE =
+BUN_RUN_TESTS = $(BUN) run
 BUN_TEST_PROFILED = $(BUN) test
 profile_begin =
 profile_summary = :

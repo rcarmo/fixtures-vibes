@@ -1,6 +1,11 @@
 import {expect,test} from 'bun:test';
-import {uploadMedia} from '../../src/api';
-import {composeTransfers} from '../../src/gi-compose-transfer';
+import { piclawWebAdapter } from '../../scripts/piclaw-web.mjs';
+const root = new URL('../..', import.meta.url).pathname.replace(/\/$/, '');
+// Bundle API and observer together so adapted imports share one singleton,
+// independent of the other unit files Bun loaded before this test.
+const built = await Bun.build({ entrypoints: [`${root}/tests/fixtures/upload-adapter-entry.ts`], target: 'bun', plugins: [piclawWebAdapter(root)] });
+if (!built.success) throw new AggregateError(built.logs, 'upload adapter build failed');
+const {uploadMedia,composeTransfers} = await import(`data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString('base64')}`);
 
 test('native upload adapter aborts before encoding or during XHR, fences late completion and cleans listeners',async()=>{
  const original=globalThis.XMLHttpRequest;const calls:any[]=[];let throwOpen=false;
