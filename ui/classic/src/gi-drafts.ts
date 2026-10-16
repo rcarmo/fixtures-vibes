@@ -110,6 +110,9 @@ export function sessionDraftTextJournal(): DraftTextJournal {
 
 export function createDraftRepository(storage: DraftStorage, onError: (error: Error) => void = () => {}, recover?: PendingSendRecovery, journal?: DraftTextJournal) {
     const records = new Map<string, Record>();
+    // Native composer owns the live failure announcement; persisted recovery
+    // warnings remain host-owned after reload.
+    const liveSubmissionErrors = new Map<string, string>();
     const revisions = new Map<string, number>();
     const conflicts = new Map<string, Error>();
     const journalNonces = new Set<string>();
@@ -197,6 +200,7 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
         },
         get(id: string) { return record(id).draft; },
         error(id: string) { return record(id).error || ''; },
+        hostError(id: string) { const error = record(id).error || ''; return error === liveSubmissionErrors.get(id) ? '' : error; },
         update(id: string, patch: Partial<Draft>) {
             const draft = record(id).draft;
             if (Object.entries(patch).every(([field, value]) => draft[field as keyof Draft] === value)) return;
@@ -223,6 +227,7 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
             await persist(id);
         },
         failed(id: string, token: string, error: string) {
+            liveSubmissionErrors.set(id, error);
             const row = record(id);
             const pending = row.pending.find(p => p.id === token);
             if (pending) row.draft = mergeDrafts(pending.draft, row.draft);

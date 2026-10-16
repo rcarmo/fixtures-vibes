@@ -238,3 +238,11 @@ test('queue return fences text and media edits while recovery is pending',async(
   const fresh=repo.captureQueueReturn('A');await repo.prepareQueueReturn('A','q',{...emptyDraft(),text:'queued'},fresh).ready;expect(repo.get('A').text).toBe('queued');expect(repo.get('A').media).toEqual([]);
  }
 });
+
+test('live submit error has one composer owner but reload keeps recovery warning', async () => {
+ const store=storage(),repo=createDraftRepository(store);await repo.load();
+ repo.update('s',{text:'keep me'});await repo.flush();const claim=repo.begin('s',repo.get('s'));await claim.ready;
+ repo.failed('s',claim.token,'single error');await repo.flush();
+ expect(repo.error('s')).toBe('single error');expect(repo.hostError('s')).toBe('');
+ const reloaded=createDraftRepository(store);await reloaded.load();expect(reloaded.hostError('s')).toBe('single error');
+});

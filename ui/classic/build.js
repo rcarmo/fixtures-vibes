@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync, renameSync, existsSync, rmSync,
 import { fileURLToPath } from 'url';
 import { patchPinnedStatusResize } from './scripts/patch-pinned-status-resize.mjs';
 import { patchComposeHost } from './scripts/patch-compose-host.mjs';
+import { patchModelPickerFocus } from './scripts/patch-model-picker-focus.mjs';
 import { patchSseConnection } from './scripts/patch-sse-connection.mjs';
 import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
@@ -124,6 +125,7 @@ const appBuild = await Bun.build({
     build.onLoad({filter:/[\\/]src[\\/]markdown\.ts$/},async args=>({contents:patchMarkdownCode(await Bun.file(args.path).text()),loader:'ts'}));
   } }, { name: 'gi-popup-key-ownership', setup(build) {
     build.onLoad({ filter: /[\\/]components[\\/]compose-box\.ts$/ }, async args => ({ contents: patchComposeHost(await Bun.file(args.path).text()), loader: 'ts' }));
+    build.onLoad({ filter: /[\\/]components[\\/]model-picker\.ts$/ }, async args => ({ contents: patchModelPickerFocus(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]components[\\/]timeline-quick-actions\.ts$/ }, async args => ({
       contents: patchQuickActionKeys(await Bun.file(args.path).text()), loader: 'ts',
     }));
@@ -137,12 +139,6 @@ const appBuild = await Bun.build({
       contents: (await Bun.file(args.path).text()) + '\nexport { THEME_PRESETS as giThemePresets, applyThemeState as giApplyThemeState };\n',
       loader: 'ts',
     }));
-  } }, { name: 'gi-clipboard-safety', setup(build) {
-    build.onResolve({filter: /^\.\/post-runtime-safety\.js$/}, args => {
-      if (args.importer === resolve(webSrc, 'components/post.ts')) {
-        return { path: resolve(webSrc, 'gi-clipboard-safety.ts') };
-      }
-    });
   } }],
 });
 if (!appBuild.success) { console.error(appBuild.logs); process.exit(1); }

@@ -149,3 +149,11 @@ test('revision adaptations fail closed on drift or duplicate application', () =>
   expect(patchEditorRefreshRevision(refresh)).toContain('payload?.truncated === false ? payload?.revision : null');
   expect(() => patchEditorRefreshRevision(patchEditorRefreshRevision(refresh))).toThrow(/anchor changed/);
 });
+
+test('external complete content replacement notifies the native preview after revision adoption',()=>{
+ const patched=patchEditorRevision(readFileSync(resolve(import.meta.dir,'../../piclaw/web-3.3.4/extensions/viewers/editor/editor-extension.ts'),'utf8'));
+ const method=patched.slice(patched.indexOf('    setContent(content:'),patched.indexOf('    focus():'));
+ expect(method.indexOf('this.loadedRevision =')).toBeLessThan(method.indexOf('this.scheduleContentChangeCallback()'));
+ expect(method.indexOf('this.setDirty(false)')).toBeLessThan(method.indexOf('this.scheduleContentChangeCallback()'));
+ expect(method).toContain('this.scheduleContentChangeCallback();\n        this.conflictMonitor?.onSaved(mtime);');
+});

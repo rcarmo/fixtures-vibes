@@ -114,7 +114,6 @@ import {createActivationRefreshGate,createTimelineRevision,createAssetVersionGua
 import {createSearchView} from './gi-search-state.js';
 import {newMessageWindow,mergeMessagePages,captureTimelineAnchor,restoreTimelineAnchor} from './gi-message-pages.js';
 
-import {bindWorkspaceVisibility} from './gi-workspace-visibility.js';
 import { composeTransfers } from './gi-compose-transfer.js';
 import { ownsHorizontalGesture } from './gi-scroll-gesture.js';
 import { messageReference, scrollToReferencedPost } from './gi-message-reference.js';
@@ -994,11 +993,8 @@ function GiApp() {
         zenMode ? 'zen-mode' : '',
     ].filter(Boolean).join(' ');
 
-    useLayoutEffect(()=>{
-        if(!ready || !workspaceOpen)return;
-        const sidebar=document.querySelector<HTMLElement>('.workspace-sidebar');
-        if(sidebar)return bindWorkspaceVisibility(sidebar);
-    },[ready,workspaceOpen]);
+    // The native explorer owns workspace-action and toggle-hidden-files events.
+    // A second DOM bridge would toggle the same state twice.
 
     // ── Render ────────────────────────────────────────────────────────────────
 
@@ -1160,7 +1156,7 @@ function GiApp() {
                 ${stopError && html`<div role="alert">${stopError}</div>`}
                 ${compactError && html`<div role="alert">${compactError}</div>`}
                 ${draftStorageError && html`<div role="alert">${draftStorageError}</div>`}
-                ${drafts.error(sessionId) && html`<div role="alert">${drafts.error(sessionId)}</div>`}
+                ${drafts.hostError(sessionId) && html`<div role="alert">${drafts.hostError(sessionId)}</div>`}
                 ${localNotifications.notice && html`<div class="gi-notification-status" role="status"><span>${localNotifications.notice}</span><button type="button" aria-label="Dismiss notification status" onClick=${localNotifications.dismiss}>×</button></div>`}
                 <${ComposeTransfer} sessionId=${sessionId} hidden=${searchState.active} />
                 <${ComposeBox}
