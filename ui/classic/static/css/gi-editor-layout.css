@@ -5,3 +5,30 @@
     padding-inline-start: 44px;
   }
 }
+
+/* Keep the native catalogue and session picker within the host's established
+   viewport contract, with touch-sized session dismissal on narrow screens. */
+.compose-model-catalogue {
+  width: min(680px, calc(100vw - 24px), 100%);
+}
+.compose-session-popup {
+  width: auto;
+  left: 0;
+  right: 0;
+}
+@media (max-width: 639px) {
+  .compose-model-popup {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100dvh - 16px);
+  }
+  .compose-session-popup-close {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
