@@ -7,6 +7,9 @@ test('native picker defers opening-key focus and cancels stale unmount work',()=
  const patched=patchModelPickerFocus(source);
  expect(patched).toContain('requestAnimationFrame(() => searchRef.current?.focus())');
  expect(patched).toContain('return () => cancelAnimationFrame(frame)');
+ expect(patched).toContain('aria-label="Close model picker"');
+ expect(patched).toContain('onClick=${onClose}');
+ expect(patched).toContain('min-width:44px;min-height:44px');
  expect(()=>patchModelPickerFocus(patched)).toThrow('anchor changed');
  expect(()=>patchModelPickerFocus(source+source)).toThrow('anchor changed');
 });

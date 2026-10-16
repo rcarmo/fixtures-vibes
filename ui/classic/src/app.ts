@@ -114,7 +114,6 @@ import {createActivationRefreshGate,createTimelineRevision,createAssetVersionGua
 import {createSearchView} from './gi-search-state.js';
 import {newMessageWindow,mergeMessagePages,captureTimelineAnchor,restoreTimelineAnchor} from './gi-message-pages.js';
 
-import {bindWorkspaceVisibility} from './gi-workspace-visibility.js';
 import { composeTransfers } from './gi-compose-transfer.js';
 import { ownsHorizontalGesture } from './gi-scroll-gesture.js';
 import { messageReference, scrollToReferencedPost } from './gi-message-reference.js';
@@ -994,11 +993,8 @@ function GiApp() {
         zenMode ? 'zen-mode' : '',
     ].filter(Boolean).join(' ');
 
-    useLayoutEffect(()=>{
-        if(!ready || !workspaceOpen)return;
-        const sidebar=document.querySelector<HTMLElement>('.workspace-sidebar');
-        if(sidebar)return bindWorkspaceVisibility(sidebar);
-    },[ready,workspaceOpen]);
+    // The native explorer owns workspace-action and toggle-hidden-files events.
+    // A second DOM bridge would toggle the same state twice.
 
     // ── Render ────────────────────────────────────────────────────────────────
 

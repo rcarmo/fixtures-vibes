@@ -141,7 +141,7 @@ const appBuild = await Bun.build({
     }));
   } }, { name: 'gi-clipboard-safety', setup(build) {
     build.onResolve({filter: /^\.\/post-runtime-safety\.js$/}, args => {
-      if (args.importer === resolve(webSrc, 'components/post.ts')) {
+      if (args.importer === resolve(PICLAW_WEB, 'web/src/components/post.ts')) {
         return { path: resolve(webSrc, 'gi-clipboard-safety.ts') };
       }
     });
