@@ -56,6 +56,8 @@ export function patchComposeHost(source) {
   // Journal trusted editor changes synchronously, before a page can close.
   s = once(s, '    const updateValue = (value) => {\n        if (searchMode)',
     '    const updateValue = (value) => {\n        if (!searchMode) onContentChange?.(value);\n        if (searchMode)');
+  s = once(s, "            clearAfterSubmit = true,", "            clearAfterSubmit = !/^\\/compact\\s*$/i.test(overrideContent || \"\"),");
+  s = once(s, "            ${activeCompactionLabel && html`<span class=\"compose-context-pie-timer\">${activeCompactionLabel}</span>`}", "            ${(activeCompactionLabel || usage.hostElapsed) && html`<span class=\"compose-context-pie-timer gi-compaction-elapsed\">${activeCompactionLabel || usage.hostElapsed}</span>`}");
   // Host durable capture must finish before the native editor clears or POST begins.
   s = once(s, '    const [mediaFiles, setMediaFiles] = useState([]);',
     '    const [mediaFiles, setMediaFiles] = useState(() => composeServices.initialMedia || []);\n    useEffect(() => { composeServices.onMediaChange?.(mediaFiles); }, [mediaFiles]);');

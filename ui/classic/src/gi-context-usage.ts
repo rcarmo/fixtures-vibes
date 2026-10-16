@@ -30,7 +30,7 @@ export function hostContextUsage(usage: any, fresh: boolean, capability: any, ca
     const detail = [active ? `Compacting context — ${state.elapsed || '0:00'}` : '', state.estimate || '', presentation.title].filter(Boolean).join(' — ');
     return { ...usage, percent: usage.percent ?? 0,
         hostLabel: active ? detail : presentation.label,
-        hostActive: active, hostStopPending: !!state.stopPending,
+        hostActive: active, hostElapsed: active ? state.elapsed : null, hostStopPending: !!state.stopPending,
         hostDescription: active ? null : state.pending ? 'Compaction request pending' : canCompact ? null : reason,
         hostTitle: active ? detail : capability?.active ? null : `${presentation.title} — ${state.pending ? 'Compaction request pending' : canCompact ? 'Compact context' : reason}` };
 }
