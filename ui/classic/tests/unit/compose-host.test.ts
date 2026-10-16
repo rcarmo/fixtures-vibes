@@ -10,7 +10,12 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(source.indexOf(render)).toBeGreaterThan(0);
   expect(patched.indexOf(render)).toBeGreaterThan(0);
   const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
-  expect(patched.slice(patched.indexOf(render)).replace(resizeBinding, '')).toBe(source.slice(source.indexOf(render)));
+  const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
+    .replace('role=${speechUiState.kind === "error" ? "alert" : "status"}', 'role="status"')
+    .replace('                            aria-pressed=${speechIsActive ? "true" : "false"}\n', '');
+  expect(nativeRender).toBe(source.slice(source.indexOf(render)));
+  expect(patched).toContain('speechRecognitionRef.current=null;');
+  expect(patched).toContain('if (speechPendingStopRef.current) recognition.stop();');
   expect(patched).toContain('current: () => textarea.isConnected && resizeChatRef.current===chat');
   expect(patched).toContain("['ArrowUp','ArrowDown','Home','End']");
   expect(patched).toContain('beginUploadBatch?.(submissionChatJid)');
