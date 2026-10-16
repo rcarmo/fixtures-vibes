@@ -1,0 +1,7 @@
+/* The fixed global menu shares the top edge with native editor tabs on phones.
+   Reserve its touch target instead of letting it intercept the first tab. */
+@media (max-width: 600px) {
+  .app-shell.editor-open .tab-strip {
+    padding-inline-start: 44px;
+  }
+}
