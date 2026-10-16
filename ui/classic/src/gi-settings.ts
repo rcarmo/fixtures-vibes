@@ -244,7 +244,7 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
             requestAnimationFrame(restoreUnownedFocus);
             // Native colour-input teardown can release focus after portal cleanup.
             // A bounded retry repairs only unowned focus, never another control.
-            setTimeout(restoreUnownedFocus, 100);
+            for (const delay of [100, 250, 500]) setTimeout(restoreUnownedFocus, delay);
         }));
     };
     // Install opening controls before first paint, including the auth gate's
