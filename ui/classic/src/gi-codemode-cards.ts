@@ -84,7 +84,7 @@ export function projectCodemodeCard(message: any, opts: { fallbackSession?: stri
         turn_id: message.payload?.turn_id || null,
         tool_call_id: String(message.payload?.tool_call_id || ''),
         occurrence_id: message.payload?.occurrence_id || null,
-        script: opts.script ?? '',
+        script: opts.script || (typeof message.payload?.details?.script === 'string' ? message.payload.details.script : ''),
         // A settled failure or unknown duration is never upgraded to ok or running.
         status: message.payload?.source === 'terminal_projection' && message.payload?.status === 'cancelled'
             ? 'cancelled' : (parsed.status ?? (message.payload?.is_error === true ? 'error' : null)),
