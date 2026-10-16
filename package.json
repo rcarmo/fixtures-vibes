@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "bun test tests",
+    "test": "bun run tools/test.mjs",
     "suite": "playwright test -c suite/playwright.config.ts"
   },
   "devDependencies": {

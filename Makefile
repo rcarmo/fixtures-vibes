@@ -22,7 +22,7 @@ deps:
 test:
 	$(tmp_init)
 	$(profile_begin)
-	$(BUN_TEST_PROFILED) ./tests/; s=$$?; $(profile_summary); exit $$s
+	$(BUN_RUN_TESTS) tools/test.mjs; s=$$?; $(profile_summary); exit $$s
 
 suite:
 	@test -n "$(PROFILE)" || { echo "PROFILE=/absolute/path/to/profile.json is required"; exit 2; }
