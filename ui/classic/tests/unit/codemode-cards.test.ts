@@ -81,7 +81,7 @@ test('conversation projection shows only the codemode tool_result as a card',()=
 });
 
 test('build adapter wires the card renderer through checked anchors only',()=>{
-  const source=readFileSync(new URL('../../piclaw/web-3.3.0/web/src/components/post.ts',import.meta.url),'utf8');
+  const source=readFileSync(new URL('../../piclaw/web-3.3.4/web/src/components/post.ts',import.meta.url),'utf8');
   const patched=patchCodemodeCards(source);
   expect(patched).toContain("import { renderCodemodeCard } from '../gi-codemode-cards.js';");
   expect(patched).toContain('${accessory}${renderCodemodeCard(post, html)}');

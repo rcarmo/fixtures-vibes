@@ -13,7 +13,7 @@ const planBundle = join(run, 'plan-browser.js');
 const built = await Bun.build({ entrypoints: [join(root, 'piclaw/plan-sidebar-0.1.25/index.ts')], target: 'browser', format: 'esm', external: ['/editor-vendor/codemirror.js'], plugins: [piclawPlanSidebarAdapter(), piclawWebAdapter(root)] });
 if (!built.success) throw new AggregateError(built.logs);
 await Bun.write(planBundle, built.outputs[0]);
-const loaderSource = patchEditorLoaderRevision(await Bun.file(join(root, 'piclaw/web-3.3.0/web/src/panes/editor-loader.ts')).text());
+const loaderSource = patchEditorLoaderRevision(await Bun.file(join(root, 'piclaw/web-3.3.4/web/src/panes/editor-loader.ts')).text());
 const loaderJS = new Bun.Transpiler({loader:'ts',target:'browser'}).transformSync(loaderSource);
 const loaderBundle = join(run,'loader-browser.js');
 await Bun.write(loaderBundle,loaderJS.replaceAll('/static/classic/dist/editor.bundle.js','/dist/editor.bundle.js'));
@@ -106,13 +106,18 @@ try {
       await expect(page.locator('.editor-conflict-bar')).toBeVisible();await expect(page.locator('.cm-content')).toHaveText('newer');
       const beforeCopy=writes.length;await page.getByRole('button',{name:'Save copy',exact:true}).click();await expect.poll(()=>writes.length).toBe(beforeCopy+1);
       expect(writes.at(-1).name).not.toBe('a.md');expect(writes.at(-1).expected_revision).toBeUndefined();
-      await page.getByRole('button',{name:'Overwrite',exact:true}).click();
-      await expect(page.getByRole('dialog',{name:'Review overwrite'})).toBeVisible();
-      await expect(page.getByLabel('Current saved content')).toHaveValue('remote with same mtime');
-      // A second writer during review defeats this exact reviewed revision.
-      await fixture({remoteFile:'changed during review'});await page.getByRole('button',{name:'Overwrite reviewed revision'}).click();
+      const reviewed = new Promise<void>((resolve, reject) => page.once('dialog', async dialog => {
+        try {
+          expect(dialog.message()).toContain('remote with same mtime');
+          // A second writer while native review is open defeats this exact revision.
+          await fixture({remoteFile:'changed during review'});
+          await dialog.accept(); resolve();
+        } catch (error) { await dialog.dismiss(); reject(error); }
+      }));
+      await page.getByRole('button',{name:'Overwrite',exact:true}).click(); await reviewed;
       await expect(page.locator('.editor-conflict-bar')).toBeVisible();expect(file.text).toBe('changed during review');
-      await page.getByRole('button',{name:'Overwrite',exact:true}).click();await page.getByRole('button',{name:'Overwrite reviewed revision'}).click();
+      page.once('dialog', dialog => dialog.accept());
+      await page.getByRole('button',{name:'Overwrite',exact:true}).click();
       await expect(page.locator('.editor-status-text')).toContainText('All changes saved');expect(file.text).toBe('newer');
       await page.evaluate(() => window.editor.setContent('external snapshot', 'mtime', 'refresh-rev'));
       await expect(page.locator('.cm-content')).toHaveText('external snapshot');

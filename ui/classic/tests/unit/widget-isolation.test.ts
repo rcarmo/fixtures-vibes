@@ -1,23 +1,17 @@
-import { expect, test } from 'bun:test';
-import { patchWidgetMessageSource, patchWidgetSandbox } from '../../scripts/patch-widget-isolation.mjs';
-import { piclawModule } from './piclaw-module';
+import { test, expect } from 'bun:test';
+import { readFileSync } from 'node:fs';
+import { getGeneratedWidgetSandbox } from '../../piclaw/web-3.3.4/web/src/ui/generated-widget-policy';
 
-const read = (p: string) => Bun.file(piclawModule(p)).text();
-
-test('interactive widgets lose same-origin access; static widgets keep downloads only', async () => {
-  const patched = patchWidgetSandbox(await read('ui/generated-widget.ts'));
-  expect(patched).toContain("? 'allow-downloads allow-scripts allow-forms'");
-  expect(patched).not.toMatch(/'[^'\n]*allow-same-origin[^'\n]*'/); // the supplied comment still names it
-  expect(patched).toContain(": 'allow-downloads';");
+test('upstream interactive widgets exclude same-origin; static widgets keep downloads only', () => {
+  for (const widget of [{ kind: 'html', source: 'live' }, { kind: 'html', capabilities: ['interactive'] }]) {
+    expect(getGeneratedWidgetSandbox(widget as any)).toBe('allow-downloads allow-scripts allow-forms');
+    expect(getGeneratedWidgetSandbox(widget as any)).not.toContain('allow-same-origin');
+  }
+  expect(getGeneratedWidgetSandbox({ kind: 'html' } as any)).toBe('allow-downloads');
 });
 
-test('bridge messages are accepted only from the widget iframe', async () => {
-  const patched = patchWidgetMessageSource(await read('components/floating-widget-pane.ts'));
-  expect(patched).toContain('if (!iframe?.contentWindow || event.source !== iframe.contentWindow) return;');
-  expect(patched).not.toContain('if (!incomingKey && iframe?.contentWindow');
-});
-
-test('patches fail loudly when their anchors move', () => {
-  expect(() => patchWidgetSandbox('nothing here')).toThrow(/anchor/);
-  expect(() => patchWidgetMessageSource('nothing here')).toThrow(/anchor/);
+test('upstream bridge messages are accepted only from the widget iframe', () => {
+  const source = readFileSync(new URL('../../piclaw/web-3.3.4/web/src/components/floating-widget-pane.ts', import.meta.url), 'utf8');
+  expect(source).toContain('if (!iframe?.contentWindow || event.source !== iframe.contentWindow) return;');
+  expect(source).not.toContain('event.source !== iframe.contentWindow && event.origin');
 });

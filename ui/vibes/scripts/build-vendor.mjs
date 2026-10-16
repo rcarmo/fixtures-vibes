@@ -15,6 +15,7 @@ async function bundle(entry, outfile) {
 await bundle(resolve(root, 'scripts/preact-htm-entry.js'), resolve(vendor, 'preact-htm.js'));
 await bundle(resolve(vendor, 'codemirror-entry.ts'), resolve(vendor, 'codemirror.js'));
 
+copyFileSync(resolve(root, 'node_modules/marked/lib/marked.umd.js'), resolve(root, 'static/js/marked.min.js'));
 const katex = resolve(root, 'node_modules/katex/dist');
 writeFileSync(resolve(root, 'static/css/katex.min.css'), readFileSync(resolve(katex, 'katex.min.css'), 'utf8').replaceAll('url(fonts/', 'url(/static/fonts/'));
 for (const font of readdirSync(resolve(katex, 'fonts'))) {

@@ -5,10 +5,10 @@ import { patchPinnedStatusResize } from './scripts/patch-pinned-status-resize.mj
 import { patchComposeHost } from './scripts/patch-compose-host.mjs';
 import { patchSseConnection } from './scripts/patch-sse-connection.mjs';
 import {piclawPlanSidebarAdapter} from './scripts/piclaw-plan-sidebar-adapter.mjs';
-import {patchWidgetSandbox, patchWidgetMessageSource} from './scripts/patch-widget-isolation.mjs';
 import { patchMarkdownCode } from './scripts/gi-markdown-code-adapter.mjs';
 import { patchTimelineMenu } from './scripts/patch-timeline-menu.mjs';
 import { patchQuickActionKeys } from './scripts/patch-popup-keys.mjs';
+import { patchAboutDialog } from './scripts/patch-about-dialog.mjs';
 import { patch, piclawWebDir, piclawWebAdapter, verifyPiclawWeb } from './scripts/piclaw-web.mjs';
 
 import { readdirSync, statSync } from 'fs';
@@ -80,6 +80,21 @@ const katexCSS = readFileSync('node_modules/katex/dist/katex.min.css', 'utf8')
   .replace(/,url\(fonts\/[^)]+\.ttf\) format\("truetype"\)/g, '');
 writeFileSync('static/css/katex.min.css', katexCSS.replaceAll('url(fonts/', 'url(/fonts/katex/'));
 buildVendor('mermaid-entry.ts',    vendorDir,  'beautiful-mermaid.js');
+// Adaptive Cards are loaded on demand as a classic script, sharing the pinned package lock.
+run(['bun', 'build', `${webSrc}/vendor/adaptivecards-entry.ts`, '--target=browser', '--format=iife', '--minify',
+  `--outfile=static/common/js/vendor/adaptivecards.min.js`]);
+// Retire the old unused URL so fresh builds cannot silently ship two SDK versions.
+for (const suffix of ['', '.br', '.gz']) rmSync(`${vendorDir}/adaptivecards.min.js${suffix}`, { force: true });
+copyFileSync('node_modules/adaptivecards/LICENSE', 'static/common/js/vendor/adaptivecards.LICENSE');
+const cardPackage = JSON.parse(readFileSync('node_modules/adaptivecards/package.json', 'utf8'));
+writeFileSync('static/common/js/vendor/adaptivecards.meta.json', JSON.stringify({
+  package_name: cardPackage.name, package_version: cardPackage.version, package_license: cardPackage.license,
+  source_entry: `${webSrc}/vendor/adaptivecards-entry.ts`, output_file: 'static/common/js/vendor/adaptivecards.min.js',
+  size_bytes: statSync('static/common/js/vendor/adaptivecards.min.js').size,
+}, null, 2) + '\n');
+for (const name of ['adaptivecards.LICENSE', 'adaptivecards.meta.json', 'adaptivecards.meta.json.br', 'adaptivecards.meta.json.gz']) {
+  rmSync(`${vendorDir}/${name}`, { force: true });
+}
 // CodeMirror for the Piclaw editor and the other editor surfaces: the vendored 3.2.5 entry (a superset of the
 // exports src/vendor/codemirror-entry.ts provided).
 verifyPiclawWeb(__dirname);
@@ -104,8 +119,7 @@ const appBuild = await Bun.build({
   plugins: [piclawPlanSidebarAdapter(), piclawWebAdapter(__dirname), { name: 'gi-widget-isolation', setup(build) {
     build.onLoad({ filter: /[\\/]ui[\\/]use-sse-connection\.ts$/ }, async args => ({ contents: patchSseConnection(await Bun.file(args.path).text()), loader: 'ts' }));
     build.onLoad({ filter: /[\\/]components[\\/]status\.ts$/ }, async args => ({ contents: patchPinnedStatusResize(await Bun.file(args.path).text()), loader: 'ts' }));
-    build.onLoad({ filter: /[\\/]ui[\\/]generated-widget\.ts$/ }, async args => ({ contents: patchWidgetSandbox(await Bun.file(args.path).text()), loader: 'ts' }));
-    build.onLoad({ filter: /[\\/]components[\\/]floating-widget-pane\.ts$/ }, async args => ({ contents: patchWidgetMessageSource(await Bun.file(args.path).text()), loader: 'ts' }));
+    build.onLoad({ filter: /[\\/]components[\\/]about-dialog\.ts$/ }, async args => ({ contents: patchAboutDialog(await Bun.file(args.path).text()), loader: 'ts' }));
   } }, { name: 'gi-markdown', setup(build) {
     build.onLoad({filter:/[\\/]src[\\/]markdown\.ts$/},async args=>({contents:patchMarkdownCode(await Bun.file(args.path).text()),loader:'ts'}));
   } }, { name: 'gi-popup-key-ownership', setup(build) {
@@ -153,11 +167,11 @@ if (existsSync(phtmAlias)) rmSync(phtmAlias);
 });
 
 
-// Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its v3.3.0 server routes
-// (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.3.0/csp.json.
+// Piclaw's standalone viewer pages (tab-mode web/data viewers), extracted from its v3.3.4-ux server routes
+// (scripts/extract-piclaw-viewers.ts): runtimes serve static/<viewer>/index.html at /<viewer>/ with piclaw/viewers-3.3.4/csp.json.
 for (const viewer of ['html-viewer', 'image-viewer', 'video-viewer', 'pdf-viewer', 'data-viewer']) {
   mkdirSync(`static/${viewer}`, { recursive: true });
-  copyFileSync(`piclaw/viewers-3.3.0/${viewer}/index.html`, `static/${viewer}/index.html`);
+  copyFileSync(`piclaw/viewers-3.3.4/${viewer}/index.html`, `static/${viewer}/index.html`);
 }
 
 // Theme catalogue for the server-side /theme and /tint commands, from Piclaw's shared preset catalogue.

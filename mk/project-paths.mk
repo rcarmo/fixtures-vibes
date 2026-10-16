@@ -44,8 +44,8 @@ export XDG_CACHE_HOME := $(CACHE_ROOT)/xdg
 export BUN_INSTALL_CACHE_DIR := $(CACHE_ROOT)/bun
 export npm_config_cache := $(CACHE_ROOT)/npm
 export GOCACHE := $(CACHE_ROOT)/go
-# XDG_CACHE_HOME would otherwise move Playwright's browser lookup.
-export PLAYWRIGHT_BROWSERS_PATH ?= $(HOME)/.cache/ms-playwright
+# New downloads stay project-scoped; explicit existing browser installations remain supported.
+export PLAYWRIGHT_BROWSERS_PATH ?= $(CACHE_ROOT)/playwright
 
 # Create the run's directories, checking each level (mk/project-tmp.mjs); the suite checks FIXTURES_RUN_ROOT again.
 define tmp_init

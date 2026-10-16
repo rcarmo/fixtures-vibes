@@ -1,7 +1,7 @@
 # Classic web UI backend contract
 
-The shared Classic web UI is the `ui/classic` tree: Piclaw v3.3.0 Classic sources (tagged commit
-`e4c2b9a3536eb64361da86237a4dfc970d772682`, recorded in `ui/classic/piclaw/web-3.3.0/SOURCE`),
+The shared Classic web UI is the `ui/classic` tree: Piclaw v3.3.4-ux Classic sources (tagged commit
+`78dcfa25838a152fdf936b864306b643b8d1cfbc`, recorded in `ui/classic/piclaw/web-3.3.4/SOURCE`),
 its separately pinned Plan sidebar add-on, and an adapter layer (`src/api.ts`, `src/gi-*.ts`). A runtime adopts the UI by serving its static tree and
 implementing the HTTP and SSE surface below. The UI is not edited per runtime.
 
@@ -65,7 +65,7 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | Method | Path | UI caller | Reference |
 |---|---|---|---|
 | GET, PATCH | `/api/sessions/{s}/model` | `getAgentModels`, `selectAgentModel`, `selectAgentThinking` | `handleSessionSubroutes` (`model-panel.md`, `session-thinking.md`) |
-| GET | `/api/runtime/config` | `getRuntimeConfig`, `getAgents`, `getAgentModels` | `handleRuntimeConfig` |
+| GET | `/api/runtime/config` | `getRuntimeConfig`, `getAgents`, `getAgentModels`, About | `handleRuntimeConfig` |
 | GET | `/api/quick-actions` | `getQuickActionsSettings`, `getAgentCommands` | `handleQuickActions` |
 | GET | `/api/system-metrics` | `getSystemMetrics` | `handleSystemMetrics` |
 | GET, PATCH | `/api/settings/identity` | `getGiIdentity`, `saveGiIdentity` | `handleSettingsIdentity` |
@@ -95,8 +95,10 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 | GET | `/image-viewer/`, `/video-viewer/`, `/pdf-viewer/`, `/html-viewer/`, `/data-viewer/` `?path=` | tab-mode web/data viewers (iframe) | static: `static/<viewer>/index.html`, headers below |
 | GET | `/pdf-viewer/source?media=<id>` | PDF viewer for chat attachments | Piclaw v3.2.5 `pdf-viewer-route.ts` (the attachment's PDF bytes); not yet in reference |
 
-The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.3.0`): serve `static/<viewer>/index.html` at
-`/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.3.0/csp.json`,
+About reads the optional string `version` from `/api/runtime/config`; missing values display `Unknown`. The UI release is shown separately. It makes no `/agent/about` request.
+
+The viewer pages are Piclaw's own (`ui/classic/piclaw/viewers-3.3.4`): serve `static/<viewer>/index.html` at
+`/<viewer>/` for any query, with the `Content-Security-Policy` listed for it in `piclaw/viewers-3.3.4/csp.json`,
 `X-Frame-Options: SAMEORIGIN` and `Cache-Control: no-cache`. Do not answer these paths with the app's `index.html`.
 
 The editor reads `GET /api/workspace/file?path&max_bytes&mode=edit`: complete UTF-8 text up to 256 KiB,
@@ -122,7 +124,7 @@ The editor watches `/api/workspace/stat` for external changes. `workspace_update
 (`{updates: [{path, root, truncated, changed_paths}]}`) refresh the tree and a clean editor; they carry no text.
 The lazy proxy forwards the complete `setContent(text, mtime, revision)` snapshot
 without coercion; missing revision still disables writes.
-The revision adaptation is an anchored build patch over unmodified Piclaw v3.3.0 sources. It implements
+The revision adaptation is an anchored build patch over unmodified Piclaw v3.3.4-ux sources. It implements
 fixtures-vibes#1; release-specific oracle evidence and skips remain unchanged.
 
 Backend revision enforcement covers the runtime's conditional-write transaction. Gi backend `78f8f53` checks

@@ -1,0 +1,8 @@
+{
+  "package_name": "adaptivecards",
+  "package_version": "3.0.6",
+  "package_license": "MIT",
+  "source_entry": "src/vendor/adaptivecards-entry.ts",
+  "output_file": "static/common/js/vendor/adaptivecards.min.js",
+  "size_bytes": 339230
+}

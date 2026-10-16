@@ -2,7 +2,7 @@ import { test, expect } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { patchTerminalLifecycle } from '../../scripts/patch-terminal-lifecycle.mjs';
 
-const source = readFileSync(new URL('../../piclaw/web-3.3.0/web/src/panes/terminal-pane.ts', import.meta.url), 'utf8');
+const source = readFileSync(new URL('../../piclaw/web-3.3.4/web/src/panes/terminal-pane.ts', import.meta.url), 'utf8');
 function methods(text: string) {
   const load = text.slice(text.indexOf('  loadAddon(addon, name) {'), text.indexOf('  installPreOpenAddons(runtime) {'));
   const dispose = text.slice(text.indexOf('  dispose() {', text.indexOf('class TerminalPaneInstance')), text.indexOf('\n}\n\nexport const terminalPaneExtension'));

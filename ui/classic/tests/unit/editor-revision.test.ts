@@ -6,7 +6,7 @@ import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision 
 import { validRevision, snapshotRevision, requireRevision, isRevisionConflict, reviewOverwrite } from '../../src/gi-revision-state';
 import { piclawModule } from './piclaw-module';
 
-const original = readFileSync(resolve(import.meta.dir, '../../piclaw/web-3.3.0/extensions/viewers/editor/editor-extension.ts'), 'utf8');
+const original = readFileSync(resolve(import.meta.dir, '../../piclaw/web-3.3.4/extensions/viewers/editor/editor-extension.ts'), 'utf8');
 const patched = patchEditorRevision(original);
 // Exercise methods of the actual adapted class without mounting CodeMirror; browser tests cover its DOM lifecycle.
 const classText = patched.slice(patched.indexOf('class StandaloneEditorInstance'), patched.indexOf('// ── Extension registration'));
@@ -119,6 +119,27 @@ test('reviewed overwrite can replace changed remote content even when local text
   await state.instance.handleSave('reviewed-rev', true);
   expect(calls).toEqual([['notes/a.md','draft','reviewed-rev']]);expect(state.instance.loadedRevision).toBe('next');
 });
+test('clean external reload adopts the fetched revision, but never overwrites typing during the read', async () => {
+  const clean = editor(undefined, async () => ({ text: 'remote', mtime: 'remote-time', revision: 'remote-rev', truncated: false }));
+  clean.instance.dirty = false;
+  clean.instance.setContent = (text, mtime, revision) => { clean.type(text); clean.instance.loadedRevision = revision; };
+  clean.instance.initConflictMonitor();
+  expect(await clean.options().onExternalChange()).toBe(true);
+  expect(clean.instance.getContent()).toBe('remote');
+  expect(clean.instance.loadedRevision).toBe('remote-rev');
+  let done: Function;
+  const pending = editor(undefined, () => new Promise(resolve => { done = resolve; }));
+  pending.instance.dirty = false;
+  pending.instance.setContent = () => { throw Error('must not replace newer edits'); };
+  pending.instance.initConflictMonitor();
+  const load = pending.options().onExternalChange();
+  pending.type('typed during reload');
+  done!({ text: 'remote', revision: 'remote-rev', truncated: false });
+  expect(await load).toBe(false);
+  expect(pending.instance.getContent()).toBe('typed during reload');
+  expect(pending.instance.loadedRevision).toBe('base-rev');
+});
+
 test('revision adaptations fail closed on drift or duplicate application', () => {
   expect(() => patchEditorRevision(patched)).toThrow(/anchor changed/);
   const conflict = readFileSync(piclawModule('panes/file-conflict-monitor.ts'), 'utf8');
