@@ -55,6 +55,8 @@ export function patchComposeHost(source) {
   s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            aria-description=${usage.hostDescription || undefined}\n            disabled=${!canCompact}');
   s = once(s, '            class=${`compose-context-pie icon-btn${activeCompactionLabel ? \' is-compacting\' : \'\'}`}', '            class=${`compose-context-pie icon-btn${activeCompactionLabel || usage.hostActive ? \' is-compacting\' : \'\'}`}');
   s = once(s, '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);', '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);\n    if (abortButtonState && contextUsage?.hostStopPending) abortButtonState.disabled = true;');
+  // A queued effect from an older render must not overwrite a synchronous edit.
+  s = once(s, '        onContentChange?.(content);\n    }, [content]);', '        if (!textareaRef.current || textareaRef.current.value === content) onContentChange?.(content);\n    }, [content]);');
   // Journal trusted editor changes synchronously, before a page can close.
   s = once(s, '    const updateValue = (value) => {\n        if (searchMode)',
     '    const updateValue = (value) => {\n        if (!searchMode) onContentChange?.(value);\n        if (searchMode)');
