@@ -6,7 +6,7 @@ const once = (source, from, to) => {
   return source.replace(from, to);
 };
 export function patchComposeHost(source) {
-  let s = source;
+  let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
   // A whole captured upload batch shares a cancellation lifetime, not one File at a time.
   s = once(s, '    const fetchCommands = composeServices.fetchCommands',
     '    const beginUploadBatch = composeServices.beginUploadBatch;\n    const fetchCommands = composeServices.fetchCommands');
@@ -83,5 +83,32 @@ ${clearBlock}                const intercepted`);
     '                if (intercepted) {\n                    await composeServices.acceptSubmission?.(submissionChatJid, hostCapture?.token);\n                    onPost?.(intercepted);');
   s = once(s, '            } catch (error) {\n                if (clearAfterSubmit) {\n                    restoreDraft();\n                }',
     '            } catch (error) {\n                if (hostCapture) composeServices.failSubmission?.(submissionChatJid, hostCapture.token, error?.message || String(error));\n                if (clearAfterSubmit && (!composeServices.captureSubmission || hostCapture)) { restoreDraft(); }');
+  const resizeStart = s.indexOf('    const startComposeResize = (startHeight, startY, handle) => {');
+  const resizeEnd = s.indexOf('    const handleComposeResizeMouseDown =', resizeStart);
+  if (resizeStart < 0 || resizeEnd < 0) throw Error('Compose resize lifecycle anchor changed');
+  s = s.slice(0,resizeStart) + `    const startComposeResize = (startHeight, startY, handle) => {
+        const textarea = textareaRef.current;
+        if (!textarea || !handle || document.querySelector('[role="dialog"], [aria-modal="true"]')) return;
+        const previous = manualTextareaHeightRef.current;
+        const chat = currentChatJid;
+        startComposeResizeGesture({textarea,handle,startHeight,startY,
+            apply: height => { const value=applyTextareaHeight(textarea,height);manualTextareaHeightRef.current=value;return value; },
+            cancel: () => { manualTextareaHeightRef.current=previous; },
+            commit: height => { if(persistBrowserState) composeStorage.setItem?.(composeHeightStorageKey,String(Math.round(height))); },
+            current: () => textarea.isConnected && resizeChatRef.current===chat,
+            jump: () => onJumpToLatest?.()});
+    };
+    const handleComposeResizeKey = event => {
+        if (!['ArrowUp','ArrowDown','Home','End'].includes(event.key) || document.querySelector('[role="dialog"], [aria-modal="true"]')) return;
+        event.preventDefault();event.stopPropagation();
+        const textarea=textareaRef.current;if(!textarea)return;
+        if(event.key==='Home'){manualTextareaHeightRef.current=null;composeStorage.removeItem?.(composeHeightStorageKey);resizeTextarea();return;}
+        const height=event.key==='End'?getComposeManualHeightMax():textarea.getBoundingClientRect().height+(event.key==='ArrowUp'?10:-10);
+        manualTextareaHeightRef.current=applyTextareaHeight(textarea,height);
+        if(persistBrowserState)composeStorage.setItem?.(composeHeightStorageKey,String(Math.round(manualTextareaHeightRef.current)));
+    };
+
+` + s.slice(resizeEnd);
+  s = once(s, '                onMouseDown=${handleComposeResizeMouseDown}', '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n                onMouseDown=${handleComposeResizeMouseDown}');
   return s;
 }

@@ -9,7 +9,10 @@ test('current composer keeps native rendering with batch cancellation, authorita
   const render = '        <div class="compose-box" data-testid="compose-box"';
   expect(source.indexOf(render)).toBeGreaterThan(0);
   expect(patched.indexOf(render)).toBeGreaterThan(0);
-  expect(patched.slice(patched.indexOf(render))).toBe(source.slice(source.indexOf(render)));
+  const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
+  expect(patched.slice(patched.indexOf(render)).replace(resizeBinding, '')).toBe(source.slice(source.indexOf(render)));
+  expect(patched).toContain('current: () => textarea.isConnected && resizeChatRef.current===chat');
+  expect(patched).toContain("['ArrowUp','ArrowDown','Home','End']");
   expect(patched).toContain('beginUploadBatch?.(submissionChatJid)');
   expect(patched.indexOf('await composeServices.captureSubmission?.')).toBeLessThan(patched.indexOf("setContent('');", patched.indexOf('await composeServices.captureSubmission?.')));
   expect(patched).toContain('client_request_id: hostCapture.token');
