@@ -48,7 +48,8 @@ export function patchComposeHost(source) {
   // Do not let keyboard activation leak through IME/repeated/consumed Enter into a prompt.
   s = once(s, '    const handleKeyDown = (e) => {',
     "    const handleKeyDown = (e) => {\n        if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || (e.repeat && (e.key === 'Enter' || e.key === 'Tab'))) return;");
-  s = once(s, '    const title = activeCompactionLabel\n', '    const title = usage.hostTitle || (activeCompactionLabel\n');
-  s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`);');
+  s = once(s, '    const title = activeCompactionLabel\n', '    const nativeTitle = activeCompactionLabel\n');
+  s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`;\n    const title = usage.hostTitle || nativeTitle;');
+  s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostTitle ? `${label}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            disabled=${!canCompact}');
   return s;
 }

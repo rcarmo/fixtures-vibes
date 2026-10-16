@@ -28,7 +28,7 @@ test('host meter fences stale usage and retains unavailable capability evidence 
  const usage={tokens:85000,contextWindow:2000000,percent:4.25,source:'provider_request'};
  expect(hostContextUsage(usage,false,{reason:'Other session'},false)).toBeNull();
  expect(hostContextUsage(usage,true,{reason:'Not enough eligible context'},false).hostTitle).toBe('Context: 85K / 2.0M tokens (4%) — latest measured provider request — Not enough eligible context');
- expect(hostContextUsage(usage,true,{available:true},true).hostTitle).toBeNull();
+ expect(hostContextUsage(usage,true,{available:true},true).hostTitle).toBe('Context: 85K / 2.0M tokens (4%) — latest measured provider request — Compact context');
  expect(hostContextUsage(usage,true,{active:true},false).hostTitle).toBeNull();
  expect(usage).not.toHaveProperty('hostTitle');
 });

@@ -25,5 +25,5 @@ export function modelContextBlocked(option: any, usage: any): boolean {
 export function hostContextUsage(usage: any, fresh: boolean, capability: any, canCompact: boolean) {
     if (!usage || !fresh) return null;
     const reason = capability?.reason || 'Compaction unavailable';
-    return { ...usage, hostTitle: canCompact || capability?.active ? null : `${contextPresentation(usage).title} — ${reason}` };
+    return { ...usage, hostTitle: capability?.active ? null : `${contextPresentation(usage).title} — ${canCompact ? 'Compact context' : reason}` };
 }
