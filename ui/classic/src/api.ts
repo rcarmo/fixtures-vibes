@@ -520,6 +520,7 @@ export async function sendAgentMessage(agentId: string, content: string, _thread
             const recovered = await recoverSubmittedPrompt(sessionId, payload.client_request_id,
                 path => request(path, { signal: AbortSignal.timeout(3000) }));
             if (recovered) return recovered;
+            throw new Error('Delivery is unknown. Check the conversation before explicitly retrying.');
         }
         throw error;
     } finally { activity.end(); }
