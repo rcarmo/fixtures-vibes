@@ -19,7 +19,7 @@ export function patchTimelineMenu(source) {
     }, [open]);`;
   // The portal render's layout effect must run first so refs point to the new
   // menu before listeners are installed, including its very first frame.
-  const anchor = '    return null;';
+  const anchor = '    return aboutOpen ? html`<${AboutDialog} onClose=${() => setAboutOpen(false)} />` : null;';
   if (source.split(from).length !== 2 || source.split(anchor).length !== 2)
     throw new Error('Timeline menu adapter anchor changed');
   return "import { bindMenuDismissal } from '../gi-menu-dismissal.js';\n" + source.replace(from, '').replace(anchor, `    useLayoutEffect(() => {

@@ -13,7 +13,7 @@ const planBundle = join(run, 'plan-browser.js');
 const built = await Bun.build({ entrypoints: [join(root, 'piclaw/plan-sidebar-0.1.25/index.ts')], target: 'browser', format: 'esm', external: ['/editor-vendor/codemirror.js'], plugins: [piclawPlanSidebarAdapter(), piclawWebAdapter(root)] });
 if (!built.success) throw new AggregateError(built.logs);
 await Bun.write(planBundle, built.outputs[0]);
-const loaderSource = patchEditorLoaderRevision(await Bun.file(join(root, 'piclaw/web-3.3.0/web/src/panes/editor-loader.ts')).text());
+const loaderSource = patchEditorLoaderRevision(await Bun.file(join(root, 'piclaw/web-3.3.4/web/src/panes/editor-loader.ts')).text());
 const loaderJS = new Bun.Transpiler({loader:'ts',target:'browser'}).transformSync(loaderSource);
 const loaderBundle = join(run,'loader-browser.js');
 await Bun.write(loaderBundle,loaderJS.replaceAll('/static/classic/dist/editor.bundle.js','/dist/editor.bundle.js'));

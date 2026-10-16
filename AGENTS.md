@@ -75,8 +75,7 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
 - The suite resolves the same way when started directly (global setup creates `runs/suite/<id>` and exports it), then
   creates the model's and each runtime's root under `FIXTURES_RUN_ROOT` (owned directory, checked) with a private
   `tmp/` as the process's `TMPDIR`, and removes it when it stops (`FIXTURES_KEEP_ROOTS=1` keeps it).
-- Keep concise conclusions and canonical oracle records; raw profiling data in test-results is disposable after analysis. Playwright's browsers are an
-  installed toolchain (`PLAYWRIGHT_BROWSERS_PATH`, default `~/.cache/ms-playwright`), not scratch.
+- Keep concise conclusions and canonical oracle records; raw profiling data in test-results is disposable after analysis. New Playwright downloads use `cache/playwright` under the resolved project root. Set `PLAYWRIGHT_BROWSERS_PATH` explicitly to use an installed toolchain; never relocate or remove browsers used by active jobs.
 - `make clean-scratch` removes only this project's `runs/` and `build/`; it refuses any other root.
 
 ## Test profiling

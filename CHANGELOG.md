@@ -1,5 +1,15 @@
 # Changelog
 
+## Piclaw 3.3.4 frontend and library refresh (2026-10-16)
+
+* Align Classic's unmodified source/vendor pages to `v3.3.4-ux`; retain revision-safe editor/Plan persistence
+  and adopt upstream widget isolation and terminal recovery. About reads the shared runtime-config endpoint.
+* Update all four dependency manifests/locks to current stable direct packages, refresh compatible transitives,
+  rebuild all three UIs, and make AdaptiveCards and legacy Marked assets reproducible. Xterm packages are current.
+* Add release browser checks for Markdown/math, About, composer, cards, widgets and terminal libraries. Route new
+  Playwright downloads through project-owned cache paths. See [checks and profiling](docs/internal/piclaw-334-alignment.md).
+* Historical oracle records, shared specs/skips, consumer pins and publication holds are unchanged.
+
 ## Unreleased
 
 - Implement fixtures-vibes#1 in the shared Classic frontend: complete loaded revision baselines, conditional

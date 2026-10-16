@@ -1,7 +1,7 @@
 # Classic web UI
 
-The shared web front-end uses Piclaw **v3.3.0** Classic sources, vendored unmodified from tagged commit
-`e4c2b9a3536eb64361da86237a4dfc970d772682`, with the adapter layer that maps them onto [../API.md](../API.md). The Gi-owned files came from rcarmo/gi at the revision in
+The shared web front-end uses Piclaw **v3.3.4-ux** Classic sources, vendored unmodified from tagged commit
+`78dcfa25838a152fdf936b864306b643b8d1cfbc`, with the adapter layer that maps them onto [../API.md](../API.md). The Gi-owned files came from rcarmo/gi at the revision in
 `SOURCE-REVISION`.
 
 | Path | Contents |
@@ -22,25 +22,39 @@ Piclaw module entirely; prefer an anchored patch when Gi changes only a few line
 `/dist/app.bundle.css` is Piclaw's Classic stylesheet (`web/src/styles/app.css` and its imports), without its KaTeX copy:
 Classic serves the stylesheet of the npm KaTeX it bundles. Gi's `static/css/gi-*.css` load after it.
 
-To move to another Piclaw release, run `bun scripts/vendor-piclaw.mjs <piclaw-checkout> <tag>`. It copies the build's
+The release supplies widget isolation and terminal reattachment directly; their older backports are retired.
+Revision preconditions and reviewed overwrite still use Classic's adapter. About reads `/api/runtime/config`,
+showing the runtime's version when supplied and the UI pin.
+
+To move to another Piclaw release, run `bun scripts/vendor-piclaw.mjs <piclaw-checkout> <tag> <version>` and
+`bun scripts/extract-piclaw-viewers.ts <clean-pinned-checkout>/runtime/src/channels/web/http <version>`. It copies the build's
 import closure at that ref, replaces the old `piclaw/web-*`, and lists Classic modules outside the bundle graph. Then
 `make build`, fix any anchored patch whose anchor moved, and run the unit tests and the compliance suite.
 
 `make build` rewrites `static/` and `theme-catalogue.json` (commit both); `make test` and `make check` verify the sources.
+`make check-release` checks Markdown/math sanitisation, About, composer submission, AdaptiveCards input/actions,
+widget sandbox/message isolation and xterm/FitAddon on Chromium desktop and WebKit phone.
 `make check-revisions` exercises conditional editor and Plan persistence in Chromium desktop and WebKit phone
 against an isolated HTTP fixture, with zero retries. It covers typing during writes, transferred baselines,
 same-mtime conflicts, create-only copies, reviewed overwrite, conditional Reset, Submit-after-save and missing
 revisions. Runtime compliance and backend writer concurrency need separate acceptance.
 
 Tests are unprofiled by default. Use `PROFILING=1` for pre-release verification; analyse captures and dispose of them.
-The revision browser helper's Bun profile covers its HTTP fixture/build runner, not browser allocations.
+The browser helpers also capture Chromium CPU and sampled allocations; Playwright cannot collect equivalent
+WebKit profiles. Bun test heaps contain live objects at exit, not allocation histories. See the
+[upgrade record](../../docs/internal/piclaw-334-alignment.md) for measurements and limits.
+
+Front-end manifests use exact versions. AdaptiveCards now builds from the lockfile at the renderer's
+`/static/common/js/vendor/adaptivecards.min.js` URL. Playwright 1.64.1 is shared across all UI and compliance
+manifests. New browser downloads use `<project-root>/cache/playwright`; an explicit `PLAYWRIGHT_BROWSERS_PATH`
+can select an installed toolchain without moving it.
 
 Revision-safe persistence uses `scripts/patch-editor-revision.mjs` and `scripts/patch-plan-revision.mjs`, wired by the
 web/add-on adapters. `src/gi-revision-state.ts` validates opaque revisions and presents the reviewed overwrite snapshot.
 The [backend contract](../API.md#workspace) requires loaded preconditions and create-only copies. Missing revisions
 fail closed; no unconditional retry or error-revision adoption is permitted.
 
-The composer is Piclaw v3.3.0's `components/compose-box.ts`, wired through its supported props and `services` in
+The composer is Piclaw v3.3.4-ux's `components/compose-box.ts`, wired through its supported props and `services` in
 `src/app.ts`. Piclaw owns rendering, draft clearing/restoration, queue return, model/session pickers and voice input.
 The host supplies session media uploads (capturing the submitting chat), commands, run-bound Stop/Compact and session
 mutations. `scripts/patch-compose-host.mjs` adds batch cancellation, server-authoritative pins when provided, and

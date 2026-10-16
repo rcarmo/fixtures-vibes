@@ -16,6 +16,7 @@ await bundle('preact-htm-entry.js', 'preact-htm.js');
 await bundle('codemirror-entry.ts', 'codemirror.js');
 await bundle('beautiful-mermaid-entry.js', 'beautiful-mermaid.js', 'iife');
 
+copyFileSync(resolve(root, 'node_modules/marked/lib/marked.umd.js'), resolve(root, 'static/js/marked.min.js'));
 const katex = resolve(root, 'node_modules/katex/dist');
 copyFileSync(resolve(katex, 'katex.min.js'), resolve(vendor, 'katex.min.js'));
 writeFileSync(resolve(root, 'static/css/katex.min.css'),

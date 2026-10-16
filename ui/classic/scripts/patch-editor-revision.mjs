@@ -1,4 +1,4 @@
-// Revision-safe persistence over unmodified Piclaw v3.3.0 editor bytes.
+// Revision-safe persistence over unmodified Piclaw v3.3.4-ux editor bytes.
 const once = (source, from, to) => {
   const at = source.indexOf(from);
   if (at < 0 || source.indexOf(from, at + from.length) >= 0) throw Error(`Editor revision anchor changed: ${from.slice(0, 90)}`);
@@ -11,7 +11,7 @@ const method = (source, start, end, replacement) => {
 };
 export function patchEditorRevision(source) {
   let s = source;
-  s = once(s, "import { getWorkspaceBranch, getWorkspaceFile, updateWorkspaceFile, uploadWorkspaceFile } from '../../../web/src/api.js';",
+  s = once(s, "import { getWorkspaceBranch, getWorkspaceFile, updateWorkspaceFile, createWorkspaceFile, uploadWorkspaceFile } from '../../../web/src/api.js';",
     "import { getWorkspaceBranch, getWorkspaceFile, updateWorkspaceFile, createWorkspaceFile, uploadWorkspaceFile } from '../../../web/src/api.js';\nimport { validRevision, snapshotRevision, reviewOverwrite } from '../../../web/src/gi-revision-state.js';");
   s = once(s, '    private initialContent = \x27\x27;', '    private initialContent = \x27\x27;\n    private loadedRevision: string | number | null = null;');
   s = once(s, '    initialContent?: string;\n', '    initialContent?: string;\n    revision?: string | number | null;\n');
@@ -73,6 +73,19 @@ export function patchEditorRevision(source) {
         this.conflictMonitor = createFileConflictMonitor({
             path: this.path, getCurrentMtime: () => this.currentMtime,
             anchorParent: this.paneEl, anchorBefore: this.bodyEl, ownerDocument: this.ownerDocument,
+            onExternalChange: async () => {
+                if (this.dirty) return false;
+                const knownMtime = this.currentMtime;
+                const path = this.path;
+                const view = this.view;
+                const content = this.getContent();
+                const data = await getWorkspaceFile(path, EDITOR_MAX_BYTES, 'edit');
+                if (this.disposed || this.path !== path || this.view !== view || this.currentMtime !== knownMtime) return true;
+                if (this.dirty || this.getContent() !== content) return false;
+                if (data?.error || typeof data?.text !== 'string' || !data?.mtime) return false;
+                this.setContent(data.text, data.mtime, snapshotRevision(data));
+                return true;
+            },
             onReload: async () => {
                 if (this.dirty && !this.ownerWindow.confirm('Reload and discard unsaved changes?')) return;
                 const path = this.path;
