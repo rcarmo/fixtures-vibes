@@ -1160,7 +1160,7 @@ function GiApp() {
                 ${stopError && html`<div role="alert">${stopError}</div>`}
                 ${compactError && html`<div role="alert">${compactError}</div>`}
                 ${draftStorageError && html`<div role="alert">${draftStorageError}</div>`}
-                ${drafts.error(sessionId) && html`<div role="alert">${drafts.error(sessionId)}</div>`}
+                ${drafts.hostError(sessionId) && html`<div role="alert">${drafts.hostError(sessionId)}</div>`}
                 ${localNotifications.notice && html`<div class="gi-notification-status" role="status"><span>${localNotifications.notice}</span><button type="button" aria-label="Dismiss notification status" onClick=${localNotifications.dismiss}>×</button></div>`}
                 <${ComposeTransfer} sessionId=${sessionId} hidden=${searchState.active} />
                 <${ComposeBox}
