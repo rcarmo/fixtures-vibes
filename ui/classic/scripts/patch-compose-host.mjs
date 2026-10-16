@@ -51,6 +51,8 @@ export function patchComposeHost(source) {
   s = once(s, '    const title = activeCompactionLabel\n', '    const nativeTitle = activeCompactionLabel\n');
   s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`;\n    const title = usage.hostTitle || nativeTitle;');
   s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            aria-description=${usage.hostDescription || undefined}\n            disabled=${!canCompact}');
+  s = once(s, '            class=${`compose-context-pie icon-btn${activeCompactionLabel ? \' is-compacting\' : \'\'}`}', '            class=${`compose-context-pie icon-btn${activeCompactionLabel || usage.hostActive ? \' is-compacting\' : \'\'}`}');
+  s = once(s, '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);', '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);\n    if (abortButtonState && contextUsage?.hostStopPending) abortButtonState.disabled = true;');
   // Journal trusted editor changes synchronously, before a page can close.
   s = once(s, '    const updateValue = (value) => {\n        if (searchMode)',
     '    const updateValue = (value) => {\n        if (!searchMode) onContentChange?.(value);\n        if (searchMode)');

@@ -22,10 +22,15 @@ export function modelContextBlocked(option: any, usage: any): boolean {
 
 // Keep host measurement/capability evidence until native compaction is available.
 // Native active-compaction wording must not be replaced by a stale host title.
-export function hostContextUsage(usage: any, fresh: boolean, capability: any, canCompact: boolean) {
+export function hostContextUsage(usage: any, fresh: boolean, capability: any, canCompact: boolean, state: any = {}) {
     if (!usage || !fresh) return null;
     const reason = capability?.reason || 'Compaction unavailable';
     const presentation = contextPresentation(usage);
-    return { ...usage, percent: usage.percent ?? 0, hostLabel: presentation.label, hostDescription: canCompact ? 'Compact context' : reason,
-        hostTitle: capability?.active ? null : `${presentation.title} — ${canCompact ? 'Compact context' : reason}` };
+    const active = state.notice?.intent_key === 'compaction';
+    const detail = [active ? `Compacting context — ${state.elapsed || '0:00'}` : '', state.estimate || '', presentation.title].filter(Boolean).join(' — ');
+    return { ...usage, percent: usage.percent ?? 0,
+        hostLabel: active ? detail : presentation.label,
+        hostActive: active, hostStopPending: !!state.stopPending,
+        hostDescription: active ? null : state.pending ? 'Compaction request pending' : canCompact ? null : reason,
+        hostTitle: active ? detail : capability?.active ? null : `${presentation.title} — ${state.pending ? 'Compaction request pending' : canCompact ? 'Compact context' : reason}` };
 }

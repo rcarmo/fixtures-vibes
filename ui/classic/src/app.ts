@@ -109,7 +109,7 @@ import { createDraftRepository, indexedDraftStorage, sessionDraftTextJournal } f
 // Piclaw components expect chat_jid strings. We map Gi sessions onto that
 // model: the default session becomes 'gi:default'.
 
-import { createActivityRevision, compactionNotice, compactionUnavailableReason } from './gi-compaction-state.js';
+import { createActivityRevision, compactionNotice, compactionUnavailableReason, compactionElapsed, compactionEstimateLabel } from './gi-compaction-state.js';
 import {createActivationRefreshGate,createTimelineRevision,createAssetVersionGuard,loadedAssetVersion} from './gi-refresh-guards.js';
 import {createSearchView} from './gi-search-state.js';
 import {newMessageWindow,mergeMessagePages,captureTimelineAnchor,restoreTimelineAnchor} from './gi-message-pages.js';
@@ -1202,7 +1202,7 @@ function GiApp() {
                     onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
                     onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
                     onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
-                    contextUsage=${hostContextUsage(contextUsage, contextUsage != null, compactState, !!manualCompact)}
+                    contextUsage=${hostContextUsage(contextUsage, contextUsage != null, compactState, !!manualCompact, {notice, pending:compactPending, stopPending, now:activityNow, estimate:compactionEstimateLabel(notice), elapsed:compactionElapsed(notice?.started_at,activityNow)})}
                     activeEditorPath=${activeTabId}
                     onAttachEditorFile=${() => {
                         if (!activeTabId) return;
