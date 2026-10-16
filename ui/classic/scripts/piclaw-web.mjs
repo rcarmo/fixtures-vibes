@@ -57,6 +57,14 @@ export const patchWindowActions = source => patch(source, 'app-window-actions.ts
 export const patchExplorerUploads = source => patch(source, 'workspace-explorer.ts', [
   ["import { uploadFileBatch, uploadWorkspaceFile } from '../ui/upload-transfers.js';",
     "import { uploadFileBatch } from '../ui/upload-transfers.js';\nimport { uploadWorkspaceFile } from '../api.js';"],
+  ['            loadTreeFnRef.current?.();\n        };\n        const onWorkspaceAction',
+    `            void loadTreeFnRef.current?.().then(() => {
+                for (const path of expandedRef.current) {
+                    if (path !== '.' && path !== '') void loadSubtreeRef.current?.(path);
+                }
+            });
+        };
+        const onWorkspaceAction`],
 ]);
 
 /** Resolve a logical runtime/ path (web/src/…, extensions/…) to a file: Classic overlay first, then vendored. */
@@ -91,6 +99,9 @@ export function piclawWebAdapter(root) {
   return { name: 'piclaw-web', setup(build) {
     build.onResolve({ filter: /^#editor-vendor\/codemirror$/ }, () => ({ path: CODEMIRROR, external: true }));
     build.onResolve({ filter: /^\.\.?\// }, args => {
+      if (args.path === './post-runtime-safety.js' && args.importer === resolve(root, piclawWebDir(root), 'web/src/components/post.ts')) {
+        return { path: resolve(root, 'src/gi-clipboard-safety.ts') };
+      }
       const path = overlay.resolve(args.importer, args.path);
       return path ? { path } : undefined;
     });

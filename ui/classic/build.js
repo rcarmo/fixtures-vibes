@@ -139,12 +139,6 @@ const appBuild = await Bun.build({
       contents: (await Bun.file(args.path).text()) + '\nexport { THEME_PRESETS as giThemePresets, applyThemeState as giApplyThemeState };\n',
       loader: 'ts',
     }));
-  } }, { name: 'gi-clipboard-safety', setup(build) {
-    build.onResolve({filter: /^\.\/post-runtime-safety\.js$/}, args => {
-      if (args.importer === resolve(PICLAW_WEB, 'web/src/components/post.ts')) {
-        return { path: resolve(webSrc, 'gi-clipboard-safety.ts') };
-      }
-    });
   } }],
 });
 if (!appBuild.success) { console.error(appBuild.logs); process.exit(1); }

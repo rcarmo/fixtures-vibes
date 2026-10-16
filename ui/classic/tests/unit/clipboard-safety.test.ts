@@ -9,9 +9,9 @@ test('missing or denied native clipboard cannot claim a successful write',async(
  expect(await writeClipboardTextBestEffort(target,'**source**')).toBe(true);expect(target.calls).toEqual(['**source**']);
 });
 test('build routes the actual vendored post importer through the clipboard guard',()=>{
- const build=readFileSync(new URL('../../build.js',import.meta.url),'utf8');
- expect(build).toContain("args.importer === resolve(PICLAW_WEB, 'web/src/components/post.ts')");
- expect(build).not.toContain("args.importer === resolve(webSrc, 'components/post.ts')");
+ const adapter=readFileSync(new URL('../../scripts/piclaw-web.mjs',import.meta.url),'utf8');
+ expect(adapter).toContain("args.importer === resolve(root, piclawWebDir(root), 'web/src/components/post.ts')");
+ expect(adapter.indexOf("args.path === './post-runtime-safety.js'")).toBeLessThan(adapter.indexOf('const path = overlay.resolve(args.importer, args.path)'));
 });
 test('compatibility adapter retains supplied legacy helper exports',()=>{
  expect(writeClipboardDataViaExecCommand(undefined,{text:'source'})).toBe(false);
