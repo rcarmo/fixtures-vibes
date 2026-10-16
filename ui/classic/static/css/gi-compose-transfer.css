@@ -17,3 +17,13 @@
 /* The native input is a flex child: honour its measured inline height rather
    than collapsing its zero flex-basis back to the minimum on long drafts. */
 .compose-box textarea { flex: 0 0 auto; }
+
+/* Host-owned codemode cards: inherit accessible theme colours, never raw HTML. */
+.codemode-card pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.codemode-card-source summary { cursor: pointer; }
+.codemode-token-keyword { color: var(--accent-color, currentColor); font-weight: 700; }
+.codemode-token-string { text-decoration: underline dotted; }
+.codemode-token-comment { font-style: italic; }
+.codemode-token-number { font-weight: 700; }
+.codemode-card-error { border-inline-start: 3px solid currentColor; padding-inline-start: .5rem; }
+.codemode-card-full-output { overflow-wrap: anywhere; }

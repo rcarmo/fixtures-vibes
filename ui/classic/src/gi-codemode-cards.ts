@@ -201,6 +201,23 @@ export function formatDuration(ms: number | null | undefined): string {
     return ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${ms}ms`;
 }
 
+/** Small lexical highlighter: spans contain text nodes, never generated HTML.
+ * Unknown tokens remain literal; this is presentation, not a JavaScript parser. */
+export function scriptTokens(script: string): { text: string; kind: string }[] {
+    const pattern = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b(?:async|await|const|let|var|return|throw|try|catch|finally|if|else|for|while|function|new|true|false|null|undefined)\b|\b\d+(?:\.\d+)?\b)/g;
+    const tokens: { text: string; kind: string }[] = [];
+    let offset = 0;
+    for (const match of script.matchAll(pattern)) {
+        const index = match.index!;
+        if (index > offset) tokens.push({ text: script.slice(offset, index), kind: 'plain' });
+        const text = match[0];
+        tokens.push({ text, kind: text.startsWith('//') || text.startsWith('/*') ? 'comment' : /^["'`]/.test(text) ? 'string' : /^\d/.test(text) ? 'number' : 'keyword' });
+        offset = index + text.length;
+    }
+    if (offset < script.length) tokens.push({ text: script.slice(offset), kind: 'plain' });
+    return tokens;
+}
+
 /** Every interpolated value is a text node; model output is never treated as markup. */
 export function renderCodemodeCard(post: any, html: any) {
     const card = post?.data?.card;
@@ -212,9 +229,10 @@ export function renderCodemodeCard(post: any, html: any) {
                 <span class="codemode-card-status">${String(card.status ?? 'unknown')}</span>
                 ${card.duration_ms !== null ? html`<span class="codemode-card-duration">${formatDuration(card.duration_ms)}</span>` : null}
             </div>
-            ${card.script ? html`<pre class="codemode-card-script">${card.script}</pre>` : null}
+            ${card.script ? html`<details class="codemode-card-source" open><summary>Script</summary><pre class="codemode-card-script"><code>${scriptTokens(String(card.script)).map(token => html`<span class=${`codemode-token-${token.kind}`}>${token.text}</span>`)}</code></pre></details>` : null}
             ${rows.length ? html`<ul class="codemode-card-calls">${rows.map(row => html`
-                <li>${`${row.name}${row.args ? ` ${row.args}` : ''}`}${row.status ? ` — ${row.status}` : ''}${row.durationMs !== null && row.durationMs !== undefined ? ` (${formatDuration(row.durationMs)})` : ''}</li>`)}</ul>` : null}
+                <li>${`${row.name}${row.args ? ` ${row.args}` : ''}`}${row.status ? ` — ${row.status}` : ''}${row.durationMs !== null && row.durationMs !== undefined ? ` (${formatDuration(row.durationMs)})` : ''}${row.error ? html`<pre class="codemode-card-error">${String(row.error)}</pre>` : null}</li>`)}</ul>` : null}
             ${card.output ? html`<pre class="codemode-card-output">${card.output}</pre>` : null}
+            ${card.full_output_path ? html`<div class="codemode-card-full-output">Full output: <code>${String(card.full_output_path)}</code></div>` : null}
         </div>`;
 }
