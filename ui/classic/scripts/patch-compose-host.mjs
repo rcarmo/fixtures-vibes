@@ -7,6 +7,8 @@ const once = (source, from, to) => {
 };
 export function patchComposeHost(source) {
   let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
+  s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
+  s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
   // A whole captured upload batch shares a cancellation lifetime, not one File at a time.
   s = once(s, '    const fetchCommands = composeServices.fetchCommands',
     '    const beginUploadBatch = composeServices.beginUploadBatch;\n    const fetchCommands = composeServices.fetchCommands');
