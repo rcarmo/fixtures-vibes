@@ -11,7 +11,9 @@ import type { Page } from '@playwright/test';
 
 type Sel = (k: string) => string;
 
-const meter = (page: Page) => page.getByRole('button', { name: /^context/i }).first();
+// The active meter prefixes its measurement with "Compacting context".
+// Require the measurement for that variant, excluding the Stop response button.
+const meter = (page: Page) => page.getByRole('button', { name: /^(?:context|compacting context[\s\S]*context:)/i }).first();
 const modelButton = (page: Page) => page.getByRole('button', { name: /model picker/i }).first();
 const meterName = async (page: Page) => (await meter(page).getAttribute('aria-label')) ?? (await meter(page).innerText());
 
