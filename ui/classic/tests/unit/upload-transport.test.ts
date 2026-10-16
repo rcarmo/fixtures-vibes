@@ -1,6 +1,6 @@
 import {expect,test} from 'bun:test';
 import {uploadMedia} from '../../src/api';
-import {composeTransfers} from '../../src/gi-compose-transfer';
+import {composeTransfers} from '../../src/gi-compose-transfer.js';
 
 test('native upload adapter aborts before encoding or during XHR, fences late completion and cleans listeners',async()=>{
  const original=globalThis.XMLHttpRequest;const calls:any[]=[];let throwOpen=false;
