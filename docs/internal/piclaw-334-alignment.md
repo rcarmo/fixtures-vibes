@@ -10,7 +10,7 @@ All direct dependencies in the root, Classic, Vibes and Tau manifests were check
 on 2026-10-16 and pinned exactly. Updated versions include Preact 11.0.1, Marked 18.1.1, Babel runtime 8.0.7,
 CodeMirror language 6.13.1/view 6.43.14/legacy-modes 6.5.5, Playwright 1.64.1, AJV 8.20.0, Pixelmatch 8.0.0 and
 axe-core/Playwright 4.14.0. Compatible transitive dependencies were refreshed too. The Vibes lock had vulnerable
-brace-expansion 5.0.9; it now resolves 5.0.12. All four `bun audit` runs must pass before publication.
+brace-expansion 5.0.9; it now resolves 5.0.12. All four final `bun audit` runs pass (11/65/135/138 checked packages respectively).
 
 AdaptiveCards 3.0.6 is now declared, locked and rebuilt at the renderer's actual lazy-load URL,
 `/static/common/js/vendor/adaptivecards.min.js`. Old SDK output and metadata are removed. Vibes and Tau refresh
@@ -25,7 +25,9 @@ source-window and pane-instance admission. The superseded backports are removed;
 policy and guards. Revision-safe editor/Plan saves, create-only copies and reviewed overwrite retain their adapters.
 The editor's clean external reload also adopts the fetched revision and preserves edits/path/view/mtime changes
 that occur during the fetch. About uses `/api/runtime/config` and displays runtime version separately from UI pin.
-The native menu keeps its new About action and the existing guarded dismissal adapter.
+The native menu keeps its new About action and the existing guarded dismissal adapter. The merge retains
+upstream native-confirm overwrite review and reverse-order terminal-addon cleanup from `origin/main`.
+The revision browser check now opens the real native dialog and changes the remote snapshot during review.
 
 No backend implementation, consumer gitlink, deployment, shared scenario/skip or oracle record is changed.
 Gi adopters must update their viewer-CSP test path to `piclaw/viewers-3.3.4/csp.json`. Static servers need the
@@ -34,13 +36,14 @@ existing `/static/` alias for the SDK's common-assets URL. Vibes publication sta
 ## Checks and profiling
 
 Toolchain: Bun 1.4.2, Playwright 1.64.1, Chromium 1248 and WebKit 2370 on Linux x64.
-All three bundles build; hook-TDZ checks pass. Pre-release units/contracts are profiled with `PROFILING=1`.
+All three bundles build; hook-TDZ checks pass. Final counts are 171 Classic, 62 Vibes, 106 Tau and 26 contract
+tests, all passing. Pre-release units/contracts are profiled with `PROFILING=1`.
 `make check-revisions` passes four zero-retry editor/Plan workloads; `make check-release` passes two zero-retry
 component workloads on Chromium desktop and WebKit phone. The latter covers Markdown/math sanitisation,
 About/runtime versions, composer submission, AdaptiveCards input/actions, isolated widget messages and xterm/fit.
 These loopback fixtures test components and adapters; live runtime acceptance and full compliance are separate.
 
-Final Classic unit CPU capture: 69 samples at 1 ms; 5,071 KiB/21,942 live objects at exit. Source verification and
+Final merged Classic unit CPU capture: 59 samples at 1 ms; 5,222 KiB/22,110 live objects at exit. Source verification and
 anchored patch checks dominate the small test workload. Vibes: 44 samples, 9,095 KiB live heap; Tau: 44 samples,
 2,750 KiB live heap. JSC snapshots contain live objects, not allocation histories.
 
