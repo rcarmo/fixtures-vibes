@@ -14,3 +14,6 @@
 @media (prefers-reduced-motion: reduce) { .compose-send-stack .send-btn[data-gi-sending="true"]::after { animation: none; } }
 .gi-upload-cancel { color: var(--text-primary); background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 5px; min-height: 32px; padding: 4px 8px; cursor: pointer; }
 @media (pointer: coarse) { .gi-upload-cancel { min-height: 44px; } }
+/* The native input is a flex child: honour its measured inline height rather
+   than collapsing its zero flex-basis back to the minimum on long drafts. */
+.compose-box textarea { flex: 0 0 auto; }
