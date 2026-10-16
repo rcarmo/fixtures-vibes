@@ -9,10 +9,12 @@
 /* Keep the native catalogue and session picker within the host's established
    viewport contract, with touch-sized session dismissal on narrow screens. */
 .compose-model-catalogue {
-  width: min(680px, calc(100vw - 24px));
+  width: min(680px, calc(100vw - 24px), 100%);
 }
 .compose-session-popup {
-  width: min(360px, calc(100vw - 24px));
+  width: auto;
+  left: 0;
+  right: 0;
 }
 @media (max-width: 639px) {
   .compose-model-popup {
