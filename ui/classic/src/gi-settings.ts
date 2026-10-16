@@ -223,13 +223,15 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
     const isOpen = useRef(false);
     const close = () => {
         isOpen.current = false; setOpen(false);
-        requestAnimationFrame(() => {
-            if (isOpen.current) return;
+        // Preact removes the portal/inert guard after committing the close.
+        // Wait through that commit before restoring focus into the application.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            if (isOpen.current || document.querySelector('[aria-modal="true"]')) return;
             const original = opener.current;
             const target = original?.isConnected && original !== document.body && !original.closest('[inert]')
                 ? original : document.querySelector<HTMLElement>('.compose-box textarea');
             target?.focus({ preventScroll: true });
-        });
+        }));
     };
     // Install opening controls before first paint, including the auth gate's
     // asynchronous application mount. A visible composer must be interactive.
