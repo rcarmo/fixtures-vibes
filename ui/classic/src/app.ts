@@ -1188,7 +1188,7 @@ function GiApp() {
                     onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
                     onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
                     onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
-                    contextUsage=${contextUsage}
+                    contextUsage=${contextUsage && activityFresh ? {...contextUsage,hostTitle:formatContextUsage(contextUsage) + ' — ' + (compactionNotice || (manualCompact.available ? 'Compact context' : manualCompact.reason || 'Compaction unavailable'))} : null}
                     activeEditorPath=${activeTabId}
                     onAttachEditorFile=${() => {
                         if (!activeTabId) return;
