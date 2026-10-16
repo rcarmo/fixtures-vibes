@@ -17,6 +17,10 @@ export function patchModelPickerFocus(source) {
  source=once(source,'aria-expanded="true"\n                        aria-controls=', 'aria-expanded="true"\n                        aria-haspopup="listbox"\n                        aria-controls=');
  source=once(source,'role="listbox" aria-label="Models">','role="listbox" aria-label="Models" aria-busy=${loading || switching ? "true" : "false"}>');
  source=once(source,'${projection.sections.map((section)', '${(loading ? [] : projection.sections).map((section)');
+ source=once(source,"if (!entry || switching || entry.contextFit.state === 'blocked') return;", "if (!entry || loading || switching || entry.contextFit.state === 'blocked') return;");
+ source=once(source,'}, [onSelect, switching]);', '}, [onSelect, loading, switching]);');
+ source=once(source,'        const actions = {', '        if ((loading || switching) && event.key !== "Escape" && event.key !== "Tab") { event.preventDefault(); return; }\n        const actions = {');
+ source=once(source,'}, [activeKey, choose, onClose, onTogglePin, projection.renderedEntries]);', '}, [activeKey, choose, onClose, onTogglePin, projection.renderedEntries, loading, switching]);');
  source=once(source,'onClick=${() => setQuery(\'\')}', 'onClick=${() => { setQuery(\'\'); searchRef.current?.focus(); }}');
  return source.replace(header,`            <button type="button" class="compose-model-picker-close" aria-label="Close model picker" style="min-width:44px;min-height:44px;align-self:flex-end" onClick=\${onClose}>×</button>\n${header}`).replace(from,`    useEffect(() => {
         const frame = requestAnimationFrame(() => searchRef.current?.focus());

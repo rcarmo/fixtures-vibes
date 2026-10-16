@@ -86,6 +86,7 @@ export function patchComposeHost(source) {
     '        const pickerOwnedFocus = () => Boolean(modelPopupRef.current?.contains(document.activeElement));\n        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);\n        const restorePickerFocus = pickerOwnedFocus();');
   s = once(s, '            requestAnimationFrame(() => modelHintRef.current?.focus?.());\n        }\n    };\n\n    const runSessionPopupEntry',
     '            if (restorePickerFocus) requestAnimationFrame(() => modelHintRef.current?.focus?.());\n        }\n    };\n\n    const runSessionPopupEntry');
+  s = once(s, "requestOpenSettingsDialog({ section: 'models' });", "window.dispatchEvent(new CustomEvent('piclaw:open-settings', {detail: {section: 'models', opener: modelHintRef.current}}));");
   // Do not let keyboard activation leak through IME/repeated/consumed Enter into a prompt.
   s = once(s, '    const handleKeyDown = (e) => {',
     "    const handleKeyDown = (e) => {\n        if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || (e.repeat && (e.key === 'Enter' || e.key === 'Tab'))) return;");
