@@ -1167,7 +1167,7 @@ function GiApp() {
                     onContentChange=${(text: string) => drafts.update(sessionId, { text })}
                     services=${{
                         // This closure belongs to the submitting chat even if the picker switches during upload.
-                        initialMedia: sessionId ? drafts.getDraft(sessionId).media : [],
+                        initialMedia: sessionId ? getDraft(sessionId).media : [],
                         onMediaChange: (media: File[]) => { if(sessionId) drafts.update(sessionId,{media}); },
                         captureSubmission: async (jid: string, draft: any) => {
                             const id = jid.startsWith('gi:') ? jid.slice(3) : jid;
