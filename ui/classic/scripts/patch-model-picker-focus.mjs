@@ -15,7 +15,7 @@ export function patchModelPickerFocus(source) {
  source=once(source,'aria-activedescendant=${activeKey ? optionId(instanceIdRef.current, activeKey) : undefined}', 'aria-activedescendant=${!loading && !switching && selectableEntries.some(entry => entry.key === activeKey) ? optionId(instanceIdRef.current, activeKey) : undefined}');
  source=once(source,"        const blocked = entry.contextFit.state === 'blocked';", "        const blocked = switching || entry.contextFit.state === 'blocked';");
  source=once(source,'aria-expanded="true"\n                        aria-controls=', 'aria-expanded="true"\n                        aria-haspopup="listbox"\n                        aria-controls=');
- source=once(source,'role="listbox" aria-label="Models">','role="listbox" aria-label="Models" aria-busy=${loading || switching ? "true" : "false"}>');
+ source=once(source,'role="listbox" aria-label="Models">','role="listbox" aria-label="Models" tabindex="-1" aria-busy=${loading || switching ? "true" : "false"}>');
  source=once(source,'${projection.sections.map((section)', '${(loading ? [] : projection.sections).map((section)');
  source=once(source,"if (!entry || switching || entry.contextFit.state === 'blocked') return;", "if (!entry || loading || switching || entry.contextFit.state === 'blocked') return;");
  source=once(source,'}, [onSelect, switching]);', '}, [onSelect, loading, switching]);');
