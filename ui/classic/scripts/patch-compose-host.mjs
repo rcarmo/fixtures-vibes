@@ -9,6 +9,29 @@ export function patchComposeHost(source) {
   let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
   s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
   s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
+  s = once(s, '            recognition.stop();\n        } catch {', '            if (speechUiState.kind !== "requesting_permission") recognition.stop();\n        } catch {');
+  s = once(s, '    }, [clearSpeechUiState]);\n\n    const handleSpeechToggle', '    }, [clearSpeechUiState, speechUiState.kind]);\n\n    const handleSpeechToggle');
+  const cleanupStart = s.indexOf('    useEffect(() => {\n        if (!searchMode) return undefined;\n        void dictationRef.current?.cancel();');
+  const cleanupEnd = s.indexOf('    useEffect(() => {\n        if (!statusNoticeIsCompaction)', cleanupStart);
+  if (cleanupStart < 0 || cleanupEnd < 0) throw Error('Speech lifecycle anchors changed');
+  s = s.slice(0,cleanupStart) + `    const retireNativeSpeech = () => {
+        const recognition=speechRecognitionRef.current;
+        speechRecognitionRef.current=null;
+        speechPushToTalkActiveRef.current=false;
+        if(recognition){recognition.abort?.();clearSpeechUiState();}
+    };
+    useEffect(() => { if(searchMode) {dictationRef.current?.cancel();retireNativeSpeech();} },[searchMode]);
+    useEffect(() => { retireNativeSpeech(); },[currentChatJid]);
+    useEffect(() => {
+        const retire=()=>retireNativeSpeech();
+        window.addEventListener('pagehide',retire);
+        window.addEventListener('piclaw:open-settings',retire);
+        const observer=new MutationObserver(()=>{if(document.querySelector('[aria-modal="true"]'))retire();});
+        observer.observe(document.body,{childList:true,subtree:true});
+        return()=>{observer.disconnect();window.removeEventListener('pagehide',retire);window.removeEventListener('piclaw:open-settings',retire);retire();};
+    },[]);
+
+` + s.slice(cleanupEnd);
   // Recognition ownership ends on manual edits; late callbacks cannot rewrite them.
   s = once(s, '        if (speechRecognitionRef.current && e?.isTrusted) {\n            stopSpeechRecognition();\n        }', '        if (speechRecognitionRef.current && e?.isTrusted) {\n            const recognition=speechRecognitionRef.current;\n            speechRecognitionRef.current=null;\n            recognition.abort?.();\n            clearSpeechUiState();\n        }');
   s = once(s, "                setSpeechUiState({\n                    kind: 'listening',\n                    title: 'Listening…',\n                    detail: 'Speak now. Tap the mic again to stop.',\n                });\n            };", "                setSpeechUiState({\n                    kind: 'listening',\n                    title: 'Listening…',\n                    detail: 'Speak now. Tap the mic again to stop.',\n                });\n                if (speechPendingStopRef.current) recognition.stop();\n            };");
