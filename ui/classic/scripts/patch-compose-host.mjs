@@ -51,5 +51,30 @@ export function patchComposeHost(source) {
   s = once(s, '    const title = activeCompactionLabel\n', '    const nativeTitle = activeCompactionLabel\n');
   s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`;\n    const title = usage.hostTitle || nativeTitle;');
   s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            aria-description=${usage.hostDescription || undefined}\n            disabled=${!canCompact}');
+  // Host durable capture must finish before the native editor clears or POST begins.
+  s = once(s, '    const [mediaFiles, setMediaFiles] = useState([]);',
+    '    const [mediaFiles, setMediaFiles] = useState(() => composeServices.initialMedia || []);\n    useEffect(() => { composeServices.onMediaChange?.(mediaFiles); }, [mediaFiles]);');
+  const clearBlock = `        if (clearAfterSubmit) {
+            setContent('');
+            setMediaFiles([]);
+            onClearFileRefs?.();
+            onClearFolderRefs?.();
+            onClearMessageRefs?.();
+        }
+`;
+  s = once(s, clearBlock, '');
+  s = once(s, '            try {\n                const intercepted',
+    `            let hostCapture = null;
+            try {
+                hostCapture = await composeServices.captureSubmission?.(submissionChatJid, { text: capturedTrimmedContent, media: capturedMediaFiles, fileRefs: [...capturedFileRefs, ...capturedFolderRefs], messageRefs: capturedMessageRefs });
+${clearBlock}                const intercepted`);
+  s = once(s, 'mediaIds, resolveSubmitMode(submitMode), submissionChatJid);',
+    'mediaIds, resolveSubmitMode(submitMode), submissionChatJid, hostCapture ? { client_request_id: hostCapture.token } : {});');
+  s = once(s, '                requireComposeAcknowledgement(response);',
+    '                requireComposeAcknowledgement(response);\n                await composeServices.acceptSubmission?.(submissionChatJid, hostCapture?.token);');
+  s = once(s, '                if (intercepted) {\n                    onPost?.(intercepted);',
+    '                if (intercepted) {\n                    await composeServices.acceptSubmission?.(submissionChatJid, hostCapture?.token);\n                    onPost?.(intercepted);');
+  s = once(s, '            } catch (error) {\n                if (clearAfterSubmit) {\n                    restoreDraft();\n                }',
+    '            } catch (error) {\n                if (hostCapture) composeServices.failSubmission?.(submissionChatJid, hostCapture.token, error?.message || String(error));\n                if (clearAfterSubmit && (!composeServices.captureSubmission || hostCapture)) { restoreDraft(); }');
   return s;
 }

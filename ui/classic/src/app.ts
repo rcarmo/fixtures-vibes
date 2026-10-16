@@ -1167,14 +1167,25 @@ function GiApp() {
                     onContentChange=${(text: string) => drafts.update(sessionId, { text })}
                     services=${{
                         // This closure belongs to the submitting chat even if the picker switches during upload.
+                        initialMedia: sessionId ? drafts.getDraft(sessionId).media : [],
+                        onMediaChange: (media: File[]) => { if(sessionId) drafts.update(sessionId,{media}); },
+                        captureSubmission: async (jid: string, draft: any) => {
+                            const id = jid.startsWith('gi:') ? jid.slice(3) : jid;
+                            await drafts.flushStable();
+                            const capture = drafts.begin(id,draft);
+                            await capture.ready;
+                            return {token:capture.token};
+                        },
+                        acceptSubmission: (jid: string, token: string) => token && drafts.accepted(jid.startsWith('gi:') ? jid.slice(3) : jid,token),
+                        failSubmission: (jid: string, token: string, error: string) => drafts.failed(jid.startsWith('gi:') ? jid.slice(3) : jid,token,error),
                         uploadMedia: (file: File, options: any) => uploadMedia(file, currentChatJid, options),
                         beginUploadBatch: (chat: string) => composeTransfers.beginUploadBatch(chat.slice(3)),
                         fetchCommands: getAgentCommands,
                         pinSession: (chat: string, pinned: boolean) => handleSessionMutation(chat, 'pin', pinned),
-                        sendAgentMessage: (agent, text, thread, media, mode, chat) => {
+                        sendAgentMessage: (agent, text, thread, media, mode, chat, options) => {
                             if (/^\/abort\s*$/i.test(text)) return stopFromComposer();
                             if (/^\/compact\s*$/i.test(text)) return compactFromMeter();
-                            return sendAgentMessage(agent, text, thread, media, mode, chat);
+                            return sendAgentMessage(agent, text, thread, media, mode, chat, options);
                         },
                     }}
                     statusNotice=${notice}

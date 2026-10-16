@@ -11,6 +11,10 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched.indexOf(render)).toBeGreaterThan(0);
   expect(patched.slice(patched.indexOf(render))).toBe(source.slice(source.indexOf(render)));
   expect(patched).toContain('beginUploadBatch?.(submissionChatJid)');
+  expect(patched.indexOf('await composeServices.captureSubmission?.')).toBeLessThan(patched.indexOf("setContent('');", patched.indexOf('await composeServices.captureSubmission?.')));
+  expect(patched).toContain('client_request_id: hostCapture.token');
+  expect(patched).toContain('await composeServices.acceptSubmission?.');
+  expect(patched).toContain('composeServices.failSubmission?.');
   expect(patched.match(/uploadBatch\?\.signal.throwIfAborted\(\)/g)).toHaveLength(2);
   expect(patched).toContain('signal: uploadBatch?.signal');
   expect(patched).toContain('await composeServices.pinSession(chatJid, pinned)');
