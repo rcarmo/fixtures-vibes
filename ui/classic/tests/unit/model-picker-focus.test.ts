@@ -10,6 +10,11 @@ test('native picker defers opening-key focus and cancels stale unmount work',()=
  expect(patched).toContain('aria-label="Close model picker"');
  expect(patched).toContain('onClick=${onClose}');
  expect(patched).toContain('min-width:44px;min-height:44px');
+ expect(patched).toContain('aria-busy=${loading || switching ? "true" : "false"}');
+ expect(patched).toContain('loading || switching ? [] : projection.renderedEntries');
+ expect(patched).toContain('${(loading ? [] : projection.sections)');
+ expect(patched).toContain('!loading && !switching && selectableEntries.some');
+ expect(patched).toContain("setQuery(''); searchRef.current?.focus()");
  expect(()=>patchModelPickerFocus(patched)).toThrow('anchor changed');
  expect(()=>patchModelPickerFocus(source+source)).toThrow('anchor changed');
 });
