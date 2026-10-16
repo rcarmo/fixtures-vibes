@@ -50,6 +50,6 @@ export function patchComposeHost(source) {
     "    const handleKeyDown = (e) => {\n        if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || (e.repeat && (e.key === 'Enter' || e.key === 'Tab'))) return;");
   s = once(s, '    const title = activeCompactionLabel\n', '    const nativeTitle = activeCompactionLabel\n');
   s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`;\n    const title = usage.hostTitle || nativeTitle;');
-  s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            disabled=${!canCompact}');
+  s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            aria-description=${usage.hostDescription || undefined}\n            disabled=${!canCompact}');
   return s;
 }

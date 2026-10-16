@@ -26,6 +26,6 @@ export function hostContextUsage(usage: any, fresh: boolean, capability: any, ca
     if (!usage || !fresh) return null;
     const reason = capability?.reason || 'Compaction unavailable';
     const presentation = contextPresentation(usage);
-    return { ...usage, percent: usage.percent ?? 0, hostLabel: presentation.label,
+    return { ...usage, percent: usage.percent ?? 0, hostLabel: presentation.label, hostDescription: canCompact ? 'Compact context' : reason,
         hostTitle: capability?.active ? null : `${presentation.title} — ${canCompact ? 'Compact context' : reason}` };
 }
