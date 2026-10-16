@@ -19,3 +19,11 @@ export function contextPresentation(usage: any, canCompact = false) {
 export function modelContextBlocked(option: any, usage: any): boolean {
     return known(usage?.tokens) && known(option?.contextWindow) && option.contextWindow > 0 && usage.tokens > option.contextWindow;
 }
+
+// Keep host measurement/capability evidence until native compaction is available.
+// Native active-compaction wording must not be replaced by a stale host title.
+export function hostContextUsage(usage: any, fresh: boolean, capability: any, canCompact: boolean) {
+    if (!usage || !fresh) return null;
+    const reason = capability?.reason || 'Compaction unavailable';
+    return { ...usage, hostTitle: canCompact || capability?.active ? null : `${contextPresentation(usage).title} — ${reason}` };
+}

@@ -1,4 +1,4 @@
-import { contextPresentation } from "./gi-context-usage.js";
+import { hostContextUsage } from "./gi-context-usage.js";
 // @ts-nocheck
 import { randomClientId } from "./gi-random-id.js";
 import { staleTerminalEvent } from './gi-turn-event.js';
@@ -1189,7 +1189,7 @@ function GiApp() {
                     onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
                     onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
                     onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
-                    contextUsage=${contextUsage && activityFresh ? {...contextUsage,hostTitle:contextPresentation(contextUsage).title + ' — ' + (compactionNotice || (manualCompact.available ? 'Compact context' : manualCompact.reason || 'Compaction unavailable'))} : null}
+                    contextUsage=${hostContextUsage(contextUsage, activityFresh, compactState, !!manualCompact)}
                     activeEditorPath=${activeTabId}
                     onAttachEditorFile=${() => {
                         if (!activeTabId) return;
