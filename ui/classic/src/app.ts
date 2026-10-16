@@ -1,3 +1,4 @@
+import { hostContextUsage } from "./gi-context-usage.js";
 // @ts-nocheck
 import { randomClientId } from "./gi-random-id.js";
 import { staleTerminalEvent } from './gi-turn-event.js';
@@ -108,7 +109,7 @@ import { createDraftRepository, indexedDraftStorage, sessionDraftTextJournal } f
 // Piclaw components expect chat_jid strings. We map Gi sessions onto that
 // model: the default session becomes 'gi:default'.
 
-import { createActivityRevision, compactionNotice, compactionUnavailableReason } from './gi-compaction-state.js';
+import { createActivityRevision, compactionNotice, compactionUnavailableReason, compactionElapsed, compactionEstimateLabel } from './gi-compaction-state.js';
 import {createActivationRefreshGate,createTimelineRevision,createAssetVersionGuard,loadedAssetVersion} from './gi-refresh-guards.js';
 import {createSearchView} from './gi-search-state.js';
 import {newMessageWindow,mergeMessagePages,captureTimelineAnchor,restoreTimelineAnchor} from './gi-message-pages.js';
@@ -282,7 +283,7 @@ function GiApp() {
         const scope = selection.capture(); const expected = compactState.token; const token = {};
         compactToken.current=token; setCompactPending(true); setCompactError('');
         try { await compactSession(sessionToChatJid(scope.sessionId),expected); }
-        catch (error) { if (selection.isCurrent(scope)) setCompactError(`Compact failed: ${error.message}`); }
+        catch (error) { if (selection.isCurrent(scope)) setCompactError(`Compact failed: ${error.message}`); throw error; }
         finally {
             if (compactToken.current===token) { compactToken.current=null; setCompactPending(false); }
             if (selection.isCurrent(scope)) {activityRevision.invalidate();setActivityFresh(false);refreshAfterConnection.current();}
@@ -292,7 +293,9 @@ function GiApp() {
     const compactFromMeter = async () => {
         if (manualCompact) return manualCompact();
         if (notice?.intent_key === 'compaction') return;
-        setCompactError(compactionUnavailableReason({fresh:activityFresh,disconnected:streamDisconnected.current,pending:compactPending,status:activity?.status,capability:compactState}) || 'Compaction is unavailable');
+        const reason = compactionUnavailableReason({fresh:activityFresh,disconnected:streamDisconnected.current,pending:compactPending,status:activity?.status,capability:compactState}) || 'Compaction is unavailable';
+        setCompactError(reason);
+        throw new Error(reason);
     };
     useEffect(() => {
         if (!activity?.compaction) return;
@@ -1166,14 +1169,25 @@ function GiApp() {
                     onContentChange=${(text: string) => drafts.update(sessionId, { text })}
                     services=${{
                         // This closure belongs to the submitting chat even if the picker switches during upload.
+                        initialMedia: sessionId ? getDraft(sessionId).media : [],
+                        onMediaChange: (media: File[]) => { if(sessionId) drafts.update(sessionId,{media}); },
+                        captureSubmission: async (jid: string, draft: any) => {
+                            const id = jid.startsWith('gi:') ? jid.slice(3) : jid;
+                            await drafts.flushStable();
+                            const capture = drafts.begin(id,draft);
+                            await capture.ready;
+                            return {token:capture.token};
+                        },
+                        acceptSubmission: (jid: string, token: string) => token && drafts.accepted(jid.startsWith('gi:') ? jid.slice(3) : jid,token),
+                        failSubmission: (jid: string, token: string, error: string) => drafts.failed(jid.startsWith('gi:') ? jid.slice(3) : jid,token,error),
                         uploadMedia: (file: File, options: any) => uploadMedia(file, currentChatJid, options),
                         beginUploadBatch: (chat: string) => composeTransfers.beginUploadBatch(chat.slice(3)),
                         fetchCommands: getAgentCommands,
                         pinSession: (chat: string, pinned: boolean) => handleSessionMutation(chat, 'pin', pinned),
-                        sendAgentMessage: (agent, text, thread, media, mode, chat) => {
-                            if (/^\/abort\s*$/i.test(text)) return stopFromComposer();
-                            if (/^\/compact\s*$/i.test(text)) return compactFromMeter();
-                            return sendAgentMessage(agent, text, thread, media, mode, chat);
+                        sendAgentMessage: async (agent, text, thread, media, mode, chat, options) => {
+                            if (/^\/abort\s*$/i.test(text)) { await stopFromComposer(); return {source_committed:true}; }
+                            if (/^\/compact\s*$/i.test(text)) { await compactFromMeter(); return {source_committed:true}; }
+                            return sendAgentMessage(agent, text, thread, media, mode, chat, options);
                         },
                     }}
                     statusNotice=${notice}
@@ -1188,7 +1202,7 @@ function GiApp() {
                     onInjectQueuedFollowup=${(item: any) => mutateQueue('steer', item)}
                     onRemoveQueuedFollowup=${(item: any) => mutateQueue('remove', item)}
                     onMoveQueuedFollowup=${(from: number, to: number) => mutateQueue('move', from, to)}
-                    contextUsage=${contextUsage}
+                    contextUsage=${hostContextUsage(contextUsage, contextUsage != null, compactState, !!manualCompact, {notice, pending:compactPending, stopPending, now:activityNow, estimate:compactionEstimateLabel(notice), elapsed:compactionElapsed(notice?.started_at,activityNow)})}
                     activeEditorPath=${activeTabId}
                     onAttachEditorFile=${() => {
                         if (!activeTabId) return;

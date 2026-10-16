@@ -138,7 +138,7 @@ export async function getTimeline(limit = 50, beforeId: string | null = null, ch
     const messages: any[] = data.messages || [];
     return {
         hasMore: data.has_more === true, before: data.before || null, after: data.after || null,
-        posts: messages.map((m: any) => projectConversationMessage(m,sessionId)).filter(Boolean),
+        posts: messages.map((m: any) => projectConversationMessage(m,sessionId,messages)).filter(Boolean),
     };
 }
 
@@ -152,7 +152,7 @@ export async function searchPosts(query: string, limit = 50, offset = 0, chatJid
     const params=new URLSearchParams({q:query,scope,limit:String(limit),offset:String(offset),view:'conversation'});
     const data = await request(`/api/sessions/${encodeURIComponent(sessionId)}/search?${params}`);
     const messages: any[] = data.messages || [];
-    return { posts: messages.map((m: any) => projectConversationMessage(m,sessionId)).filter(Boolean) };
+    return { posts: messages.map((m: any) => projectConversationMessage(m,sessionId,messages)).filter(Boolean) };
 }
 
 export async function getThread(threadId: number, _chatJid: string | null = null) {
@@ -520,6 +520,7 @@ export async function sendAgentMessage(agentId: string, content: string, _thread
             const recovered = await recoverSubmittedPrompt(sessionId, payload.client_request_id,
                 path => request(path, { signal: AbortSignal.timeout(3000) }));
             if (recovered) return recovered;
+            throw new Error('Delivery is unknown. Check the conversation before explicitly retrying.');
         }
         throw error;
     } finally { activity.end(); }

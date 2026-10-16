@@ -1,6 +1,6 @@
 import {test,expect} from 'bun:test';
 import {readFileSync} from 'node:fs';
-import {parseCodemodeResult,settledCalls,codemodeScript,projectCodemodeCard,staleCodemodeEvent,mergeCodemodeLive,formatDuration,renderCodemodeCard,statusFromEvent,liveCardFromEnvelope,liveCardPost,applyCodemodeEnvelope,replaceSettledCard} from '../../src/gi-codemode-cards.ts';
+import {parseCodemodeResult,settledCalls,codemodeScript,projectCodemodeCard,staleCodemodeEvent,mergeCodemodeLive,formatDuration,renderCodemodeCard,scriptTokens,statusFromEvent,liveCardFromEnvelope,liveCardPost,applyCodemodeEnvelope,replaceSettledCard} from '../../src/gi-codemode-cards.ts';
 import {projectConversationMessage} from '../../src/gi-conversation.ts';
 import {openCodemodeTopic,topicUrl} from '../../src/gi-codemode-topic.ts';
 import {patchCodemodeCards} from '../../scripts/patch-codemode-cards.mjs';
@@ -164,3 +164,12 @@ test('nested events require matching parent execution occurrence within a turn',
  expect(posts[1].data.card.calls.length).toBe(1);
  expect(posts[1].data.card.calls[0].durationMs).toBe(0);
 });
+
+ test("script highlighting preserves literal text and exposes nested errors/full output",()=>{
+ const script='const unsafe = "<img onerror=alert(1)>"; // comment\nawait shell({timeout: 20});';
+ const tokens=scriptTokens(script); expect(tokens.map(t=>t.text).join("" )).toBe(script);
+ expect(tokens.map(t=>t.kind)).toContain("keyword"); expect(tokens.map(t=>t.kind)).toContain("string"); expect(tokens.map(t=>t.kind)).toContain("comment"); expect(tokens.map(t=>t.kind)).toContain("number");
+ const html=(strings,...values)=>({strings,values});
+ const vnode=renderCodemodeCard({data:{card:{script,calls:[{name:"shell",status:"error",error:"<svg onload=alert(1)>",durationMs:0}],full_output_path:"vfs://codemode-output/s/out.txt"}}},html);
+ const encoded=JSON.stringify(vnode); expect(encoded).toContain("codemode-card-error"); expect(encoded).toContain("vfs://codemode-output/s/out.txt"); expect(encoded).toContain("<svg onload=alert(1)>"); expect(encoded).not.toContain("innerHTML");
+ });

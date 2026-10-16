@@ -9,8 +9,20 @@ test('current composer keeps native rendering with batch cancellation, authorita
   const render = '        <div class="compose-box" data-testid="compose-box"';
   expect(source.indexOf(render)).toBeGreaterThan(0);
   expect(patched.indexOf(render)).toBeGreaterThan(0);
-  expect(patched.slice(patched.indexOf(render))).toBe(source.slice(source.indexOf(render)));
+  const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
+  const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
+    .replace('role=${speechUiState.kind === "error" ? "alert" : "status"}', 'role="status"')
+    .replace('                            aria-pressed=${speechButtonActive ? "true" : "false"}\n', '');
+  expect(nativeRender).toBe(source.slice(source.indexOf(render)));
+  expect(patched).toContain('speechRecognitionRef.current=null;');
+  expect(patched).toContain('if (speechPendingStopRef.current) recognition.stop();');
+  expect(patched).toContain('current: () => textarea.isConnected && resizeChatRef.current===chat');
+  expect(patched).toContain("['ArrowUp','ArrowDown','Home','End']");
   expect(patched).toContain('beginUploadBatch?.(submissionChatJid)');
+  expect(patched.indexOf('await composeServices.captureSubmission?.')).toBeLessThan(patched.indexOf("setContent('');", patched.indexOf('await composeServices.captureSubmission?.')));
+  expect(patched).toContain('client_request_id: hostCapture.token');
+  expect(patched).toContain('await composeServices.acceptSubmission?.');
+  expect(patched).toContain('composeServices.failSubmission?.');
   expect(patched.match(/uploadBatch\?\.signal.throwIfAborted\(\)/g)).toHaveLength(2);
   expect(patched).toContain('signal: uploadBatch?.signal');
   expect(patched).toContain('await composeServices.pinSession(chatJid, pinned)');

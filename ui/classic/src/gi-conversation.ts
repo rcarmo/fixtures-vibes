@@ -1,16 +1,16 @@
 import {projectMessageMedia} from './gi-message-media.js';
 import {projectLinkPreviews} from './gi-message-links.js';
-import {projectCodemodeCard} from './gi-codemode-cards.js';
+import {projectCodemodeCard,codemodeScript} from './gi-codemode-cards.js';
 
 export const SYSTEM_AGENT_ID = '__gi_system__';
 export const SYSTEM_AGENT = {id:SYSTEM_AGENT_ID,name:'System',avatar_url:null};
 
 // The wire/storage role is independent from the shared Post component's two
 // visual roles. Non-user notices use bot presentation with explicit identity.
-export function projectConversationMessage(m: any, fallbackSession?: string) {
+export function projectConversationMessage(m: any, fallbackSession?: string, messages: any[] = []) {
     // Codemode results are the one tool_result row the timeline shows, as a card.
     if (m?.role === 'tool_result' && m.payload?.kind === 'tool_result' && m.payload?.tool_name === 'codemode') {
-        const card = projectCodemodeCard(m, {fallbackSession: m.session_id || fallbackSession});
+        const card = projectCodemodeCard(m, {fallbackSession: m.session_id || fallbackSession, script: codemodeScript(messages, String(m.payload.tool_call_id || ''))});
         if (!card) return null;
         return {
             id: m.id, display_row_id: m.display_row_id, chat_jid: card.chat_jid, timestamp: m.created_at, content: '',

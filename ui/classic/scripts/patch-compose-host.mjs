@@ -6,7 +6,37 @@ const once = (source, from, to) => {
   return source.replace(from, to);
 };
 export function patchComposeHost(source) {
-  let s = source;
+  let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
+  s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
+  s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
+  s = once(s, '            recognition.stop();\n        } catch {', '            if (speechUiState.kind !== "requesting_permission") recognition.stop();\n        } catch {');
+  s = once(s, '    }, [clearSpeechUiState]);\n\n    const handleSpeechToggle', '    }, [clearSpeechUiState, speechUiState.kind]);\n\n    const handleSpeechToggle');
+  const cleanupStart = s.indexOf('    useEffect(() => {\n        if (!searchMode) return undefined;\n        void dictationRef.current?.cancel();');
+  const cleanupEnd = s.indexOf('    useEffect(() => {\n        if (!statusNoticeIsCompaction)', cleanupStart);
+  if (cleanupStart < 0 || cleanupEnd < 0) throw Error('Speech lifecycle anchors changed');
+  s = s.slice(0,cleanupStart) + `    const retireNativeSpeech = () => {
+        const recognition=speechRecognitionRef.current;
+        speechRecognitionRef.current=null;
+        speechPushToTalkActiveRef.current=false;
+        if(recognition){recognition.abort?.();clearSpeechUiState();}
+    };
+    useEffect(() => { if(searchMode) {dictationRef.current?.cancel();retireNativeSpeech();} },[searchMode]);
+    useEffect(() => { retireNativeSpeech(); },[currentChatJid]);
+    useEffect(() => {
+        const retire=()=>retireNativeSpeech();
+        window.addEventListener('pagehide',retire);
+        window.addEventListener('piclaw:open-settings',retire);
+        const observer=new MutationObserver(()=>{if(document.querySelector('[aria-modal="true"]'))retire();});
+        observer.observe(document.body,{childList:true,subtree:true});
+        return()=>{observer.disconnect();window.removeEventListener('pagehide',retire);window.removeEventListener('piclaw:open-settings',retire);retire();};
+    },[]);
+
+` + s.slice(cleanupEnd);
+  // Recognition ownership ends on manual edits; late callbacks cannot rewrite them.
+  s = once(s, '        if (speechRecognitionRef.current && e?.isTrusted) {\n            stopSpeechRecognition();\n        }', '        if (speechRecognitionRef.current && e?.isTrusted) {\n            const recognition=speechRecognitionRef.current;\n            speechRecognitionRef.current=null;\n            recognition.abort?.();\n            clearSpeechUiState();\n        }');
+  s = once(s, "                setSpeechUiState({\n                    kind: 'listening',\n                    title: 'Listening…',\n                    detail: 'Speak now. Tap the mic again to stop.',\n                });\n            };", "                setSpeechUiState({\n                    kind: 'listening',\n                    title: 'Listening…',\n                    detail: 'Speak now. Tap the mic again to stop.',\n                });\n                if (speechPendingStopRef.current) recognition.stop();\n            };");
+  s = once(s, 'class=${`compose-inline-status compose-speech-status compose-speech-status-${speechUiState.kind}`} role="status"', 'class=${`compose-inline-status compose-speech-status compose-speech-status-${speechUiState.kind}`} role=${speechUiState.kind === "error" ? "alert" : "status"}');
+  s = once(s, '                            aria-label=${speechButtonTitle}', '                            aria-pressed=${speechButtonActive ? "true" : "false"}\n                            aria-label=${speechButtonTitle}');
   // A whole captured upload batch shares a cancellation lifetime, not one File at a time.
   s = once(s, '    const fetchCommands = composeServices.fetchCommands',
     '    const beginUploadBatch = composeServices.beginUploadBatch;\n    const fetchCommands = composeServices.fetchCommands');
@@ -48,5 +78,69 @@ export function patchComposeHost(source) {
   // Do not let keyboard activation leak through IME/repeated/consumed Enter into a prompt.
   s = once(s, '    const handleKeyDown = (e) => {',
     "    const handleKeyDown = (e) => {\n        if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || (e.repeat && (e.key === 'Enter' || e.key === 'Tab'))) return;");
+  s = once(s, '    const title = activeCompactionLabel\n', '    const nativeTitle = activeCompactionLabel\n');
+  s = once(s, '        : `${label}\\n${compactLabel}`;', '        : `${label}\\n${compactLabel}`;\n    const title = usage.hostTitle || nativeTitle;');
+  s = once(s, '            aria-label=${title}\n            disabled=${!canCompact}', '            aria-label=${usage.hostLabel ? `${usage.hostLabel}\\nCompact context` : nativeTitle}\n            data-tooltip=${title}\n            aria-description=${usage.hostDescription || undefined}\n            disabled=${!canCompact}');
+  s = once(s, '            class=${`compose-context-pie icon-btn${activeCompactionLabel ? \' is-compacting\' : \'\'}`}', '            class=${`compose-context-pie icon-btn${activeCompactionLabel || usage.hostActive ? \' is-compacting\' : \'\'}`}');
+  s = once(s, '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);', '    const abortButtonState = resolveComposeAbortButtonState(isAgentActive, statusNoticeIsCompaction);\n    if (abortButtonState && contextUsage?.hostStopPending) abortButtonState.disabled = true;');
+  // A queued effect from an older render must not overwrite a synchronous edit.
+  s = once(s, '        onContentChange?.(content);\n    }, [content]);', '        if (!textareaRef.current || textareaRef.current.value === content) onContentChange?.(content);\n    }, [content]);');
+  // Journal trusted editor changes synchronously, before a page can close.
+  s = once(s, '    const updateValue = (value) => {\n        if (searchMode)',
+    '    const updateValue = (value) => {\n        if (!searchMode) onContentChange?.(value);\n        if (searchMode)');
+  s = once(s, "            clearAfterSubmit = true,", "            clearAfterSubmit = !/^\\/compact\\s*$/i.test(overrideContent || \"\"),");
+  s = once(s, "            ${activeCompactionLabel && html`<span class=\"compose-context-pie-timer\">${activeCompactionLabel}</span>`}", "            ${(activeCompactionLabel || usage.hostElapsed) && html`<span class=\"compose-context-pie-timer gi-compaction-elapsed\">${activeCompactionLabel || usage.hostElapsed}</span>`}");
+  // Host durable capture must finish before the native editor clears or POST begins.
+  s = once(s, '    const [mediaFiles, setMediaFiles] = useState([]);',
+    '    const [mediaFiles, setMediaFiles] = useState(() => composeServices.initialMedia || []);\n    useEffect(() => { composeServices.onMediaChange?.(mediaFiles); }, [mediaFiles]);');
+  const clearBlock = `        if (clearAfterSubmit) {
+            setContent('');
+            setMediaFiles([]);
+            onClearFileRefs?.();
+            onClearFolderRefs?.();
+            onClearMessageRefs?.();
+        }
+`;
+  s = once(s, clearBlock, '');
+  s = once(s, '            try {\n                const intercepted',
+    `            let hostCapture = null;
+            try {
+                hostCapture = clearAfterSubmit ? await composeServices.captureSubmission?.(submissionChatJid, { text: baseContent, media: capturedMediaFiles, fileRefs: [...capturedFileRefs, ...capturedFolderRefs], messageRefs: capturedMessageRefs }) : null;
+${clearBlock}                const intercepted`);
+  s = once(s, 'mediaIds, resolveSubmitMode(submitMode), submissionChatJid);',
+    'mediaIds, resolveSubmitMode(submitMode), submissionChatJid, hostCapture ? { client_request_id: hostCapture.token } : {});');
+  s = once(s, '                requireComposeAcknowledgement(response);',
+    '                requireComposeAcknowledgement(response);\n                await composeServices.acceptSubmission?.(submissionChatJid, hostCapture?.token);');
+  s = once(s, '                if (intercepted) {\n                    onPost?.(intercepted);',
+    '                if (intercepted) {\n                    await composeServices.acceptSubmission?.(submissionChatJid, hostCapture?.token);\n                    onPost?.(intercepted);');
+  s = once(s, '            } catch (error) {\n                if (clearAfterSubmit) {\n                    restoreDraft();\n                }',
+    '            } catch (error) {\n                if (hostCapture) composeServices.failSubmission?.(submissionChatJid, hostCapture.token, error?.message || String(error));\n                if (clearAfterSubmit && (!composeServices.captureSubmission || hostCapture)) { restoreDraft(); }');
+  const resizeStart = s.indexOf('    const startComposeResize = (startHeight, startY, handle) => {');
+  const resizeEnd = s.indexOf('    const handleComposeResizeMouseDown =', resizeStart);
+  if (resizeStart < 0 || resizeEnd < 0) throw Error('Compose resize lifecycle anchor changed');
+  s = s.slice(0,resizeStart) + `    const startComposeResize = (startHeight, startY, handle) => {
+        const textarea = textareaRef.current;
+        if (!textarea || !handle || document.querySelector('[role="dialog"], [aria-modal="true"]')) return;
+        const previous = manualTextareaHeightRef.current;
+        const chat = currentChatJid;
+        startComposeResizeGesture({textarea,handle,startHeight,startY,
+            apply: height => { const value=applyTextareaHeight(textarea,height);manualTextareaHeightRef.current=value;return value; },
+            cancel: () => { manualTextareaHeightRef.current=previous; },
+            commit: height => { if(persistBrowserState) composeStorage.setItem?.(composeHeightStorageKey,String(Math.round(height))); },
+            current: () => textarea.isConnected && resizeChatRef.current===chat,
+            jump: () => onJumpToLatest?.()});
+    };
+    const handleComposeResizeKey = event => {
+        if (!['ArrowUp','ArrowDown','Home','End'].includes(event.key) || document.querySelector('[role="dialog"], [aria-modal="true"]')) return;
+        event.preventDefault();event.stopPropagation();
+        const textarea=textareaRef.current;if(!textarea)return;
+        if(event.key==='Home'){manualTextareaHeightRef.current=null;composeStorage.removeItem?.(composeHeightStorageKey);resizeTextarea();return;}
+        const height=event.key==='End'?getComposeManualHeightMax():textarea.getBoundingClientRect().height+(event.key==='ArrowUp'?10:-10);
+        manualTextareaHeightRef.current=applyTextareaHeight(textarea,height);
+        if(persistBrowserState)composeStorage.setItem?.(composeHeightStorageKey,String(Math.round(manualTextareaHeightRef.current)));
+    };
+
+` + s.slice(resizeEnd);
+  s = once(s, '                onMouseDown=${handleComposeResizeMouseDown}', '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n                onMouseDown=${handleComposeResizeMouseDown}');
   return s;
 }
