@@ -1,11 +1,21 @@
-import { expect, mock, test } from 'bun:test';
+import { expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
-import * as preact from '../../src/vendor/preact-htm-entry';
 import { piclawModule } from './piclaw-module';
-// git stores this vendor symlink as link text; use Classic's shared Preact instance in the test runtime.
-mock.module(piclawModule('vendor/preact-htm.js'), () => preact);
-const { buildCompactMetersSummary, shouldShowVram, resolveGpuMeterSnapshots } = await import(piclawModule('components/system-meters-hud.ts'));
-const { normalizeGpuSnapshots, formatOptionalPercent } = await import(piclawModule('components/intel-gpu-meters.ts'));
+import { piclawWebAdapter } from '../../scripts/piclaw-web.mjs';
+
+// Exercise the build adapter rather than Bun's runtime module/mock resolver:
+// vendored link-pointer files are data, not executable JavaScript.
+const root = new URL('../..', import.meta.url).pathname.replace(/\/$/, '');
+async function adaptedModule(path: string) {
+  const result = await Bun.build({ entrypoints: [piclawModule(path)], target: 'bun',
+    plugins: [{ name: 'meter-preact-entry', setup(build) {
+      build.onResolve({filter: /preact-htm\.js$/}, () => ({path: `${root}/src/vendor/preact-htm-entry.ts`}));
+    }}, piclawWebAdapter(root)] });
+  if (!result.success) throw new AggregateError(result.logs, 'meter adapter build failed');
+  return import(`data:text/javascript;base64,${Buffer.from(await result.outputs[0].text()).toString('base64')}`);
+}
+const { buildCompactMetersSummary, shouldShowVram, resolveGpuMeterSnapshots } = await adaptedModule('components/system-meters-hud.ts');
+const { normalizeGpuSnapshots, formatOptionalPercent } = await adaptedModule('components/intel-gpu-meters.ts');
 
 test('3.3.0 meter integration omits unavailable telemetry instead of reporting zero', () => {
   expect(buildCompactMetersSummary({ cpu_percent: null, ram_percent: undefined })).toBe('');
