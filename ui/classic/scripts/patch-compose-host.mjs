@@ -8,6 +8,25 @@ const once = (source, from, to) => {
 export function patchComposeHost(source) {
   let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
   s = once(s, "useConnectionStatusPresentation(stateAccessFailed ? connectionStatus : 'connected')", 'useConnectionStatusPresentation(connectionStatus)');
+  s = once(s, '    const dynamicCommandsRef = useRef(null);', "    const dynamicCommandsRef = useRef([]);\n    const [commandCatalogueFailed, setCommandCatalogueFailed] = useState(false);");
+  const commandsStart = s.indexOf('        const chatJid = currentChatJid ||');
+  const commandsEnd = s.indexOf('        return () => { cancelled = true; };', commandsStart);
+  if (commandsStart < 0 || commandsEnd < 0) throw Error('Command catalogue lifecycle anchor changed');
+  s = s.slice(0, commandsStart) + `        dynamicCommandsRef.current = [];
+        setCommandCatalogueFailed(false);
+        Promise.resolve().then(() => fetchCommands(currentChatJid || 'web:default')).then(data => {
+            if (cancelled) return;
+            if (!data || !Array.isArray(data.commands) || data.commands.some(cmd => !cmd || typeof cmd.name !== 'string' || !cmd.name.startsWith('/') || typeof cmd.description !== 'string')) throw Error('Invalid command catalogue');
+            dynamicCommandsRef.current = data.commands;
+            setCommandCatalogueFailed(false);
+        }).catch(() => {
+            if (cancelled) return;
+            dynamicCommandsRef.current = [];
+            setCommandCatalogueFailed(true);
+        });
+` + s.slice(commandsEnd);
+  s = once(s, 'dynamicCommandsRef.current || SLASH_COMMANDS', 'dynamicCommandsRef.current');
+  s = once(s, '                    ${showSlash && slashMatches.length > 0 && html`', '                    ${commandCatalogueFailed && content.startsWith(\'/\') && html`<div role="status">Command suggestions unavailable.</div>`}\n                    ${showSlash && slashMatches.length > 0 && html`');
   s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
   s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
   s = once(s, '            recognition.stop();\n        } catch {', '            if (speechUiState.kind !== "requesting_permission") recognition.stop();\n        } catch {');

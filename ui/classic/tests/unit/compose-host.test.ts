@@ -11,6 +11,7 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched.indexOf(render)).toBeGreaterThan(0);
   const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
   const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
+    .replace('                    ${commandCatalogueFailed && content.startsWith(\'/\') && html`<div role="status">Command suggestions unavailable.</div>`}\n', '')
     .replace('                                aria-haspopup="listbox"\n                                aria-expanded=${showModelPopup ? "true" : "false"}\n                                aria-controls=${showModelPopup ? "compose-model-results-host" : undefined}\n', '')
     .replace('                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n', '')
     .replace("window.dispatchEvent(new CustomEvent('piclaw:open-settings', {detail: {section: 'models', opener: modelHintRef.current}}));", "requestOpenSettingsDialog({ section: 'models' });")
