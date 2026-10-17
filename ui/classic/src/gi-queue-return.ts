@@ -11,7 +11,7 @@ export async function returnQueuedDraft({chat,item,drafts,fetcher=fetch,remove,i
    // Gi persists string media IDs; the upstream parser accepts numeric IDs only.
    const attachments=[...(item.content||item.text||'').matchAll(/^- attachment:([^\s]+)(?:\s*\(([^)]+)\))?$/gm)].map(match=>({id:match[1],label:match[2]}));
    for(const attachment of attachments){
-    const response=await fetcher(`/api/media/${encodeURIComponent(attachment.id)}/raw`);
+    const response=await fetcher(`/api/sessions/${encodeURIComponent(id)}/media/${encodeURIComponent(attachment.id)}`);
     if(!response.ok)throw Error('Attachment recovery failed');
     const blob=await response.blob();media.push(new File([blob],attachment.label||attachment.name||'attachment',{type:blob.type}));
    }
