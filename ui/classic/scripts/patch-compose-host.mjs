@@ -19,6 +19,7 @@ export function patchComposeHost(source) {
             if (!data || !Array.isArray(data.commands) || data.commands.some(cmd => !cmd || typeof cmd.name !== 'string' || !cmd.name.startsWith('/') || typeof cmd.description !== 'string')) throw Error('Invalid command catalogue');
             dynamicCommandsRef.current = data.commands;
             setCommandCatalogueFailed(false);
+            if (textareaRef.current) updateSlashAutocomplete(textareaRef.current.value);
         }).catch(() => {
             if (cancelled) return;
             dynamicCommandsRef.current = [];
