@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { createDraftRepository, emptyDraft, mergeDrafts, DraftConflictError, type DraftTextJournal } from '../../src/gi-drafts';
+import { createDraftRepository, emptyDraft, mergeDrafts, DraftConflictError, pendingSendKey, type DraftTextJournal } from '../../src/gi-drafts';
 
 const draft = (text: string) => ({ ...emptyDraft(), text });
 function textJournal(): DraftTextJournal & { entries: Map<string, any> } {
@@ -245,4 +245,21 @@ test('live submit error has one composer owner but reload keeps recovery warning
  repo.failed('s',claim.token,'single error');await repo.flush();
  expect(repo.error('s')).toBe('single error');expect(repo.hostError('s')).toBe('');
  const reloaded=createDraftRepository(store);await reloaded.load();expect(reloaded.hostError('s')).toBe('single error');
+});
+
+test('unknown delivery failure retains receipt token across reload and retires only confirmed recovered text', async () => {
+  let saved: any[] = [];
+  const storage = { load: async () => structuredClone(saved), put: async (row: any, expected: number) => { const next = expected + 1; saved = [{ ...structuredClone(row), revision: next }]; return next; } };
+  const repo = createDraftRepository(storage);
+  await repo.load();
+  const capture = repo.begin('a', { ...emptyDraft(), text: 'accepted before navigation' });
+  await capture.ready;
+  repo.failed('a', capture.token, 'Delivery is unknown. Check the conversation before explicitly retrying.');
+  await repo.flush();
+  expect(saved[0].pending[0].id).toBe(capture.token);
+  const recovered = createDraftRepository(storage, undefined, async pending => new Set(pending.map(p => pendingSendKey(p.sessionId, p.token))));
+  await recovered.load();
+  expect(recovered.get('a').text).toBe('');
+  expect(recovered.error('a')).toBe('');
+  expect(saved[0].pending).toEqual([]);
 });

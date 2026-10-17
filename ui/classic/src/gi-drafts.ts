@@ -2,7 +2,7 @@ import { randomClientId } from "./gi-random-id.js";
 // Browser-local session drafts. File bytes use IndexedDB ArrayBuffers; never
 // serialise attachment bytes to localStorage or silently drop failed writes.
 export type Draft = { text: string; media: File[]; fileRefs: string[]; messageRefs: any[] };
-type Pending = { id: string; draft: Draft };
+type Pending = { id: string; draft: Draft; deliveryUnknown?: boolean };
 type QueueReturn = { state: 'prepared' | 'removed'; recoveredAt: number };
 type Record = { sessionId: string; revision?: number; draft: Draft; pending: Pending[]; error?: string; queueReturns?: { [id: string]: QueueReturn } };
 export class DraftConflictError extends Error {
@@ -124,7 +124,7 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
     };
     const persist = (id: string) => {
         const source = record(id);
-        const snapshot = { ...source, queueReturns: Object.fromEntries(Object.entries(source.queueReturns || {}).map(([id, entry]) => [id, { ...entry }])), draft: copy(source.draft), pending: source.pending.map(p => ({ id: p.id, draft: copy(p.draft) })) };
+        const snapshot = { ...source, queueReturns: Object.fromEntries(Object.entries(source.queueReturns || {}).map(([id, entry]) => [id, { ...entry }])), draft: copy(source.draft), pending: source.pending.map(p => ({ ...p, draft: copy(p.draft) })) };
         const write = tail.catch(() => {}).then(async () => {
             if (loadFailure) throw loadFailure;
             if (conflicts.has(id)) throw conflicts.get(id);
@@ -173,9 +173,13 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
                 // accepted capture as resendable text after a conflicting write.
                 const expected = revision(row);
                 if (row.pending.length) {
+                    for (const pending of row.pending) {
+                        if (pending.deliveryUnknown && confirmed.has(pendingSendKey(row.sessionId, pending.id)) && row.draft.text === pending.draft.text) row.draft.text = '';
+                    }
                     const unknown = row.pending.filter(p => !confirmed.has(pendingSendKey(row.sessionId, p.id)));
                     for (const pending of [...unknown].reverse()) row.draft = mergeDrafts(pending.draft, row.draft);
                     row.pending = [];
+                    if (!unknown.length && row.error?.startsWith('Delivery is unknown.')) row.error = '';
                     if (unknown.length) row.error = 'Recovered an unacknowledged send. Delivery is unknown; check the timeline before resending.';
                     row.revision = await storage.put(row, expected);
                 }
@@ -231,7 +235,10 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
             const row = record(id);
             const pending = row.pending.find(p => p.id === token);
             if (pending) row.draft = mergeDrafts(pending.draft, row.draft);
-            row.pending = row.pending.filter(p => p.id !== token);
+            // A navigation-cancelled response may already have committed upstream.
+            // Keep its token for read-only source receipt recovery after reload.
+            if (pending && error.startsWith('Delivery is unknown.')) pending.deliveryUnknown = true;
+            else row.pending = row.pending.filter(p => p.id !== token);
             row.error = error;
             void persist(id).catch(() => {});
             return copy(row.draft);
