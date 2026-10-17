@@ -16,9 +16,14 @@ export async function returnQueuedDraft({chat,item,drafts,fetcher=fetch,remove,i
     const blob=await response.blob();media.push(new File([blob],attachment.label||attachment.name||'attachment',{type:blob.type}));
    }
    const text=parsed.content.replace(/\n\nAttachments:\n[\s\S]*$/,'');
-   await drafts.prepareQueueReturn(id,item.id,{text,media,fileRefs:[...parsed.fileRefs,...parsed.folderRefs],messageRefs:parsed.messageRefs},expected);
-  }else await drafts.prepareQueueReturn(id,item.id,drafts.get(id));
-  if(isCurrent())apply(drafts.get(id));
+   const prepared=drafts.prepareQueueReturn(id,item.id,{text,media,fileRefs:[...parsed.fileRefs,...parsed.folderRefs],messageRefs:parsed.messageRefs},expected);
+   if(isCurrent())apply(prepared.draft);
+   await prepared.ready;
+  }else {
+   const prepared=drafts.prepareQueueReturn(id,item.id,drafts.get(id));
+   await prepared.ready;
+   if(isCurrent())apply(prepared.draft);
+  }
   await remove(item.id,chat);
   await drafts.completeQueueReturn(id,item.id);
   return isCurrent()?drafts.get(id):null;
