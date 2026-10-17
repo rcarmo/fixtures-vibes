@@ -3,6 +3,7 @@ import {buildReturnedQueuedDraft} from './components/compose-box.js';
 // Durable host policy: snapshot before asynchronous attachment recovery, persist
 // the replacement before removal, and never replace a prepared return twice.
 export async function returnQueuedDraft({chat,item,drafts,fetcher=fetch,remove,isCurrent,apply}:any){
+ console.log("QUEUE_DIAG",chat,item);
  const id=chat.slice(3),expected=drafts.snapshot(id).draft;
  try{
   if(!drafts.hasQueueReturn(id,item.id)){
