@@ -19,6 +19,8 @@ import { composeTransfers } from './gi-compose-transfer.js';
 import { randomClientId } from './gi-random-id.js';
 import { recoverSubmittedPrompt, recoverPendingSends } from './gi-send-recovery.js';
 import type { PendingSend } from './gi-drafts.js';
+import { pageRequestLifetime } from './gi-page-requests.js';
+const pageRequestSignal = pageRequestLifetime(typeof window !== 'undefined' ? window : new EventTarget());
 
 const API_BASE = '';
 
@@ -32,6 +34,7 @@ async function request(url: string, options: RequestInit = {}) {
     try {
         response = await fetch(API_BASE + url, {
             ...options,
+            signal: pageRequestSignal(options.signal),
             headers: {
                 'Content-Type': 'application/json',
                 ...((options as any).headers || {}),
