@@ -81,7 +81,7 @@ import {
     getThread,
 } from './api.js';
 import { Timeline } from './components/timeline.js';
-import { ComposeBox } from './components/compose-box.js';
+import { ComposeBox, buildReturnedQueuedDraft } from './components/compose-box.js';
 import { returnQueuedDraft } from './gi-queue-return.js';
 import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
@@ -1169,7 +1169,7 @@ function GiApp() {
                         initialMedia: sessionId ? getDraft(sessionId).media : [],
                         returnQueuedFollowup: (chat,item,applyEditor) => {
                             const scope=selection.capture();
-                            return returnQueuedDraft({chat,item,drafts,remove:removeAgentQueueItem,
+                            return returnQueuedDraft({chat,item,drafts,parse:buildReturnedQueuedDraft,remove:removeAgentQueueItem,
                                 isCurrent:()=>selection.isCurrent(scope),
                                 apply:(draft)=>{setFileRefs(draft.fileRefs);setMessageRefs(draft.messageRefs);applyEditor(draft);},
                             }).then(draft=>{if(selection.isCurrent(scope))setFollowupQueueItems(items=>items.filter(x=>x.id!==item.id));return draft;});
