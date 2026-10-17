@@ -7,6 +7,7 @@ const once = (source, from, to) => {
 };
 export function patchComposeHost(source) {
   let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
+  s = once(s, "useConnectionStatusPresentation(stateAccessFailed ? connectionStatus : 'connected')", 'useConnectionStatusPresentation(connectionStatus)');
   s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
   s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
   s = once(s, '            recognition.stop();\n        } catch {', '            if (speechUiState.kind !== "requesting_permission") recognition.stop();\n        } catch {');
@@ -134,7 +135,7 @@ export function patchComposeHost(source) {
     `            let hostCapture = null;
             try {
                 hostCapture = clearAfterSubmit ? await composeServices.captureSubmission?.(submissionChatJid, { text: baseContent, media: capturedMediaFiles, fileRefs: [...capturedFileRefs, ...capturedFolderRefs], messageRefs: capturedMessageRefs }) : null;
-${clearBlock}                const intercepted`);
+${clearBlock.replace('            setContent(\'\');', '            if (textareaRef.current) textareaRef.current.value = "";\n            onContentChange?.(\'\');\n            setContent(\'\');')}                const intercepted`);
   s = once(s, 'mediaIds, resolveSubmitMode(submitMode), submissionChatJid);',
     'mediaIds, resolveSubmitMode(submitMode), submissionChatJid, hostCapture ? { client_request_id: hostCapture.token } : {});');
   s = once(s, '                requireComposeAcknowledgement(response);',
