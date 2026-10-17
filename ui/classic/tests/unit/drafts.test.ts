@@ -263,3 +263,20 @@ test('unknown delivery failure retains receipt token across reload and retires o
   expect(recovered.error('a')).toBe('');
   expect(saved[0].pending).toEqual([]);
 });
+
+test('unknown delivery receipt preserves newer edits and unconfirmed delivery keeps recovery text', async () => {
+  for (const confirmed of [true, false]) {
+    let saved: any[] = [];
+    const storage = { load: async () => structuredClone(saved), put: async (row: any, expected: number) => { const next = expected + 1; saved = [{ ...structuredClone(row), revision: next }]; return next; } };
+    const repo = createDraftRepository(storage);
+    await repo.load();
+    const capture = repo.begin('a', { ...emptyDraft(), text: 'submitted' });
+    await capture.ready;
+    repo.failed('a', capture.token, 'Delivery is unknown. Check the conversation before explicitly retrying.');
+    repo.update('a', { text: 'newer edits' });
+    await repo.flush();
+    const recovered = createDraftRepository(storage, undefined, async () => new Set(confirmed ? [pendingSendKey('a', capture.token)] : []));
+    await recovered.load();
+    expect(recovered.get('a').text).toBe(confirmed ? 'newer edits' : 'submitted\n\nnewer edits');
+  }
+});
