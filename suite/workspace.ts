@@ -34,15 +34,10 @@ export async function previewPath(page: Page) {
 
 /** The tree row for a name, ignoring the selected file's preview (which repeats the name). */
 export async function treeRow(page: Page, name: string) {
-  const matches = pane(page).getByText(name, { exact: true });
-  const index = await pane(page).evaluate((root, wanted) => {
-    const del = [...root.querySelectorAll('button, a')].find(b => /delete file/i.test(b.getAttribute('aria-label') ?? b.getAttribute('title') ?? b.textContent ?? ''));
-    let preview: Element | null = del ?? null;
-    while (preview && preview !== root && !/path:/.test(preview.textContent ?? '')) preview = preview.parentElement;
-    const leaves = [...root.querySelectorAll('*')].filter(e => e.textContent?.trim() === wanted && ![...e.children].some(c => c.textContent?.trim() === wanted));
-    return leaves.findIndex(e => !(preview && preview !== root && preview.contains(e)));
-  }, name);
-  return index < 0 ? null : matches.nth(index);
+  // Upload selects a preview before its metadata/body arrives. Never infer
+  // tree membership from preview text or its asynchronously rendered path.
+  const match = pane(page).locator('.workspace-tree').getByText(name, { exact: true }).first();
+  return await match.count() ? match : null;
 }
 
 /** Create a file with "New file"; it is selected in the preview. Returns its name. */

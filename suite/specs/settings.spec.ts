@@ -250,8 +250,10 @@ test.describe('layering', () => {
 });
 
 test.describe('core sections', () => {
-  const section = async (page: Page, sel: Sel, name: string) => {
-    await page.goto(page.url());
+  const section = async (page: Page, sel: Sel, name: string, reload = false) => {
+    // beforeEach already navigates. Reload only for explicit persistence checks,
+    // not a redundant second navigation immediately after the initial one.
+    if (reload) await page.reload();
     await openSettings(page, sel);
     await nav(page, sel, name).click();
   };
@@ -277,7 +279,8 @@ test.describe('core sections', () => {
       await binding.fill('ctrl+alt+shift+9');
       await save.click();
       await page.keyboard.press('Escape');
-      await section(page, sel, 'Keyboard');
+      await expect(dialog(page, sel)).toHaveCount(0);
+      await section(page, sel, 'Keyboard', true);
       await dialog(page, sel).getByPlaceholder(/filter shortcuts/i).fill('zen');
       await expect(binding).toHaveValue('ctrl+alt+shift+9');
     } finally {
