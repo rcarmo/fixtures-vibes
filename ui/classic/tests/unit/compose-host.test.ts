@@ -27,6 +27,11 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched).toContain('client_request_id: hostCapture.token');
   expect(patched).toContain('await composeServices.acceptSubmission?.');
   expect(patched).toContain('useConnectionStatusPresentation(connectionStatus)');
+  expect(patched).not.toContain('dynamicCommandsRef.current || SLASH_COMMANDS');
+  expect(patched).toContain('Command suggestions unavailable.');
+  expect(patched).toContain('commandSearchModeRef.current = searchMode;');
+  expect(patched).toContain('!commandSearchModeRef.current && !document.querySelector(\'[aria-modal="true"]\')');
+  expect(patched).toContain('if (event.defaultPrevented || document.querySelector(\'.timeline-quick-actions\')) return;');
   const clearFence = patched.indexOf('if (textareaRef.current) textareaRef.current.value = "";');
   expect(clearFence).toBeGreaterThan(patched.indexOf('await composeServices.captureSubmission?.'));
   expect(patched.slice(clearFence)).toMatch(/textareaRef.current.value = "";\s+onContentChange\?\.\(''\);\s+setContent\(''\)/);
