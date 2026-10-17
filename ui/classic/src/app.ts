@@ -82,6 +82,7 @@ import {
 } from './api.js';
 import { Timeline } from './components/timeline.js';
 import { ComposeBox } from './components/compose-box.js';
+import { returnQueuedDraft } from './gi-queue-return.js';
 import { AgentStatus, AgentRequestModal } from './components/status.js';
 import { WorkspaceExplorer } from './components/workspace-explorer.js';
 import { GiPanePopout, renderEditorPane, useGiEditorPane } from './gi-editor-pane.js';
@@ -1166,6 +1167,13 @@ function GiApp() {
                     services=${{
                         // This closure belongs to the submitting chat even if the picker switches during upload.
                         initialMedia: sessionId ? getDraft(sessionId).media : [],
+                        returnQueuedFollowup: (chat,item,applyEditor) => {
+                            const scope=selection.capture();
+                            return returnQueuedDraft({chat,item,drafts,remove:removeAgentQueueItem,
+                                isCurrent:()=>selection.isCurrent(scope),
+                                apply:(draft)=>{setFileRefs(draft.fileRefs);setMessageRefs(draft.messageRefs);applyEditor(draft);repaintDraft(x=>x+1);},
+                            }).then(draft=>{if(selection.isCurrent(scope))setFollowupQueueItems(items=>items.filter(x=>x.id!==item.id));return draft;});
+                        },
                         onMediaChange: (media: File[]) => { if(sessionId) drafts.update(sessionId,{media}); },
                         captureSubmission: async (jid: string, draft: any) => {
                             const id = jid.startsWith('gi:') ? jid.slice(3) : jid;
