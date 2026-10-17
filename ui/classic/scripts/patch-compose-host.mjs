@@ -77,6 +77,21 @@ export function patchComposeHost(source) {
     '        const onKeyDown = (event) => {\n            if (event.target === textareaRef.current) return;\n            handlePopupKeyboardEvent(event);');
   s = once(s, 'resolvePopupTypeaheadMatch(currentSessionPopupEntries, nextBuffer.value, sessionPopupIndex, (item) => item.label)',
     'resolvePopupTypeaheadMatch(currentSessionPopupEntries, nextBuffer.value, -1, (item) => item.label)');
+  s = once(s, '    const handleReturnQueuedFollowup = useCallback((queuedItem) => {\n        returnQueuedFollowupToEditor({',
+    `    const handleReturnQueuedFollowup = useCallback((queuedItem) => {
+        if (composeServices.returnQueuedFollowup) {
+            const applyReturnedDraft = (draft) => {
+                if (!draft || currentChatJidRef.current !== currentChatJid) return;
+                setMediaFiles(draft.media); onSetFileRefs?.(draft.fileRefs); onSetMessageRefs?.(draft.messageRefs);
+                onSetFolderRefs?.([]); setContent(draft.text);
+                requestAnimationFrame(() => { const input = textareaRef.current; if (!input) return; input.value = draft.text; resizeTextarea(); input.selectionStart = input.selectionEnd = draft.text.length; input.focus(); });
+            };
+            void composeServices.returnQueuedFollowup(currentChatJid, queuedItem, applyReturnedDraft).catch(error => setSubmitError('Queue action failed: ' + (error?.message || 'Queue return incomplete')));
+            return;
+        }
+        return returnQueuedFollowupToEditor({`);
+  s = once(s, '    }, [onRemoveQueuedFollowup, onSetFileRefs, onSetFolderRefs, onSetMessageRefs, resizeTextarea]);',
+    '    }, [onRemoveQueuedFollowup, onSetFileRefs, onSetFolderRefs, onSetMessageRefs, resizeTextarea, composeServices.returnQueuedFollowup, currentChatJid]);');
   // Capture, target and bubble handlers share this callback: consume each key once.
   s = once(s, '    const handlePopupKeyboardEvent = useCallback((e) => {',
     '    const handlePopupKeyboardEvent = useCallback((e) => {\n        if (e.defaultPrevented || e.target?.closest?.(".compose-session-popup-close")) return false;');
