@@ -174,7 +174,15 @@ export function createDraftRepository(storage: DraftStorage, onError: (error: Er
                 const expected = revision(row);
                 if (row.pending.length) {
                     for (const pending of row.pending) {
-                        if (pending.deliveryUnknown && confirmed.has(pendingSendKey(row.sessionId, pending.id)) && row.draft.text === pending.draft.text) row.draft.text = '';
+                        if (!confirmed.has(pendingSendKey(row.sessionId, pending.id))) continue;
+                        if (row.draft.text === pending.draft.text) row.draft.text = '';
+                        // The old page may journal its passive pre-clear render
+                        // after capture. Do not reapply that accepted text below.
+                        const entry = entries.get(row.sessionId);
+                        if (entry?.text === pending.draft.text && entry.previousText === '') {
+                            entries.delete(row.sessionId);
+                            journal!.clear(row.sessionId);
+                        }
                     }
                     const unknown = row.pending.filter(p => !confirmed.has(pendingSendKey(row.sessionId, p.id)));
                     for (const pending of [...unknown].reverse()) row.draft = mergeDrafts(pending.draft, row.draft);
