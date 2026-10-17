@@ -3,14 +3,13 @@ import {buildReturnedQueuedDraft} from './components/compose-box.js';
 // Durable host policy: snapshot before asynchronous attachment recovery, persist
 // the replacement before removal, and never replace a prepared return twice.
 export async function returnQueuedDraft({chat,item,drafts,fetcher=fetch,remove,isCurrent,apply}:any){
- console.log("QUEUE_DIAG",chat,item);
  const id=chat.slice(3),expected=drafts.snapshot(id).draft;
  try{
   if(!drafts.hasQueueReturn(id,item.id)){
-   const parsed=buildReturnedQueuedDraft(item.content||'');
+   const parsed=buildReturnedQueuedDraft(item.content||item.text||'');
    const media=[];
    // Gi persists string media IDs; the upstream parser accepts numeric IDs only.
-   const attachments=[...(item.content||'').matchAll(/^- attachment:([^\s]+)(?:\s*\(([^)]+)\))?$/gm)].map(match=>({id:match[1],label:match[2]}));
+   const attachments=[...(item.content||item.text||'').matchAll(/^- attachment:([^\s]+)(?:\s*\(([^)]+)\))?$/gm)].map(match=>({id:match[1],label:match[2]}));
    for(const attachment of attachments){
     const response=await fetcher(`/api/media/${encodeURIComponent(attachment.id)}/raw`);
     if(!response.ok)throw Error('Attachment recovery failed');
