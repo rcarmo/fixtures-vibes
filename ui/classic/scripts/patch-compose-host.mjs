@@ -86,7 +86,7 @@ export function patchComposeHost(source) {
                 onSetFolderRefs?.([]); setContent(draft.text);
                 requestAnimationFrame(() => { const input = textareaRef.current; if (!input) return; input.value = draft.text; resizeTextarea(); input.selectionStart = input.selectionEnd = draft.text.length; input.focus(); });
             };
-            void composeServices.returnQueuedFollowup(currentChatJid, queuedItem, applyReturnedDraft).catch(error => setSubmitError(error?.message || 'Queue return incomplete'));
+            void composeServices.returnQueuedFollowup(currentChatJid, queuedItem, applyReturnedDraft).catch(error => setSubmitError('Queue action failed: ' + (error?.message || 'Queue return incomplete')));
             return;
         }
         return returnQueuedFollowupToEditor({`);

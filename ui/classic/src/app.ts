@@ -1171,7 +1171,7 @@ function GiApp() {
                             const scope=selection.capture();
                             return returnQueuedDraft({chat,item,drafts,remove:removeAgentQueueItem,
                                 isCurrent:()=>selection.isCurrent(scope),
-                                apply:(draft)=>{setFileRefs(draft.fileRefs);setMessageRefs(draft.messageRefs);applyEditor(draft);repaintDraft(x=>x+1);},
+                                apply:(draft)=>{setFileRefs(draft.fileRefs);setMessageRefs(draft.messageRefs);applyEditor(draft);},
                             }).then(draft=>{if(selection.isCurrent(scope))setFollowupQueueItems(items=>items.filter(x=>x.id!==item.id));return draft;});
                         },
                         onMediaChange: (media: File[]) => { if(sessionId) drafts.update(sessionId,{media}); },
