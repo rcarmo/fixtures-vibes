@@ -25,6 +25,10 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched.indexOf('await composeServices.captureSubmission?.')).toBeLessThan(patched.indexOf("setContent('');", patched.indexOf('await composeServices.captureSubmission?.')));
   expect(patched).toContain('client_request_id: hostCapture.token');
   expect(patched).toContain('await composeServices.acceptSubmission?.');
+  expect(patched).toContain('useConnectionStatusPresentation(connectionStatus)');
+  const clearFence = patched.indexOf('if (textareaRef.current) textareaRef.current.value = "";');
+  expect(clearFence).toBeGreaterThan(patched.indexOf('await composeServices.captureSubmission?.'));
+  expect(patched.slice(clearFence)).toMatch(/textareaRef.current.value = "";\s+onContentChange\?\.\(''\);\s+setContent\(''\)/);
   expect(patched).toContain('e.target?.closest?.(".compose-session-popup-close")');
   expect(patched).toContain('resolvePopupTypeaheadMatch(currentSessionPopupEntries, nextBuffer.value, -1, (item) => item.label)');
   expect(patched).toContain('composeServices.failSubmission?.');

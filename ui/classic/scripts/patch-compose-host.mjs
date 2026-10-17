@@ -135,7 +135,7 @@ export function patchComposeHost(source) {
     `            let hostCapture = null;
             try {
                 hostCapture = clearAfterSubmit ? await composeServices.captureSubmission?.(submissionChatJid, { text: baseContent, media: capturedMediaFiles, fileRefs: [...capturedFileRefs, ...capturedFolderRefs], messageRefs: capturedMessageRefs }) : null;
-${clearBlock}                const intercepted`);
+${clearBlock.replace('            setContent(\'\');', '            if (textareaRef.current) textareaRef.current.value = "";\n            onContentChange?.(\'\');\n            setContent(\'\');')}                const intercepted`);
   s = once(s, 'mediaIds, resolveSubmitMode(submitMode), submissionChatJid);',
     'mediaIds, resolveSubmitMode(submitMode), submissionChatJid, hostCapture ? { client_request_id: hostCapture.token } : {});');
   s = once(s, '                requireComposeAcknowledgement(response);',
