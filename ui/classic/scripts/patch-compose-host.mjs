@@ -8,7 +8,7 @@ const once = (source, from, to) => {
 export function patchComposeHost(source) {
   let s = "import { startComposeResizeGesture } from '../gi-compose-resize.js';\n" + source;
   s = once(s, "useConnectionStatusPresentation(stateAccessFailed ? connectionStatus : 'connected')", 'useConnectionStatusPresentation(connectionStatus)');
-  s = once(s, '    const dynamicCommandsRef = useRef(null);', "    const dynamicCommandsRef = useRef([]);\n    const [commandCatalogueFailed, setCommandCatalogueFailed] = useState(false);");
+  s = once(s, '    const dynamicCommandsRef = useRef(null);', "    const dynamicCommandsRef = useRef([]);\n    const [commandCatalogueFailed, setCommandCatalogueFailed] = useState(false);\n    const commandSearchModeRef = useRef(searchMode);\n    commandSearchModeRef.current = searchMode;");
   const commandsStart = s.indexOf('        const chatJid = currentChatJid ||');
   const commandsEnd = s.indexOf('        return () => { cancelled = true; };', commandsStart);
   if (commandsStart < 0 || commandsEnd < 0) throw Error('Command catalogue lifecycle anchor changed');
@@ -19,7 +19,7 @@ export function patchComposeHost(source) {
             if (!data || !Array.isArray(data.commands) || data.commands.some(cmd => !cmd || typeof cmd.name !== 'string' || !cmd.name.startsWith('/') || typeof cmd.description !== 'string')) throw Error('Invalid command catalogue');
             dynamicCommandsRef.current = data.commands;
             setCommandCatalogueFailed(false);
-            if (textareaRef.current) updateSlashAutocomplete(textareaRef.current.value);
+            if (textareaRef.current && !commandSearchModeRef.current && !document.querySelector('[aria-modal="true"]')) updateSlashAutocomplete(textareaRef.current.value);
         }).catch(() => {
             if (cancelled) return;
             dynamicCommandsRef.current = [];
@@ -27,6 +27,7 @@ export function patchComposeHost(source) {
         });
 ` + s.slice(commandsEnd);
   s = once(s, 'dynamicCommandsRef.current || SLASH_COMMANDS', 'dynamicCommandsRef.current');
+  s = once(s, "            if (event.key === '/' && !isFocused && !isEditableTarget(event.target)) {", "            if (event.defaultPrevented || document.querySelector('.timeline-quick-actions')) return;\n            if (event.key === '/' && !isFocused && !isEditableTarget(event.target)) {");
   s = once(s, '                    ${showSlash && slashMatches.length > 0 && html`', '                    ${commandCatalogueFailed && content.startsWith(\'/\') && html`<div role="status">Command suggestions unavailable.</div>`}\n                    ${showSlash && slashMatches.length > 0 && html`');
   s = once(s, '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem };', '        : { getItem: getLocalStorageItem, setItem: setLocalStorageItem, removeItem: key => { try { localStorage.removeItem(key); } catch {} } };');
   s = once(s, '    return Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);', '    return window.innerWidth <= 639 ? Math.min(Math.floor(window.innerHeight * 0.30), 200) : Math.min(Math.floor(window.innerHeight * 0.40), COMPOSE_AUTO_MAX_HEIGHT_CAP);');
