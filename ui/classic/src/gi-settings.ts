@@ -134,7 +134,7 @@ function General() {
     </section>`;
 }
 
-function Dialog({ chatJid, initialSection = 'general', onClose, onMutationStart, onMutationEnd, onApplied }) {
+function Dialog({ chatJid, initialSection = 'general', onClose, onDismissed, onMutationStart, onMutationEnd, onApplied }) {
     const [section, setSection] = useState(initialSection);
     const dialog = useRef<HTMLDivElement>(null);
     const filterRef = useRef<HTMLInputElement>(null);
@@ -200,6 +200,8 @@ function Dialog({ chatJid, initialSection = 'general', onClose, onMutationStart,
             window.removeEventListener('keydown', key, true);
             if (app) app.inert = previousInert || false;
             document.body.style.overflow = previousOverflow;
+            // Restore after the portal releases inert, not before its teardown.
+            onDismissed?.();
         };
     }, []);
     return html`<div class="settings-dialog-backdrop" onClick=${e => { if (e.target === e.currentTarget) onClose(); }}>
@@ -221,8 +223,7 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
     const [initialSection, setInitialSection] = useState('general');
     const opener = useRef<HTMLElement>(null);
     const isOpen = useRef(false);
-    const close = () => {
-        isOpen.current = false; setOpen(false);
+    const restoreFocus = () => {
         // Preact removes the portal/inert guard after committing the close.
         // Wait through that commit before restoring focus into the application.
         requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -247,6 +248,7 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
             for (const delay of [100, 250, 500]) setTimeout(restoreUnownedFocus, delay);
         }));
     };
+    const close = () => { isOpen.current = false; setOpen(false); };
     // Install opening controls before first paint, including the auth gate's
     // asynchronous application mount. A visible composer must be interactive.
     useLayoutEffect(() => {
@@ -267,5 +269,5 @@ export function GiSettings({ chatJid, onMutationStart, onMutationEnd, onApplied 
         window.addEventListener('keydown', shortcut, true);
         return () => { window.removeEventListener('piclaw:open-settings', show); window.removeEventListener('keydown', shortcut, true); };
     }, []);
-    return open && html`<${BodyPortal} className="settings-portal"><${Dialog} chatJid=${chatJid} initialSection=${initialSection} onClose=${close} onMutationStart=${onMutationStart} onMutationEnd=${onMutationEnd} onApplied=${onApplied} /><//>`;
+    return open && html`<${BodyPortal} className="settings-portal"><${Dialog} chatJid=${chatJid} initialSection=${initialSection} onClose=${close} onDismissed=${restoreFocus} onMutationStart=${onMutationStart} onMutationEnd=${onMutationEnd} onApplied=${onApplied} /><//>`;
 }
