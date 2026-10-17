@@ -11,6 +11,7 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched.indexOf(render)).toBeGreaterThan(0);
   const resizeBinding = '                tabIndex="0"\n                onKeyDown=${handleComposeResizeKey}\n';
   const nativeRender = patched.slice(patched.indexOf(render)).replace(resizeBinding, '')
+    .replace('                    ${commandCatalogueFailed && content.startsWith(\'/\') && html`<div role="status">Command suggestions unavailable.</div>`}\n', '')
     .replace('                                aria-haspopup="listbox"\n                                aria-expanded=${showModelPopup ? "true" : "false"}\n                                aria-controls=${showModelPopup ? "compose-model-results-host" : undefined}\n', '')
     .replace('                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n', '')
     .replace("window.dispatchEvent(new CustomEvent('piclaw:open-settings', {detail: {section: 'models', opener: modelHintRef.current}}));", "requestOpenSettingsDialog({ section: 'models' });")
@@ -26,6 +27,11 @@ test('current composer keeps native rendering with batch cancellation, authorita
   expect(patched).toContain('client_request_id: hostCapture.token');
   expect(patched).toContain('await composeServices.acceptSubmission?.');
   expect(patched).toContain('useConnectionStatusPresentation(connectionStatus)');
+  expect(patched).not.toContain('dynamicCommandsRef.current || SLASH_COMMANDS');
+  expect(patched).toContain('Command suggestions unavailable.');
+  expect(patched).toContain('commandSearchModeRef.current = searchMode;');
+  expect(patched).toContain('!commandSearchModeRef.current && !document.querySelector(\'[aria-modal="true"]\')');
+  expect(patched).toContain('if (event.defaultPrevented || document.querySelector(\'.timeline-quick-actions\')) return;');
   const clearFence = patched.indexOf('if (textareaRef.current) textareaRef.current.value = "";');
   expect(clearFence).toBeGreaterThan(patched.indexOf('await composeServices.captureSubmission?.'));
   expect(patched.slice(clearFence)).toMatch(/textareaRef.current.value = "";\s+onContentChange\?\.\(''\);\s+setContent\(''\)/);
