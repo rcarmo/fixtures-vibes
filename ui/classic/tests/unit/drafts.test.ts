@@ -280,3 +280,20 @@ test('unknown delivery receipt preserves newer edits and unconfirmed delivery ke
     expect(recovered.get('a').text).toBe(confirmed ? 'newer edits' : 'submitted\n\nnewer edits');
   }
 });
+
+test('confirmed pending receipt fences stale pre-clear journal replay after navigation', async () => {
+  let saved: any[] = [];
+  const journal = textJournal();
+  const storage = { load: async () => structuredClone(saved), put: async (row: any, expected: number) => { const next = expected + 1; saved = [{ ...structuredClone(row), revision: next }]; return next; } };
+  const repo = createDraftRepository(storage, undefined, undefined, journal);
+  await repo.load();
+  const capture = repo.begin('a', draft('accepted text'));
+  await capture.ready;
+  repo.update('a', { text: 'accepted text' });
+  await repo.flush();
+  journal.write('a', { text: 'accepted text', previousText: '', revision: saved[0].revision, nonce: 'late-page' });
+  const recovered = createDraftRepository(storage, undefined, async () => new Set([pendingSendKey('a', capture.token)]), journal);
+  await recovered.load();
+  expect(recovered.get('a').text).toBe('');
+  expect(journal.read('a')).toBeNull();
+});
