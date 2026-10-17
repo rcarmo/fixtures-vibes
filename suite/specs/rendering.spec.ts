@@ -47,6 +47,9 @@ test('@ux-timeline-024 Code blocks expose a copy button in the top-right corner'
 });
 
 test('@ux-timeline-025 Resource links and link previews open in a new tab', async ({ page, runtime, sel }) => {
+  const url = 'https://example.com/fixture';
+  // Cover the popup's initial navigation without external-network dependency.
+  await page.context().route(url, route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>Link fixture</title><p>Fixture destination</p>' }));
   const post = await agentPosts(page, runtime, sel, '[fixture link](https://example.com/fixture)');
   const link = post.getByRole('link', { name: 'fixture link' });
   await expect(link).toHaveAttribute('target', '_blank');
@@ -54,7 +57,8 @@ test('@ux-timeline-025 Resource links and link previews open in a new tab', asyn
   const opened = page.context().waitForEvent('page');
   await link.click();
   const tab = await opened;
-  expect(tab.url()).toContain('example.com/fixture');
+  await expect(tab).toHaveURL(url);
+  await expect(tab.locator('p')).toHaveText('Fixture destination');
   await tab.close();
 });
 
