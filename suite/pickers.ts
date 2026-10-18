@@ -36,6 +36,12 @@ export async function typeInModelPicker(page: Page, text: string) {
     const a = document.activeElement;
     return !!a && a !== document.body && (el.contains(a) || (!!el.id && a.getAttribute('aria-controls') === el.id));
   }), { message: 'model picker has focus' }).toBe(true);
-  await page.keyboard.type(text);
-  if (await search.count()) await expect(search).toHaveValue(text);
+  if (await search.count()) {
+    // Target text entry to the control. Global typing can lose leading keys
+    // across WebKit focus transitions; keyboard navigation is tested separately.
+    await search.fill(text);
+    await expect(search).toHaveValue(text);
+  } else {
+    await page.keyboard.type(text); // list-only runtime typeahead contract
+  }
 }
