@@ -27,9 +27,15 @@ export const searchField = (scope: Pick<Page, 'getByRole'> | Pick<Locator, 'getB
 export async function typeInModelPicker(page: Page, text: string) {
   const picker = modelList(page);
   await expect(picker).toBeVisible();
+  // Focus can arrive before the asynchronous catalogue refresh completes.
+  // Busy pickers deliberately decline navigation and selection keys.
+  await expect(picker).not.toHaveAttribute('aria-busy', 'true');
+  const search = searchField(page, /search models/i);
+  if (await search.count()) await expect(search).toBeEnabled();
   await expect.poll(() => picker.first().evaluate(el => {
     const a = document.activeElement;
     return !!a && a !== document.body && (el.contains(a) || (!!el.id && a.getAttribute('aria-controls') === el.id));
   }), { message: 'model picker has focus' }).toBe(true);
   await page.keyboard.type(text);
+  if (await search.count()) await expect(search).toHaveValue(text);
 }
