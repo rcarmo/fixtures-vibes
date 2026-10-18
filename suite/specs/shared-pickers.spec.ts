@@ -144,7 +144,7 @@ for (const [id, name] of [
   await page.keyboard.press('Enter');
   await expect(opener).toContainText(MODEL_TWO);
   await composer.fill(`[reply:after-${n}] after ${n}`);
-  await page.locator(sel('sendButton')).click();
+  await composer.press('Enter');
   await expect(page.locator(sel('agentPost')).filter({ hasText: `after-${n}` })).toHaveCount(1);
   const turns = (await runtime.modelLog()).filter(e => !e.toolFollowUp && e.prompt.includes(`after ${n}`));
   expect(turns.map(e => e.model)).toEqual(['fixture-2']);

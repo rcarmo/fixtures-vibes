@@ -93,6 +93,18 @@ export function patchComposeHost(source) {
         const preferences = togglePinnedSessionChatJid(chatJid, sessionPreferenceRuntime);`);
   s = once(s, '    }, [currentChatJid]);\n\n    const handleRenameSession',
     '    }, [currentChatJid, sessionPreferenceRuntime, composeServices.pinSession, pinnedSessionChatJids]);\n\n    const handleRenameSession');
+  // Restore session-picker focus only if no newer interaction owns focus.
+  s = once(s, '    const handlePopupKeyboardEvent = useCallback((e) => {', `    const restoreSessionPickerFocus = () => {
+        const owner = document.activeElement;
+        requestAnimationFrame(() => {
+            const active = document.activeElement;
+            if (active === owner || active === document.body || !active) sessionTriggerRef.current?.querySelector?.('button')?.focus?.();
+        });
+    };
+
+    const handlePopupKeyboardEvent = useCallback((e) => {`);
+  s = once(s, "                requestAnimationFrame(() => sessionTriggerRef.current?.querySelector?.('button')?.focus?.());", '                restoreSessionPickerFocus();');
+  s = once(s, "setShowSessionPopup(false); requestAnimationFrame(() => sessionTriggerRef.current?.querySelector?.('button')?.focus?.());", 'setShowSessionPopup(false); restoreSessionPickerFocus();');
   // A passive-effect listener can survive a popup dismissal for one frame (notably WebKit). Once focus is back in
   // the editor, a stale capture listener must not consume its Enter as a session-row activation.
   s = once(s, '        const onKeyDown = (event) => {\n            handlePopupKeyboardEvent(event);',
@@ -120,9 +132,9 @@ export function patchComposeHost(source) {
   s = once(s, '                                ref=${modelHintRef}\n', '                                ref=${modelHintRef}\n                                aria-haspopup="listbox"\n                                aria-expanded=${showModelPopup ? "true" : "false"}\n                                aria-controls=${showModelPopup ? "compose-model-results-host" : undefined}\n');
   s = once(s, '                            entries=${modelOptions}\n', '                            entries=${modelOptions}\n                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n');
   s = once(s, '        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);',
-    '        const pickerOwnedFocus = () => Boolean(modelPopupRef.current?.contains(document.activeElement));\n        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);\n        const restorePickerFocus = pickerOwnedFocus();');
+    '        const ok = await runModelCommand(`/model ${modelLabel}`, modelLabel);\n        const pickerFocusOwner = document.activeElement;\n        const restorePickerFocus = Boolean(modelPopupRef.current?.contains(pickerFocusOwner));');
   s = once(s, '            requestAnimationFrame(() => modelHintRef.current?.focus?.());\n        }\n    };\n\n    const runSessionPopupEntry',
-    '            if (restorePickerFocus) requestAnimationFrame(() => modelHintRef.current?.focus?.());\n        }\n    };\n\n    const runSessionPopupEntry');
+    '            if (restorePickerFocus) requestAnimationFrame(() => {\n                // Unmount may move focus to body; any other owner is newer.\n                const active = document.activeElement;\n                if (active === pickerFocusOwner || active === document.body || !active) modelHintRef.current?.focus?.();\n            });\n        }\n    };\n\n    const runSessionPopupEntry');
   s = once(s, "requestOpenSettingsDialog({ section: 'models' });", "window.dispatchEvent(new CustomEvent('piclaw:open-settings', {detail: {section: 'models', opener: modelHintRef.current}}));");
   s = once(s, "            alert('Failed to switch model: ' + error.message);", "            setSubmitError('Failed to switch model: ' + error.message);");
   // Do not let keyboard activation leak through IME/repeated/consumed Enter into a prompt.

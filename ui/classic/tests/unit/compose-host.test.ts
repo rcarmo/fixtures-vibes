@@ -16,7 +16,8 @@ test('current composer keeps native rendering with batch cancellation, authorita
     .replace('                            instanceKey="host"\n                            supportsThinking=${supportsThinking}\n', '')
     .replace("window.dispatchEvent(new CustomEvent('piclaw:open-settings', {detail: {section: 'models', opener: modelHintRef.current}}));", "requestOpenSettingsDialog({ section: 'models' });")
     .replace('role=${speechUiState.kind === "error" ? "alert" : "status"}', 'role="status"')
-    .replace('                            aria-pressed=${speechButtonActive ? "true" : "false"}\n', '');
+    .replace('                            aria-pressed=${speechButtonActive ? "true" : "false"}\n', '')
+    .replace('setShowSessionPopup(false); restoreSessionPickerFocus();', "setShowSessionPopup(false); requestAnimationFrame(() => sessionTriggerRef.current?.querySelector?.('button')?.focus?.());");
   expect(nativeRender).toBe(source.slice(source.indexOf(render)));
   expect(patched).toContain('speechRecognitionRef.current=null;');
   expect(patched).toContain('if (speechPendingStopRef.current) recognition.stop();');
