@@ -14,6 +14,12 @@ export function patchPlanSidebar(source) {
   const sha = createHash('sha256').update(source).digest('hex');
   if (sha !== SHA256) throw new Error(`plan sidebar add-on source changed (${sha})`);
   if (!source.includes(ANCHOR)) throw new Error('plan sidebar apiJson anchor not found');
+  const focusAnchor = '      setTimeout(() => focusEditor(), 80);';
+  if (source.split(focusAnchor).length !== 2) throw new Error('plan sidebar focus anchor changed');
+  source = source.replace(focusAnchor, `      const focusOwner = document.activeElement;
+      window.setTimeout(() => {
+        if (state.open && document.activeElement === focusOwner) focusEditor();
+      }, 80);`);
   return patchPlanRevision(`import { giPlanSidebarRequest } from '../../src/gi-plan-sidebar.ts';\n`
     + source.replace(ANCHOR, '  async function apiJson(url, options) {\n    return giPlanSidebarRequest(url, options);\n  }'));
 }

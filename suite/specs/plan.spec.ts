@@ -14,14 +14,8 @@ async function send(page: Page, sel: (k: string) => string, text: string, reply:
   // Start each turn from an idle composer, and confirm the submission was accepted.
   await expect(page.locator(sel('stopButton'))).toHaveCount(0, { timeout: 20_000 });
   await input.fill(text);
-  // The open panel overlaps Send on narrow screens. Activate the enabled
-  // button by keyboard without closing/autosaving the dirty Plan under test.
-  // Submit once; never resend an uncertain turn. Composer Enter has its own
-  // HTTP acceptance gate; these cases exercise Plan state ownership.
-  const sendButton = page.locator(sel('sendButton'));
-  await expect(sendButton).toBeEnabled();
-  await sendButton.focus();
-  await sendButton.press('Enter');
+  // Exercise the composer keyboard path once; never resend an uncertain turn.
+  await input.press('Enter');
   await expect(input).toHaveValue('');
   await expect(page.locator(sel('agentPost')).filter({ hasText: reply })).toHaveCount(1, { timeout: 20_000 });
 }

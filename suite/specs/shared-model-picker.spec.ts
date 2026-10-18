@@ -62,7 +62,7 @@ for (const [id, name] of [
 
     // The next turn uses the selected model; the choice survives reload for this session only.
     await composer.fill(`[reply:ok-${n}] use ${n}`);
-    await page.locator(sel('sendButton')).click();
+    await composer.press('Enter');
     await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${n}` })).toHaveCount(1);
     expect(await modelUsed(runtime, n)).toEqual(['fixture-2']);
     await page.reload();
@@ -72,7 +72,7 @@ for (const [id, name] of [
     await expect(modelButton(page)).not.toContainText(MODEL_TWO);
     const m = randomUUID().slice(0, 8);
     await page.locator(sel('composeInput')).fill(`[reply:ok-${m}] use ${m}`);
-    await page.locator(sel('sendButton')).click();
+    await page.locator(sel('composeInput')).press('Enter');
     await expect(page.locator(sel('agentPost')).filter({ hasText: `ok-${m}` })).toHaveCount(1);
     expect(await modelUsed(runtime, m)).toEqual(['fixture-1']);
   });

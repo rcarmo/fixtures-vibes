@@ -5,6 +5,17 @@ import { validRevision, requireRevision, isRevisionConflict } from '../../src/gi
 import { giPlanSidebarRequest } from '../../src/gi-plan-sidebar';
 const source = readFileSync(new URL('../../piclaw/plan-sidebar-0.1.25/index.ts', import.meta.url), 'utf8');
 const adapted = patchPlanSidebar(source);
+test('deferred Plan focus honours a newer composer owner and a closed panel', () => {
+  const owner = {}; const composer = {}; const document = { activeElement: owner };
+  const state = { open: false }; let callback: Function; let focused = 0;
+  const setOpen = new Function('state', 'localStorage', 'renderChrome', 'ensureEditor', 'loadPlan', 'window', 'document', 'focusEditor',
+    `const STORAGE_OPEN = 'test-open';\n${adapted.slice(adapted.indexOf('  function setOpen('), adapted.indexOf('  async function closeSidebar('))}\nreturn setOpen;`
+  )(state, {setItem(){}}, () => {}, () => Promise.resolve(), () => Promise.resolve(),
+    {setTimeout(fn: Function){callback=fn;}}, document, () => {focused++;});
+  setOpen(true); document.activeElement = composer; callback!(); expect(focused).toBe(0);
+  document.activeElement = owner; setOpen(true); setOpen(false); callback!(); expect(focused).toBe(0);
+  setOpen(true); callback!(); expect(focused).toBe(1);
+});
 function host(apiJson: Function) {
   const state: any = { chatJid: 'gi:A', requestEpoch: 0, editRevision: 0, revision: 0, markdown: '- [ ] base', baseline: '- [ ] base', dirty: false, pendingRemoteRefresh: false, pendingRemoteLabel: 'remote' };
   let nextChat = 'gi:A'; const drafts = new Map();
