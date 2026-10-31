@@ -37,6 +37,13 @@ name/avatar across session refreshes, followed by a separate `@session` bubble; 
 Saved identity changes retain the manual-restart contract. Search bubbles keep their existing reference action.
 The browser tab title follows selection and rename as `@session — Gi`, using the selected ID while its name loads.
 The xterm overview-ruler border matches its background instead of defaulting to white; scrollbar/search markers remain enabled.
+General Instance Configuration exposes **Maximum iterations** when the runtime returns
+`settings.maxIterations`. The default is 128; it autosaves whole-number edits after 800 ms,
+sends only changed fields, and explains that subsequent turns use the instance-wide limit
+without restarting while running turns keep their snapshot. Upload-only runtimes retain
+their existing control. Save failures are surfaced and unsaved edits revert; closing the
+pane cancels a pending debounce.
+
 `make check-appearance-identity` builds components from source without rewriting assets and verifies these defaults
 at desktop and phone widths. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` may select an existing Chromium installation.
 

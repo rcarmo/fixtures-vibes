@@ -79,6 +79,15 @@ this presentation change does not activate saved settings or alter persistence.
 | GET, PATCH, DELETE | `/api/settings/providers` | `getGiProviders`, `saveGiProviderKey`, `removeGiProviderKey` | `handleProviderSettings` |
 | GET, POST | `/api/settings/general` | `getGeneralSettings`, `saveGeneralSettings` | `handleGeneralSettings` |
 
+General responds with `{ok, settings: {workspaceUploadLimitMb, maxIterations}}`.
+`maxIterations` defaults to 128 unless a positive startup value or saved instance
+override exists. POST accepts either/both properties as a partial update;
+`maxIterations` must be an integer from 1 to 2147483647. Saved limits affect
+subsequent model/tool loops without restarting, never a running loop's snapshot.
+The frontend omits this control for upload-only runtimes that do not return the
+property. Upload edits must not reset the iteration limit.
+
+
 ## Keychain and environment
 
 | Method | Path | UI caller | Reference |

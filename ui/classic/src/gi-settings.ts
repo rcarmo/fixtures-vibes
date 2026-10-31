@@ -2,8 +2,8 @@
 // Native capabilities only; no Piclaw settings service calls.
 import { html, useState, useEffect, useLayoutEffect, useRef, useMemo } from './vendor/preact-htm.js';
 import { BodyPortal } from './components/body-portal.js';
-import { getGiSettingsSnapshot, getGiIdentity, saveGiIdentity, getGeneralSettings, saveGeneralSettings } from './api.js';
-import { NumberStepper } from './gi-number-stepper.js';
+import { getGiSettingsSnapshot, getGiIdentity, saveGiIdentity } from './api.js';
+import { InstanceConfig } from './gi-settings-instance.js';
 import { LazySettingsPane } from './gi-settings-lazy.js';
 
 let generalCache: any = null;
@@ -58,49 +58,6 @@ function Identity() {
         ${error && html`<p role="alert">${error}</p>`}
         ${notice && html`<p role="status">${notice}</p>`}
     </section>`;
-}
-
-// Piclaw 3.2.5 General "Instance Configuration": edits autosave 800 ms after
-// the last change and report "Settings applied", or the error.
-function InstanceConfig() {
-    const [limit, setLimit] = useState<number | null>(null);
-    const [applied, setApplied] = useState(false);
-    const [error, setError] = useState('');
-    const saved = useRef<number | null>(null);
-    const timer = useRef<any>(null);
-    const alive = useRef(true);
-    useEffect(() => () => { alive.current = false; clearTimeout(timer.current); }, []);
-    useEffect(() => {
-        getGeneralSettings().then(({ data }) => {
-            const value = data?.settings?.workspaceUploadLimitMb;
-            if (alive.current && Number.isFinite(value)) { saved.current = value; setLimit(value); }
-        }).catch(() => alive.current && setError('Failed to load instance settings.'));
-    }, []);
-    useEffect(() => {
-        if (limit === null || limit === saved.current) return;
-        clearTimeout(timer.current);
-        timer.current = setTimeout(async () => {
-            try {
-                const { status, data } = await saveGeneralSettings({ workspaceUploadLimitMb: limit });
-                if (!alive.current) return;
-                if (status < 200 || status >= 300 || !data?.ok) throw new Error(data?.error || `Failed to save general settings (${status})`);
-                saved.current = data.settings?.workspaceUploadLimitMb ?? limit;
-                setError(''); setApplied(true);
-                setTimeout(() => { if (alive.current) setApplied(false); }, 4000);
-            } catch (err) { if (alive.current) { setApplied(false); setError(`Failed to save: ${err?.message || err}`); } }
-        }, 800);
-        return () => clearTimeout(timer.current);
-    }, [limit]);
-    return html`<div class="gi-settings-instance">
-        <h3>Instance Configuration</h3>
-        ${applied && html`<div class="settings-general-applied-notice" role="status" aria-live="polite">Settings applied. Changes take effect on the next upload.</div>`}
-        ${error && html`<div role="alert">${error}</div>`}
-        ${limit !== null && html`<div class="settings-row">
-            <label for="gi-general-upload-limit">Upload limit (MB)</label>
-            <${NumberStepper} id="gi-general-upload-limit" label="Upload limit (MB)" value=${limit} min=${1} max=${1024} fallback=${256} width="80px" onChange=${setLimit} />
-            <span class="settings-hint">Applies to workspace uploads.</span>
-        </div>`}
-    </div>`;
 }
 
 function General() {

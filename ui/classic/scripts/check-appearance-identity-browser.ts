@@ -13,6 +13,7 @@ const entry = join(scratch, 'entry.ts');
 writeFileSync(entry, `
 import {html,render} from '${root}/src/vendor/preact-htm-entry.ts';
 import {Appearance} from '${root}/src/gi-settings-appearance.ts';
+import {InstanceConfig} from '${root}/src/gi-settings-instance.ts';
 import {Timeline} from '${root}/piclaw/web-3.3.4/web/src/components/timeline.ts';
 import {timelineAgents,activeSessionTitle} from '${root}/src/gi-post-identity.ts';
 import {buildTerminalTheme} from '${root}/piclaw/web-3.3.4/web/src/panes/terminal-pane.ts';
@@ -39,6 +40,8 @@ window.mount=(session='first',search=false,selected='gi:a')=>{
  render(html\`<\$\{Appearance} />\`,document.querySelector('#appearance'));
  render(html\`<\$\{Timeline} posts=\$\{posts} agents=\$\{agents} user=\$\{{name:'Reader'}} searchQuery=\$\{search?'Hello':''} onMessageRef=\$\{()=>{window.references++;}} />\`,document.querySelector('#timeline'));
 };window.references=0;window.mount();
+render(html\`<\$\{InstanceConfig} />\`,document.querySelector('#instance'));
+window.unmountInstance=()=>render(null,document.querySelector('#instance'));
 `);
 try {
  const bundle = await Bun.build({entrypoints:[entry],target:'browser',format:'esm',external:['/common/js/vendor/xterm/xterm.mjs'],plugins:[{name:'fixture-vendor',setup(build){
@@ -51,7 +54,7 @@ try {
  const server=Bun.serve({port:0,hostname:'127.0.0.1',async fetch(req){
   const path=new URL(req.url).pathname;
   if(path==='/entry.js')return new Response(javascript,{headers:{'Content-Type':'text/javascript'}});
-  if(path==='/')return new Response('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/dist/app.bundle.css"><link rel="stylesheet" href="/css/gi-settings.css"><link rel="stylesheet" href="/common/js/vendor/xterm/xterm.css"></head><body><div id="terminal" style="width:320px;height:140px"></div><div id="appearance" class="settings-content"></div><div id="timeline"></div><script type="module" src="/js/marked.min.js"></script><script type="module" src="/entry.js"></script></body></html>',{headers:{'Content-Type':'text/html'}});
+  if(path==='/')return new Response('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="/dist/app.bundle.css"><link rel="stylesheet" href="/css/gi-settings.css"><link rel="stylesheet" href="/common/js/vendor/xterm/xterm.css"></head><body><div id="terminal" style="width:320px;height:140px"></div><div id="instance" class="settings-content"></div><div id="appearance" class="settings-content"></div><div id="timeline"></div><script type="module" src="/js/marked.min.js"></script><script type="module" src="/entry.js"></script></body></html>',{headers:{'Content-Type':'text/html'}});
   if(path==='/favicon.ico')return new Response(null,{status:204});
   if(path.startsWith('/api/'))return Response.json({});
   const file=resolve(root,'static','.'+path);
@@ -63,12 +66,44 @@ try {
    for(const width of [1440,390]){
     const context=await browser.newContext({viewport:{width,height:1000}});const page=await context.newPage();const errors:string[]=[];
     page.on('pageerror',e=>errors.push(e.message));
+    let general:any={workspaceUploadLimitMb:256,maxIterations:128};
+    const writes:any[]=[];let failSave=false;
+    await page.route('**/api/settings/general',async route=>{
+      if(route.request().method()==='POST'){
+        const patch=route.request().postDataJSON();writes.push(patch);
+        if(failSave)return route.fulfill({status:503,json:{error:'Fixture save unavailable'}});
+        general={...general,...patch};
+      }
+      return route.fulfill({json:{ok:true,settings:general}});
+    });
     const profileDir=process.env.IDENTITY_BROWSER_PROFILE_DIR;
     const cdp=profileDir?await context.newCDPSession(page):null;
     if(cdp){await cdp.send('Profiler.enable');await cdp.send('Profiler.start');await cdp.send('HeapProfiler.enable');await cdp.send('HeapProfiler.startSampling',{samplingInterval:16384,includeObjectsCollectedByMajorGC:true,includeObjectsCollectedByMinorGC:true});}
     try {
     await page.goto(server.url.origin);
     await expect(page).toHaveTitle('@first — Gi');
+    const iterations=page.getByRole('textbox',{name:'Maximum iterations',exact:true});
+    const upload=page.getByRole('textbox',{name:'Upload limit (MB)',exact:true});
+    await expect(iterations).toHaveValue('128');
+    await iterations.fill('32');await iterations.press('Tab');
+    await expect(page.locator('.settings-general-applied-notice')).toContainText('subsequent turns');
+    expect(writes).toEqual([{maxIterations:32}]);
+    await upload.fill('64');await upload.press('Tab');
+    await expect.poll(()=>general.workspaceUploadLimitMb).toBe(64);
+    expect(general.maxIterations).toBe(32);
+    await page.reload();await expect(iterations).toHaveValue('32');await expect(upload).toHaveValue('64');
+    failSave=true;
+    await iterations.fill('33');await iterations.press('Tab');
+    await expect(page.getByRole('alert')).toContainText('Fixture save unavailable');
+    await expect(iterations).toHaveValue('32');failSave=false;
+    const beforeClose=writes.length;
+    await iterations.fill('34');await iterations.press('Tab');
+    await page.evaluate(()=>(window as any).unmountInstance());
+    await page.waitForTimeout(1000);expect(writes.length).toBe(beforeClose);
+    general={workspaceUploadLimitMb:64};
+    await page.reload();await expect(upload).toHaveValue('64');await expect(iterations).toHaveCount(0);
+    general={workspaceUploadLimitMb:64,maxIterations:32};
+    await page.reload();await expect(iterations).toHaveValue('32');
     const palettes=page.getByRole('img',{name:/palette$/});
     expect(await palettes.count()).toBeGreaterThan(10);
     await expect(page.getByRole('img',{name:'Default light palette',exact:true})).toBeVisible();
@@ -105,7 +140,7 @@ try {
       expect(result.pixel).toEqual(dark?[13,17,23,255]:[255,255,255,255]);
       expect(result.scrolled).toBe(true);
     }
-    expect(errors).toEqual([]);console.log('PASS width='+width+': palettes, persistence, identity, rename, tab title, user/system, search reference, terminal ruler');
+    expect(errors).toEqual([]);console.log('PASS width='+width+': palettes, persistence, identity, rename, tab title, user/system, search reference, terminal ruler, maximum iteration default/autosave/reopen/error/unmount');
     } finally {
       if(cdp&&profileDir){
         const cpu=await cdp.send('Profiler.stop');const heap=await cdp.send('HeapProfiler.stopSampling');
