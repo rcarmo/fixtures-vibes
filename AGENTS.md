@@ -15,10 +15,15 @@ Rui's explicit rule: **profile and tune during pre-release tests; remove profili
 
 # Agent rules for fixtures-vibes
 
-## Scope: shared Web UX behaviour only
+## Scope: one shared Classic frontend and its Web UX contract
 
-This repository owns **only shared, user-visible Classic web UI behaviour**: the Gherkin features, the black-box
-compliance suite that checks them, the deterministic fixture model it drives, and the reference evidence.
+Rui's 2026-10-31 instruction: **one frontend only**, at `ui/classic/`. This supersedes all older instructions to
+retain runtime-specific frontend trees until adoption. Do not create `ui/vibes`, `ui/tau`, compatibility symlinks,
+renamed copies or alternate build/package trees. Consumers implement `ui/API.md` server-side and use Classic;
+a missing backend contract is an explicit consumer blocker, never a reason to keep another UI.
+
+This repository owns the shared Classic source, assets, build and frontend adapters at `ui/classic/`, plus its
+Gherkin features, black-box compliance suite, deterministic fixture model and reference evidence.
 
 It does **not** own, and must not contain:
 
@@ -26,8 +31,8 @@ It does **not** own, and must not contain:
 * **Back-ends**: server, API, storage, agent, provider or tool behaviour, except as it is visible in the web UI.
 * **Runtime specifics**: one runtime's routes, commands, settings, storage keys, prompt or summary formats, file
   layouts or product features. Express runtime differences with `@cap-*` tags, profile data and skips.
-* **Product code**: no UI source, assets or build (the uniform Classic UI lives in its own repository), and no
-  runtime adapters.
+* **Alternate product UIs**: no runtime-specific frontend sources, assets, packages or builds. The only UI is
+  `ui/classic/`; shared frontend adapters belong there, backend implementations stay in runtime repositories.
 
 The suite also owns the **general Playwright UI tests** for shared behaviour. Runtimes do not keep their own copies of
 browser tests for shared UX: they contribute them here, bound to a scenario ID (add the scenario if none fits), and keep
@@ -65,7 +70,7 @@ rewritten in terms of what a user sees. If neither works, the behaviour is not s
   3. local: a usable `/workspace/tmp`, then the system temp directory (`/tmp/<project>` on POSIX).
   The inherited `TMPDIR` is snapshotted as `PROJECT_ORIGINAL_TMPDIR` before it is redirected.
 - Layout: `cache/<tool>/` (bun, npm, xdg, go) for rebuildable caches, `build/` for generated output, `tests/` and
-  `logs/` for disposable test/log scratch, `runs/<purpose>/<run-id>/` (`suite`, `ui-classic`, `ui-vibes`, `ui-tau`,
+  `logs/` for disposable test/log scratch, `runs/<purpose>/<run-id>/` (`suite`, `ui-classic`,
   or `RUN_PURPOSE=…`) for isolated runs. Raw profiling data is transient; delete it immediately after analysis.
 - `mk/project-paths.mk`, included by every Makefile here, exports the resolved `PROJECT_TMP_ROOT` (children never
   resolve again, so a run directory used as `TMPDIR` is not nested into), `TMPDIR`/`TMP`/`TEMP`, `FIXTURES_RUN_ROOT`,
@@ -109,8 +114,7 @@ that is a runtime defect, fixed in the runtime or recorded as a skip with an iss
 
 ## Ownership
 
-Per Rui (2026-10-04), the fixtures-vibes agent owns this repository and the front-end code of every implementation:
-Vibes Python `src/vibes/static/`, tau-prime `src/tau_web/vibes/`
-and Gi `web/`, including their front-end builds and tests, plus the selector maps and front-end capability claims in
-runtime profiles. Runtime agents own backends, APIs, runtime lifecycle and publication of their repositories; UI
-changes they need are requested from the front-end owner with the backend API contract.
+The frontend owner maintains `ui/classic/`, its build/tests, shared selectors and frontend capability claims.
+Runtime owners maintain backends, APIs, static mounting, lifecycle, consumer pins and publication. Consumers use
+`references/fixtures-vibes/ui/classic`; no runtime owns a second frontend tree here. Cross-agent contact still
+requires Rui's explicit request.

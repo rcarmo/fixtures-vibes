@@ -13,15 +13,20 @@ Any local deviations are either specific to the runtime or tool (`gi` and `tau-p
 
 # Agent Guidance
 
-The installed Piclaw release is the behavioural oracle; the current reference and shared `ui/classic` sources are
-**Piclaw v3.3.0** (`e4c2b9a3536e…`). The reference uses the 3.3.0 baseline release, with verified asset identity in
+`ui/classic` is the **only frontend**, using unmodified **Piclaw v3.3.4-ux** sources
+(`78dcfa25838a152fdf936b864306b643b8d1cfbc`) and shared backend adapters. The former `ui/vibes` and `ui/tau`
+trees are removed; there are no alternate builds or compatibility symlinks. Consumers implement
+[the HTTP/SSE contract](ui/API.md) and mount Classic assets; see [the frontend layout](ui/README.md).
+
+The recorded behavioural reference uses the Piclaw 3.3.0 baseline, with verified asset identity in
 `oracle/piclaw/3.3.0/identity.json`. The initial 3.3.0 record is a focused linked-defect revalidation, not a full
 compliance run. Existing `oracle/piclaw/3.2.5/` records stay unchanged.
 
-This repository holds behaviour, not product code:
+This repository holds one shared frontend and its behaviour contract:
 
 | Path | Contents |
 |---|---|
+| `ui/classic/` | The only frontend source, dependencies, build, tests and served assets. |
 | `features/` | Runtime-independent Classic Gherkin with stable scenario IDs (`@ux-<area>-NNN`). |
 | `capabilities.json` | `@cap-*` vocabulary. A scenario tagged `@cap-X` needs capability X. |
 | `schemas/` | JSON Schemas for runtime profiles, skips files and evidence manifests. |

@@ -1,5 +1,13 @@
 # Changelog
 
+## One frontend only (2026-10-31)
+
+* Remove the legacy `ui/vibes` and `ui/tau` source, assets, tests, dependency locks and build entry points.
+  `ui/classic` is the only frontend; no archive, renamed copy or compatibility symlink is retained.
+* Replace obsolete ownership/adoption guidance and add a layout regression test that rejects alternate UI trees.
+* Consumers adopting this revision must use `ui/classic` and implement `ui/API.md`. Older Vibes/Tau pins still
+  reference their historical UI until migrated; this removal does not claim backend acceptance or deployment.
+
 ## Piclaw 3.3.4 frontend and library refresh (2026-10-16)
 
 * Align Classic's unmodified source/vendor pages to `v3.3.4-ux`; retain revision-safe editor/Plan persistence
