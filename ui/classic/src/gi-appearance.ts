@@ -2,6 +2,8 @@
 // The supplied theme module itself is never modified.
 import { giThemePresets, giApplyThemeState } from './ui/theme.js';
 import { APPEARANCE_KEY, defaultAppearance, normalizeOutputPad, readAppearance, saveAppearance, validateAppearance, type Appearance } from './gi-appearance-state.js';
+import { themePreviews } from './gi-theme-preview.js';
+export const appearancePresetPreviews = Object.fromEntries(Object.entries(giThemePresets).map(([name, preset]) => [name, themePreviews(preset)]));
 export const appearancePresets = Object.keys(giThemePresets);
 const changeEvent = 'gi:appearance-changed';
 // api.ts announces /theme and /tint results without importing the renderer.

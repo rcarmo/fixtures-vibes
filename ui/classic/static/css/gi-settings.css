@@ -268,6 +268,15 @@
 .settings-theme-table th:first-child, .settings-theme-table td:first-child { width: 32px; text-align: center; }
 .settings-theme-table tbody tr:hover { background: var(--bg-hover, rgba(128,128,128,0.06)); }
 .settings-theme-table .settings-row-active { background: color-mix(in srgb, var(--accent-color) 10%, transparent); }
+.gi-theme-previews { display: flex; flex-direction: column; gap: 4px; }
+.gi-theme-preview { display: flex; align-items: center; gap: 6px; }
+.gi-theme-preview > .settings-hint { min-width: 30px; font-size: 0.75em; }
+.gi-theme-palette { display: flex; width: 144px; height: 20px; overflow: hidden; border: 1px solid var(--border-color); border-radius: 4px; }
+.gi-theme-palette > span { flex: 1 1 0; min-width: 0; }
+@media (max-width: 480px) {
+    .settings-theme-table th, .settings-theme-table td { padding: 6px 4px; }
+    .gi-theme-palette { width: 96px; }
+}
 
 /* Output padding (Piclaw 3.2.5 --output-pad) around timeline posts; phones keep the base padding, as in Piclaw. */
 @media (min-width: 640px) {

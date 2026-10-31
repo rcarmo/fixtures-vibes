@@ -31,6 +31,15 @@ To move to another Piclaw release, run `bun scripts/vendor-piclaw.mjs <piclaw-ch
 import closure at that ref, replaces the old `piclaw/web-*`, and lists Classic modules outside the bundle graph. Then
 `make build`, fix any anchored patch whose anchor moved, and run the unit tests and the compliance suite.
 
+The default Appearance pane shows labelled colour swatches from each theme's own catalogue palette, including
+both light and dark palettes for automatic themes. Timeline posts retain the active runtime-configured assistant
+name/avatar across session refreshes, followed by a separate `@session` bubble; picker labels remain session names.
+Saved identity changes retain the manual-restart contract. Search bubbles keep their existing reference action.
+The browser tab title follows selection and rename as `@session — Gi`, using the selected ID while its name loads.
+The xterm overview-ruler border matches its background instead of defaulting to white; scrollbar/search markers remain enabled.
+`make check-appearance-identity` builds components from source without rewriting assets and verifies these defaults
+at desktop and phone widths. `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` may select an existing Chromium installation.
+
 `make build` rewrites `static/` and `theme-catalogue.json` (commit both); `make test` and `make check` verify the sources.
 `make check-release` checks Markdown/math sanitisation, About, composer submission, AdaptiveCards input/actions,
 widget sandbox/message isolation and xterm/FitAddon on Chromium desktop and WebKit phone.

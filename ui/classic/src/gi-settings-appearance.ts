@@ -2,8 +2,17 @@
 // (MIT): theme presets as radios that apply at once, a custom tint for the
 // default theme and output padding. Storage remains browser-local.
 import { html, useState, useEffect, useRef } from "./vendor/preact-htm.js";
-import { appearancePresets, appearancePresetLabels, currentAppearance, persistAppearance, subscribeAppearance } from "./gi-appearance.js";
+import { appearancePresets, appearancePresetLabels, appearancePresetPreviews, currentAppearance, persistAppearance, subscribeAppearance } from "./gi-appearance.js";
 import { normalizeOutputPad } from "./gi-appearance-state.js";
+
+function ThemePreview({ name }) {
+    return html`<div class="gi-theme-previews">${(appearancePresetPreviews[name] || []).map(preview => html`<div class="gi-theme-preview">
+        <span class="settings-hint">${preview.mode}</span>
+        <span class="gi-theme-palette" role="img" aria-label=${`${appearancePresetLabels[name] || name} ${preview.mode} palette`}>
+            ${preview.colors.map(({ key, color }) => html`<span title=${`${key}: ${color}`} style=${{ backgroundColor: color }}></span>`)}
+        </span>
+    </div>`)}</div>`;
+}
 
 export function Appearance() {
     const [value, setValue] = useState(currentAppearance);
@@ -30,6 +39,7 @@ export function Appearance() {
                 <input type="radio" name="gi-settings-theme" checked=${value.theme === 'default'} onChange=${() => apply({ theme: 'default' })} />
                 <strong>Default</strong> <span class="settings-hint">auto light/dark</span>
             </label>
+            <${ThemePreview} name="default" />
             <div class="settings-tint-picker">
                 <label class="settings-hint" for="gi-settings-tint">Tint</label>
                 <input id="gi-settings-tint" type="color" value=${value.tint || '#1d9bf0'}
@@ -48,11 +58,12 @@ export function Appearance() {
             </div>
         </div>
         <table class="settings-table settings-borderless settings-theme-table">
-            <thead><tr><th scope="col"><span class="gi-visually-hidden">Selected</span></th><th scope="col">Theme</th></tr></thead>
+            <thead><tr><th scope="col"><span class="gi-visually-hidden">Selected</span></th><th scope="col">Theme</th><th scope="col">Colors</th></tr></thead>
             <tbody>
                 ${appearancePresets.filter(name => name !== 'default').map(name => html`<tr class=${name === value.theme ? 'settings-row-active' : ''} style="cursor:pointer" onClick=${() => apply({ theme: name, tint: '' })}>
                     <td><input type="radio" name="gi-settings-theme" aria-label=${appearancePresetLabels[name] || name} checked=${name === value.theme} onChange=${() => apply({ theme: name, tint: '' })} /></td>
                     <td><strong>${appearancePresetLabels[name] || name}</strong></td>
+                    <td><${ThemePreview} name=${name} /></td>
                 </tr>`)}
             </tbody>
         </table>

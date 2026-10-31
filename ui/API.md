@@ -62,6 +62,12 @@ Event names the UI handles (Piclaw vocabulary): `connected` (carries `app_asset_
 
 ## Models and settings
 
+`assistant_name` and `assistant_avatar` in `/api/runtime/config` supply the active timeline identity. Session titles
+from `/api/sessions` supply picker labels and separate `@session` bubbles, never replace assistant identity, and
+are resolved per post's `chat_jid` even when several sessions share an agent ID. Search's `chat_agent_name`, when
+present, identifies its source session. Saved names still use `/api/settings/identity`'s restart-required contract;
+this presentation change does not activate saved settings or alter persistence.
+
 | Method | Path | UI caller | Reference |
 |---|---|---|---|
 | GET, PATCH | `/api/sessions/{s}/model` | `getAgentModels`, `selectAgentModel`, `selectAgentThinking` | `handleSessionSubroutes` (`model-panel.md`, `session-thinking.md`) |

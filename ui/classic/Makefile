@@ -3,7 +3,7 @@ BUN ?= bun
 RUN_PURPOSE ?= ui-classic
 include ../../mk/project-paths.mk
 include ../../mk/profiling.mk
-.PHONY: deps build test check check-revisions check-release
+.PHONY: deps build test check check-revisions check-release check-appearance-identity
 deps:
 	$(tmp_init)
 	$(BUN) install --frozen-lockfile
@@ -18,6 +18,11 @@ check: deps
 check-revisions: deps
 	$(profile_begin)
 	REVISION_BROWSER_PROFILE_DIR="$(if $(filter 1,$(PROFILING)),$(PROFILE_DIR),)" $(BUN) $(BUN_PROFILE) run scripts/check-revision-browser.ts; s=$$?; $(profile_summary); exit $$s
+# Focused source-built Appearance and identity acceptance; committed assets are read-only.
+check-appearance-identity: deps
+	$(profile_begin)
+	IDENTITY_BROWSER_PROFILE_DIR="$(if $(filter 1,$(PROFILING)),$(PROFILE_DIR),)" $(BUN) $(BUN_PROFILE) run scripts/check-appearance-identity-browser.ts; s=$$?; $(profile_summary); exit $$s
+
 # Latest release/library component integration; loopback fixture, not runtime compliance.
 check-release: deps
 	$(profile_begin)

@@ -9,7 +9,9 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { patchCodemodeCards } from './patch-codemode-cards.mjs';
+import { patchPostIdentity, patchTimelineIdentity } from './patch-post-identity.mjs';
 import { patchTerminalLifecycle } from './patch-terminal-lifecycle.mjs';
+import { patchTerminalRuler } from './patch-terminal-ruler.mjs';
 
 import { patchEditorRevision, patchConflictRevision, patchEditorRefreshRevision, patchEditorLoaderRevision } from './patch-editor-revision.mjs';
 const CODEMIRROR = '/editor-vendor/codemirror.js';
@@ -115,7 +117,7 @@ export function piclawWebAdapter(root) {
       contents: patchEditorRefreshRevision(await Bun.file(args.path).text()), loader: 'ts',
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]terminal-pane\.ts$/ }, async args => ({
-      contents: patchTerminalLifecycle(await Bun.file(args.path).text()), loader: 'ts',
+      contents: patchTerminalRuler(patchTerminalLifecycle(await Bun.file(args.path).text())), loader: 'ts',
     }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]panes[\\/]editor-loader\.ts$/ }, async args => ({
       contents: patchEditorLoader(await Bun.file(args.path).text()), loader: 'ts',
@@ -126,8 +128,11 @@ export function piclawWebAdapter(root) {
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]ui[\\/]app-window-actions\.ts$/ }, async args => ({
       contents: patchWindowActions(await Bun.file(args.path).text()), loader: 'ts',
     }));
+    build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]components[\\/]timeline\.ts$/ }, async args => ({
+      contents: patchTimelineIdentity(await Bun.file(args.path).text()), loader: 'ts',
+    }));
     build.onLoad({ filter: /[\\/]web-[^\\/]+[\\/]web[\\/]src[\\/]components[\\/]post\.ts$/ }, async args => ({
-      contents: patchCodemodeCards(await Bun.file(args.path).text()), loader: 'ts',
+      contents: patchPostIdentity(patchCodemodeCards(await Bun.file(args.path).text())), loader: 'ts',
     }));
   } };
 }

@@ -1,3 +1,4 @@
+import { timelineAgents, activeSessionTitle } from './gi-post-identity.js';
 import { hostContextUsage } from "./gi-context-usage.js";
 // @ts-nocheck
 import { randomClientId } from "./gi-random-id.js";
@@ -211,6 +212,7 @@ function GiApp() {
     const getDraft = (sid: string) => drafts.get(sid);
     const initialComposeDraft = useMemo(() => ready && sessionId ? getDraft(sessionId).text : '', [ready, sessionId]);
     const [runtimeConfig, setRuntimeConfig] = useState<any>({});
+    const runtimeIdentity = useRef<any>({});
     const [agents, setAgents] = useState<any>({});
     const [userProfile, setUserProfile] = useState<any>(null);
 
@@ -369,6 +371,11 @@ function GiApp() {
     }, []);
     const renderedSelection = selection.capture();
 
+    // Selection owns the title immediately; session-list updates supply names/renames.
+    useEffect(() => {
+        document.title = activeSessionTitle(sessionId ? sessionToChatJid(sessionId) : null, activeChatAgents);
+    }, [sessionId, activeChatAgents]);
+
     // ── Bootstrap ────────────────────────────────────────────────────────────
 
     useEffect(() => {
@@ -393,6 +400,7 @@ function GiApp() {
             setFileRefs(getDraft(sid).fileRefs);
             setMessageRefs(getDraft(sid).messageRefs);
             setRuntimeConfig(cfg);
+            runtimeIdentity.current = cfg;
             setUserProfile({ name: cfg.user_name, avatarUrl: cfg.user_avatar, avatarBackground: cfg.user_avatar_background });
             setAgents({
                 [DEFAULT_AGENT_ID]: {
@@ -568,9 +576,7 @@ function GiApp() {
         ]);
         if (!selection.isCurrent(scope) || revision !== sessionListRevision.current) return;
         const agentsList = Array.isArray((agentsPayload as any)?.agents) ? (agentsPayload as any).agents : [];
-        setAgents(Object.fromEntries(agentsList.map((entry: any) => [entry.agent_id, {
-            id: entry.agent_id, name: entry.agent_name, avatar_url: null,
-        }])));
+        setAgents(timelineAgents(agentsList, runtimeIdentity.current));
         const branchesList = Array.isArray((branchesPayload as any)?.branches)
             ? (branchesPayload as any).branches
             : (Array.isArray((branchesPayload as any)?.chats) ? (branchesPayload as any).chats : []);
